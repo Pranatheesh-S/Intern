@@ -157,7 +157,7 @@ export default function FullscreenButton() {
         justifyContent: 'center',
         borderRadius: '10px',
         backgroundColor: isHovered ? 'rgba(15, 23, 42, 0.95)' : 'rgba(15, 23, 42, 0.82)',
-        color: isHovered ? 'var(--accent)' : 'var(--surface)',
+        color: isHovered ? 'var(--lesson-accent)' : 'var(--lesson-surface)',
         border: isHovered ? '1px solid rgba(56, 189, 248, 0.8)' : '1px solid rgba(255, 255, 255, 0.22)',
         boxShadow: isHovered
           ? '0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(56, 189, 248, 0.35)'

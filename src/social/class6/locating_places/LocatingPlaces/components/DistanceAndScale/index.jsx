@@ -730,6 +730,20 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           z-index: 4;
         }
         
+        .ds-callout-right {
+          position: relative;
+          bottom: auto;
+          right: auto;
+          max-width: 100%;
+          width: 100%;
+          margin-top: auto;
+          margin-bottom: 8px;
+          padding: 12px 16px;
+          box-sizing: border-box;
+          box-shadow: 0 4px 16px rgba(60,40,20,0.06);
+          background: rgba(255, 252, 246, 0.95);
+        }
+        
         .ds-callout-title {
           font-size: 12px;
           font-weight: 800;
@@ -737,6 +751,11 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           display: flex;
           align-items: center;
           gap: 4px;
+        }
+        
+        .ds-callout-right .ds-callout-title {
+          font-size: 16px;
+          margin-bottom: 4px;
         }
         
         .ds-callout-text {
@@ -748,6 +767,13 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           margin: 0;
           text-align: justify;
           text-justify: inter-word;
+        }
+        
+        .ds-callout-right .ds-callout-text {
+          font-size: 15px;
+          text-align: left;
+          line-height: 1.45;
+          text-justify: auto;
         }
         
         /* Examples */
@@ -887,13 +913,6 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                       </div>
                     </div>
 
-                    {/* Remember Callout */}
-                    <div className="ds-callout">
-                      <div className="ds-callout-title">
-                        <Lightbulb size={10} strokeWidth={3} /> Remember
-                      </div>
-                      <p className="ds-callout-text">Maps are smaller, but the scale tells us the real distance.</p>
-                    </div>
                   </div>
                 </>
               )}
@@ -1113,6 +1132,14 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                 )}
 
               </div>
+              
+              {/* Remember Callout moved to right side */}
+              <div className="ds-callout ds-callout-right">
+                <div className="ds-callout-title">
+                  <Lightbulb size={16} strokeWidth={3} /> Remember
+                </div>
+                <p className="ds-callout-text">Maps are smaller, but the scale tells us the real distance.</p>
+              </div>
 
               {/* Sub-page navigation — Parallel Symmetrical Baseline */}
               <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px', marginTop: '6px' }}>
@@ -1304,7 +1331,7 @@ const TamilNaduSubpage = () => {
                   <div style={{ background: 'white', border: '1px solid #d5e3ef', borderRadius: '12px', padding: '14px', width: '90%', maxWidth: '400px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', zIndex: 10, marginTop: '16px' }}>
                     <div style={{ fontSize: '13px', fontWeight: 800, color: '#0284c7', textTransform: 'uppercase', marginBottom: '4px' }}>Real-Life Example</div>
                     <div style={{ fontSize: '13px', color: '#475569', lineHeight: 1.45, textAlign: 'justify', textJustify: 'inter-word' }}>
-                      The straight-line distance between Chennai and Kanyakumari is about 625 km. On a map, this large real-world distance is represented using only a few centimetres because maps are drawn to scale.
+                      The straight distance from Chennai to Kanyakumari is about 625 km. On a map, this huge distance is drawn as just a few centimetres using a scale.
                     </div>
                   </div>
                 </motion.div>
@@ -1335,7 +1362,7 @@ const TamilNaduSubpage = () => {
                 <div style={{ fontSize: '24px' }}>🌍</div>
                 <div>
                   <div style={{ fontSize: '12.5px', color: '#5c6b7a', fontWeight: 700, textTransform: 'uppercase' }}>Real-world Distance</div>
-                  <div style={{ fontSize: '12.5px', color: '#475569', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>The approximate straight-line distance between Chennai and Kanyakumari is about 625 km.</div>
+                  <div style={{ fontSize: '12.5px', color: '#475569', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>The actual straight distance from Chennai to Kanyakumari is about 625 km.</div>
                 </div>
               </div>
               <div style={{ fontSize: '20px', fontWeight: 900, color: '#1e3a8a', whiteSpace: 'nowrap', flexShrink: 0 }}>≈ 625 km</div>
@@ -1352,7 +1379,7 @@ const TamilNaduSubpage = () => {
                 <div style={{ fontSize: '24px' }}>🗺️</div>
                 <div>
                   <div style={{ fontSize: '12.5px', color: '#0369a1', fontWeight: 700, textTransform: 'uppercase' }}>Distance on the Map</div>
-                  <div style={{ fontSize: '12.5px', color: '#0369a1', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>Using the given scale, the real-world distance is represented by a shorter distance on the map.</div>
+                  <div style={{ fontSize: '12.5px', color: '#0369a1', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>Using the scale, the real big distance is shown as a small distance on the map.</div>
                 </div>
               </div>
               <div style={{ fontSize: '20px', fontWeight: 900, color: '#0284c7', whiteSpace: 'nowrap', flexShrink: 0 }}>5 cm</div>
@@ -1364,7 +1391,7 @@ const TamilNaduSubpage = () => {
         <div style={{ background: '#ecfdf5', padding: '12px 16px', borderRadius: '14px', border: '1px solid #a7f3d0', flexShrink: 0 }}>
           <h4 style={{ margin: '0 0 4px 0', color: '#059669', fontSize: '13px', fontWeight: 800 }}>Remember</h4>
           <p style={{ margin: 0, fontSize: '12.5px', color: '#065f46', lineHeight: 1.45, textAlign: 'justify', textJustify: 'inter-word' }}>
-            Maps reduce real-world distances using a scale. Although the map is much smaller than the real world, the distances remain proportional and accurately represent actual locations.
+            Maps shrink real distances using a scale. Even though the map is small, the distances are shrunk evenly to show the exact locations.
           </p>
         </div>
 

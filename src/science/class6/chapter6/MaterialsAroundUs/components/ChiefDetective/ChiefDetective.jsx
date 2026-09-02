@@ -36,7 +36,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'var(--surface)',
+      background: 'var(--lesson-surface)',
       fontFamily: '"Times New Roman", serif',
       display: 'flex',
       justifyContent: 'center',
@@ -50,8 +50,8 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
           .book-frame {
             width: 100%;
             height: 100%;
-            background: var(--surface);
-            border: 8px solid var(--text-heading);
+            background: var(--lesson-surface);
+            border: 8px solid var(--lesson-primary);
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.18);
             position: relative;
@@ -78,7 +78,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             position: relative;
           }
           .right-page {
-            background: var(--surface);
+            background: var(--lesson-surface);
             border-left: 1px solid #ece7d8;
             height: 100%;
             overflow-y: auto;
@@ -95,13 +95,13 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             top: 24px;
             left: 24px;
             background: rgba(255, 255, 255, 0.8);
-            border: 2px solid var(--border);
+            border: 2px solid var(--lesson-border);
             border-radius: 8px;
             padding: 8px 16px;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 14px;
             font-weight: bold;
-            color: var(--text-secondary);
+            color: var(--lesson-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -111,7 +111,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
           }
           .back-button:hover {
             background: white;
-            color: var(--text-primary);
+            color: var(--lesson-text);
             transform: translateX(-2px);
           }
           
@@ -125,7 +125,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             z-index: 20;
-            border: 2px solid var(--border);
+            border: 2px solid var(--lesson-border);
           }
           .speech-bubble::after {
             content: '';
@@ -146,7 +146,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             left: 38px;
             border-width: 0 18px 18px;
             border-style: solid;
-            border-color: transparent transparent var(--border);
+            border-color: transparent transparent var(--lesson-border);
             display: block;
             width: 0;
           }
@@ -154,7 +154,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             position: absolute;
             top: -16px;
             right: 24px;
-            background: var(--text-muted);
+            background: var(--lesson-muted);
             color: white;
             padding: 4px 16px;
             border-radius: 6px;
@@ -171,7 +171,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 2px;
-            color: #16a34a;
+            color: var(--lesson-success);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
@@ -180,14 +180,14 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
           .debrief-title {
             font-size: 52px;
             line-height: 1.1;
-            color: var(--text-heading);
+            color: var(--lesson-primary);
             font-weight: 700;
             margin: 0 0 36px 0;
           }
           .debrief-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 4px solid #16a34a;
+            background: var(--lesson-surface);
+            border: 1px solid var(--lesson-border);
+            border-left: 4px solid var(--lesson-success);
             border-radius: 12px;
             padding: 28px;
             margin-bottom: 40px;
@@ -196,7 +196,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 18px;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--lesson-muted);
             margin: 0 0 16px 0;
             display: flex;
             align-items: center;
@@ -205,8 +205,8 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
           }
           
           .reward-box {
-            background: #f0fdf4;
-            border: 2px solid #bbf7d0;
+            background: var(--lesson-success-bg);
+            border: 2px solid var(--lesson-success-border);
             border-radius: 12px;
             padding: 20px 28px;
             margin-bottom: 40px;
@@ -218,7 +218,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
             font-weight: 700;
-            color: #15803d;
+            color: var(--lesson-success);
             text-transform: uppercase;
             letter-spacing: 1px;
           }
@@ -226,11 +226,11 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 20px;
             font-weight: 600;
-            color: #166534;
+            color: var(--lesson-success);
           }
 
           .start-btn {
-            background: #16a34a;
+            background: var(--lesson-success);
             color: white;
             border: none;
             padding: 20px 40px;
@@ -249,7 +249,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
           }
           .start-btn:hover {
             transform: translateY(-2px);
-            background: #15803d;
+            background: var(--lesson-success);
           }
 
           /* STAMP ANIMATION */
@@ -261,8 +261,8 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-family: 'Courier New', Courier, monospace;
             font-size: 4rem;
             font-weight: 900;
-            color: #16a34a;
-            border: 8px solid #16a34a;
+            color: var(--lesson-success);
+            border: 8px solid var(--lesson-success);
             padding: 1rem 2rem;
             border-radius: 12px;
             opacity: 0;
@@ -324,7 +324,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
               transition={{ delay: 0.4 }}
             >
               <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--text-primary)', lineHeight: '1.6' }}>
+              <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--lesson-text)', lineHeight: '1.6' }}>
                 {data.dialogue || "Outstanding work. Headquarters is officially closing this investigation."}
               </p>
             </motion.div>
@@ -340,12 +340,12 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             <h1 className="debrief-title">{data.title || 'Investigation Officially Closed'}</h1>
             
             <div className="debrief-box">
-              <h3><BookMarked size={20} color="#16a34a" /> FINAL OBSERVATIONS</h3>
+              <h3><BookMarked size={20} color="var(--lesson-success)" /> FINAL OBSERVATIONS</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
                 {data.observations && data.observations.map((obs, idx) => (
                   <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <CheckCircle size={20} color="#16a34a" />
-                    <span style={{ fontSize: '20px', color: 'var(--text-primary)' }}>
+                    <CheckCircle size={20} color="var(--lesson-success)" />
+                    <span style={{ fontSize: '20px', color: 'var(--lesson-text)' }}>
                       <strong>{obs.object}:</strong> {obs.finding}
                     </span>
                   </div>
@@ -358,7 +358,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
                 <span className="reward-label">Evidence Submitted</span>
                 <span className="reward-value">{data.rewardReason || "Case Completed"}</span>
               </div>
-              <Award size={40} color="#16a34a" />
+              <Award size={40} color="var(--lesson-success)" />
             </div>
             
             <div style={{ marginTop: '24px' }}>

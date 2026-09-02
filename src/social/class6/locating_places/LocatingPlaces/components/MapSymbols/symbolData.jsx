@@ -189,10 +189,10 @@ export const SYMBOL_GROUPS = [
     title: 'Transport',
     items: [
       { id: 'railway', name: 'Railway Line', Icon: SVGSymbols.RailwayLine, desc: 'Used to show railway tracks for trains.' },
-      { id: 'road', name: 'Road', Icon: SVGSymbols.Road, desc: 'Represents a standard metalled road.' },
-      { id: 'nh', name: 'National Highway', Icon: SVGSymbols.NationalHighway, desc: 'Major roads connecting big cities.' },
+      { id: 'road', name: 'Road', Icon: SVGSymbols.Road, desc: 'Shows a main road.' },
+      { id: 'nh', name: 'National Highway', Icon: SVGSymbols.NationalHighway, desc: 'Big roads connecting large cities.' },
       { id: 'airport', name: 'Airport', Icon: SVGSymbols.Airport, desc: 'Shows where an airport is located.' },
-      { id: 'busstand', name: 'Bus Stand', Icon: SVGSymbols.BusStand, desc: 'A major bus terminal or stop.' },
+      { id: 'busstand', name: 'Bus Stand', Icon: SVGSymbols.BusStand, desc: 'A big bus stop.' },
     ]
   },
   {
@@ -200,18 +200,18 @@ export const SYMBOL_GROUPS = [
     items: [
       { id: 'river', name: 'River', Icon: SVGSymbols.River, desc: 'Shows natural flowing water.' },
       { id: 'lake', name: 'Lake', Icon: SVGSymbols.Lake, desc: 'A large body of still water.' },
-      { id: 'canal', name: 'Canal', Icon: SVGSymbols.Canal, desc: 'A man-made water channel.' },
+      { id: 'canal', name: 'Canal', Icon: SVGSymbols.Canal, desc: 'A water channel built by people.' },
       { id: 'bridge', name: 'Bridge', Icon: SVGSymbols.Bridge, desc: 'A road or track crossing water.' },
     ]
   },
   {
     title: 'Public Places',
     items: [
-      { id: 'temple', name: 'Temple', Icon: SVGSymbols.Temple, desc: 'A place of worship.' },
-      { id: 'hospital', name: 'Hospital', Icon: SVGSymbols.Hospital, desc: 'A medical facility.' },
-      { id: 'school', name: 'School', Icon: SVGSymbols.School, desc: 'An educational institution.' },
-      { id: 'postoffice', name: 'Post Office', Icon: SVGSymbols.PostOffice, desc: 'A facility for sending mail.' },
-      { id: 'police', name: 'Police Station', Icon: SVGSymbols.PoliceStation, desc: 'A local police headquarters.' },
+      { id: 'temple', name: 'Temple', Icon: SVGSymbols.Temple, desc: 'A place to pray.' },
+      { id: 'hospital', name: 'Hospital', Icon: SVGSymbols.Hospital, desc: 'A place for sick people to get help.' },
+      { id: 'school', name: 'School', Icon: SVGSymbols.School, desc: 'A place where students learn.' },
+      { id: 'postoffice', name: 'Post Office', Icon: SVGSymbols.PostOffice, desc: 'A place to send letters.' },
+      { id: 'police', name: 'Police Station', Icon: SVGSymbols.PoliceStation, desc: 'Where the police work.' },
     ]
   },
   {
@@ -219,9 +219,9 @@ export const SYMBOL_GROUPS = [
     items: [
       { id: 'settlement', name: 'Settlement', Icon: SVGSymbols.Settlement, desc: 'A village, town or city.' },
       { id: 'forest', name: 'Forest', Icon: SVGSymbols.Forest, desc: 'A large area covered with trees.' },
-      { id: 'trees', name: 'Trees', Icon: SVGSymbols.Trees, desc: 'Scattered trees or a small grove.' },
-      { id: 'grass', name: 'Grass', Icon: SVGSymbols.Grass, desc: 'Grasslands or pastures.' },
-      { id: 'mountain', name: 'Mountain', Icon: SVGSymbols.Mountain, desc: 'A large natural elevation of earth.' },
+      { id: 'trees', name: 'Trees', Icon: SVGSymbols.Trees, desc: 'A few trees growing together.' },
+      { id: 'grass', name: 'Grass', Icon: SVGSymbols.Grass, desc: 'A large area covered with grass.' },
+      { id: 'mountain', name: 'Mountain', Icon: SVGSymbols.Mountain, desc: 'A very high hill.' },
       { id: 'peak', name: 'Peak', Icon: SVGSymbols.Peak, desc: 'The pointed top of a mountain.' },
     ]
   },

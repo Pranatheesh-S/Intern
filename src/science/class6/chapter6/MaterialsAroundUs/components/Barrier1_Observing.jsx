@@ -37,14 +37,14 @@ export default function Barrier1_Observing({ onComplete, addXp }) {
               flexDirection: 'column',
               gap: '1.5rem',
               alignItems: 'center',
-              border: '2px solid var(--success-border)',
-              background: 'var(--success-bg)'
+              border: '2px solid var(--lesson-success-border)',
+              background: 'var(--lesson-success-bg)'
             }}
           >
-            <CheckCircle size={48} style={{ color: 'var(--success)' }} />
+            <CheckCircle size={48} style={{ color: 'var(--lesson-success)' }} />
             <div>
-              <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--success)', fontSize: '1.5rem' }}>Barrier 1 Complete!</h2>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+              <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--lesson-success)', fontSize: '1.5rem' }}>Barrier 1 Complete!</h2>
+              <p style={{ margin: 0, color: 'var(--lesson-secondary)', lineHeight: '1.6' }}>
                 Excellent work, Detective. We now know that all objects around us are made of one or more materials. 
                 But scientists don't stop there. They organize materials to understand them better.
               </p>

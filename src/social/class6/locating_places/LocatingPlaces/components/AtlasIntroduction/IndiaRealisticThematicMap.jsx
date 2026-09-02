@@ -2,113 +2,130 @@ import React, { useMemo } from 'react';
 import indiaPhysicalReliefImg from './assets/india_3d_physical_relief.jpg';
 import indiaPlainsReliefImg from './assets/india_plains_3d_relief.jpg';
 import indiaPlateausReliefImg from './assets/india_plateaus_3d_relief.jpg';
-import indiaForestsReliefImg from './assets/india_forests_3d_relief.jpg';
-import indiaRiversMapImg from './assets/india_rivers_3d_map.jpg';
-import indiaDesertsMapImg from './assets/india_deserts_3d_map.jpg';
+import indiaForestsMapImg from './assets/india_forests_3d_relief.jpg';
+import indiaRiversMapImg from './assets/india_rivers_satellite_3d.jpg';
+import indiaDesertsMapImg from './assets/india_deserts_straight_map.jpg';
 
 // Exact calibrated landmark positions on 3D Physical Relief Map (1024 x 682 viewBox)
+// Bounding box: 61°E–100°E longitude, 4°N–40°N latitude (top-down orthographic)
+// Formula: x = ((lon - 61) / 39) * 1024,  y = (1 - ((lat - 4) / 36)) * 682
 export const MOUNTAINS_LANDMARKS = {
-  'k2': { x: 315, y: 70 },
-  'kullu_manali': { x: 265, y: 118 },
-  'nanda_devi': { x: 350, y: 125 },
-  'kanchenjunga': { x: 678, y: 165 },
-  'saramati': { x: 890, y: 220 },
-  'guru_shikhar': { x: 238, y: 310 },
-  'dhupgarh': { x: 360, y: 360 },
-  'anamudi': { x: 236, y: 565 },
-  'gangetic_plain': { x: 455, y: 245 },
-  'punjab_plain': { x: 232, y: 185 },
-  'brahmaputra_plain': { x: 770, y: 245 },
-  'konkan_coast': { x: 205, y: 435 },
-  'malabar_coast': { x: 285, y: 585 },
-  'coromandel_coast': { x: 380, y: 565 },
-  'sundarbans': { x: 675, y: 310 },
-  'western_ghats_rainforest': { x: 260, y: 430 },
-  'gir_forest': { x: 145, y: 335 },
-  'kaziranga': { x: 795, y: 246 },
-  'kaziranga_forest': { x: 795, y: 246 },
-  'deccan_plateau': { x: 350, y: 480 },
-  'malwa_plateau': { x: 320, y: 345 },
-  'chota_nagpur': { x: 560, y: 345 },
-  'meghalaya_plateau': { x: 775, y: 285 },
-  'thar_desert': { x: 180, y: 240 },
-  'rann_of_kutch': { x: 155, y: 345 },
-  'cold_desert_ladakh': { x: 370, y: 85 }
+  'k2': { x: 408, y: 61 },
+  'nanga_parbat': { x: 357, y: 74 },
+  'kullu_manali': { x: 425, y: 130 },
+  'nanda_devi': { x: 498, y: 166 },
+  'mount_everest': { x: 681, y: 211 },
+  'kanchenjunga': { x: 713, y: 216 },
+  'namcha_barwa': { x: 895, y: 180 },
+  'saramati': { x: 894, y: 254 },
+  'guru_shikhar': { x: 310, y: 274 },
+  'dhupgarh': { x: 456, y: 316 },
+  'mahendragiri': { x: 614, y: 382 },
+  'dodabetta': { x: 414, y: 526 },
+  'anamudi': { x: 422, y: 549 },
+  'gangetic_plain': { x: 540, y: 255 },
+  'punjab_plain': { x: 380, y: 180 },
+  'brahmaputra_plain': { x: 830, y: 240 },
+  'konkan_coast': { x: 370, y: 415 },
+  'malabar_coast': { x: 385, y: 535 },
+  'coromandel_coast': { x: 500, y: 520 },
+  'sundarbans': { x: 740, y: 290 },
+  'western_ghats_rainforest': { x: 385, y: 450 },
+  'gir_forest': { x: 310, y: 345 },
+  'kaziranga': { x: 850, y: 240 },
+  'kaziranga_forest': { x: 850, y: 240 },
+  'deccan_plateau': { x: 460, y: 450 },
+  'malwa_plateau': { x: 415, y: 330 },
+  'chota_nagpur': { x: 620, y: 320 },
+  'meghalaya_plateau': { x: 820, y: 270 },
+  'thar_desert': { x: 325, y: 265 },
+  'rann_of_kutch': { x: 300, y: 320 },
+  'cold_desert_ladakh': { x: 430, y: 80 }
 };
 
 // Exact calibrated landmark positions on 3D Forest Biomes Map (1024 x 682 viewBox)
 export const FORESTS_LANDMARKS = {
-  'himalayan_tropical_forests': { x: 325, y: 152 },
-  'indo_gangetic_forests': { x: 500, y: 218 },
-  'central_indian_forests': { x: 375, y: 326 },
-  'western_ghats_rainforest': { x: 260, y: 430 },
-  'south_indian_forests': { x: 345, y: 540 },
-  'north_east_hill_forests': { x: 795, y: 246 },
-  'kaziranga_forest': { x: 795, y: 246 },
-  'kaziranga': { x: 795, y: 246 },
-  'sundarbans': { x: 730, y: 328 },
-  'gir_forest': { x: 145, y: 335 }
+  'himalayan_tropical_forests': { x: 370, y: 175 },
+  'indo_gangetic_forests': { x: 530, y: 245 },
+  'central_indian_forests': { x: 400, y: 345 },
+  'western_ghats_rainforest': { x: 295, y: 430 },
+  'south_indian_forests': { x: 330, y: 560 },
+  'north_east_hill_forests': { x: 770, y: 265 },
+  'sundarbans': { x: 700, y: 320 },
+  'gir_forest': { x: 210, y: 330 }
 };
 
-// Exact calibrated landmark positions on 3D River Hydrology Map (1024 x 682 viewBox)
 export const RIVERS_LANDMARKS = {
-  'river_indus': { x: 195, y: 155 },
-  'river_yamuna': { x: 340, y: 185 },
-  'river_ganga': { x: 462, y: 245 },
-  'river_brahmaputra': { x: 805, y: 230 },
-  'sundarbans_delta': { x: 730, y: 315 },
-  'sundarbans': { x: 730, y: 315 },
-  'river_narmada': { x: 288, y: 310 },
-  'marble_rocks': { x: 395, y: 305 },
-  'river_tapi': { x: 320, y: 355 },
-  'river_mahanadi': { x: 590, y: 365 },
-  'river_godavari': { x: 360, y: 410 },
-  'river_krishna': { x: 350, y: 460 },
-  'river_kaveri': { x: 372, y: 565 },
-  'jog_falls': { x: 235, y: 495 }
+  'river_ganga': { x: 530, y: 245 },
+  'river_yamuna': { x: 415, y: 208 },
+  'river_indus': { x: 310, y: 110 },
+  'river_brahmaputra': { x: 780, y: 203 },
+  'sundarbans_delta': { x: 716, y: 312 },
+  'river_narmada': { x: 430, y: 335 },
+  'river_tapi': { x: 350, y: 365 },
+  'river_mahanadi': { x: 610, y: 355 },
+  'river_godavari': { x: 490, y: 420 },
+  'river_krishna': { x: 475, y: 440 },
+  'river_kaveri': { x: 455, y: 520 },
+  'river_sutlej': { x: 370, y: 165 },
+  'river_chenab': { x: 320, y: 140 },
+  'river_luni': { x: 295, y: 255 },
+  'river_chambal': { x: 425, y: 275 },
+  'river_kosi': { x: 650, y: 255 },
+  'river_tungabhadra': { x: 415, y: 475 },
+  'river_vaigai': { x: 445, y: 555 },
+  'jog_falls': { x: 360, y: 490 },
 };
 
-// Exact calibrated landmark positions on 3D Arid Relief Map (1024 x 682 viewBox)
+export const PLATEAUS_LANDMARKS = {
+  'deccan_plateau': { x: 460, y: 450 },
+  'malwa_plateau': { x: 415, y: 330 },
+  'chota_nagpur': { x: 620, y: 320 },
+  'meghalaya_plateau': { x: 820, y: 270 }
+};
+
 export const DESERTS_LANDMARKS = {
-  'thar_desert': { x: 180, y: 240 },
-  'rann_of_kutch': { x: 155, y: 345 },
-  'cold_desert_ladakh': { x: 370, y: 85 }
+  'thar_desert': { x: 390, y: 220 },
+  'rann_of_kutch': { x: 360, y: 270 },
+  'cold_desert_ladakh': { x: 460, y: 60 },
+  'cold_desert_spiti': { x: 510, y: 140 }
+};
+
+export const PLAINS_LANDMARKS = {
+  'gangetic_plain': { x: 525, y: 240 },
+  'punjab_plain': { x: 340, y: 185 },
+  'brahmaputra_plain': { x: 795, y: 228 },
+  'rajasthan_plains': { x: 285, y: 245 },
+  'gujarat_plains': { x: 250, y: 340 },
+  'konkan_coast': { x: 308, y: 430 },
+  'malabar_coast': { x: 370, y: 590 },
+  'coromandel_coast': { x: 462, y: 505 },
+  'northern_circars': { x: 565, y: 380 }
 };
 
 export const projectCoords = (lat, lon, placeId = null, category = 'mountains') => {
-  if (category === 'forests') {
-    if (placeId && FORESTS_LANDMARKS[placeId]) {
-      return FORESTS_LANDMARKS[placeId];
-    }
+  if (category === 'plains' && placeId && PLAINS_LANDMARKS[placeId]) {
+    return PLAINS_LANDMARKS[placeId];
   }
-
-  if (category === 'rivers') {
-    if (placeId && RIVERS_LANDMARKS[placeId]) {
-      return RIVERS_LANDMARKS[placeId];
-    }
-    const minLon = 68.0, maxLon = 97.5;
-    const minLat = 6.5, maxLat = 37.5;
-    const x = ((lon - minLon) / (maxLon - minLon)) * 1024;
-    const y = (1 - ((lat - minLat) / (maxLat - minLat))) * 682;
-    return { x: +x.toFixed(1), y: +y.toFixed(1) };
-  }
-
-  if (category === 'deserts') {
-    if (placeId && DESERTS_LANDMARKS[placeId]) {
-      return DESERTS_LANDMARKS[placeId];
-    }
-    const minLon = 68.0, maxLon = 97.5;
-    const minLat = 6.5, maxLat = 37.5;
-    const x = ((lon - minLon) / (maxLon - minLon)) * 1024;
-    const y = (1 - ((lat - minLat) / (maxLat - minLat))) * 682;
-    return { x: +x.toFixed(1), y: +y.toFixed(1) };
-  }
-
-  if (placeId && MOUNTAINS_LANDMARKS[placeId]) {
+  if (category === 'mountains' && placeId && MOUNTAINS_LANDMARKS[placeId]) {
     return MOUNTAINS_LANDMARKS[placeId];
   }
-  const minLon = 68.0, maxLon = 97.5;
-  const minLat = 6.5, maxLat = 37.5;
+  if (category === 'forests' && placeId && FORESTS_LANDMARKS[placeId]) {
+    return FORESTS_LANDMARKS[placeId];
+  }
+  if (category === 'rivers' && placeId && RIVERS_LANDMARKS[placeId]) {
+    return RIVERS_LANDMARKS[placeId];
+  }
+  if (category === 'deserts' && placeId && DESERTS_LANDMARKS[placeId]) {
+    return DESERTS_LANDMARKS[placeId];
+  }
+  if (category === 'plateaus' && placeId && PLATEAUS_LANDMARKS[placeId]) {
+    return PLATEAUS_LANDMARKS[placeId];
+  }
+  
+  // Default top-down projection formula
+  const minLon = 61.0, maxLon = 100.0;
+  const minLat = 4.0, maxLat = 40.0;
   const x = ((lon - minLon) / (maxLon - minLon)) * 1024;
   const y = (1 - ((lat - minLat) / (maxLat - minLat))) * 682;
   return { x: +x.toFixed(1), y: +y.toFixed(1) };
@@ -129,7 +146,7 @@ const CATEGORY_MAP_THEMES = {
     image: indiaRiversMapImg,
     aspectRatio: '1024 / 682',
     viewBox: '0 0 1024 682',
-    filter: 'contrast(1.06) saturate(1.12) brightness(1.02)',
+    filter: 'contrast(1.08) saturate(1.18) brightness(1.02)',
     bgGrad: 'radial-gradient(ellipse at 50% 50%, #082f49 0%, #020617 100%)',
     primaryColor: '#0284C7'
   },
@@ -144,25 +161,25 @@ const CATEGORY_MAP_THEMES = {
   },
   deserts: {
     badge: '🏜️ 3D Great Thar & Arid Relief Map',
-    image: indiaPhysicalReliefImg,
-    aspectRatio: '1024 / 682',
-    viewBox: '0 0 1024 682',
+    image: indiaDesertsMapImg,
+    aspectRatio: '1024 / 576',
+    viewBox: '0 0 1024 576',
     filter: 'contrast(1.08) saturate(1.15) brightness(1.02)',
     bgGrad: 'radial-gradient(ellipse at 35% 45%, #2d1806 0%, #0c0803 100%)',
     primaryColor: '#D97706'
   },
   forests: {
     badge: '🌳 Rainforest Canopy & Biosphere Sanctuaries Map',
-    image: indiaForestsReliefImg,
+    image: indiaForestsMapImg,
     aspectRatio: '1024 / 682',
     viewBox: '0 0 1024 682',
-    filter: 'contrast(1.06) saturate(1.12) brightness(1.02)',
-    bgGrad: 'radial-gradient(ellipse at 45% 65%, #022c22 0%, #020617 100%)',
-    primaryColor: '#059669'
+    filter: 'contrast(1.1) saturate(1.2) brightness(0.95)',
+    bgGrad: 'radial-gradient(ellipse at 40% 60%, #064e3b 0%, #022c22 100%)',
+    primaryColor: '#10B981'
   },
   plateaus: {
     badge: '⛰️ Deccan Basalt & Geological Tablelands Map',
-    image: indiaPlateausReliefImg,
+    image: indiaPhysicalReliefImg,
     aspectRatio: '1024 / 682',
     viewBox: '0 0 1024 682',
     filter: 'contrast(1.06) saturate(1.12) brightness(1.02)',
@@ -207,7 +224,7 @@ export default function IndiaRealisticThematicMap({
       }}>
         <div style={{
           position: 'relative',
-          aspectRatio: '1024 / 682',
+          aspectRatio: currentTheme.aspectRatio || '1024 / 682',
           width: '100%',
           height: '100%',
           maxWidth: '100%',
@@ -235,7 +252,7 @@ export default function IndiaRealisticThematicMap({
 
           {/* 3. HIGH-PRECISION VECTOR OVERLAY MATCHING 100% OF THE IMAGE */}
           <svg
-            viewBox="0 0 1024 682"
+            viewBox={currentTheme.viewBox || "0 0 1024 682"}
             preserveAspectRatio="none"
             style={{
               position: 'absolute',

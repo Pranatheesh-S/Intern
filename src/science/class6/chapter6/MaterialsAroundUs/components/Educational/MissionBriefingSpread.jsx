@@ -23,7 +23,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'var(--surface)',
+      background: 'var(--lesson-surface)',
       fontFamily: '"Times New Roman", serif',
       display: 'flex',
       justifyContent: 'center',
@@ -37,8 +37,8 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .book-frame {
             width: 100%;
             height: 100%;
-            background: var(--surface);
-            border: 8px solid var(--text-heading);
+            background: var(--lesson-surface);
+            border: 8px solid var(--lesson-primary);
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.18);
             position: relative;
@@ -90,7 +90,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
 
           /* ---------- RIGHT PAGE ---------- */
           .right-page {
-            background: var(--surface);
+            background: var(--lesson-surface);
             border-left: 1px solid #ece7d8;
             height: 100%;
             position: relative;
@@ -120,7 +120,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             z-index: 20;
-            border: 2px solid var(--border);
+            border: 2px solid var(--lesson-border);
             flex: 0 0 auto;
           }
           .speech-bubble::after {
@@ -142,7 +142,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             left: 30px;
             border-width: 0 16px 16px;
             border-style: solid;
-            border-color: transparent transparent var(--border);
+            border-color: transparent transparent var(--lesson-border);
             display: block;
             width: 0;
           }
@@ -150,7 +150,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             position: absolute;
             top: -15px;
             right: 20px;
-            background: var(--text-muted);
+            background: var(--lesson-muted);
             color: white;
             padding: 4px 16px;
             border-radius: 6px;
@@ -167,7 +167,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 1.8px;
-            color: var(--text-heading);
+            color: var(--lesson-primary);
             margin-bottom: 14px;
             display: flex;
             align-items: center;
@@ -176,7 +176,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .mission-title {
             font-size: clamp(35px, 4.3vh, 46px);
             line-height: 1.15;
-            color: var(--text-heading);
+            color: var(--lesson-primary);
             font-weight: 700;
             margin: 0 0 22px 0;
             font-family: Georgia, "Times New Roman", serif;
@@ -194,9 +194,9 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             color: #3b4560;
           }
           .mission-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 4px solid #ef4444;
+            background: var(--lesson-surface);
+            border: 1px solid var(--lesson-border);
+            border-left: 4px solid var(--lesson-danger);
             border-radius: 12px;
             padding: 22px 26px;
             margin-bottom: 22px;
@@ -206,7 +206,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 19px;
             font-weight: 700;
-            color: var(--text-heading);
+            color: var(--lesson-primary);
             margin: 0 0 12px 0;
             display: flex;
             align-items: center;
@@ -216,14 +216,14 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .mission-box p, .mission-box li {
             font-family: Arial, Helvetica, sans-serif;
             font-size: clamp(20px, 2.5vh, 25px);
-            color: var(--text-primary);
+            color: var(--lesson-text);
             line-height: 1.45;
             font-weight: 600;
           }
           .mission-meta {
             display: flex;
             gap: 48px;
-            border-top: 1px dashed var(--border);
+            border-top: 1px dashed var(--lesson-border);
             padding-top: 18px;
             margin-bottom: 22px;
             width: 100%;
@@ -237,7 +237,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--lesson-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
           }
@@ -245,17 +245,17 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 22px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--lesson-text);
             display: flex;
             align-items: center;
             gap: 7px;
           }
           .meta-stars {
-            color: #eab308;
+            color: var(--lesson-warning);
             font-size: 24px;
           }
           .meta-stars.empty {
-            color: var(--border);
+            color: var(--lesson-border);
           }
 
           .start-btn {
@@ -263,7 +263,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             bottom: 18px;
             right: 28px;
             z-index: 10000;
-            background: var(--text-heading);
+            background: var(--lesson-primary);
             color: white;
             border: none;
             padding: 18px 44px;
@@ -282,7 +282,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .start-btn:hover {
             transform: translateY(-2px);
-            background: var(--text-heading);
+            background: var(--lesson-primary);
           }
 
           @media (max-width: 1024px) {
@@ -296,9 +296,9 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             left: 24px;
             top: auto;
             z-index: 10000;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            color: var(--text-primary);
+            background: var(--lesson-surface);
+            border: 2px solid var(--lesson-border);
+            color: var(--lesson-text);
             padding: 12px 26px;
             border-radius: 11px;
             display: flex;
@@ -312,7 +312,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             transition: all 0.2s;
           }
           .spread-back-btn:hover {
-            background: var(--surface);
+            background: var(--lesson-surface);
             transform: translateY(-1px);
           }
         `}
@@ -342,7 +342,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               transition={{ delay: 0.4 }}
             >
               <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: 'var(--text-primary)', lineHeight: '1.45', fontWeight: '500' }}>
+              <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: 'var(--lesson-text)', lineHeight: '1.45', fontWeight: '500' }}>
                 {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
               </p>
             </motion.div>
@@ -369,11 +369,11 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               </div>
               
               <div className="mission-box">
-                <h3><Check size={18} color="#ef4444" /> OBJECTIVES</h3>
+                <h3><Check size={18} color="var(--lesson-danger)" /> OBJECTIVES</h3>
                 {Array.isArray(data.objective) ? (
                   <ul style={{ margin: 0, paddingLeft: '26px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
                     {data.objective.map((obj, i) => (
-                      <li key={i} style={{ fontSize: 'clamp(20px, 2.5vh, 25px)', color: 'var(--text-primary)', lineHeight: '1.45' }}>
+                      <li key={i} style={{ fontSize: 'clamp(20px, 2.5vh, 25px)', color: 'var(--lesson-text)', lineHeight: '1.45' }}>
                         {obj}
                       </li>
                     ))}

@@ -8,7 +8,7 @@ import ExploreIndiaActivity from '../LostInTheCity/ExploreIndiaActivity';
 const DIRECTIONS = [
   { 
     id: 'N', label: 'North', type: 'Main Direction', angle: 0, 
-    description: <>North is one of the four <b>cardinal directions</b>. On a compass it sits at the top. Most maps show a small arrow marked <b>'N'</b> (the <b>North Line</b>) pointing towards North.</>, 
+    description: <>North is one of the four <b>main directions</b>. On a compass, it is at the top. Most maps have a small arrow marked <b>'N'</b> (the <b>North Line</b>) that points North.</>, 
     note: 'Maps usually print a North arrow so you can orient every other direction from it.', 
     question: 'Where is North located on a standard map?',
     options: ['At the top', 'At the bottom', 'On the right', 'On the left'],
@@ -18,7 +18,7 @@ const DIRECTIONS = [
   },
   { 
     id: 'NE', label: 'North-East', type: 'Intermediate Direction', angle: 45, 
-    description: <>North-East is an <b>intermediate direction</b> — it lies exactly halfway between <b>North</b> and <b>East</b>.</>, 
+    description: <>North-East is an <b>intermediate direction</b>. It is exactly halfway between <b>North</b> and <b>East</b>.</>, 
     note: 'Intermediate directions (NE, SE, SW, NW) give you finer bearings between the four main ones.', 
     question: 'Which direction lies halfway between North and East?',
     options: ['North-West', 'North-East', 'South-East', 'South-West'],
@@ -28,7 +28,7 @@ const DIRECTIONS = [
   },
   { 
     id: 'E', label: 'East', type: 'Main Direction', angle: 90, 
-    description: <>East is a <b>cardinal direction</b>, one quarter-turn clockwise from North. The <b>Sun rises in the East</b> every morning.</>, 
+    description: <>East is a <b>main direction</b>, to the right of North. The <b>Sun rises in the East</b> every morning.</>, 
     note: 'Facing the sunrise, North is on your left and South on your right.', 
     question: 'Where does the Sun rise every morning?',
     options: ['In the West', 'In the East', 'In the North', 'In the South'],
@@ -38,7 +38,7 @@ const DIRECTIONS = [
   },
   { 
     id: 'SE', label: 'South-East', type: 'Intermediate Direction', angle: 135, 
-    description: <>South-East is an <b>intermediate direction</b>, located halfway between <b>South</b> and <b>East</b>.</>, 
+    description: <>South-East is an <b>intermediate direction</b>. It is located halfway between <b>South</b> and <b>East</b>.</>, 
     note: "Between two cardinals — useful for describing a spot that isn't due S or due E.", 
     question: 'Which direction sits halfway between South and East?',
     options: ['South-West', 'North-East', 'South-East', 'North-West'],
@@ -48,7 +48,7 @@ const DIRECTIONS = [
   },
   { 
     id: 'S', label: 'South', type: 'Main Direction', angle: 180, 
-    description: <>South is a <b>cardinal direction</b>, directly opposite North at the bottom of the compass.</>, 
+    description: <>South is a <b>main direction</b>. It is directly opposite North, at the bottom of the compass.</>, 
     note: 'On most maps, down the page is roughly South.', 
     question: 'Which direction is directly opposite to North?',
     options: ['East', 'West', 'South', 'North-East'],
@@ -58,7 +58,7 @@ const DIRECTIONS = [
   },
   { 
     id: 'SW', label: 'South-West', type: 'Intermediate Direction', angle: 225, 
-    description: <>South-West is an <b>intermediate direction</b>, located halfway between <b>South</b> and <b>West</b>.</>, 
+    description: <>South-West is an <b>intermediate direction</b>. It is located halfway between <b>South</b> and <b>West</b>.</>, 
     note: 'Halfway between two cardinals, like all intermediate points.', 
     question: 'Which direction lies between South and West?',
     options: ['South-West', 'North-West', 'South-East', 'North-East'],
@@ -68,7 +68,7 @@ const DIRECTIONS = [
   },
   { 
     id: 'W', label: 'West', type: 'Main Direction', angle: 270, 
-    description: <>West is a <b>cardinal direction</b>, opposite East. The <b>Sun sets in the West</b> every evening.</>, 
+    description: <>West is a <b>main direction</b>, to the left of North. The <b>Sun sets in the West</b> every evening.</>, 
     note: 'Facing the sunset, South is on your left and North on your right.', 
     question: 'Where does the Sun set in the evening?',
     options: ['In the East', 'In the West', 'In the North', 'In the South'],
@@ -78,7 +78,7 @@ const DIRECTIONS = [
   },
   { 
     id: 'NW', label: 'North-West', type: 'Intermediate Direction', angle: 315, 
-    description: <>North-West is an <b>intermediate direction</b>, located halfway between <b>North</b> and <b>West</b>.</>, 
+    description: <>North-West is an <b>intermediate direction</b>. It is located halfway between <b>North</b> and <b>West</b>.</>, 
     note: 'The last of the four intermediate directions.', 
     question: 'Which direction lies halfway between North and West?',
     options: ['North-East', 'South-West', 'North-West', 'South-East'],
@@ -214,7 +214,7 @@ export default function Directions({ onComplete, onBack }) {
                           </span>
                         </div>
                         <p style={{ color: '#3D2E24', fontSize: 'clamp(12px, 1.85vh, 13.5px)', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          Directions are one of the <b>three major components of a map</b> (along with <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Distance</span> and <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Symbols</span>). They tell us how places relate to one another in space.
+                          Maps have <b>three main parts</b>: Directions, <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Distance</span>, and <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Symbols</span>. Directions help us find our way and tell us where places are.
                         </p>
                       </div>
 
@@ -273,11 +273,11 @@ export default function Directions({ onComplete, onBack }) {
                       {/* Section 3 - Intermediate Directions (NE, SE, SW, NW) */}
                       <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: 'clamp(10px, 1.4vh, 14px) 14px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                          <h3 style={{ color: '#78350F', fontSize: 'clamp(13px, 2vh, 14.5px)', margin: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>Intermediate Directions</h3>
-                          <span style={{ fontSize: '10px', color: '#92400E', fontWeight: 700 }}>Halfway bearings</span>
+                          <h3 style={{ color: '#78350F', fontSize: 'clamp(13px, 2vh, 14.5px)', margin: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>In-Between Directions</h3>
+                          <span style={{ fontSize: '10px', color: '#92400E', fontWeight: 700 }}>Halfway points</span>
                         </div>
                         <p style={{ color: '#3D2E24', margin: '0 0 6px 0', fontSize: 'clamp(11px, 1.75vh, 12.5px)', fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          Intermediate directions provide finer navigation bearings situated halfway between the main cardinal points.
+                          These directions help us point to places more exactly. They are halfway between the four main directions.
                         </p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
@@ -304,10 +304,10 @@ export default function Directions({ onComplete, onBack }) {
                       {/* Section 4 - Solar Orientation Hands-on Rule */}
                       <div style={{ background: '#FEF3C7', borderRadius: '12px', padding: 'clamp(10px, 1.4vh, 14px) 14px', border: '1.5px solid #FDE68A', boxShadow: '0 2px 8px rgba(180,83,9,0.06)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>
-                          <Sun size={13} color="#D97706" /> Natural Guide: Finding Directions using the Sun
+                          <Sun size={13} color="#D97706" /> Find Directions Using the Sun
                         </div>
                         <p style={{ margin: '0 0 6px 0', fontSize: 'clamp(11px, 1.75vh, 12.5px)', color: '#78350F', lineHeight: 1.35, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          If you stand early in the morning facing the <b>rising Sun</b> with your arms outstretched:
+                          Stand early in the morning and face the <b>rising Sun</b> with your arms open:
                         </p>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
                           <div style={{ background: '#FFFFFF', border: '1px solid #FDE68A', padding: '5px 8px', borderRadius: '6px', fontSize: '11px', color: '#78350F', fontWeight: 600 }}>
@@ -343,7 +343,7 @@ export default function Directions({ onComplete, onBack }) {
                           What is the <span style={{ background: '#FEF3C7', color: '#92400E', padding: '2px 6px', borderRadius: '4px', border: '1px solid #FDE68A' }}>North Line (N)</span>?
                         </h3>
                         <p style={{ color: '#3D2E24', fontSize: 'clamp(12px, 1.85vh, 13px)', lineHeight: 1.5, margin: '0 0 8px 0', fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          Most maps do not draw every single direction. Instead, they show an arrow with the letter <b>'N'</b> at the upper right corner. This arrow is called the <b>North Line</b>. Once North is known, you can instantly find South (opposite), East (right), and West (left).
+                          Most maps do not show all directions. Instead, they show an arrow with <b>'N'</b> at the top right. This is the <b>North Line</b>. If you know North, you can easily find South, East, and West.
                         </p>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFF9F0', border: '1px dashed #F2DFBC', padding: '6px 10px', borderRadius: '8px', fontSize: '11.5px', color: '#78350F', fontWeight: 700 }}>
                           <span>📍</span>
@@ -354,10 +354,10 @@ export default function Directions({ onComplete, onBack }) {
                       {/* Section 2 - The Magnetic Compass Fact & Science */}
                       <div style={{ background: '#FFF9F0', borderRadius: '12px', padding: 'clamp(12px, 1.8vh, 16px) 16px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
-                          <Lightbulb size={14} color="#D97706" /> How Does a Magnetic Compass Work?
+                          <Lightbulb size={14} color="#D97706" /> How Does a Compass Work?
                         </div>
                         <p style={{ color: '#3D2E24', margin: '0 0 8px 0', fontSize: 'clamp(12px, 1.85vh, 13px)', lineHeight: 1.5, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          A <b>compass</b> is an instrument used to find main directions. Its magnetic needle is free to rotate and <b>always points in the North-South direction</b> because Earth acts like a giant magnet with its own magnetic poles.
+                          A <b>compass</b> is a small tool used to find directions. It has a needle that spins. This needle <b>always points North-South</b> because our Earth is like a giant magnet.
                         </p>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                           <div style={{ background: '#FFFFFF', border: '1px solid #F2DFBC', padding: '6px 8px', borderRadius: '6px', fontSize: '11px', color: '#92400E', fontWeight: 700 }}>
