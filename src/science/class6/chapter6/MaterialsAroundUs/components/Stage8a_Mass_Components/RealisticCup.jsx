@@ -72,7 +72,7 @@ const SandMaterial = ({ velocityX }) => {
   const sandShift = velocityX ? useTransform(velocityX, [-600, 600], [-1.5, 1.5]) : 0;
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#d3ba9b' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#FFFFFF' }}>
       
       {/* Photorealistic Sand Grain Texture */}
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
@@ -162,7 +162,7 @@ const PebblesMaterial = ({ velocityX }) => {
   ];
   
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#1c1b1a' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#FFFFFF' }}>
       <motion.svg 
         width="100%" height="100%" 
         style={{ position: 'absolute', inset: 0, x: pebbleShift }} 

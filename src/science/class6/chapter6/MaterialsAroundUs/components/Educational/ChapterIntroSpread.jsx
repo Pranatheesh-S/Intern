@@ -565,7 +565,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
 
                       <div className="slogan-two-col">
                         <div className="slogan-card">
-                          <h3><span className="slogan-material-dot" style={{ background: '#4a3a2a' }}></span>Clay</h3>
+                          <h3><span className="slogan-material-dot" style={{ background: '#FFFFFF' }}></span>Clay</h3>
                           <p>Withstands high temperatures without melting easily — used for the outer body.</p>
                         </div>
                         <div className="slogan-card">

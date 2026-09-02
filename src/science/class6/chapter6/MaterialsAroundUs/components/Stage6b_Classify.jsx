@@ -15,7 +15,7 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
         <g transform="rotate(-15 25 25)">
           <rect x="6" y="16" width="38" height="18" rx="4" fill="#fda4af" />
           <rect x="6" y="16" width="38" height="12" rx="4" fill="#fecdd3" />
-          <rect x="16" y="16" width="18" height="18" fill="var(--lesson-accent)" />
+          <rect x="16" y="16" width="18" height="18" fill="#A64B27" />
           <rect x="16" y="16" width="18" height="12" fill="var(--lesson-border)" />
         </g>
       </svg>
@@ -73,10 +73,10 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: 'var(--lesson-text)', overflowY: 'auto', paddingRight: '4px' }}>
       
       {/* Header */}
-      <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
           <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Search size={24} color="var(--lesson-accent)" /> Phase 2: Activity 6.6
+            <Search size={24} color="#A64B27" /> Phase 2: Activity 6.6
           </h3>
           <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--lesson-secondary)' }}>
             Now that you've observed how different materials behave in a surveillance situation, let's classify these objects into the correct groups.
@@ -85,7 +85,7 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
           <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-bg)', borderRadius: '12px', padding: '10px 15px', position: 'relative', width: '200px' }}>
-            <div style={{ fontSize: '0.85rem', color: 'var(--lesson-accent)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+            <div style={{ fontSize: '0.85rem', color: '#A64B27', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
               <Lightbulb size={16} /> Detective Tip
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--lesson-text)', fontWeight: '500' }}>Think carefully! Where would each object belong?</div>
@@ -94,11 +94,11 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
       </div>
 
       {/* Main Classification Area */}
-      <div style={{ background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: 'var(--lesson-accent)', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-xs)', fontWeight: 'bold' }}>1</div>
+            <div style={{ background: '#A64B27', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-xs)', fontWeight: 'bold' }}>1</div>
             Let us classify
           </h4>
           <div style={{ color: 'var(--lesson-muted)', fontSize: '0.9rem', fontWeight: '500' }}>Table 6.4: Classification of objects</div>
@@ -168,19 +168,19 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
             style={{ flex: 1, background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}
           >
             <div style={{ textAlign: 'center' }}>
-              <div style={{ color: 'var(--lesson-success)', fontWeight: 'bold', fontSize: '1.1rem' }}>Transparent</div>
-              <div style={{ color: 'var(--lesson-success)', fontSize: '0.85rem' }}>See clearly through</div>
+              <div style={{ color: '#A64B27', fontWeight: 'bold', fontSize: '1.1rem' }}>Transparent</div>
+              <div style={{ color: '#A64B27', fontSize: '0.85rem' }}>See clearly through</div>
             </div>
             <div style={{ width: '100%', minHeight: '100px', border: '2px dashed var(--lesson-success-border)', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '1rem' }}>
               {items.filter(i => classifications[i.id] === 'Transparent').length === 0 ? (
                 <>
-                  <Eye size={24} color="var(--lesson-success)" />
-                  <div style={{ color: 'var(--lesson-success)', fontSize: '0.85rem' }}>Drop items here</div>
+                  <Eye size={24} color="#A64B27" />
+                  <div style={{ color: '#A64B27', fontSize: '0.85rem' }}>Drop items here</div>
                 </>
               ) : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
                   {items.filter(i => classifications[i.id] === 'Transparent').map(i => (
-                    <div key={i.id} style={{ background: 'white', border: '1px solid var(--lesson-success-border)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--lesson-success)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div key={i.id} style={{ background: 'white', border: '1px solid var(--lesson-success-border)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', color: '#A64B27', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {i.icon} {i.name}
                     </div>
                   ))}
@@ -193,22 +193,22 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
           <div 
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, 'Translucent')}
-            style={{ flex: 1, background: 'var(--lesson-warning-bg)', border: '1px solid #fef08a', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}
+            style={{ flex: 1, background: 'var(--lesson-warning-bg)', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}
           >
             <div style={{ textAlign: 'center' }}>
-              <div style={{ color: 'var(--lesson-accent)', fontWeight: 'bold', fontSize: '1.1rem' }}>Translucent</div>
+              <div style={{ color: '#A64B27', fontWeight: 'bold', fontSize: '1.1rem' }}>Translucent</div>
               <div style={{ color: 'var(--lesson-warning)', fontSize: '0.85rem' }}>See, but not clearly</div>
             </div>
             <div style={{ width: '100%', minHeight: '100px', border: '2px dashed #fef08a', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '1rem' }}>
               {items.filter(i => classifications[i.id] === 'Translucent').length === 0 ? (
                 <>
                   <Eye size={24} color="var(--lesson-warning)" />
-                  <div style={{ color: 'var(--lesson-accent)', fontSize: '0.85rem' }}>Drop items here</div>
+                  <div style={{ color: '#A64B27', fontSize: '0.85rem' }}>Drop items here</div>
                 </>
               ) : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
                   {items.filter(i => classifications[i.id] === 'Translucent').map(i => (
-                    <div key={i.id} style={{ background: 'white', border: '1px solid var(--lesson-warning-border)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--lesson-accent)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div key={i.id} style={{ background: 'white', border: '1px solid var(--lesson-warning-border)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold', color: '#A64B27', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {i.icon} {i.name}
                     </div>
                   ))}
@@ -249,8 +249,8 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
       </div>
 
       {/* Observation Box */}
-      <div style={{ background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-accent)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#A64B27', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Eye size={20} /> Observation Box
         </h4>
         <p style={{ margin: '-0.5rem 0 0 0', fontSize: '0.9rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
@@ -261,10 +261,10 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
           <div style={{ flex: 1, background: 'white', borderRadius: '12px', padding: '1rem', border: '1px solid var(--lesson-border)', position: 'relative', overflow: 'hidden' }}>
             <Search size={80} color="var(--lesson-surface)" style={{ position: 'absolute', bottom: '-10px', right: '-10px', zIndex: 0 }} />
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ display: 'inline-block', border: '1px solid var(--lesson-success-border)', color: 'var(--lesson-success)', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '8px' }}>Transparent</div>
+              <div style={{ display: 'inline-block', border: '1px solid var(--lesson-success-border)', color: '#A64B27', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '8px' }}>Transparent</div>
               <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', color: 'var(--lesson-text)', lineHeight: '1.4' }}>Objects were seen clearly through these materials.</p>
               <div style={{ fontSize: '0.85rem', color: 'var(--lesson-secondary)' }}>
-                Examples observed: <span style={{ color: 'var(--lesson-success)', fontWeight: 'bold' }}>{transparentItems || 'None yet'}</span>
+                Examples observed: <span style={{ color: '#A64B27', fontWeight: 'bold' }}>{transparentItems || 'None yet'}</span>
               </div>
             </div>
           </div>
@@ -272,10 +272,10 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
           <div style={{ flex: 1, background: 'white', borderRadius: '12px', padding: '1rem', border: '1px solid var(--lesson-border)', position: 'relative', overflow: 'hidden' }}>
             <Info size={80} color="var(--lesson-surface)" style={{ position: 'absolute', bottom: '-10px', right: '-10px', zIndex: 0 }} />
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ display: 'inline-block', border: '1px solid #fef08a', color: 'var(--lesson-accent)', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '8px' }}>Translucent</div>
+              <div style={{ display: 'inline-block', border: '1px solid #D9C9A3', color: '#A64B27', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '8px' }}>Translucent</div>
               <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', color: 'var(--lesson-text)', lineHeight: '1.4' }}>Objects were seen, but not clearly through these materials.</p>
               <div style={{ fontSize: '0.85rem', color: 'var(--lesson-secondary)' }}>
-                Examples observed: <span style={{ color: 'var(--lesson-accent)', fontWeight: 'bold' }}>{translucentItems || 'None yet'}</span>
+                Examples observed: <span style={{ color: '#A64B27', fontWeight: 'bold' }}>{translucentItems || 'None yet'}</span>
               </div>
             </div>
           </div>
@@ -294,8 +294,8 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
       </div>
 
       {/* Footer */}
-      <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--lesson-accent)' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#A64B27' }}>
           <Lightbulb size={20} />
           <span style={{ color: 'var(--lesson-secondary)', fontSize: '0.95rem' }}>Classify all the objects to complete this activity.</span>
         </div>
@@ -303,7 +303,7 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
           <div style={{ fontWeight: 'bold', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px', background: isComplete ? 'var(--lesson-success-bg)' : 'var(--lesson-surface)', padding: '8px 16px', borderRadius: '20px', border: `1px solid ${isComplete ? 'var(--lesson-success-border)' : 'var(--lesson-border)'}`, transition: 'all 0.3s' }}>
             <img src="/images/chief_detective_blake.png" alt="Hat" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
             {isComplete ? (
-              <><span style={{ color: 'var(--lesson-success)' }}>Completed!</span> <CheckCircle2 size={18} color="var(--lesson-success)" /></>
+              <><span style={{ color: '#A64B27' }}>Completed!</span> <CheckCircle2 size={18} color="#A64B27" /></>
             ) : (
               <>{classifiedCount} / 6 Classified</>
             )}

@@ -103,7 +103,7 @@ export default function AirExperiments3D() {
       <div style={{ display: 'flex', gap: '12px', width: '100%', height: '180px' }}>
          {/* Experiment 1 */}
          <div style={{ flex: 1, background: 'var(--lesson-background)', borderRadius: '12px', border: '1px solid var(--lesson-border)', overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ padding: '6px 8px', background: 'var(--lesson-surface)', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
+            <div style={{ padding: '6px 8px', background: '#FFFFFF', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
                1. Air occupies space
             </div>
             <div style={{ flex: 1, position: 'relative' }}>
@@ -121,7 +121,7 @@ export default function AirExperiments3D() {
                   Pump Air
                </button>
                {inflate && (
-                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--lesson-success)', pointerEvents: 'none' }}>
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: '#A64B27', pointerEvents: 'none' }}>
                      Volume increases!
                   </div>
                )}
@@ -130,7 +130,7 @@ export default function AirExperiments3D() {
 
          {/* Experiment 2 */}
          <div style={{ flex: 1, background: 'var(--lesson-background)', borderRadius: '12px', border: '1px solid var(--lesson-border)', overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ padding: '6px 8px', background: 'var(--lesson-surface)', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
+            <div style={{ padding: '6px 8px', background: '#FFFFFF', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
                2. Air has mass
             </div>
             <div style={{ flex: 1, position: 'relative' }}>
@@ -148,7 +148,7 @@ export default function AirExperiments3D() {
                   Weigh
                </button>
                {weigh && (
-                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--lesson-success)', pointerEvents: 'none' }}>
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: '#A64B27', pointerEvents: 'none' }}>
                      Inflated balloon is heavier!
                   </div>
                )}

@@ -7,7 +7,7 @@ export default function Handbook_Transparency({ stageCompleted }) {
   return (
     <div style={{
         height: '100%',
-        background: 'var(--lesson-surface)', 
+        background: '#FFFFFF', 
         borderRadius: '16px',
         border: 'clamp(6px, 1.5vw, 18px) solid var(--lesson-primary)',
         display: 'flex', flexDirection: 'column', 
@@ -34,16 +34,16 @@ export default function Handbook_Transparency({ stageCompleted }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Transparent Box */}
           <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <div style={{ color: 'var(--lesson-success)' }}><Eye size={20} /></div>
+            <div style={{ color: '#A64B27' }}><Eye size={20} /></div>
             <div style={{ fontSize: '0.85rem', color: 'var(--lesson-secondary)', lineHeight: '1.5', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <strong style={{ color: 'var(--lesson-success)', fontSize: '0.95rem' }}>Transparent</strong>
-              <div>Materials through which things can be <strong style={{ color: 'var(--lesson-success)' }}>seen clearly</strong>.</div>
+              <strong style={{ color: '#A64B27', fontSize: '0.95rem' }}>Transparent</strong>
+              <div>Materials through which things can be <strong style={{ color: '#A64B27' }}>seen clearly</strong>.</div>
               <div style={{ color: 'var(--lesson-muted)' }}>Examples: Glass, water, air, cellophane paper.</div>
             </div>
           </div>
 
           {/* Translucent Box */}
-          <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid #fef08a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
             <div style={{ color: '#ca8a04' }}><ShieldAlert size={20} /></div>
             <div style={{ fontSize: '0.85rem', color: 'var(--lesson-secondary)', lineHeight: '1.5', display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <strong style={{ color: '#ca8a04', fontSize: '0.95rem' }}>Translucent</strong>
@@ -66,17 +66,17 @@ export default function Handbook_Transparency({ stageCompleted }) {
       </div>
 
       {/* Page navigation */}
-      <div style={{ padding: '16px 24px', borderTop: '1px solid var(--lesson-surface)', background: 'var(--lesson-surface)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ padding: '16px 24px', borderTop: '1px solid var(--lesson-surface)', background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button 
           disabled
-          style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: \'#A64B27\', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: \'#FFFFFF\', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           <span>←</span> Previous
         </button>
         <div style={{ color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>Page 1</div>
         <button 
           disabled
-          style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: \'#A64B27\', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: \'#FFFFFF\', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           Next <span>→</span>
         </button>

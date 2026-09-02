@@ -5,7 +5,7 @@ export default function Handbook_Mass({ stageCompleted }) {
   return (
     <div style={{
         height: '100%',
-        background: 'var(--lesson-surface)', 
+        background: '#FFFFFF', 
         borderRadius: '16px',
         border: 'clamp(6px, 1.5vw, 18px) solid var(--lesson-primary)',
         display: 'flex', flexDirection: 'column', 
@@ -32,7 +32,7 @@ export default function Handbook_Mass({ stageCompleted }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* 6.3.5 Mass */}
-          <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '12px', overflow: 'hidden' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '12px', overflow: 'hidden' }}>
             <div style={{ background: 'var(--lesson-border)', padding: '10px 15px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', color: 'var(--lesson-text)' }}>
               <Scale size={18} color="var(--lesson-secondary)" /> Mass
             </div>
@@ -45,7 +45,7 @@ export default function Handbook_Mass({ stageCompleted }) {
                 <li>An object which is lighter has <strong>less mass</strong>.</li>
                 <li>We can measure this by weighing the object on a balance scale.</li>
               </ul>
-              <div style={{ marginTop: '12px', background: 'rgba(34, 197, 94, 0.1)', padding: '10px', borderRadius: '8px', borderLeft: '4px solid var(--lesson-success)', color: 'var(--lesson-success)', fontSize: '0.85rem' }}>
+              <div style={{ marginTop: '12px', background: 'rgba(34, 197, 94, 0.1)', padding: '10px', borderRadius: '8px', borderLeft: '4px solid #A64B27', color: '#A64B27', fontSize: '0.85rem' }}>
                 <strong>Note:</strong> Weight is sometimes used in common language for mass as it is determined by weighing.
               </div>
             </div>
@@ -54,17 +54,17 @@ export default function Handbook_Mass({ stageCompleted }) {
       </div>
 
       {/* Page navigation */}
-      <div style={{ padding: '16px 24px', borderTop: '1px solid var(--lesson-surface)', background: 'var(--lesson-surface)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ padding: '16px 24px', borderTop: '1px solid var(--lesson-surface)', background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button 
           disabled
-          style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: \'#A64B27\', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: \'#FFFFFF\', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           <span>←</span> Previous
         </button>
         <div style={{ color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>Page 1</div>
         <button 
           disabled
-          style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: \'#A64B27\', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: \'#FFFFFF\', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           Next <span>→</span>
         </button>

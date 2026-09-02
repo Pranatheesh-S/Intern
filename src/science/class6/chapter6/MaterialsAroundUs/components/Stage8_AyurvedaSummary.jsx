@@ -36,7 +36,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
           alt="Chief Detective" 
           style={{ width: '100px', height: '100px', filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.15))', objectFit: 'contain' }}
         />
-        <div style={{ flex: 1, background: 'var(--lesson-surface)', padding: '20px', borderRadius: '0 20px 20px 20px', border: '1px solid var(--lesson-border)', position: 'relative' }}>
+        <div style={{ flex: 1, background: '#FFFFFF', padding: '20px', borderRadius: '0 20px 20px 20px', border: '1px solid var(--lesson-border)', position: 'relative' }}>
           {/* Speech bubble tail */}
           <div style={{ position: 'absolute', left: '-10px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--lesson-border)' }}></div>
           <div style={{ position: 'absolute', left: '-8px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--lesson-surface)' }}></div>
@@ -83,7 +83,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
               style={{ 
-                background: 'var(--lesson-surface)', 
+                background: '#FFFFFF', 
                 border: '1px solid var(--lesson-border)', 
                 borderRadius: '16px', 
                 padding: '1.5rem',
@@ -101,7 +101,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
               <div style={{ padding: '0 20px', color: 'var(--lesson-primary)', fontWeight: 'bold', fontSize: 'var(--text-2xl)' }}>×</div>
               
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', textAlign: 'right' }}>
-                <span style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', color: 'var(--lesson-success)' }}>{pair.sanskrit2}</span>
+                <span style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', color: '#A64B27' }}>{pair.sanskrit2}</span>
                 <span style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-secondary)' }}>({pair.eng2})</span>
               </div>
             </motion.div>

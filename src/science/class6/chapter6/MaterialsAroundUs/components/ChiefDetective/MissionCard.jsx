@@ -14,7 +14,7 @@ export default function MissionCard({ mission, onAccept }) {
     <div className="fade-slide-up" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
         <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Shield size={20} style={{ color: 'var(--lesson-accent)' }} /> 
+          <Shield size={20} style={{ color: '#A64B27' }} /> 
           MISSION BRIEFING
         </h2>
         <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-accent-text)' }}>{mission.title}</h3>
@@ -25,7 +25,7 @@ export default function MissionCard({ mission, onAccept }) {
           {mission.dialogue}
         </p>
 
-        <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '8px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '8px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
             <Target size={18} style={{ color: 'var(--lesson-danger)', marginTop: '2px' }} />
             <div>

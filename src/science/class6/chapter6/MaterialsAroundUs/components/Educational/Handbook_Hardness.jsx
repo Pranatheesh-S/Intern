@@ -34,7 +34,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
               <h2 style={{ margin: '0 0 8px 0', fontSize: 'var(--text-xl)', color: 'var(--lesson-primary)', fontWeight: 'bold', lineHeight: '1.3' }}>
                 6.3.2 Hardness
               </h2>
-              <div style={{ width: 'clamp(28px, 4vw, 60px)', height: '4px', background: 'var(--lesson-accent)', borderRadius: '2px' }} />
+              <div style={{ width: 'clamp(28px, 4vw, 60px)', height: '4px', background: '#A64B27', borderRadius: '2px' }} />
             </div>
             <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Sam&backgroundColor=transparent" alt="Student" style={{ width: 'clamp(42px, 6vw, 90px)', height: 'clamp(42px, 6vw, 90px)', marginTop: '-5px' }} />
           </div>
@@ -47,8 +47,8 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: 'var(--text-2xl)', marginTop: '4px' }}>☁️</div>
             <div style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-text)', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <strong style={{ color: 'var(--lesson-success)', fontSize: 'var(--text-base)' }}>Soft Materials</strong>
-              <div>Materials which can be <strong style={{ color: 'var(--lesson-success)' }}>compressed or scratched easily</strong> are called soft.</div>
+              <strong style={{ color: '#A64B27', fontSize: 'var(--text-base)' }}>Soft Materials</strong>
+              <div>Materials which can be <strong style={{ color: '#A64B27' }}>compressed or scratched easily</strong> are called soft.</div>
               <div><em>Examples:</em> Cotton, Sponge, Chalk, Candle.</div>
             </div>
           </div>
@@ -67,7 +67,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-bg)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginTop: 'auto' }}>
             <div style={{ fontSize: 'var(--text-xl)', transform: 'rotate(-45deg)' }}>📌</div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--lesson-text)', lineHeight: '1.5' }}>
-              <strong style={{ color: 'var(--lesson-accent)', display: 'block', marginBottom: '4px' }}>The Scratch Test</strong>
+              <strong style={{ color: '#A64B27', display: 'block', marginBottom: '4px' }}>The Scratch Test</strong>
               Take a metal key and try to scratch a piece of wood, stone, or candle. Some will easily get marks, others won't!
             </div>
           </div>
@@ -86,7 +86,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
         <div style={{ flex: 1, minHeight: 0, padding: '24px 20px', paddingLeft: '32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           {/* ================= RIGHT PAGE ================= */}
           <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-xl)', color: 'var(--lesson-primary)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Target size={24} style={{ color: 'var(--lesson-accent)' }} /> Investigation: Hardness
+            <Target size={24} style={{ color: '#A64B27' }} /> Investigation: Hardness
           </h2>
 
           <div style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-secondary)', lineHeight: '1.5', marginBottom: '16px' }}>
@@ -94,35 +94,35 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           </div>
 
           {/* Mission Checklist */}
-          <div style={{ border: '2px solid var(--lesson-success)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', marginBottom: '16px' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-success)', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', marginBottom: '16px' }}>
+            <h4 style={{ margin: '0 0 12px 0', color: '#A64B27', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Target size={18} /> MISSION CHECKLIST
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
-                <CheckSquare size={18} color="var(--lesson-success)" /> Read the Handbook
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
+                <CheckSquare size={18} color="#A64B27" /> Read the Handbook
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
-                {isPhase1Done ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-muted)" />} Phase 1: Press Test
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
+                {isPhase1Done ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="var(--lesson-muted)" />} Phase 1: Press Test
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
-                {isPhase2Done ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-muted)" />} Phase 2: Material ID Test
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
+                {isPhase2Done ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="var(--lesson-muted)" />} Phase 2: Material ID Test
               </div>
             </div>
           </div>
 
           {/* How to do */}
-          <div style={{ border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-surface)', marginBottom: '16px' }}>
+          <div style={{ border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '16px', background: '#FFFFFF', marginBottom: '16px' }}>
             <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-primary)', fontSize: 'var(--text-sm)' }}>How to do:</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-                <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><MousePointer2 size={16} /></div> Click an object from the list.
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><MousePointer2 size={16} /></div> Click an object from the list.
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-                <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><Layers size={16} /></div> Choose the material it is made of.
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><Layers size={16} /></div> Choose the material it is made of.
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-                <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><Lightbulb size={16} /></div> It will be added to your Evidence Board.
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><Lightbulb size={16} /></div> It will be added to your Evidence Board.
               </div>
             </div>
           </div>
@@ -131,7 +131,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-bg)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginTop: 'auto' }}>
             <div style={{ fontSize: 'var(--text-xl)', transform: 'rotate(-45deg)' }}>💡</div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--lesson-text)', lineHeight: '1.5' }}>
-              <strong style={{ color: 'var(--lesson-accent)', display: 'block', marginBottom: '4px' }}>Detective Tip</strong>
+              <strong style={{ color: '#A64B27', display: 'block', marginBottom: '4px' }}>Detective Tip</strong>
               Look carefully at the object. Think about what it is usually made of.
             </div>
           </div>

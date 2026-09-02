@@ -4,18 +4,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
   const items = [
-    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, var(--lesson-surface), var(--lesson-border))', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: 'var(--lesson-success)', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-success-border)', blockRadius: '20px' },
-    { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: 'var(--lesson-success)', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-success-border)', blockRadius: '8px' },
+    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, var(--lesson-surface), var(--lesson-border))', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: '#A64B27', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-success-border)', blockRadius: '20px' },
+    { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: '#A64B27', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-success-border)', blockRadius: '8px' },
     { id: 'eraser', name: 'Eraser', type: 'soft', resultText: 'It changed shape slightly.', icon: (
       <svg width="50" height="50" viewBox="0 0 50 50">
         <g transform="rotate(-15 25 25)">
           <rect x="6" y="16" width="38" height="18" rx="4" fill="#fda4af" />
           <rect x="6" y="16" width="38" height="12" rx="4" fill="#fecdd3" />
-          <rect x="16" y="16" width="18" height="18" fill="var(--lesson-accent)" />
+          <rect x="16" y="16" width="18" height="18" fill="#A64B27" />
           <rect x="16" y="16" width="18" height="12" fill="var(--lesson-border)" />
         </g>
       </svg>
-    ), color: 'var(--lesson-success)', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-border)', blockRadius: '4px' },
+    ), color: '#A64B27', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-border)', blockRadius: '4px' },
     { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: 'var(--lesson-danger)', bg: 'var(--lesson-danger-bg)', blockBg: 'var(--lesson-muted)', blockRadius: '12px' },
     { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, var(--lesson-border), var(--lesson-surface), var(--lesson-muted))', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: 'var(--lesson-danger)', bg: 'var(--lesson-danger-bg)', blockBg: 'var(--lesson-muted)', blockRadius: '0px' }
   ];
@@ -57,7 +57,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Hand size={24} style={{ color: 'var(--lesson-accent)' }} /> Observe Hardness: Press Test
+            <Hand size={24} style={{ color: '#A64B27' }} /> Observe Hardness: Press Test
           </h3>
           <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--lesson-secondary)', lineHeight: '1.5' }}>
             Before we perform advanced scratch tests, detectives test materials by simply pressing them. Press each object with your hand and observe what happens.
@@ -67,7 +67,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
           </div>
         </div>
         
-        <div style={{ width: '280px', background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ width: '280px', background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ca8a04', fontWeight: 'bold', fontSize: '0.95rem' }}>
             <Lightbulb size={18} /> Detective Tip
           </div>
@@ -182,7 +182,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
                   onClick={() => handlePress(item.id)}
                   disabled={activeAnim !== null}
                   style={{
-                    background: 'var(--lesson-accent)', color: 'white', border: 'none',
+                    background: '#A64B27', color: 'white', border: 'none',
                     padding: '0.4rem 1.5rem', borderRadius: '20px',
                     fontWeight: 'bold', cursor: activeAnim ? 'not-allowed' : 'pointer',
                     fontSize: '0.9rem', width: '100%',
@@ -199,7 +199,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
       </div>
 
       {/* Auto-Sorting Observation Section */}
-      <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>
           <span style={{ fontSize: '1.2rem' }}>🔍</span> My Observation
         </div>
@@ -209,8 +209,8 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
 
         <div style={{ display: 'flex', gap: '2rem', marginTop: '0.5rem' }}>
           {/* Soft Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed var(--lesson-success)', borderRadius: '12px', background: 'var(--lesson-success-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
-            <div style={{ color: 'var(--lesson-success)', fontWeight: 'bold', marginBottom: '1rem' }}>Soft (Easily Compressed)</div>
+          <div style={{ flex: 1, border: '2px dashed #A64B27', borderRadius: '12px', background: 'var(--lesson-success-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
+            <div style={{ color: '#A64B27', fontWeight: 'bold', marginBottom: '1rem' }}>Soft (Easily Compressed)</div>
             {placedItems.soft.length === 0 ? (
               <div style={{ color: 'var(--lesson-success-border)', margin: 'auto' }}>Awaiting soft materials...</div>
             ) : (
@@ -242,7 +242,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
 
       {/* Completion Toast */}
       {allPlaced && (
-         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem', borderRadius: '8px', color: 'var(--lesson-success)', textAlign: 'center', fontWeight: 'bold' }}>
+         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem', borderRadius: '8px', color: '#A64B27', textAlign: 'center', fontWeight: 'bold' }}>
            <CheckCircle size={20} style={{ display: 'inline', marginBottom: '-4px', marginRight: '5px' }} />
            Excellent classification! We are ready for the advanced scratch test.
          </motion.div>

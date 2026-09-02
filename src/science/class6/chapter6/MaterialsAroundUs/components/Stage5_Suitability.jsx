@@ -111,7 +111,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
         <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Shield size={22} style={{ color: 'var(--lesson-accent)' }} /> Activity 6.3: Let Us Think (Material Suitability)
+          <Shield size={22} style={{ color: '#A64B27' }} /> Activity 6.3: Let Us Think (Material Suitability)
         </h3>
         <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5' }}>
           Why is a window made of glass and not wood? Why is a cooking pot made of metal and not paper? 
@@ -146,7 +146,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
           <div style={{ fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
             {tumblerMaterial === 'cloth' && <span style={{ color: 'var(--lesson-danger)' }}><strong>Leakage!</strong> Cloth has porous holes. Water slips through instantly.</span>}
             {tumblerMaterial === 'paper' && <span style={{ color: 'var(--lesson-danger)' }}><strong>Collapse!</strong> Paper absorbs water and loses structural strength.</span>}
-            {(tumblerMaterial === 'glass' || tumblerMaterial === 'metal') && <span style={{ color: 'var(--lesson-success)' }}><strong>Perfect!</strong> Glass and Metal are non-porous and hold liquids perfectly.</span>}
+            {(tumblerMaterial === 'glass' || tumblerMaterial === 'metal') && <span style={{ color: '#A64B27' }}><strong>Perfect!</strong> Glass and Metal are non-porous and hold liquids perfectly.</span>}
           </div>
         </div>
 
@@ -175,7 +175,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
 
           <div style={{ fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
             {potMaterial === 'paper' && <span style={{ color: 'var(--lesson-danger)' }}><strong>Danger!</strong> Paper is combustible and catches fire easily.</span>}
-            {potMaterial === 'metal' && <span style={{ color: 'var(--lesson-success)' }}><strong>Safe!</strong> Stainless steel is fire-resistant and conducts heat perfectly.</span>}
+            {potMaterial === 'metal' && <span style={{ color: '#A64B27' }}><strong>Safe!</strong> Stainless steel is fire-resistant and conducts heat perfectly.</span>}
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
             <motion.div 
               initial={{ opacity: 0, y: 10 }} 
               animate={{ opacity: 1, y: 0 }} 
-              style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--lesson-success)', fontWeight: 'bold', fontSize: '1rem' }}
+              style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: '#A64B27', fontWeight: 'bold', fontSize: '1rem' }}
             >
               Tests Complete! Click "Proceed to next" in the bottom right corner.
             </motion.div>

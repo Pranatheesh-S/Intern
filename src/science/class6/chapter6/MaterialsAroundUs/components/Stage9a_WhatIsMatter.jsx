@@ -26,7 +26,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', background: 'var(--lesson-background)', overflow: 'hidden' }}>
       
       {/* LEFT SIDEBAR (MOCK) */}
-      <div style={{ width: '280px', flexShrink: 0, borderRight: '1px solid var(--lesson-border)', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '24px', background: 'var(--lesson-surface)' }}>
+      <div style={{ width: '280px', flexShrink: 0, borderRight: '1px solid var(--lesson-border)', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '24px', background: '#FFFFFF' }}>
          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
             <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
             <div>
@@ -40,12 +40,12 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
          
          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px 10px', background: 'white', border: '1px solid var(--lesson-border)', borderRadius: '8px', position: 'relative', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                <div style={{ position: 'absolute', left: -1, top: '50%', transform: 'translateY(-50%)', width: '4px', height: '60%', background: 'var(--lesson-success)', borderTopRightRadius: '4px', borderBottomRightRadius: '4px' }}></div>
-                <div style={{ flexShrink: 0, background: 'var(--lesson-success)', color: 'white', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>1</div>
+                <div style={{ position: 'absolute', left: -1, top: '50%', transform: 'translateY(-50%)', width: '4px', height: '60%', background: '#A64B27', borderTopRightRadius: '4px', borderBottomRightRadius: '4px' }}></div>
+                <div style={{ flexShrink: 0, background: '#A64B27', color: 'white', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>1</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                   <div style={{ fontSize: '0.9rem', fontWeight: '800', color: 'var(--lesson-success)' }}>Barrier 4:</div>
+                   <div style={{ fontSize: '0.9rem', fontWeight: '800', color: '#A64B27' }}>Barrier 4:</div>
                    <div style={{ fontSize: '0.95rem', fontWeight: '900', color: 'var(--lesson-primary)' }}>What is Matter?</div>
-                   <div style={{ fontSize: '0.8rem', color: 'var(--lesson-success)' }}>Mass & Volume</div>
+                   <div style={{ fontSize: '0.8rem', color: '#A64B27' }}>Mass & Volume</div>
                 </div>
             </div>
             
@@ -69,7 +69,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
          <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ fontSize: '0.8rem', fontWeight: '800', color: 'var(--lesson-primary)', textTransform: 'uppercase' }}>Clues found</div>
             <div style={{ display: 'flex', gap: '8px' }}>
-               {clueRevealed ? <CheckCircle2 size={24} color="var(--lesson-success)" /> : <Circle size={24} color="var(--lesson-border)" />}
+               {clueRevealed ? <CheckCircle2 size={24} color="#A64B27" /> : <Circle size={24} color="var(--lesson-border)" />}
                <Circle size={24} color="var(--lesson-border)" />
                <Circle size={24} color="var(--lesson-border)" />
             </div>
@@ -78,7 +78,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
       
       {/* RIGHT MAIN CONTENT */}
       <div style={{ flex: 1, padding: '24px 32px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-         <div style={{ flex: 1, background: 'var(--lesson-surface)', borderRadius: '24px', border: '1px solid var(--lesson-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', padding: '24px', gap: '16px', overflow: 'hidden' }}>
+         <div style={{ flex: 1, background: '#FFFFFF', borderRadius: '24px', border: '1px solid var(--lesson-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', padding: '24px', gap: '16px', overflow: 'hidden' }}>
             
             {/* Header / Intro */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '12px', flexShrink: 0 }}>
@@ -113,11 +113,11 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
                               display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', 
                               borderRadius: '8px', cursor: clueRevealed ? 'default' : 'pointer',
                               background: selectedAnswer === opt ? 'var(--lesson-success-bg)' : 'white',
-                              border: `1px solid ${selectedAnswer === opt ? 'var(--lesson-success)' : 'var(--lesson-border)'}`,
+                              border: `1px solid ${selectedAnswer === opt ? '#A64B27' : 'var(--lesson-border)'}`,
                               color: 'var(--lesson-primary)', fontWeight: '600', fontSize: '0.9rem'
                            }}
                         >
-                           {selectedAnswer === opt ? <CheckCircle2 size={16} color="var(--lesson-success)" /> : <Circle size={16} color="var(--lesson-muted)" />}
+                           {selectedAnswer === opt ? <CheckCircle2 size={16} color="#A64B27" /> : <Circle size={16} color="var(--lesson-muted)" />}
                            {opt}
                         </button>
                      ))}
@@ -127,7 +127,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
                      <button 
                         onClick={handleSubmit}
                         disabled={!selectedAnswer || clueRevealed}
-                        style={{ background: 'var(--lesson-success)', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.9rem', opacity: (!selectedAnswer || clueRevealed) ? 0.5 : 1, cursor: (!selectedAnswer || clueRevealed) ? 'default' : 'pointer' }}
+                        style={{ background: \'#A64B27\', color: \'#FFFFFF\', border: 'none', padding: '6px 20px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.9rem', opacity: (!selectedAnswer || clueRevealed) ? 0.5 : 1, cursor: (!selectedAnswer || clueRevealed) ? 'default' : 'pointer' }}
                      >
                         Submit ✓
                      </button>
@@ -146,16 +146,16 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--lesson-success-bg)', padding: '10px 16px', borderRadius: '12px', border: '1px solid var(--lesson-success-border)', flexShrink: 0 }}>
                         <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
                         <div style={{ flex: 1 }}>
-                           <div style={{ fontSize: '0.85rem', fontWeight: '800', color: 'var(--lesson-success)' }}>Clue revealed!</div>
+                           <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#A64B27' }}>Clue revealed!</div>
                            <div style={{ fontSize: '0.95rem', color: 'var(--lesson-text)' }}>There is something inside the bottle that takes up <strong style={{ color: 'var(--lesson-primary)' }}>space</strong>. That something is <strong style={{ color: 'var(--lesson-primary)' }}>matter</strong>.</div>
                         </div>
-                        <HelpCircle size={28} color="var(--lesson-success)" opacity={0.5} />
+                        <HelpCircle size={28} color="#A64B27" opacity={0.5} />
                      </div>
                      
                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flexShrink: 0 }}>
                         <div style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>What is matter?</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', background: 'white', borderRadius: '8px', border: '1px solid var(--lesson-border)' }}>
-                           <CheckCircle2 size={18} color="var(--lesson-success)" />
+                           <CheckCircle2 size={18} color="#A64B27" />
                            <div style={{ fontSize: '1rem', color: 'var(--lesson-text)' }}>
                               Anything that <strong style={{ color: 'var(--lesson-primary)', background: 'var(--lesson-highlight)', padding: '0 4px' }}>occupies space</strong> and <strong style={{ color: 'var(--lesson-primary)', background: 'var(--lesson-highlight)', padding: '0 4px' }}>has mass</strong> is called matter.
                            </div>

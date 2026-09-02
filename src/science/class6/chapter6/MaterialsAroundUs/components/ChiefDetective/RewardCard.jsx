@@ -8,7 +8,7 @@ export default function RewardCard({ debrief, onContinue }) {
   return (
     <div className="fade-slide-up" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-        <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', color: 'var(--lesson-success)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem', color: '#A64B27', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <CheckCircle size={20} /> 
           EVIDENCE REVIEW
         </h2>
@@ -25,10 +25,10 @@ export default function RewardCard({ debrief, onContinue }) {
         )}
 
         <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', borderRadius: '8px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <strong style={{ fontSize: '0.85rem', color: 'var(--lesson-success)', textTransform: 'uppercase' }}>Evidence Submitted</strong>
+          <strong style={{ fontSize: '0.85rem', color: '#A64B27', textTransform: 'uppercase' }}>Evidence Submitted</strong>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '1rem', color: 'var(--lesson-text)' }}>{debrief.rewardReason}</span>
-            <CheckCircle size={24} style={{ color: 'var(--lesson-success)' }} />
+            <CheckCircle size={24} style={{ color: '#A64B27' }} />
           </div>
         </div>
       </div>

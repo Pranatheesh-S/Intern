@@ -5,7 +5,7 @@ import { Search, CheckCircle, ArrowRight, BookOpen } from 'lucide-react';
 export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
   const objects = [
     { id: 'brick', name: 'Brick', match: 'clay', icon: '🧱' },
-    { id: 'bottle', name: 'Water Bottle', match: 'plastic', icon: <div style={{ width: '24px', height: '50px', background: 'linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%)', borderRadius: '6px 6px 12px 12px', position: 'relative', border: '2px solid #0284c7', boxShadow: 'inset -2px 0 5px rgba(0,0,0,0.2)' }}><div style={{ position: 'absolute', top: '-10px', left: '2px', width: '16px', height: '8px', background: '#0284c7', borderRadius: '2px' }} /></div> },
+    { id: 'bottle', name: 'Water Bottle', match: 'plastic', icon: <div style={{ width: '24px', height: '50px', background: 'linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%)', borderRadius: '6px 6px 12px 12px', position: 'relative', border: '2px solid #D9C9A3', boxShadow: 'inset -2px 0 5px rgba(0,0,0,0.2)' }}><div style={{ position: 'absolute', top: '-10px', left: '2px', width: '16px', height: '8px', background: '#FFFFFF', borderRadius: '2px' }} /></div> },
     { id: 'pillow', name: 'Pillow', match: 'cotton', icon: (
       <svg width="70" height="50" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
         <g transform="rotate(-5, 60, 40)">
@@ -38,10 +38,10 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
       <svg width="60" height="50" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
         {/* Blue Plastic Bottle */}
         <g transform="translate(15, 5)">
-          <path d="M 15 0 L 25 0 L 25 10 L 35 15 L 35 60 Q 35 70 20 70 Q 5 70 5 60 L 5 15 L 15 10 Z" fill="#7dd3fc" stroke="#0284c7" strokeWidth="3" opacity="0.8" />
-          <path d="M 13 -5 L 27 -5 L 27 2 L 13 2 Z" fill="#0284c7" />
-          <path d="M 5 35 L 35 35" fill="none" stroke="#0284c7" strokeWidth="2" opacity="0.5" />
-          <path d="M 5 45 L 35 45" fill="none" stroke="#0284c7" strokeWidth="2" opacity="0.5" />
+          <path d="M 15 0 L 25 0 L 25 10 L 35 15 L 35 60 Q 35 70 20 70 Q 5 70 5 60 L 5 15 L 15 10 Z" fill="#7dd3fc" stroke="#3B2A1F" strokeWidth="3" opacity="0.8" />
+          <path d="M 13 -5 L 27 -5 L 27 2 L 13 2 Z" fill="#3B2A1F" />
+          <path d="M 5 35 L 35 35" fill="none" stroke="#3B2A1F" strokeWidth="2" opacity="0.5" />
+          <path d="M 5 45 L 35 45" fill="none" stroke="#3B2A1F" strokeWidth="2" opacity="0.5" />
         </g>
         {/* Red Plastic Cup */}
         <g transform="translate(50, 25)">
@@ -92,15 +92,15 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '1000px', margin: '0 auto', paddingBottom: '2rem' }}>
       
       {/* Header */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '16px', padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', zIndex: 2 }}>
-          <h3 style={{ margin: 0, fontSize: '1.6rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.6rem', color: '#3B2A1F', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Search size={26} color="#6366f1" /> Material Identification Test
           </h3>
           <p style={{ margin: 0, fontSize: '1rem', color: '#334155' }}>
             Click an object, then click the material it is made of to match them.
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#eef2ff', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: '0.9rem', fontWeight: 'bold', width: 'fit-content', border: '1px dashed #a5b4fc' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: '0.9rem', fontWeight: 'bold', width: 'fit-content', border: '1px dashed #a5b4fc' }}>
             <Search size={16} /> Think like a detective. Observe carefully!
           </div>
         </div>
@@ -113,9 +113,9 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
         
         {/* Step 1: Objects */}
-        <div style={{ flex: 1, background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
+        <div style={{ flex: 1, background: '#ffffff', borderRadius: '16px', border: '1px solid #D9C9A3', padding: '1.5rem' }}>
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: '#22c55e', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>1</div>
+            <div style={{ background: '#FFFFFF', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>1</div>
             Select an Object
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
@@ -145,7 +145,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
                   }}
                 >
                   {isMatched && (
-                    <div style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#22c55e', color: 'white', borderRadius: '50%', padding: '2px' }}>
+                    <div style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#FFFFFF', color: 'white', borderRadius: '50%', padding: '2px' }}>
                       <CheckCircle size={16} />
                     </div>
                   )}
@@ -167,9 +167,9 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
         </div>
 
         {/* Step 2: Materials */}
-        <div style={{ flex: 1.2, background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
+        <div style={{ flex: 1.2, background: '#ffffff', borderRadius: '16px', border: '1px solid #D9C9A3', padding: '1.5rem' }}>
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: '#22c55e', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>2</div>
+            <div style={{ background: '#FFFFFF', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>2</div>
             Choose the Material
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
@@ -201,7 +201,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
                   }}
                 >
                   {isMatched && (
-                    <div style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#22c55e', color: 'white', borderRadius: '50%', padding: '2px' }}>
+                    <div style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#FFFFFF', color: 'white', borderRadius: '50%', padding: '2px' }}>
                       <CheckCircle size={16} />
                     </div>
                   )}
@@ -220,7 +220,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
       </div>
 
       {/* Evidence Board */}
-      <div style={{ background: '#f0fdf4', border: '2px solid #bbf7d0', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ background: '#FFFFFF', border: '2px solid #D9C9A3', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ fontSize: '1.2rem', transform: 'rotate(-45deg)' }}>📌</div>
           <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#166534', fontWeight: 'bold' }}>Evidence Board</h4>
@@ -241,7 +241,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
                   key={`evidence-${obj.id}`} 
                   style={{ 
                     minWidth: '110px', height: '130px', 
-                    background: '#ffffff', border: '1px solid #86efac', 
+                    background: '#ffffff', border: '1px solid #D9C9A3', 
                     borderRadius: '8px', padding: '0.5rem', 
                     display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                     position: 'relative', boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
@@ -278,7 +278,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+          style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ fontSize: '2.5rem' }}>🕵️</div>
@@ -291,7 +291,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
               </div>
             </div>
           </div>
-          <button style={{ background: 'white', border: '1px solid #c7d2fe', padding: '0.5rem 1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', color: '#4f46e5', fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer' }}>
+          <button style={{ background: \'#A64B27\', border: '1px solid #D9C9A3', padding: '0.5rem 1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', color: \'#FFFFFF\', fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer' }}>
             <BookOpen size={18} /> View Detective Notebook
           </button>
         </motion.div>

@@ -278,7 +278,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
                     height: '40px', 
                     // Simulate folded corner: top left is golden backing, rest is dark charcoal abrasive
                     background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 25%, #3f3f46 27%, #27272a 100%)', 
-                    border: '1px solid #18181b',
+                    border: '1px solid #D9C9A3',
                     borderRadius: '2px',
                     pointerEvents: 'none',
                     boxShadow: '2px 4px 8px rgba(0,0,0,0.5)',

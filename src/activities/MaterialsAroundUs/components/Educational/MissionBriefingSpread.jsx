@@ -38,7 +38,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             width: 100%;
             height: 100%;
             background: #ffffff;
-            border: 8px solid #1b2a4a;
+            border: 8px solid #3B2A1F;
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.18);
             position: relative;
@@ -155,7 +155,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 1.8px;
-            color: #3b4ea0;
+            color: #3B2A1F;
             margin-bottom: 14px;
             display: flex;
             align-items: center;
@@ -164,7 +164,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .mission-title {
             font-size: clamp(41px, 5vh, 53px);
             line-height: 1.12;
-            color: #1b2a4a;
+            color: #3B2A1F;
             font-weight: 700;
             margin: 0 0 22px 0;
             font-family: Georgia, "Times New Roman", serif;
@@ -193,7 +193,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 19px;
             font-weight: 700;
-            color: #3b4ea0;
+            color: #3B2A1F;
             margin: 0 0 12px 0;
             display: flex;
             align-items: center;

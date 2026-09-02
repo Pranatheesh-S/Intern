@@ -15,7 +15,7 @@ export default function ChapterCover({ onOpenBook, onBack }) {
         overflow: 'hidden',
         zIndex: 10000,
         userSelect: 'none',
-        backgroundColor: '#060A17'
+        backgroundColor: '#FFFFFF'
       }}
     >
       <style>{`
@@ -51,7 +51,7 @@ export default function ChapterCover({ onOpenBook, onBack }) {
           left: '53.68%',
           width: '37.79%',
           height: '13.38%',
-          background: 'transparent',
+          background: \'#A64B27\',
           border: 'none',
           borderRadius: '9999px',
           cursor: 'pointer',
@@ -80,7 +80,7 @@ export default function ChapterCover({ onOpenBook, onBack }) {
           left: '3.78%',
           width: '12.44%',
           height: '6.54%',
-          background: 'transparent',
+          background: \'#A64B27\',
           border: 'none',
           borderRadius: '9999px',
           cursor: 'pointer',

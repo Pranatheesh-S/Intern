@@ -18,15 +18,15 @@ const TextbookIcon = ({ size = 45 }) => (
 
 const RulerIcon = ({ size = 45 }) => (
   <svg width={size} height={size} viewBox="0 0 100 30" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="5" width="90" height="20" rx="2" fill="rgba(167, 139, 250, 0.4)" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="15" y1="5" x2="15" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="25" y1="5" x2="25" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="35" y1="5" x2="35" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="45" y1="5" x2="45" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="55" y1="5" x2="55" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="65" y1="5" x2="65" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="75" y1="5" x2="75" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="85" y1="5" x2="85" y2="10" stroke="#8b5cf6" strokeWidth="1" />
+    <rect x="5" y="5" width="90" height="20" rx="2" fill="rgba(167, 139, 250, 0.4)" stroke="#3B2A1F" strokeWidth="2" />
+    <line x1="15" y1="5" x2="15" y2="12" stroke="#3B2A1F" strokeWidth="2" />
+    <line x1="25" y1="5" x2="25" y2="10" stroke="#3B2A1F" strokeWidth="1" />
+    <line x1="35" y1="5" x2="35" y2="12" stroke="#3B2A1F" strokeWidth="2" />
+    <line x1="45" y1="5" x2="45" y2="10" stroke="#3B2A1F" strokeWidth="1" />
+    <line x1="55" y1="5" x2="55" y2="12" stroke="#3B2A1F" strokeWidth="2" />
+    <line x1="65" y1="5" x2="65" y2="10" stroke="#3B2A1F" strokeWidth="1" />
+    <line x1="75" y1="5" x2="75" y2="12" stroke="#3B2A1F" strokeWidth="2" />
+    <line x1="85" y1="5" x2="85" y2="10" stroke="#3B2A1F" strokeWidth="1" />
   </svg>
 );
 
@@ -371,8 +371,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
 
           {allCompleted ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', zIndex: 2, textAlign: 'center', padding: '1.5rem' }}>
-              <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '3px solid #10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Award size={40} style={{ color: '#10b981' }} />
+              <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '3px solid #D9C9A3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Award size={40} style={{ color: '#3B2A1F' }} />
               </div>
               <div>
                 <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.75rem' }}>Scan Complete!</h3>
@@ -394,7 +394,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   width: '200px', 
                   height: '200px', 
                   borderRadius: '50%', 
-                  border: `4px solid ${scanState === 'scanning' ? '#6366f1' : scanState === 'correct' ? '#10b981' : scanState === 'incorrect' ? '#ef4444' : 'var(--scanner-circle-border)'}`, 
+                  border: `4px solid ${scanState === 'scanning' ? '#6366f1' : scanState === 'correct' ? '#3B2A1F' : scanState === 'incorrect' ? '#ef4444' : 'var(--scanner-circle-border)'}`, 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
@@ -425,7 +425,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       inset: 0,
                       borderRadius: '50%',
                       background: 'rgba(99, 102, 241, 0.15)',
-                      border: '2px solid #6366f1',
+                      border: '2px solid #D9C9A3',
                       zIndex: 3
                     }}
                     animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
@@ -439,7 +439,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     position: 'absolute',
                     bottom: '-8px',
                     right: '-8px',
-                    background: '#10b981',
+                    background: '#FFFFFF',
                     borderRadius: '50%',
                     width: '32px',
                     height: '32px',
@@ -458,7 +458,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     position: 'absolute',
                     bottom: '-8px',
                     right: '-8px',
-                    background: '#ef4444',
+                    background: '#FFFFFF',
                     borderRadius: '50%',
                     width: '32px',
                     height: '32px',

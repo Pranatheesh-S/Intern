@@ -11,68 +11,69 @@
   --lesson-background-gradient: #F8F4EC;
 
   /* ── Card / Panel ── */
-  --lesson-card: #FCFAEF; /* warm cream/off-white */
-  --lesson-border: #E2D3C4; /* subtle beige border */
-  --card-shadow: 0 4px 20px rgba(62, 39, 35, 0.05), 0 8px 32px rgba(62, 39, 35, 0.03);
-  --card-hover-border: #C8B49E;
-  --card-hover-shadow: 0 8px 32px rgba(62, 39, 35, 0.08);
+  /* ── Card / Panel ── */
+  --lesson-card: #FFFFFF;
+  --lesson-border: #D9C9A3;
+  --card-shadow: 0 4px 20px rgba(59, 42, 31, 0.05), 0 8px 32px rgba(59, 42, 31, 0.03);
+  --card-hover-border: #D9C9A3;
+  --card-hover-shadow: 0 8px 32px rgba(59, 42, 31, 0.08);
 
-  /* ── Text (Chocolate Brown) ── */
-  --lesson-primary: #3E2723; /* Dark chocolate brown for main headings */
-  --lesson-text: #4E342E; /* Dark brown for body text */
-  --lesson-secondary: #70534C; /* Lighter brown for secondary */
-  --lesson-muted: #8F766F;
-  --text-faint: #B3A19C;
-  --map-popup-desc: var(--lesson-muted);
+  /* ── Text ── */
+  --lesson-primary: #3B2A1F; /* Deep Warm Brown */
+  --lesson-text: #3B2A1F;
+  --lesson-secondary: #7A6A52; /* Warm Taupe */
+  --lesson-muted: #7A6A52;
+  --text-faint: #7A6A52;
+  --map-popup-desc: var(--lesson-secondary);
 
-  /* ── Accent (Muted Burgundy / Wine) ── */
-  --lesson-accent: #7A3041; /* muted, dark, sophisticated burgundy/wine */
-  --lesson-accent-bg: #F5E8EA; /* very light burgundy background for tabs/highlights */
-  --lesson-accent-border: #D6A8B3; 
-  --lesson-accent-text: #5C2230; 
-  --lesson-highlight: #F5E8EA; 
+  /* ── Buttons / Progress (Terracotta) ── */
+  --lesson-accent: #A64B27; 
+  --lesson-accent-bg: #FFFFFF; 
+  --lesson-accent-border: #D9C9A3; 
+  --lesson-accent-text: #FFFFFF; 
+  --lesson-highlight: #FFFFFF; 
 
-  /* ── Success (Muted Slate Blue) ── */
-  --lesson-success: #4A6370; 
-  --lesson-success-bg: #EEF2F4;
-  --lesson-success-border: #BCCDD6;
+  /* ── Success ── */
+  --lesson-success: #A64B27; 
+  --lesson-success-bg: #FFFFFF;
+  --lesson-success-border: #D9C9A3;
 
-  /* ── Danger (Muted Brick/Terracotta) ── */
-  --lesson-danger: #A34A42;
-  --lesson-danger-bg: #FAEEEE;
-  --lesson-danger-border: #E0BDBA;
+  /* ── Danger ── */
+  --lesson-danger: #A64B27;
+  --lesson-danger-bg: #FFFFFF;
+  --lesson-danger-border: #D9C9A3;
 
-  /* ── Warning (Muted Bronze/Parchment) ── */
-  --lesson-warning: #B58235;
-  --lesson-warning-bg: #FAF5EB;
-  --lesson-warning-border: #E3CBA8;
+  /* ── Warning ── */
+  --lesson-warning: #A64B27;
+  --lesson-warning-bg: #FFFFFF;
+  --lesson-warning-border: #D9C9A3;
 
   /* ── Neutral / Beige ── */
-  --neutral-bg: #EAE1D3; /* Soft warm beige */
-  --neutral-text: #4E342E;
-  --neutral-border: #E2D3C4;
+  --neutral-bg: #FFFFFF;
+  --neutral-text: #3B2A1F;
+  --neutral-border: #D9C9A3;
 
-  /* ── Surface (soft beige) ── */
-  --lesson-surface: #F2ECE0;
-  --surface-hover: #EBE4D5;
+  /* ── Surface ── */
+  --lesson-surface: #FFFFFF;
+  --surface-hover: #FFFFFF;
 
   /* ── Canvas ── */
-  --canvas-bg: #F8F4EC;
-  --canvas-border: #E2D3C4;
-  --canvas-grid: rgba(62, 39, 35, 0.05);
+  --canvas-bg: #FFFFFF;
+  --canvas-border: #D9C9A3;
+  --canvas-grid: rgba(59, 42, 31, 0.05);
 
   /* ── Scrollbar ── */
-  --scrollbar-track: #F2ECE0;
-  --scrollbar-thumb: #C8B49E;
+  --scrollbar-track: #FFFFFF;
+  --scrollbar-thumb: #D9C9A3;
 
   /* ── Tabs ── */
-  --tab-bg: #F2ECE0;
-  --tab-text: #70534C;
-  --tab-hover-bg: #EAE1D3;
-  --tab-hover-text: #3E2723;
-  --tab-active-bg: var(--lesson-accent);
-  --tab-active-text: #ffffff;
-  --tab-active-shadow: 0 2px 6px rgba(122, 48, 65, 0.2);
+  --tab-bg: #FFFFFF;
+  --tab-text: #7A6A52;
+  --tab-hover-bg: #FFFFFF;
+  --tab-hover-text: #3B2A1F;
+  --tab-active-bg: #A64B27;
+  --tab-active-text: #FFFFFF;
+  --tab-active-shadow: none;
 }
 
 /* Ensure background color overrides tailwind bg classes */

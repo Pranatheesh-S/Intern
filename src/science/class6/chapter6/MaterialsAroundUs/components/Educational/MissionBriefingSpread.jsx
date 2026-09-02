@@ -23,7 +23,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'var(--lesson-surface)',
+      background: '#FFFFFF',
       fontFamily: '"Times New Roman", serif',
       display: 'flex',
       justifyContent: 'center',

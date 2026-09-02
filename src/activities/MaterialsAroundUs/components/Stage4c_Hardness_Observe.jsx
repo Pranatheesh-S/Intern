@@ -58,7 +58,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
           </div>
         </div>
         
-        <div style={{ width: '280px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ width: '280px', background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ca8a04', fontWeight: 'bold', fontSize: '0.95rem' }}>
             <Lightbulb size={18} /> Detective Tip
           </div>
@@ -85,7 +85,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
               flexDirection: 'column', 
               alignItems: 'center', 
               gap: '1rem',
-              background: '#fff',
+              background: '#FFFFFF',
               position: 'relative',
               opacity: isPlaced ? 0.5 : 1
             }}>
@@ -173,7 +173,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
                   onClick={() => handlePress(item.id)}
                   disabled={activeAnim !== null}
                   style={{
-                    background: '#3b82f6', color: 'white', border: 'none',
+                    background: '#FFFFFF', color: 'white', border: 'none',
                     padding: '0.4rem 1.5rem', borderRadius: '20px',
                     fontWeight: 'bold', cursor: activeAnim ? 'not-allowed' : 'pointer',
                     fontSize: '0.9rem', width: '100%',
@@ -190,8 +190,8 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
       </div>
 
       {/* Auto-Sorting Observation Section */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1e3a8a', fontWeight: 'bold' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#3B2A1F', fontWeight: 'bold' }}>
           <span style={{ fontSize: '1.2rem' }}>🔍</span> My Observation
         </div>
         <div style={{ fontSize: '0.95rem', color: '#475569' }}>
@@ -200,7 +200,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
 
         <div style={{ display: 'flex', gap: '2rem', marginTop: '0.5rem' }}>
           {/* Soft Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed #22c55e', borderRadius: '12px', background: '#f0fdf4', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
+          <div style={{ flex: 1, border: '2px dashed #22c55e', borderRadius: '12px', background: '#FFFFFF', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
             <div style={{ color: '#15803d', fontWeight: 'bold', marginBottom: '1rem' }}>Soft (Easily Compressed)</div>
             {placedItems.soft.length === 0 ? (
               <div style={{ color: '#86efac', margin: 'auto' }}>Awaiting soft materials...</div>
@@ -215,7 +215,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
           </div>
 
           {/* Hard Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed #ef4444', borderRadius: '12px', background: '#fef2f2', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
+          <div style={{ flex: 1, border: '2px dashed #ef4444', borderRadius: '12px', background: '#FFFFFF', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
             <div style={{ color: '#b91c1c', fontWeight: 'bold', marginBottom: '1rem' }}>Hard (Difficult to Compress)</div>
             {placedItems.hard.length === 0 ? (
               <div style={{ color: '#fca5a5', margin: 'auto' }}>Awaiting hard materials...</div>

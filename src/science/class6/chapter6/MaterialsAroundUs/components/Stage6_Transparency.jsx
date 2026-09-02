@@ -29,7 +29,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       seekerDialog: 'Ah, I see a blurry outline of the suspect! I can see through, but not clearly. Frosted glass lets some light pass.',
       description: 'Materials through which objects can be seen, but not clearly, are called Translucent.',
       icon: '🌫️',
-      color: 'var(--lesson-accent)',
+      color: '#A64B27',
       bg: 'var(--lesson-warning-bg)'
     },
     { 
@@ -51,7 +51,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       seekerDialog: 'Aha! I see the suspect clearly through the window! Glass allows light to pass through completely, making it perfectly clear.',
       description: 'Materials through which things can be seen clearly are called Transparent.',
       icon: '🪟',
-      color: 'var(--lesson-success)',
+      color: '#A64B27',
       bg: 'var(--lesson-success-bg)'
     }
   ];
@@ -93,9 +93,9 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', maxWidth: '1000px', margin: '0 auto', paddingBottom: '2rem' }}>
       
       {/* Intro Header */}
-      <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Eye size={26} color="var(--lesson-accent)" /> Explore materials through which one can see or cannot see
+          <Eye size={26} color="#A64B27" /> Explore materials through which one can see or cannot see
         </h3>
         <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-text)', lineHeight: '1.5' }}>
           Chief Blake is running a surveillance simulation! Click on the locations to see if the suspect is visible through the material. Then complete Activity 6.6 below.
@@ -105,9 +105,9 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
         {/* Interactive Yard */}
-        <div style={{ background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem' }}>
+        <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem' }}>
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: 'var(--lesson-accent)', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>1</div>
+            <div style={{ background: '#A64B27', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>1</div>
             Surveillance Simulator
           </h4>
 
@@ -140,7 +140,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
             </div>
 
             {/* Dialogue display */}
-            <div style={{ flex: 1, background: 'var(--lesson-surface)', borderRadius: '12px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ flex: 1, background: '#FFFFFF', borderRadius: '12px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               {selectedHidingSpot ? (
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
@@ -166,9 +166,9 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
         </div>
 
         {/* Classification Table */}
-        <div style={{ background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem' }}>
+        <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem' }}>
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: 'var(--lesson-success)', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>2</div>
+            <div style={{ background: '#A64B27', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>2</div>
             Activity 6.6: Let us classify
           </h4>
           <p style={{ margin: '0 0 1rem 0', color: 'var(--lesson-muted)' }}>
@@ -183,13 +183,13 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                 const isSelected = classifications[obj.id] !== undefined;
                 if (isSelected) return null; // Hide if placed
                 return (
-                  <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '8px 12px', borderRadius: '8px', fontWeight: 'bold', color: 'var(--lesson-text)' }}>
+                  <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#FFFFFF', border: '1px solid var(--lesson-border)', padding: '8px 12px', borderRadius: '8px', fontWeight: 'bold', color: 'var(--lesson-text)' }}>
                     <span style={{ fontSize: '1.2rem' }}>{obj.icon}</span> {obj.name}
                   </div>
                 );
               })}
               {classificationComplete && (
-                <div style={{ color: 'var(--lesson-success)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '1rem' }}>
+                <div style={{ color: '#A64B27', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '1rem' }}>
                   <Check size={20} /> All classified!
                 </div>
               )}
@@ -202,12 +202,12 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                 
                 {['Transparent', 'Translucent', 'Opaque'].map(category => (
                   <div key={category} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <div style={{ background: 'var(--lesson-success-bg)', color: 'var(--lesson-success)', fontWeight: 'bold', textAlign: 'center', padding: '10px', borderRadius: '8px 8px 0 0', border: '1px solid var(--lesson-success-border)' }}>
+                    <div style={{ background: 'var(--lesson-success-bg)', color: '#A64B27', fontWeight: 'bold', textAlign: 'center', padding: '10px', borderRadius: '8px 8px 0 0', border: '1px solid var(--lesson-success-border)' }}>
                       {category}
                     </div>
                     
                     {/* Items placed in this category */}
-                    <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '0 0 8px 8px', padding: '10px', minHeight: '150px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '0 0 8px 8px', padding: '10px', minHeight: '150px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {objectsToClassify.filter(o => classifications[o.id] === category).map(obj => (
                         <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: obj.correct === category ? 'var(--lesson-success-bg)' : 'var(--lesson-danger-bg)', border: `1px solid ${obj.correct === category ? 'var(--lesson-success-border)' : 'var(--lesson-danger-border)'}`, padding: '6px 10px', borderRadius: '6px', fontSize: '0.9rem' }}>
                           <span style={{ fontSize: '1.1rem' }}>{obj.icon}</span> {obj.name}
@@ -222,7 +222,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                           style={{
                             background: 'white', border: '1px dashed var(--lesson-border)', padding: '6px', borderRadius: '6px', color: 'var(--lesson-muted)', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', transition: 'all 0.2s'
                           }}
-                          onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--lesson-accent)'; e.currentTarget.style.color = 'var(--lesson-accent)'; }}
+                          onMouseOver={(e) => { e.currentTarget.style.borderColor = '#A64B27'; e.currentTarget.style.color = '#A64B27'; }}
                           onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--lesson-border)'; e.currentTarget.style.color = 'var(--lesson-muted)'; }}
                         >
                           Place <strong>{obj.name}</strong> here

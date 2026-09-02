@@ -42,20 +42,20 @@ export default function IntroBriefing({ onComplete, addXp }) {
         height: '80px', 
         borderRadius: '50%', 
         background: 'rgba(99, 102, 241, 0.1)', 
-        border: '2px solid var(--lesson-accent)',
+        border: '2px solid #D9C9A3',
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',
-        color: 'var(--lesson-accent)',
+        color: '#A64B27',
         fontSize: '2.5rem'
       }}>
         🕵️‍♂️
       </div>
 
       <div>
-        <span style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--lesson-accent)' }}>Active Assignment</span>
+        <span style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.15em', color: '#A64B27' }}>Active Assignment</span>
         <h2 style={{ margin: '0.25rem 0 0.75rem 0', fontSize: '1.8rem', color: 'var(--lesson-primary)' }}>Mission: Material Detective</h2>
-        <div style={{ height: '2px', width: '60px', background: 'var(--lesson-accent)', margin: '0.5rem auto 1rem' }} />
+        <div style={{ height: '2px', width: '60px', background: '#A64B27', margin: '0.5rem auto 1rem' }} />
         <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--lesson-secondary)', lineHeight: '1.6', maxWidth: '520px' }}>
           Welcome, <strong>Detective</strong>! Your mission is to explore your classroom and investigate the <strong>materials around you</strong>.
           You will scan objects to discover what substances they are made of, test their physical properties, and solve hands-on science puzzles.
@@ -63,7 +63,7 @@ export default function IntroBriefing({ onComplete, addXp }) {
       </div>
 
       <div style={{ 
-        background: 'var(--lesson-surface)', 
+        background: '#FFFFFF', 
         border: '1px solid var(--lesson-border)', 
         borderRadius: '10px', 
         padding: '1rem 1.5rem', 
