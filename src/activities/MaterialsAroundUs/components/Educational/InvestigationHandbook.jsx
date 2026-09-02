@@ -106,7 +106,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
               </div>
 
               <div style={{ background: '#FFFDF5', border: '3px solid #D9C9A3', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#3B2A1F', fontSize: 'var(--text-xl)', fontWeight: '900' }}>Examples:</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#A64B27', fontSize: 'var(--text-xl)', fontWeight: '900' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', fontWeight: '700', color: '#3b2818' }}>
                   <div style={{ display: 'flex', gap: '8px' }}><span>🪑</span> Chair can be made of wood, plastic or steel.</div>
                   <div style={{ display: 'flex', gap: '8px' }}><span>🍽️</span> A plate can be made of steel, glass or plastic.</div>
@@ -127,7 +127,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
               <div style={{ background: '#FFFFFF', border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: 'var(--text-xl)' }}>💡</div>
                 <div style={{ fontSize: 'var(--text-xl)', color: '#3b2818', lineHeight: '1.4', fontWeight: '700' }}>
-                  <strong style={{ color: '#3B2A1F', fontWeight: '900' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
+                  <strong style={{ color: '#A64B27', fontWeight: '900' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
               <div style={{ background: '#FDF6F2', border: '3px solid #D9C9A3', borderRadius: '12px', padding: '16px', marginBottom: '16px', position: 'relative' }}>
                 <div style={{ position: 'absolute', top: '-15px', right: '20px', background: '#A64B27', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>Do you know?</div>
                 <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
-                  The earliest pottery found in the Indian subcontinent dates back to <strong>7,000 to 8,000 years</strong> in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh). 
+                  The earliest pottery found in the Indian subcontinent dates back to <strong style={{ color: '#A64B27' }}>7,000 to 8,000 years</strong> in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh). 
                 </p>
                 <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
                   About <strong>4000 BCE onwards</strong>, Sindhu-Sarasvati developed techniques of wheel-turned pottery production, pigmentation, application of protective or decorative coats (called 'slips') of multiple colours, decorative painting, etc. 

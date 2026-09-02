@@ -12,7 +12,7 @@ const CLASSROOM_OBJECTS = [
   { id: 'duster', emoji: '🧽', name: 'Duster', material: 'Wood', desc: 'A hard wooden back provides a strong grip for the soft felt underneath.', xPos: 58.5, yPos: 37.5, hitbox: 'rect', w: 5, h: 3 }
 ];
 
-const MAGNIFIER_RADIUS = 140;
+const MAGNIFIER_RADIUS = 110;
 const DISCOVERY_RADIUS = 70;
 const HOLD_DURATION_MS = 1000;
 
@@ -26,6 +26,18 @@ export default function Stage1_Intro({ onComplete, addXp }) {
   const [viewState, setViewState] = useState('explore'); // explore, zoom, completed
   const [activeObject, setActiveObject] = useState(null);
   const [hintActive, setHintActive] = useState(false);
+  const [inspectionComplete, setInspectionComplete] = useState(false);
+  const [isPopActive, setIsPopActive] = useState(false);
+
+  useEffect(() => {
+    setIsPopActive(inspectionComplete);
+  }, [inspectionComplete]);
+
+  useEffect(() => {
+    if (viewState !== 'zoom') {
+      setInspectionComplete(false);
+    }
+  }, [viewState]);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   // Refs
@@ -243,19 +255,20 @@ export default function Stage1_Intro({ onComplete, addXp }) {
   let transformStyle = 'scale(1) translate(0px, 0px)';
   let transformOriginStyle = 'center';
 
-  if (viewState === 'zoom' && activeObject && containerRef.current) {
-    const rect = containerRef.current.getBoundingClientRect();
-    const { x: objX, y: objY } = getPixelCoordinates(activeObject.xPos, activeObject.yPos, rect.width, rect.height);
+  if (viewState === 'zoom' && activeObject && containerSize.width > 0) {
+    const cw = containerSize.width;
+    const ch = containerSize.height;
+    const { x: objX, y: objY } = getPixelCoordinates(activeObject.xPos, activeObject.yPos, cw, ch);
     
     const scale = 2.5;
     
     // Target translation to put the object at the center of the container
-    let finalX = (rect.width / 2) - (objX * scale);
-    let finalY = (rect.height / 2) - (objY * scale);
+    let finalX = (cw / 2) - (objX * scale);
+    let finalY = (ch / 2) - (objY * scale);
     
     // Clamp the translation so we don't show the black background
-    const minX = rect.width * (1 - scale);
-    const minY = rect.height * (1 - scale);
+    const minX = cw * (1 - scale);
+    const minY = ch * (1 - scale);
     
     finalX = Math.max(minX, Math.min(0, finalX));
     finalY = Math.max(minY, Math.min(0, finalY));
@@ -288,9 +301,26 @@ export default function Stage1_Intro({ onComplete, addXp }) {
       display: 'flex',
       flexDirection: 'column'
     }}>
+      <style>{`
+        @keyframes gentlePulse {
+          0% { transform: scale(1); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+          50% { transform: scale(1.03); box-shadow: 0 0 0 4px rgba(166,75,39,0.3), 0 8px 24px rgba(166,75,39,0.4); }
+          100% { transform: scale(1); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+        }
+        .attention-btn-pulse {
+          animation: gentlePulse 2.5s infinite ease-in-out;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .attention-btn-pulse {
+            animation: none !important;
+            transform: scale(1.03) !important;
+            box-shadow: 0 0 0 4px rgba(166,75,39,0.3), 0 8px 24px rgba(166,75,39,0.4) !important;
+          }
+        }
+      `}</style>
       
       {/* MAIN CONTENT AREA */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', gap: '12px', flex: 1, minHeight: 0 }}>
         
         {/* LEFT PANEL: CLASSROOM */}
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -312,7 +342,13 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             onPointerLeave={handlePointerUp}
           >
             {/* ZOOMABLE CONTAINER */}
-            <div style={{
+            <div 
+              onTransitionEnd={(e) => {
+                if (e.propertyName === 'transform' && viewState === 'zoom') {
+                  setInspectionComplete(true);
+                }
+              }}
+              style={{
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
               transform: transformStyle,
               transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -632,7 +668,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             
             {/* Header */}
             <div style={{ padding: '24px 24px 16px 24px', borderBottom: '2px dashed var(--lesson-border)' }}>
-              <h3 style={{ margin: 0, fontSize: '1.6rem', fontWeight: '900', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <h3 style={{ margin: 0, fontSize: '1.65rem', fontWeight: '700', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Folder size={28} fill="var(--lesson-primary)" /> CASE FILE
               </h3>
             </div>
@@ -643,27 +679,27 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                 // --- INITIAL / SEARCHING STATE ---
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: '#FFFFFF', padding: '20px', borderRadius: '16px', border: '2px dashed var(--lesson-border)', justifyContent: 'center', alignItems: 'center', textAlign: 'center', opacity: 0.8 }}>
                   <Search size={32} color="var(--lesson-muted)" />
-                  <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: '900', color: 'var(--lesson-secondary)' }}>SEARCHING...</h4>
-                  <p style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-secondary)', fontWeight: '600' }}>Search the classroom to discover an object.</p>
+                  <h4 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '700', color: 'var(--lesson-secondary)' }}>SEARCHING...</h4>
+                  <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)', fontWeight: '600' }}>Search the classroom to discover an object.</p>
                 </div>
               ) : (
                 // --- MATERIAL EXPLANATION (Visible only during zoom) ---
                 <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: '16px', border: '2px solid var(--lesson-border)', animation: 'fadeIn 0.3s ease-out' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
                      <div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: '900', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>OBJECT</div>
-                        <div style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--lesson-primary)' }}>{activeObject?.name}</div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>OBJECT</div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#3B2A1F' }}>{activeObject?.name}</div>
                      </div>
                      <div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: '900', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>MATERIAL</div>
-                        <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#A64B27' }}>{activeObject?.material}</div>
+                        <div style={{ fontSize: '1rem', fontWeight: '600', color: '#7A6A52', textTransform: 'uppercase', letterSpacing: '0.5px' }}>MATERIAL</div>
+                        <div style={{ fontSize: '1.35rem', fontWeight: '700', color: '#A64B27' }}>{activeObject?.material}</div>
                     </div>
                 </div>
                 <div style={{ marginTop: '16px' }}>
                   <div style={{ display: 'inline-block', background: '#A64B27', color: 'white', padding: '4px 12px', borderRadius: '8px', fontSize: '1rem', fontWeight: '900', textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.5px' }}>
                     IDENTIFIED
                   </div>                </div>
-                  <ul style={{ margin: 0, paddingLeft: '24px', color: 'var(--lesson-primary)', fontSize: '1.1rem', lineHeight: '1.5', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <ul style={{ margin: 0, paddingLeft: '24px', color: '#3B2A1F', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                      {activeObject?.desc.split('. ').filter(Boolean).map((pt, idx) => (
                        <li key={idx} style={{ paddingLeft: '4px' }}>{pt.trim()}{pt.endsWith('.') ? '' : '.'}</li>
                      ))}
@@ -673,8 +709,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
 
               {/* PROGRESS LIST (Always visible) */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-                <h4 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: '900', color: 'var(--lesson-primary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Folder size={20} /> Case File Progress
+                <h4 style={{ margin: '0 0 8px 0', fontSize: '1.45rem', fontWeight: '700', color: '#3B2A1F', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Folder size={24} /> Case File Progress
                 </h4>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -701,7 +737,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                           opacity: !isFound ? 0.6 : 1
                         }}
                       >
-                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', fontWeight: '800', color: isFound ? 'var(--lesson-primary)' : 'var(--lesson-muted)' }}>
+                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.2rem', fontWeight: '700', color: isFound ? '#3B2A1F' : 'var(--lesson-muted)' }}>
                           <span>{i + 1}.</span>
                           {isCompleted ? (
                             <>
@@ -713,10 +749,10 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                             <>
                               <span>{obj.name}</span>
                               <span style={{ color: 'var(--lesson-border)' }}>&rarr;</span>
-                              <span style={{ color: 'var(--lesson-muted)' }}>?</span>
+                              <span style={{ color: 'var(--lesson-muted)', fontSize: '1.15rem', fontWeight: '600' }}>???</span>
                             </>
                           ) : (
-                            <span>???</span>
+                            <span style={{ fontSize: '1.15rem', fontWeight: '600' }}>???</span>
                           )}
                         </div>
 
@@ -736,8 +772,12 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             {/* Bottom Actions */}
             {viewState === 'zoom' && (
               <div style={{ padding: '16px 24px', background: '#FFFFFF', borderTop: '2px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                 <button onClick={returnToClassroom} style={{ width: '100%', padding: '16px', background: '#A64B27', color: '#FFFFFF', border: '2px solid var(--lesson-primary)', fontSize: '1.2rem', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '16px', cursor: 'pointer', boxShadow: '0 6px 16px rgba(0,0,0,0.05)' }}>
-                   RETURN TO CLASSROOM
+                 <button onClick={returnToClassroom} className={isPopActive ? "attention-btn-pulse" : ""} style={{ 
+                   width: '100%', padding: '16px', background: '#A64B27', color: '#FFFFFF', border: '2px solid var(--lesson-primary)', fontSize: '1.2rem', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '16px', cursor: 'pointer', 
+                   boxShadow: '0 6px 16px rgba(0,0,0,0.05)',
+                   transition: 'all 0.3s ease-in-out'
+                 }}>
+                   {isPopActive ? '✨ RETURN TO CLASSROOM' : 'RETURN TO CLASSROOM'}
                  <ChevronRight size={24} />
                  </button>
               </div>

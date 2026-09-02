@@ -195,7 +195,7 @@ const PotterySpotlight = ({ page1Layout }) => {
         boxSizing: 'border-box',
         overflow: 'visible'
       }}>
-        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: '#3B2A1F', marginBottom: 'clamp(8px, 1.5vh, 16px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
+        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: '#A64B27', marginBottom: 'clamp(8px, 1.5vh, 16px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
           {currentData.bigFact}
         </div>
         
@@ -271,7 +271,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
       boxShadow: '0 12px 36px rgba(0,0,0,0.14)',
       display: 'flex',
       flexDirection: 'column',
-      border: '8px solid var(--lesson-primary)',
+      border: '8px solid #D9C9A3',
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -300,22 +300,22 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           <>
             {/* ================= LEFT PAGE (PAGE 1) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: 'clamp(24px, 4vh, 32px) clamp(24px, 3vw, 32px)', position: 'relative', display: 'flex', flexDirection: 'column', gap: 'clamp(12px, 3vh, 24px)', borderRight: '1px solid var(--lesson-border)' }}>
-              <h2 style={{ margin: 0, fontSize: '34px', color: 'var(--lesson-primary)', fontWeight: '900', borderBottom: '4px solid #A64B27', paddingBottom: '4px', display: 'inline-block', alignSelf: 'flex-start' }}>
+              <h2 style={{ margin: 0, fontSize: '34px', color: '#3B2A1F', fontWeight: '900', borderBottom: '4px solid #A64B27', paddingBottom: '4px', display: 'inline-block', alignSelf: 'flex-start' }}>
                 What are Objects Made Of?
               </h2>
 
               <div style={{ fontSize: '21px', color: 'var(--lesson-text)', lineHeight: '1.4', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</div>
-                <div>These are all <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>objects</strong>. Even though they look different, each object is made of some <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>material</strong>.</div>
+                <div>These are all <strong style={{ color: '#3B2A1F', fontWeight: '800' }}>objects</strong>. Even though they look different, each object is made of some <strong style={{ color: '#3B2A1F', fontWeight: '800' }}>material</strong>.</div>
               </div>
 
               <div style={{ border: '1px dashed var(--lesson-border)', borderRadius: '8px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: 'var(--lesson-primary)', fontWeight: '800', fontSize: '22px' }}>Material:</strong> The substance used to make an object.</div>
-                <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: 'var(--lesson-primary)', fontWeight: '800', fontSize: '22px' }}>Object:</strong> Anything we can see or use around us.</div>
+                <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: '#3B2A1F', fontWeight: '800', fontSize: '22px' }}>Material:</strong> The substance used to make an object.</div>
+                <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: '#3B2A1F', fontWeight: '800', fontSize: '22px' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
               <div style={{ background: '#FFFDF5', border: '3px solid #D9C9A3', borderRadius: '8px', padding: '12px 16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#3B2A1F', fontSize: '24px', fontWeight: '900' }}>Examples:</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#A64B27', fontSize: '24px', fontWeight: '900' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '21px', fontWeight: '700', color: '#3b2818' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
                   <div>A plate can be made of steel, glass or plastic.</div>
@@ -325,7 +325,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
               <div style={{ background: '#FFFFFF', border: '2px solid #D9C9A3', borderRadius: '8px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: '21px', fontWeight: '700', color: '#3b2818', lineHeight: '1.4' }}>
-                  <strong style={{ fontWeight: '900', fontSize: '24px', color: '#3B2A1F' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
+                  <strong style={{ fontWeight: '900', fontSize: '24px', color: '#A64B27' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
               </div>
             </div>
@@ -344,14 +344,14 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           <>
             {/* ================= LEFT PAGE B2 (PAGE 1) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'hidden', borderRight: '1px solid var(--lesson-border)' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: 'var(--lesson-primary)', fontWeight: 'bold', borderBottom: '4px solid #A64B27', paddingBottom: '6px', display: 'inline-block' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: '#3B2A1F', fontWeight: 'bold', borderBottom: '4px solid #A64B27', paddingBottom: '6px', display: 'inline-block' }}>
                 Observe and Identify Appearance of Materials
               </h2>
 
               <div style={{ fontSize: 'clamp(1.30rem, 1.55vw, 1.65rem)', color: 'var(--lesson-text)', lineHeight: '1.4', marginBottom: '14px', fontWeight: '600' }}>
                 <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Materials can look different from each other.</p>
                 <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Some have shiny surfaces, while others look dull.</p>
-                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>They may also differ in <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>colour</strong> and <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>texture</strong>, such as smooth or rough.</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>They may also differ in <strong style={{ color: '#A64B27', fontWeight: '800' }}>colour</strong> and <strong style={{ color: '#A64B27', fontWeight: '800' }}>texture</strong>, such as smooth or rough.</p>
               </div>
 
               <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: '#FFFFFF', marginBottom: '14px' }}>
@@ -366,7 +366,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
               <div style={{ marginTop: 'auto', background: 'var(--lesson-warning-bg)', border: '2px solid var(--lesson-warning-border)', borderRadius: '12px', padding: '12px 18px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: 'calc(var(--text-xl) * 1.3)' }}>📌</div>
-                <div style={{ fontSize: 'calc(var(--text-lg) * 1.3)', color: 'var(--lesson-primary)', lineHeight: '1.35' }}>
+                <div style={{ fontSize: 'calc(var(--text-lg) * 1.3)', color: '#3B2A1F', lineHeight: '1.35' }}>
                   <strong>Remember!</strong><br/>
                   Not everything that shines is a metal!
                 </div>
@@ -375,7 +375,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
             {/* ================= RIGHT PAGE B2 (PAGE 2) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '20px 28px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'hidden' }}>
-              <h2 style={{ margin: '0 0 12px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>
+              <h2 style={{ margin: '0 0 12px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: '#3B2A1F', fontWeight: 'bold' }}>
                 Investigation: Group by Appearance
               </h2>
 
@@ -385,7 +385,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
               <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-border)', borderRadius: '12px', padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '14px' }}>
                 <div style={{ fontSize: 'calc(var(--text-xl) * 1.1)' }}>💡</div>
-                <div style={{ fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--lesson-primary)', lineHeight: '1.4', fontWeight: '600' }}>
+                <div style={{ fontSize: 'calc(var(--text-lg) * 1.15)', color: '#3B2A1F', lineHeight: '1.4', fontWeight: '600' }}>
                   Look carefully under the lamp.<br/>Drag each item to the correct group.
                 </div>
               </div>
@@ -417,7 +417,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
               </div>
 
               <div style={{ border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '12px 18px', background: '#FFFFFF', display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
-                <h4 style={{ margin: '0', color: 'var(--lesson-primary)', fontSize: 'calc(var(--text-lg) * 1.1)', fontWeight: 'bold' }}>
+                <h4 style={{ margin: '0', color: '#3B2A1F', fontSize: 'calc(var(--text-lg) * 1.1)', fontWeight: 'bold' }}>
                   How to do:
                 </h4>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--lesson-text)', fontWeight: '600' }}>
@@ -439,7 +439,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           <>
             {/* ================= LEFT PAGE B3 (PAGE 1) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', borderRight: '1px solid var(--lesson-border)' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--lesson-primary)', fontWeight: 'bold', borderBottom: '4px solid #A64B27', paddingBottom: '8px', display: 'inline-block' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#3B2A1F', fontWeight: 'bold', borderBottom: '4px solid #A64B27', paddingBottom: '8px', display: 'inline-block' }}>
                 Choosing the Right Material
               </h2>
 
@@ -453,9 +453,9 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
               <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--lesson-text)', lineHeight: '1.6', marginBottom: '24px', fontWeight: '500' }}>
                 <p style={{ margin: '0 0 16px 0' }}>Different objects are made for different purposes.</p>
-                <p style={{ margin: '0 0 16px 0' }}>The material used to make an object depends on its <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>properties</strong> and how the object will be used.</p>
+                <p style={{ margin: '0 0 16px 0' }}>The material used to make an object depends on its <strong style={{ color: '#A64B27', fontWeight: '800' }}>properties</strong> and how the object will be used.</p>
                 <p style={{ margin: '0 0 16px 0' }}>For example, a pen is made of different materials such as plastic, metal and ink. Each material is chosen because it performs a specific job.</p>
-                <p style={{ margin: '0' }}>Choosing the right material helps us make objects that are <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>safe</strong>, <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>useful</strong> and <strong style={{ color: 'var(--lesson-primary)', fontWeight: '800' }}>long-lasting</strong>.</p>
+                <p style={{ margin: '0' }}>Choosing the right material helps us make objects that are <strong style={{ color: '#A64B27', fontWeight: '800' }}>safe</strong>, <strong style={{ color: '#A64B27', fontWeight: '800' }}>useful</strong> and <strong style={{ color: '#A64B27', fontWeight: '800' }}>long-lasting</strong>.</p>
               </div>
 
               <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-border)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
@@ -469,7 +469,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
             {/* ================= RIGHT PAGE B3 (PAGE 2) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#3B2A1F', fontWeight: 'bold' }}>
                 Case File 03: Choosing the Right Material
               </h2>
 
