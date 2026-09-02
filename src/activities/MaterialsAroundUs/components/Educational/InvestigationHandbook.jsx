@@ -138,27 +138,27 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 Historical Spotlight: Pottery
               </h2>
 
-              <div style={{ background: '#fdf6e3', border: '2px solid #eab308', borderRadius: '12px', padding: '16px', marginBottom: '16px', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: '-15px', right: '20px', background: '#eab308', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>Do you know?</div>
-                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
+              <div style={{ background: '#fdfaf3', border: '2px solid #a65842', borderRadius: '12px', padding: '16px', marginBottom: '16px', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: '-15px', right: '20px', background: '#a65842', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>Do you know?</div>
+                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
                   The earliest pottery found in the Indian subcontinent dates back to <strong>7,000 to 8,000 years</strong> in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh). 
                 </p>
-                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
+                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
                   About <strong>4000 BCE onwards</strong>, Sindhu-Sarasvati developed techniques of wheel-turned pottery production, pigmentation, application of protective or decorative coats (called 'slips') of multiple colours, decorative painting, etc. 
                 </p>
-                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
+                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
                   These techniques became further sophisticated during the <strong>Sindhu-Sarasvati (also known as 'Harappan') Civilisation (2600-1900 BCE)</strong>, with a bright red surface painted with black-coloured designs displaying geometric patterns, and aquatic and terrestrial animals.
                 </p>
               </div>
 
-              <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#334155', fontSize: 'var(--text-lg)' }}>How Pottery is Made</h4>
-                <p style={{ margin: '0', fontSize: 'var(--text-lg)', color: '#475569', lineHeight: '1.5' }}>
+              <div style={{ background: '#fdfaf3', border: '1px solid #e3d8c8', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#813928', fontSize: 'var(--text-lg)' }}>How Pottery is Made</h4>
+                <p style={{ margin: '0', fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
                   The clay used for making pots, dishes, bowls and other items was carefully selected and cleaned, sieved, kneaded, turned over a wheel and finally baked in kilns (baked clay is called <strong>'terracotta'</strong>).
                 </p>
               </div>
 
-              <div style={{ fontSize: 'var(--text-lg)', color: '#334155', lineHeight: '1.5' }}>
+              <div style={{ fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
                 <p style={{ margin: '0 0 8px 0' }}>Pots were used for various purposes, from cooking to storage of food grains, oil, ghee, and so on.</p>
                 <p style={{ margin: '0' }}>Some very large storage jars and other pottery items are exhibited at the <strong>National Museum, New Delhi</strong>.</p>
               </div>
