@@ -172,16 +172,16 @@ const PotterySpotlight = ({ page1Layout }) => {
         <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: 'var(--lesson-text)', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
           {currentData.title}
         </h3>
-        <div style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: 'var(--lesson-accent)', letterSpacing: '1px' }}>
+        <div style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: '#a65842', letterSpacing: '1px' }}>
           DO YOU KNOW?
         </div>
       </div>
 
       <div style={{ 
         flex: '1 1 auto', 
-        backgroundColor: 'var(--lesson-surface)', 
+        backgroundColor: '#fdfaf3', 
         borderRadius: '12px', 
-        border: '1px solid var(--lesson-border)', 
+        border: '2px solid #a65842', 
         padding: 'clamp(12px, 2vmin, 16px)',
 
         display: 'flex',
@@ -195,36 +195,17 @@ const PotterySpotlight = ({ page1Layout }) => {
         boxSizing: 'border-box',
         overflow: 'visible'
       }}>
-        
-        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: 'var(--lesson-primary)', marginBottom: 'clamp(8px, 1.5vh, 16px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
+        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: '#813928', marginBottom: 'clamp(8px, 1.5vh, 16px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
           {currentData.bigFact}
         </div>
         
-        <div style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: 'var(--lesson-text)', lineHeight: '1.5', maxWidth: '100%', overflow: 'visible' }}>
-          {isPlaying ? (
-            <HighlightedText phrases={[currentData.text]} activeCharIndex={activeCharIndex} />
-          ) : (
-             <span style={{ backgroundColor: hasPlayed ? '#fef08a' : 'transparent' }}>{currentData.text}</span>
-          )}
+        <div style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: '#3b2818', lineHeight: '1.5', maxWidth: '100%', overflow: 'visible' }}>
+          <span>{currentData.text}</span>
         </div>
       </div>
 
       <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button 
-            onClick={isPlaying ? stopAudio : playAudio}
-            style={{
-              background: isPlaying ? 'var(--lesson-danger)' : 'var(--lesson-accent)',
-              color: 'white', border: 'none', borderRadius: '24px',
-              padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)',
-              display: 'flex', alignItems: 'center', gap: '8px',
-              fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
-              cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-            }}
-          >
-            {isPlaying ? <SvgIcons.Pause /> : <SvgIcons.Play />}
-            {isPlaying ? 'PLAYING...' : (hasPlayed ? 'PLAY AGAIN' : 'PLAY EXPLANATION')}
-          </button>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'flex-end', alignItems: 'center' }}>
           
           {currentClue < clues.length ? (
              <button 

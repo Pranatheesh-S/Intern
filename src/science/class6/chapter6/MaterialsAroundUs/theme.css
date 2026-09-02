@@ -7,72 +7,72 @@
   --font-body: 'Inter', sans-serif;
 
   /* ── Page ── */
-  --lesson-background: #FDFBF7; /* very light warm ivory/cream */
-  --lesson-background-gradient: #FDFBF7;
+  --lesson-background: #F8F4EC; /* warm parchment */
+  --lesson-background-gradient: #F8F4EC;
 
   /* ── Card / Panel ── */
-  --lesson-card: #FBF7F0; /* soft cream */
-  --lesson-border: #E8DECE; /* muted warm tan */
-  --card-shadow: 0 4px 20px rgba(110, 80, 50, 0.06), 0 8px 32px rgba(110, 80, 50, 0.04);
-  --card-hover-border: #D8C3A5;
-  --card-hover-shadow: 0 8px 32px rgba(44, 110, 99, 0.12);
+  --lesson-card: #FCFAEF; /* warm cream/off-white */
+  --lesson-border: #E2D3C4; /* subtle beige border */
+  --card-shadow: 0 4px 20px rgba(62, 39, 35, 0.05), 0 8px 32px rgba(62, 39, 35, 0.03);
+  --card-hover-border: #C8B49E;
+  --card-hover-shadow: 0 8px 32px rgba(62, 39, 35, 0.08);
 
-  /* ── Text ── */
-  --lesson-primary: #3E2723; /* deep espresso */
-  --lesson-text: #4E342E; /* warm dark brown */
-  --lesson-secondary: #5D4037;
-  --lesson-muted: #8D6E63;
-  --text-faint: #A1887F;
+  /* ── Text (Chocolate Brown) ── */
+  --lesson-primary: #3E2723; /* Dark chocolate brown for main headings */
+  --lesson-text: #4E342E; /* Dark brown for body text */
+  --lesson-secondary: #70534C; /* Lighter brown for secondary */
+  --lesson-muted: #8F766F;
+  --text-faint: #B3A19C;
   --map-popup-desc: var(--lesson-muted);
 
-  /* ── Accent (Muted Teal/Blue-Green) ── */
-  --lesson-accent: #2C6E63; /* muted teal/blue-green */
-  --lesson-accent-bg: #E6F0EE; /* very light teal/cream mix */
-  --lesson-accent-border: #B2D1CB; /* soft teal border */
-  --lesson-accent-text: #1B4D45; /* deep teal for text */
-  --lesson-highlight: #fef08a; /* for text highlighting */
+  /* ── Accent (Muted Burgundy / Wine) ── */
+  --lesson-accent: #7A3041; /* muted, dark, sophisticated burgundy/wine */
+  --lesson-accent-bg: #F5E8EA; /* very light burgundy background for tabs/highlights */
+  --lesson-accent-border: #D6A8B3; 
+  --lesson-accent-text: #5C2230; 
+  --lesson-highlight: #F5E8EA; 
 
-  /* ── Success (warm harmonized green) ── */
-  --lesson-success: #689F38;
-  --lesson-success-bg: #F1F8E9;
-  --lesson-success-border: #C5E1A5;
+  /* ── Success (Muted Slate Blue) ── */
+  --lesson-success: #4A6370; 
+  --lesson-success-bg: #EEF2F4;
+  --lesson-success-border: #BCCDD6;
 
-  /* ── Danger (warm harmonized red/terracotta) ── */
-  --lesson-danger: #D84315;
-  --lesson-danger-bg: #FBE9E7;
-  --lesson-danger-border: #FFCCBC;
+  /* ── Danger (Muted Brick/Terracotta) ── */
+  --lesson-danger: #A34A42;
+  --lesson-danger-bg: #FAEEEE;
+  --lesson-danger-border: #E0BDBA;
 
-  /* ── Warning (muted golden yellow) ── */
-  --lesson-warning: #FBC02D;
-  --lesson-warning-bg: #FFFDE7;
-  --lesson-warning-border: #FFF59D;
+  /* ── Warning (Muted Bronze/Parchment) ── */
+  --lesson-warning: #B58235;
+  --lesson-warning-bg: #FAF5EB;
+  --lesson-warning-border: #E3CBA8;
 
-  /* ── Neutral ── */
-  --neutral-bg: #F4ECE1;
+  /* ── Neutral / Beige ── */
+  --neutral-bg: #EAE1D3; /* Soft warm beige */
   --neutral-text: #4E342E;
-  --neutral-border: #E8DECE;
+  --neutral-border: #E2D3C4;
 
-  /* ── Surface (light beige) ── */
-  --lesson-surface: #F5EFE6;
-  --surface-hover: #EBE3D5;
+  /* ── Surface (soft beige) ── */
+  --lesson-surface: #F2ECE0;
+  --surface-hover: #EBE4D5;
 
   /* ── Canvas ── */
-  --canvas-bg: #FDFBF7;
-  --canvas-border: #E8DECE;
-  --canvas-grid: rgba(139, 115, 85, 0.06);
+  --canvas-bg: #F8F4EC;
+  --canvas-border: #E2D3C4;
+  --canvas-grid: rgba(62, 39, 35, 0.05);
 
   /* ── Scrollbar ── */
-  --scrollbar-track: #F5EFE6;
-  --scrollbar-thumb: #D8C3A5;
+  --scrollbar-track: #F2ECE0;
+  --scrollbar-thumb: #C8B49E;
 
   /* ── Tabs ── */
-  --tab-bg: #F5EFE6;
-  --tab-text: #8D6E63;
-  --tab-hover-bg: #EBE3D5;
-  --tab-hover-text: #4E342E;
+  --tab-bg: #F2ECE0;
+  --tab-text: #70534C;
+  --tab-hover-bg: #EAE1D3;
+  --tab-hover-text: #3E2723;
   --tab-active-bg: var(--lesson-accent);
   --tab-active-text: #ffffff;
-  --tab-active-shadow: 0 2px 6px rgba(44, 110, 99, 0.2);
+  --tab-active-shadow: 0 2px 6px rgba(122, 48, 65, 0.2);
 }
 
 /* Ensure background color overrides tailwind bg classes */
