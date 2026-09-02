@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Lightbulb, X, Globe2, Image as ImageIcon, Maximize2, Minimize2, Mountain } from 'lucide-react';
 import physicalImg from './assets/printed_physical_map.jpeg';
 import politicalImg from './assets/political.png';
@@ -29,8 +30,13 @@ const PageLayout = ({
   onFullyViewed,
   globeMode = 'physical',
   globeTheme,
+  thematicMapOptions,
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
+  const [activeMapIndex, setActiveMapIndex] = useState(0);
+
+  const currentImageSrc = thematicMapOptions ? thematicMapOptions[activeMapIndex].src : (imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg'));
+  const currentMapTitle = thematicMapOptions ? thematicMapOptions[activeMapIndex].label : title;
   const [isGlobeOpen, setIsGlobeOpen] = useState(false);
   const [isMountainsMapOpen, setIsMountainsMapOpen] = useState(false);
   const [mountainsCategory, setMountainsCategory] = useState('all');
@@ -503,7 +509,7 @@ const PageLayout = ({
             gap: '4px',
             boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
           }}>
-            <ImageIcon size={11} /> Printed {title}
+            <ImageIcon size={11} /> Printed {currentMapTitle}
           </div>
 
           <div style={{
@@ -525,8 +531,8 @@ const PageLayout = ({
           </div>
 
           <img
-            src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
-            alt={title}
+            src={currentImageSrc}
+            alt={currentMapTitle}
             style={{
               maxWidth: '100%',
               maxHeight: '100%',
@@ -616,15 +622,16 @@ const PageLayout = ({
     </div>
 
     {/* Natural Features 3D Map Explorer Modal */}
-    {isMountainsMapOpen && (
+    {isMountainsMapOpen && typeof document !== 'undefined' && createPortal(
       <IndiaMountainsMapExplorer 
         initialCategory={mountainsCategory}
         onClose={() => setIsMountainsMapOpen(false)} 
-      />
+      />,
+      document.body
     )}
 
     {/* High-Resolution Printed Map Modal */}
-    {isImageOpen && (
+    {isImageOpen && typeof document !== 'undefined' && createPortal(
       <div
         onClick={() => setIsImageOpen(false)}
         style={{
@@ -639,7 +646,7 @@ const PageLayout = ({
           style={{
             position: 'relative',
             width: 'min(1100px, 94vw)',
-            maxHeight: '92vh',
+            height: '92vh',
             background: '#FFFFFF',
             borderRadius: '16px',
             boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
@@ -663,7 +670,7 @@ const PageLayout = ({
             flexShrink: 0
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 900, fontSize: '14px' }}>
-              <ImageIcon size={18} color="#F59E0B" /> Printed {title} • NCERT Class 6 Atlas Reference
+              <ImageIcon size={18} color="#F59E0B" /> Printed {currentMapTitle} • NCERT Class 6 Atlas Reference
             </div>
             <button
               onClick={() => setIsImageOpen(false)}
@@ -691,19 +698,62 @@ const PageLayout = ({
           <div style={{
             flex: 1,
             minHeight: 0,
-            padding: '16px',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            flexDirection: 'column',
             background: '#FAF5EB',
-            overflow: 'auto'
+            overflow: 'hidden'
           }}>
-            <img
-              src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
-              alt={title}
+            {thematicMapOptions && (
+              <div style={{
+                display: 'flex',
+                gap: '8px',
+                padding: '12px 16px',
+                background: '#FFFFFF',
+                borderBottom: '2px solid #F2DFBC',
+                overflowX: 'auto',
+                flexShrink: 0
+              }}>
+                {thematicMapOptions.map((opt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={(e) => { e.stopPropagation(); setActiveMapIndex(idx); }}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: idx === activeMapIndex ? '2px solid #D97706' : '2px solid transparent',
+                      background: idx === activeMapIndex ? '#FEF3C7' : '#F3F4F6',
+                      color: idx === activeMapIndex ? '#92400E' : '#4B5563',
+                      fontWeight: 800,
+                      fontSize: '13px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    {opt.icon} {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            
+            <div style={{
+              flex: 1,
+              minHeight: 0,
+              padding: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden'
+            }}>
+              <img
+                src={currentImageSrc}
+                alt={currentMapTitle}
               style={{
                 maxWidth: '100%',
-                maxHeight: '75vh',
+                maxHeight: '100%',
                 objectFit: 'contain',
                 borderRadius: '10px',
                 boxShadow: '0 6px 24px rgba(0,0,0,0.15)',
@@ -718,12 +768,14 @@ const PageLayout = ({
               }}
             />
           </div>
+          </div>
         </div>
-      </div>
+      </div>,
+      document.body
     )}
 
     {/* 3D Globe Modal */}
-    {isGlobeOpen && (
+    {isGlobeOpen && typeof document !== 'undefined' && createPortal(
       <div
         onClick={() => setIsGlobeOpen(false)}
         style={{
@@ -790,7 +842,8 @@ const PageLayout = ({
             allowFullScreen
           />
         </div>
-      </div>
+      </div>,
+      document.body
     )}
     </>
   );
@@ -899,9 +952,15 @@ export const ThematicMapPage = ({ onFullyViewed }) => (
     onFullyViewed={onFullyViewed}
     title="Thematic Maps"
     subtitle="Maps that focus on one special topic like soil, rainfall, or crops"
-    imageSrc={thematicMapImg}
     globeMode="thematic"
     globeTheme="rain"
+    thematicMapOptions={[
+      { icon: '🌱', label: 'Major Soil Types', src: thematicMapImg },
+      { icon: '🌧', label: 'Annual Rainfall', src: '/maps/flat_thematic_rainfall_map.jpg' },
+      { icon: '🌡', label: 'Temperature Distribution', src: '/maps/flat_thematic_temperature_map.jpg' },
+      { icon: '👥', label: 'Population Density', src: '/maps/flat_thematic_population_density_map.jpg' },
+      { icon: '🌳', label: 'Forest Cover', src: '/maps/flat_thematic_forest_cover_map.jpg' }
+    ]}
     callouts={[
       { icon: '🌱', label: 'Alluvial Soil', top: '33%', left: '42%' },
       { icon: '🧱', label: 'Black Soil', top: '50%', left: '30%' },

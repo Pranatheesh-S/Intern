@@ -66,7 +66,7 @@ export default function RealLifeMathLab({
               The 3×3 Calendar Magic Window
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              Select any interior date on the calendar. The cumulative sum of all 9 dates enclosed inside the $3 \times 3$ window is invariantly equal to <strong>9 × Center Date</strong>, because opposite paired dates cancel deviations symmetrically.
+              Click any middle date on the calendar. If you add up all 9 dates in the $3 \times 3$ square around it, the total is always exactly <strong>9 times the center date</strong>! This happens because the opposite numbers balance each other out perfectly.
             </p>
           </div>
 
@@ -158,14 +158,14 @@ export default function RealLifeMathLab({
               Market Grocery Billing & Arithmetic Progressions
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              Every supermarket receipt applies linear progression: Total Cost = Unit Rate × Quantity. Adjust produce weights to evaluate billing arithmetic:
+              When you buy vegetables, the total cost grows by the same amount for every extra kilogram you add. Move the sliders to see how the bill adds up!
             </p>
           </div>
 
           {/* Arithmetic Progression Example Box */}
           <div style={{ background: '#ffffff', padding: '0.7rem 0.8rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', flex: 1, justifyContent: 'center' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)' }}>
-              Sequence Rule: Add Unit Rate (₹30 or ₹50) per kg
+              Pattern Rule: Keep Adding the Cost of 1 kg (₹30 or ₹50)
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%', alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
@@ -272,10 +272,10 @@ export default function RealLifeMathLab({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', height: '100%', justifyContent: 'space-between' }}>
           <div>
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-              Virahānka Fibonacci Numbers in Botanical Anatomy
+              Fibonacci Numbers in Nature
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              Petal counts in flowering plants overwhelmingly belong to the Virahānka sequence ($3, 5, 8, 13, 21 \dots$) because the golden angle packing optimizes sunlight exposure for every petal:
+              Did you know that the number of petals on most flowers follows a special math pattern called the Fibonacci sequence (3, 5, 8, 13, 21...)? This helps the flower get the most sunlight!
             </p>
           </div>
 
@@ -350,10 +350,10 @@ export default function RealLifeMathLab({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', height: '100%', justifyContent: 'space-between' }}>
           <div>
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-              Powers of 2: The Chessboard Doubling Legend & Viral Reach
+              Powers of 2: The Chessboard Legend
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.96rem', color: '#334155', lineHeight: 1.55, textAlign: 'justify', textJustify: 'inter-word' }}>
-              In the celebrated Indian mathematical legend of the chessboard, placing 1 grain on square 1 and doubling each subsequent square (1 → 2 → 4 → 8 → 16 → … → 1024) shows how powers of 2 ($2^N$) grow at an astounding exponential velocity:
+              There is an old Indian legend about a king who agreed to put 1 grain of rice on the first square of a chessboard, and then double it on every next square (1 → 2 → 4 → 8 → 16...). This shows how fast powers of 2 ($2^N$) can grow!
             </p>
           </div>
 
@@ -400,7 +400,7 @@ export default function RealLifeMathLab({
           </div>
 
           <div style={{ background: 'var(--theme-bg, #f0fdfa)', padding: '0.65rem 1.05rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', fontSize: '0.88rem', color: 'var(--theme-heading, #134e4a)', fontWeight: '800', lineHeight: 1.45 }}>
-            💡 Notice: By Square 10 ($2^{10}$), you already exceed one thousand units (1,024 grains), and by the 64th square, the total grains exceed 18 quintillion ($2^{64}-1$)!
+            💡 Notice: By the 11th square ($2^{10}$), you already have over 1,000 grains of rice. By the 64th square, you would have over 18 quintillion grains! That's more rice than in the entire world!
           </div>
         </div>
       )}

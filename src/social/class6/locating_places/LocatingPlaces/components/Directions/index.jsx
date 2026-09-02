@@ -135,19 +135,19 @@ export default function Directions({ onComplete, onBack }) {
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => setActiveTab('compass')}
-              style={{ padding: '7px 16px', borderRadius: '999px', border: '1.5px solid #F2DFBC', background: '#FFFFFF', color: '#78350F', fontSize: '13px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', transition: 'all 0.2s' }}
+              style={{ padding: '7px 16px', borderRadius: '999px', border: '1.5px solid #F2DFBC', background: '#FFFFFF', color: '#78350F', fontSize: '15px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', transition: 'all 0.2s' }}
             >
               <Compass size={15} color="#D97706" /> Finding Directions (Compass)
             </button>
             <button
-              style={{ padding: '7px 16px', borderRadius: '999px', border: 'none', background: '#D97706', color: '#ffffff', fontSize: '13px', fontWeight: 800, cursor: 'default', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', boxShadow: '0 2px 8px rgba(217,119,6,0.3)' }}
+              style={{ padding: '7px 16px', borderRadius: '999px', border: 'none', background: '#D97706', color: '#ffffff', fontSize: '15px', fontWeight: 800, cursor: 'default', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', boxShadow: '0 2px 8px rgba(217,119,6,0.3)' }}
             >
               <Globe size={15} color="#ffffff" /> Travel Across India (6 Locations)
             </button>
           </div>
           <button
             onClick={() => setActiveTab('compass')}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 1rem', background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '999px', color: '#78350F', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 1rem', background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '999px', color: '#78350F', fontSize: '14.5px', fontWeight: 800, cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif' }}
           >
             <ArrowLeft size={14} /> Back to Compass
           </button>
@@ -171,13 +171,13 @@ export default function Directions({ onComplete, onBack }) {
       <div style={{ padding: '0.6rem 1.25rem', borderBottom: '1.5px solid #F2DFBC', background: '#FFF9F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button
-            style={{ padding: '7px 16px', borderRadius: '999px', border: 'none', background: '#D97706', color: '#ffffff', fontSize: '13px', fontWeight: 800, cursor: 'default', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', boxShadow: '0 2px 8px rgba(217,119,6,0.3)' }}
+            style={{ padding: '7px 16px', borderRadius: '999px', border: 'none', background: '#D97706', color: '#ffffff', fontSize: '15px', fontWeight: 800, cursor: 'default', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', boxShadow: '0 2px 8px rgba(217,119,6,0.3)' }}
           >
             <Compass size={15} color="#ffffff" /> Finding Directions (Compass)
           </button>
           <button
             onClick={() => setActiveTab('india-map')}
-            style={{ padding: '7px 16px', borderRadius: '999px', border: '1.5px solid #F2DFBC', background: '#FFFFFF', color: '#78350F', fontSize: '13px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', transition: 'all 0.2s' }}
+            style={{ padding: '7px 16px', borderRadius: '999px', border: '1.5px solid #F2DFBC', background: '#FFFFFF', color: '#78350F', fontSize: '15px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: '"Space Grotesk", sans-serif', transition: 'all 0.2s' }}
           >
             <Globe size={15} color="#D97706" /> Travel Across India (6 Locations)
           </button>
@@ -186,7 +186,7 @@ export default function Directions({ onComplete, onBack }) {
         {activeDir !== null && (
           <button 
             onClick={() => setActiveDir(null)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 1rem', background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '999px', color: '#78350F', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 1rem', background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '999px', color: '#78350F', fontSize: '14.5px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}
           >
             <ArrowLeft size={14} /> Back to Overview
           </button>
@@ -209,63 +209,67 @@ export default function Directions({ onComplete, onBack }) {
                       {/* Section 1 - Intro */}
                       <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: 'clamp(10px, 1.4vh, 14px) 14px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-                          <span style={{ background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '8px', border: '1px solid #FDE68A', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          <span style={{ background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '8px', border: '1px solid #FDE68A', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                             <Compass size={14} color="#D97706" /> Finding Directions
                           </span>
                         </div>
-                        <p style={{ color: '#3D2E24', fontSize: 'clamp(12px, 1.85vh, 13.5px)', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          Maps have <b>three main parts</b>: Directions, <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Distance</span>, and <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Symbols</span>. Directions help us find our way and tell us where places are.
+                        <p style={{ color: '#3D2E24', fontSize: 'clamp(14px, 1.85vh, 15px)', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
+                          Maps have <b>three main parts</b>: Directions, Distance, and Symbols. Directions help us find where places are.
                         </p>
                       </div>
 
-                      {/* Section 2 - The Four Cardinal Directions */}
+                      {/* Section 2 - The Four Cardinal Directions & Sun */}
                       <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: 'clamp(10px, 1.4vh, 14px) 14px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                          <h3 style={{ color: '#78350F', fontSize: 'clamp(13px, 2vh, 14.5px)', margin: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>The Four Main Directions</h3>
-                          <span style={{ fontSize: '10.5px', background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '8px', fontWeight: 800, border: '1px solid #FDE68A' }}>
-                            Cardinal Directions
+                          <h3 style={{ color: '#78350F', fontSize: 'clamp(15px, 2vh, 17px)', margin: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>Main Directions & the Sun</h3>
+                          <span style={{ fontSize: '12.5px', background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '8px', fontWeight: 800, border: '1px solid #FDE68A', display: 'flex', gap: '4px', alignItems: 'center' }}>
+                            <Sun size={13} color="#D97706" /> Face the Sunrise
                           </span>
                         </div>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
                           <button
                             onClick={() => handleDirClick('N')}
-                            style={{ background: '#FEF2F2', border: '1.5px solid #FECACA', padding: '8px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
+                            style={{ background: '#FEF2F2', border: '1.5px solid #FECACA', padding: '6px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
                             onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                             onMouseOut={e => e.currentTarget.style.transform = 'none'}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#DC2626', fontWeight: 900, fontSize: '12px' }}><ArrowUp size={13} strokeWidth={3} /> NORTH</div>
-                            <div style={{ fontSize: '10px', color: '#991B1B', marginTop: '2px', fontWeight: 700 }}>Top of Map</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#DC2626', fontWeight: 900, fontSize: '14px' }}><ArrowUp size={13} strokeWidth={3} /> NORTH</div>
+                            <div style={{ fontSize: '11px', color: '#991B1B', marginTop: '2px', fontWeight: 700 }}>Map: Top</div>
+                            <div style={{ fontSize: '11px', color: '#991B1B', marginTop: '1px', fontWeight: 600 }}>Sun: 👈 Left Hand</div>
                           </button>
 
                           <button
                             onClick={() => handleDirClick('E')}
-                            style={{ background: '#FEF3C7', border: '1.5px solid #FDE68A', padding: '8px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
+                            style={{ background: '#FEF3C7', border: '1.5px solid #FDE68A', padding: '6px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
                             onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                             onMouseOut={e => e.currentTarget.style.transform = 'none'}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#D97706', fontWeight: 900, fontSize: '12px' }}><ArrowRight size={13} strokeWidth={3} /> EAST</div>
-                            <div style={{ fontSize: '10px', color: '#92400E', marginTop: '2px', fontWeight: 700 }}>Right Side</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#D97706', fontWeight: 900, fontSize: '14px' }}><ArrowRight size={13} strokeWidth={3} /> EAST</div>
+                            <div style={{ fontSize: '11px', color: '#92400E', marginTop: '2px', fontWeight: 700 }}>Map: Right</div>
+                            <div style={{ fontSize: '11px', color: '#92400E', marginTop: '1px', fontWeight: 600 }}>Sun: 🌅 Front</div>
                           </button>
 
                           <button
                             onClick={() => handleDirClick('S')}
-                            style={{ background: '#EFF6FF', border: '1.5px solid #BFDBFE', padding: '8px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
+                            style={{ background: '#EFF6FF', border: '1.5px solid #BFDBFE', padding: '6px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
                             onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                             onMouseOut={e => e.currentTarget.style.transform = 'none'}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#2563EB', fontWeight: 900, fontSize: '12px' }}><ArrowDown size={13} strokeWidth={3} /> SOUTH</div>
-                            <div style={{ fontSize: '10px', color: '#1E40AF', marginTop: '2px', fontWeight: 700 }}>Bottom</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#2563EB', fontWeight: 900, fontSize: '14px' }}><ArrowDown size={13} strokeWidth={3} /> SOUTH</div>
+                            <div style={{ fontSize: '11px', color: '#1E40AF', marginTop: '2px', fontWeight: 700 }}>Map: Bottom</div>
+                            <div style={{ fontSize: '11px', color: '#1E40AF', marginTop: '1px', fontWeight: 600 }}>Sun: 👉 Right Hand</div>
                           </button>
 
                           <button
                             onClick={() => handleDirClick('W')}
-                            style={{ background: '#FAF5FF', border: '1.5px solid #E9D5FF', padding: '8px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
+                            style={{ background: '#FAF5FF', border: '1.5px solid #E9D5FF', padding: '6px 4px', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', transition: 'transform 0.15s', fontFamily: '"Space Grotesk", sans-serif' }}
                             onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'}
                             onMouseOut={e => e.currentTarget.style.transform = 'none'}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#7C3AED', fontWeight: 900, fontSize: '12px' }}><ArrowLeft size={13} strokeWidth={3} /> WEST</div>
-                            <div style={{ fontSize: '10px', color: '#5B21B6', marginTop: '2px', fontWeight: 700 }}>Left Side</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#7C3AED', fontWeight: 900, fontSize: '14px' }}><ArrowLeft size={13} strokeWidth={3} /> WEST</div>
+                            <div style={{ fontSize: '11px', color: '#5B21B6', marginTop: '2px', fontWeight: 700 }}>Map: Left</div>
+                            <div style={{ fontSize: '11px', color: '#5B21B6', marginTop: '1px', fontWeight: 600 }}>Sun: 🌄 Back</div>
                           </button>
                         </div>
                       </div>
@@ -273,11 +277,11 @@ export default function Directions({ onComplete, onBack }) {
                       {/* Section 3 - Intermediate Directions (NE, SE, SW, NW) */}
                       <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: 'clamp(10px, 1.4vh, 14px) 14px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                          <h3 style={{ color: '#78350F', fontSize: 'clamp(13px, 2vh, 14.5px)', margin: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>In-Between Directions</h3>
-                          <span style={{ fontSize: '10px', color: '#92400E', fontWeight: 700 }}>Halfway points</span>
+                          <h3 style={{ color: '#78350F', fontSize: 'clamp(15px, 2vh, 17px)', margin: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>In-Between Directions</h3>
+                          <span style={{ fontSize: '12px', color: '#92400E', fontWeight: 700 }}>Halfway points</span>
                         </div>
-                        <p style={{ color: '#3D2E24', margin: '0 0 6px 0', fontSize: 'clamp(11px, 1.75vh, 12.5px)', fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          These directions help us point to places more exactly. They are halfway between the four main directions.
+                        <p style={{ color: '#3D2E24', margin: '0 0 6px 0', fontSize: 'clamp(13px, 1.75vh, 14.5px)', fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
+                          These directions help us find places exactly. They are halfway between the main directions.
                         </p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
@@ -294,36 +298,13 @@ export default function Directions({ onComplete, onBack }) {
                               onMouseOver={e => { e.currentTarget.style.background = '#FEF3C7'; e.currentTarget.style.borderColor = '#D97706'; }}
                               onMouseOut={e => { e.currentTarget.style.background = '#FFF9F0'; e.currentTarget.style.borderColor = '#F2DFBC'; }}
                             >
-                              <div style={{ fontSize: '12.5px', fontWeight: 900, color: '#78350F' }}>{item.id}</div>
-                              <div style={{ fontSize: '9.5px', color: '#92400E', marginTop: '1px', fontWeight: 700 }}>{item.name}</div>
+                              <div style={{ fontSize: '14.5px', fontWeight: 900, color: '#78350F' }}>{item.id}</div>
+                              <div style={{ fontSize: '11.5px', color: '#92400E', marginTop: '1px', fontWeight: 700 }}>{item.name}</div>
                             </button>
                           ))}
                         </div>
                       </div>
 
-                      {/* Section 4 - Solar Orientation Hands-on Rule */}
-                      <div style={{ background: '#FEF3C7', borderRadius: '12px', padding: 'clamp(10px, 1.4vh, 14px) 14px', border: '1.5px solid #FDE68A', boxShadow: '0 2px 8px rgba(180,83,9,0.06)', flexShrink: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>
-                          <Sun size={13} color="#D97706" /> Find Directions Using the Sun
-                        </div>
-                        <p style={{ margin: '0 0 6px 0', fontSize: 'clamp(11px, 1.75vh, 12.5px)', color: '#78350F', lineHeight: 1.35, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          Stand early in the morning and face the <b>rising Sun</b> with your arms open:
-                        </p>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
-                          <div style={{ background: '#FFFFFF', border: '1px solid #FDE68A', padding: '5px 8px', borderRadius: '6px', fontSize: '11px', color: '#78350F', fontWeight: 600 }}>
-                            🌅 <b>Front</b>: <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 4px', borderRadius: '3px', fontWeight: 800 }}>EAST</span> (Sunrise)
-                          </div>
-                          <div style={{ background: '#FFFFFF', border: '1px solid #FDE68A', padding: '5px 8px', borderRadius: '6px', fontSize: '11px', color: '#78350F', fontWeight: 600 }}>
-                            🌄 <b>Back</b>: <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 4px', borderRadius: '3px', fontWeight: 800 }}>WEST</span> (Sunset)
-                          </div>
-                          <div style={{ background: '#FFFFFF', border: '1px solid #FDE68A', padding: '5px 8px', borderRadius: '6px', fontSize: '11px', color: '#78350F', fontWeight: 600 }}>
-                            👈 <b>Left Hand</b>: <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 4px', borderRadius: '3px', fontWeight: 800 }}>NORTH</span>
-                          </div>
-                          <div style={{ background: '#FFFFFF', border: '1px solid #FDE68A', padding: '5px 8px', borderRadius: '6px', fontSize: '11px', color: '#78350F', fontWeight: 600 }}>
-                            👉 <b>Right Hand</b>: <span style={{ background: '#FEF3C7', color: '#92400E', padding: '1px 4px', borderRadius: '3px', fontWeight: 800 }}>SOUTH</span>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   )}
 
@@ -332,38 +313,38 @@ export default function Directions({ onComplete, onBack }) {
                       {/* Section 1 - The North Line on Maps */}
                       <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: 'clamp(12px, 1.8vh, 16px) 16px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#92400E', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                             <Navigation size={13} color="#D97706" /> Map Conventions
                           </div>
-                          <span style={{ background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 900, border: '1px solid #FDE68A' }}>
+                          <span style={{ background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '6px', fontSize: '13px', fontWeight: 900, border: '1px solid #FDE68A' }}>
                             North Arrow 🧭
                           </span>
                         </div>
-                        <h3 style={{ margin: '0 0 6px 0', color: '#78350F', fontSize: 'clamp(13.5px, 2.2vh, 15.5px)', fontWeight: 900, fontFamily: '"Fraunces", serif' }}>
+                        <h3 style={{ margin: '0 0 6px 0', color: '#78350F', fontSize: 'clamp(15.5px, 2.2vh, 17.5px)', fontWeight: 900, fontFamily: '"Fraunces", serif' }}>
                           What is the <span style={{ background: '#FEF3C7', color: '#92400E', padding: '2px 6px', borderRadius: '4px', border: '1px solid #FDE68A' }}>North Line (N)</span>?
                         </h3>
-                        <p style={{ color: '#3D2E24', fontSize: 'clamp(12px, 1.85vh, 13px)', lineHeight: 1.5, margin: '0 0 8px 0', fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          Most maps do not show all directions. Instead, they show an arrow with <b>'N'</b> at the top right. This is the <b>North Line</b>. If you know North, you can easily find South, East, and West.
+                        <p style={{ color: '#3D2E24', fontSize: 'clamp(14px, 1.85vh, 15px)', lineHeight: 1.5, margin: '0 0 8px 0', fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
+                          Maps usually show an arrow with <b>'N'</b> at the top right. This is the <b>North Line</b>. Finding North helps you find all other directions easily.
                         </p>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFF9F0', border: '1px dashed #F2DFBC', padding: '6px 10px', borderRadius: '8px', fontSize: '11.5px', color: '#78350F', fontWeight: 700 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFF9F0', border: '1px dashed #F2DFBC', padding: '6px 10px', borderRadius: '8px', fontSize: '13.5px', color: '#78350F', fontWeight: 700 }}>
                           <span>📍</span>
-                          <span>Standard orientation rule: <b>North is at the top of every standard map</b>.</span>
+                          <span>Remember: <b>North is at the top of every standard map</b>.</span>
                         </div>
                       </div>
 
                       {/* Section 2 - The Magnetic Compass Fact & Science */}
                       <div style={{ background: '#FFF9F0', borderRadius: '12px', padding: 'clamp(12px, 1.8vh, 16px) 16px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#92400E', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
                           <Lightbulb size={14} color="#D97706" /> How Does a Compass Work?
                         </div>
-                        <p style={{ color: '#3D2E24', margin: '0 0 8px 0', fontSize: 'clamp(12px, 1.85vh, 13px)', lineHeight: 1.5, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          A <b>compass</b> is a small tool used to find directions. It has a needle that spins. This needle <b>always points North-South</b> because our Earth is like a giant magnet.
+                        <p style={{ color: '#3D2E24', margin: '0 0 8px 0', fontSize: 'clamp(14px, 1.85vh, 15px)', lineHeight: 1.5, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
+                          A <b>compass</b> is a tool used to find directions. Its needle <b>always points North-South</b> because Earth acts like a giant magnet.
                         </p>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-                          <div style={{ background: '#FFFFFF', border: '1px solid #F2DFBC', padding: '6px 8px', borderRadius: '6px', fontSize: '11px', color: '#92400E', fontWeight: 700 }}>
+                          <div style={{ background: '#FFFFFF', border: '1px solid #F2DFBC', padding: '6px 8px', borderRadius: '6px', fontSize: '13px', color: '#92400E', fontWeight: 700 }}>
                             🧲 <b>Red Tip</b>: Points to Magnetic North
                           </div>
-                          <div style={{ background: '#FFFFFF', border: '1px solid #F2DFBC', padding: '6px 8px', borderRadius: '6px', fontSize: '11px', color: '#1E40AF', fontWeight: 700 }}>
+                          <div style={{ background: '#FFFFFF', border: '1px solid #F2DFBC', padding: '6px 8px', borderRadius: '6px', fontSize: '13px', color: '#1E40AF', fontWeight: 700 }}>
                             ⚪ <b>Silver Tip</b>: Points to South
                           </div>
                         </div>
@@ -372,8 +353,8 @@ export default function Directions({ onComplete, onBack }) {
                       {/* Section 3 - Directions Explored Tracker */}
                       <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: 'clamp(12px, 1.8vh, 16px) 16px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flexShrink: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                          <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#78350F' }}>Directions Explored ({viewedDirs.size}/8)</span>
-                          <span style={{ fontSize: '11px', fontWeight: 800, color: isAllViewed ? '#166534' : '#92400E' }}>
+                          <span style={{ fontSize: '14.5px', fontWeight: 800, color: '#78350F' }}>Directions Explored ({viewedDirs.size}/8)</span>
+                          <span style={{ fontSize: '13px', fontWeight: 800, color: isAllViewed ? '#166534' : '#92400E' }}>
                             {isAllViewed ? '✓ All Explored!' : 'Click points on compass to complete'}
                           </span>
                         </div>
@@ -393,7 +374,7 @@ export default function Directions({ onComplete, onBack }) {
                                   borderRadius: '8px',
                                   background: isExplored ? '#DCFCE7' : '#FFF9F0',
                                   color: isExplored ? '#166534' : '#78350F',
-                                  fontSize: '12px',
+                                  fontSize: '14px',
                                   fontWeight: 800,
                                   border: isExplored ? '1.5px solid #86EFAC' : '1.5px solid #F2DFBC',
                                   cursor: 'pointer',
@@ -421,10 +402,10 @@ export default function Directions({ onComplete, onBack }) {
                       {getActiveInfo()?.icon}
                     </div>
                     <div>
-                      <h2 style={{ fontSize: '1.3rem', margin: 0, color: '#78350F', lineHeight: 1.15, fontFamily: '"Fraunces", serif', fontWeight: 900 }}>
+                      <h2 style={{ fontSize: '1.5rem', margin: 0, color: '#78350F', lineHeight: 1.15, fontFamily: '"Fraunces", serif', fontWeight: 900 }}>
                         {getActiveInfo()?.label}
                       </h2>
-                      <div style={{ fontSize: '11.5px', color: '#92400E', fontWeight: 700, marginTop: '2px' }}>
+                      <div style={{ fontSize: '13.5px', color: '#92400E', fontWeight: 700, marginTop: '2px' }}>
                         {getActiveInfo()?.type} • Compass Bearing: {getActiveInfo()?.angle}°
                       </div>
                     </div>
@@ -432,14 +413,14 @@ export default function Directions({ onComplete, onBack }) {
 
                   {/* Direction Explanation */}
                   <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #F2DFBC', flexShrink: 0 }}>
-                    <p style={{ color: '#3D2E24', fontSize: '12.5px', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
+                    <p style={{ color: '#3D2E24', fontSize: '14.5px', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
                       {getActiveInfo()?.description}
                     </p>
                   </div>
 
                   {/* Quick Check Interactive Question */}
                   <div style={{ background: '#FFFFFF', padding: '12px 14px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#78350F', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#78350F', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <HelpCircle size={14} color="#D97706" /> Quick Check: {getActiveInfo()?.question}
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
@@ -460,7 +441,7 @@ export default function Directions({ onComplete, onBack }) {
                             onClick={() => handleAnswerQuestion(activeDir, opt)}
                             style={{
                               background: bg, border: `1.5px solid ${borderColor}`, color: textColor,
-                              padding: '6px 8px', borderRadius: '8px', fontSize: '12px', fontWeight: 800,
+                              padding: '6px 8px', borderRadius: '8px', fontSize: '14px', fontWeight: 800,
                               cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s', fontFamily: '"Space Grotesk", sans-serif'
                             }}
                           >
@@ -470,7 +451,7 @@ export default function Directions({ onComplete, onBack }) {
                       })}
                     </div>
                     {answers[activeDir] && (
-                      <div style={{ marginTop: '6px', fontSize: '11.5px', fontWeight: 800, color: answers[activeDir] === getActiveInfo()?.correct ? '#166534' : '#991B1B', textAlign: 'justify', textJustify: 'inter-word' }}>
+                      <div style={{ marginTop: '6px', fontSize: '13.5px', fontWeight: 800, color: answers[activeDir] === getActiveInfo()?.correct ? '#166534' : '#991B1B', textAlign: 'justify', textJustify: 'inter-word' }}>
                         {answers[activeDir] === getActiveInfo()?.correct ? `✓ Correct! ${getActiveInfo()?.explanation}` : `✗ Not quite! ${getActiveInfo()?.explanation}`}
                       </div>
                     )}
@@ -479,7 +460,7 @@ export default function Directions({ onComplete, onBack }) {
                   {/* Map Tip Box */}
                   <div style={{ background: '#FEF3C7', padding: '8px 12px', borderRadius: '10px', border: '1.5px solid #FDE68A', display: 'flex', gap: '6px', alignItems: 'center', flexShrink: 0 }}>
                      <Lightbulb size={16} color="#D97706" style={{ flexShrink: 0 }} />
-                     <p style={{ color: '#78350F', fontSize: '11.5px', margin: 0, lineHeight: 1.35, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
+                     <p style={{ color: '#78350F', fontSize: '13.5px', margin: 0, lineHeight: 1.35, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
                        <b>Map Tip:</b> {getActiveInfo()?.note}
                      </p>
                   </div>
@@ -497,7 +478,7 @@ export default function Directions({ onComplete, onBack }) {
                   onClick={() => setInfoPage(1)}
                   disabled={infoPage === 1}
                   style={{
-                    fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '12px',
+                    fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '14px',
                     background: infoPage === 1 ? '#F7F1E2' : '#FFF9F0', color: infoPage === 1 ? '#A8A29E' : '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
                     padding: '6px 15px', cursor: infoPage === 1 ? 'default' : 'pointer',
                     opacity: infoPage === 1 ? 0.45 : 1, transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '4px'
@@ -505,7 +486,7 @@ export default function Directions({ onComplete, onBack }) {
                 >
                   ◀ Overview
                 </button>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 800, color: '#78350F' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 800, color: '#78350F' }}>
                   <span>Page {infoPage} of 2</span>
                   <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: infoPage === 1 ? '#D97706' : '#F2DFBC' }} />
                   <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: infoPage === 2 ? '#D97706' : '#F2DFBC' }} />
@@ -514,7 +495,7 @@ export default function Directions({ onComplete, onBack }) {
                   <button
                     onClick={() => setInfoPage(2)}
                     style={{
-                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '12px',
+                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '14px',
                       background: '#F59E0B', color: '#FFFFFF', border: '1.5px solid #D97706', borderRadius: '999px',
                       padding: '6px 15px', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '4px',
                       boxShadow: '0 2px 6px rgba(245,158,11,0.25)'
@@ -526,7 +507,7 @@ export default function Directions({ onComplete, onBack }) {
                   <button
                     onClick={() => setPulseCompass(true)}
                     style={{
-                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '12px',
+                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '14px',
                       background: '#FEF3C7', color: '#92400E', border: '1.5px solid #FDE68A', borderRadius: '999px',
                       padding: '6px 15px', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '4px'
                     }}
@@ -542,7 +523,7 @@ export default function Directions({ onComplete, onBack }) {
                   margin: '0 auto',
                   display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                   padding: '6px 18px', background: '#FFF9F0', border: '1.5px solid #F2DFBC',
-                  borderRadius: '999px', color: '#78350F', fontSize: '12px', fontWeight: 800,
+                  borderRadius: '999px', color: '#78350F', fontSize: '14px', fontWeight: 800,
                   cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif'
                 }}
               >
@@ -560,48 +541,71 @@ export default function Directions({ onComplete, onBack }) {
           <div style={{ position: 'absolute', width: '80%', height: '80%', background: 'radial-gradient(circle, rgba(217, 119, 6, 0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
           {/* Compass Title Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(254, 243, 199, 0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(253, 230, 138, 0.3)', padding: '4px 14px', borderRadius: '999px', color: '#FEF3C7', fontSize: '11px', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0, zIndex: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(254, 243, 199, 0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(253, 230, 138, 0.3)', padding: '4px 14px', borderRadius: '999px', color: '#FEF3C7', fontSize: '13px', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0, zIndex: 10 }}>
             <Compass size={13} color="#FDE68A" /> Interactive Magnetic Compass
           </div>
 
           {/* Realistic Compass */}
+          {/* Realistic Compass */}
           <motion.div 
-            animate={pulseCompass ? { scale: [1, 1.05, 1], boxShadow: ['0 30px 60px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -2px 10px rgba(0,0,0,0.4)', '0 30px 100px rgba(56,189,248,0.8), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -2px 10px rgba(0,0,0,0.4)', '0 30px 60px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -2px 10px rgba(0,0,0,0.4)'] } : {}}
+            animate={pulseCompass ? { scale: [1, 1.05, 1], boxShadow: ['0 30px 60px rgba(0,0,0,0.7), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -4px 15px rgba(0,0,0,0.6)', '0 30px 100px rgba(217,119,6,0.5), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -4px 15px rgba(0,0,0,0.6)', '0 30px 60px rgba(0,0,0,0.7), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -4px 15px rgba(0,0,0,0.6)'] } : {}}
             transition={{ duration: 0.5 }}
-            style={{ position: 'relative', width: 'min(330px, 44vh)', height: 'min(330px, 44vh)', borderRadius: '50%', background: 'linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #475569 100%)', boxShadow: '0 25px 50px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -2px 10px rgba(0,0,0,0.4)', padding: '12px', flexShrink: 0 }}
+            style={{ 
+              position: 'relative', width: 'min(330px, 44vh)', height: 'min(330px, 44vh)', borderRadius: '50%', 
+              background: 'conic-gradient(from 0deg, #9ca3af 0%, #f3f4f6 15%, #6b7280 35%, #e5e7eb 50%, #4b5563 65%, #f9fafb 85%, #9ca3af 100%)', 
+              boxShadow: '0 30px 60px rgba(0,0,0,0.7), inset 0 0 15px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.9), inset 0 -4px 15px rgba(0,0,0,0.8)', 
+              padding: '16px', flexShrink: 0 
+            }}
           >
             
+            {/* Inner Brass Ring */}
+            <div style={{ position: 'absolute', inset: '10px', borderRadius: '50%', background: 'conic-gradient(from 45deg, #78350f 0%, #fcd34d 25%, #92400e 50%, #fef3c7 75%, #78350f 100%)', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 3px rgba(255,255,255,0.5)' }}></div>
+
             {/* Inner Dark Dial */}
-            <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', background: 'radial-gradient(circle at 30% 30%, #1e293b 0%, #020617 80%)', boxShadow: 'inset 0 10px 20px rgba(0,0,0,0.8), 0 2px 5px rgba(255,255,255,0.2)' }}>
+            <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', background: 'radial-gradient(circle at 35% 25%, #1e293b 0%, #020617 80%)', boxShadow: 'inset 0 15px 30px rgba(0,0,0,0.9), 0 2px 6px rgba(255,255,255,0.3)', overflow: 'hidden' }}>
               
+              {/* Fine Grid/Texture on Dial */}
+              <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '4px 4px' }}></div>
+
               {/* Dial Markings */}
               <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                {Array.from({length: 36}).map((_, i) => (
-                  <line key={i} x1="50" y1="2" x2="50" y2={i % 9 === 0 ? "8" : "4"} stroke="rgba(255,255,255,0.2)" strokeWidth={i % 9 === 0 ? "1" : "0.5"} transform={`rotate(${i * 10} 50 50)`} />
+                {Array.from({length: 72}).map((_, i) => (
+                  <line key={i} x1="50" y1="2" x2="50" y2={i % 18 === 0 ? "9" : (i % 9 === 0 ? "6" : "3")} stroke={i % 18 === 0 ? "#fcd34d" : "rgba(255,255,255,0.25)"} strokeWidth={i % 18 === 0 ? "1" : "0.5"} transform={`rotate(${i * 5} 50 50)`} />
                 ))}
               </svg>
 
               {/* The Needle */}
               <motion.div 
                 animate={{ rotate: getActiveInfo()?.angle || 0 }}
-                transition={{ type: 'spring', damping: 15, stiffness: 100 }}
-                style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.5))', zIndex: 10 }}
+                transition={{ type: 'spring', damping: 12, stiffness: 80 }}
+                style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', filter: 'drop-shadow(0 12px 14px rgba(0,0,0,0.75))', zIndex: 10 }}
               >
-                {/* North Half */}
+                {/* North Half (Red/Metallic) */}
                 <svg width="24" height="180" viewBox="0 0 30 240" style={{ position: 'absolute' }}>
-                   <path d="M 15 12 L 30 120 L 15 120 Z" fill="#ef4444" />
-                   <path d="M 15 12 L 0 120 L 15 120 Z" fill="#dc2626" />
+                   <path d="M 15 10 L 30 120 L 15 120 Z" fill="url(#redGradRight)" />
+                   <path d="M 15 10 L 0 120 L 15 120 Z" fill="url(#redGradLeft)" />
+                   <defs>
+                     <linearGradient id="redGradLeft" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#991b1b" /><stop offset="100%" stopColor="#ef4444" /></linearGradient>
+                     <linearGradient id="redGradRight" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#ef4444" /><stop offset="100%" stopColor="#7f1d1d" /></linearGradient>
+                   </defs>
                 </svg>
-                {/* South Half */}
+                {/* South Half (White/Silver) */}
                 <svg width="24" height="180" viewBox="0 0 30 240" style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
-                   <path d="M 15 12 L 30 120 L 15 120 Z" fill="#e2e8f0" />
-                   <path d="M 15 12 L 0 120 L 15 120 Z" fill="#cbd5e1" />
+                   <path d="M 15 10 L 30 120 L 15 120 Z" fill="url(#silverGradRight)" />
+                   <path d="M 15 10 L 0 120 L 15 120 Z" fill="url(#silverGradLeft)" />
+                   <defs>
+                     <linearGradient id="silverGradLeft" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#94a3b8" /><stop offset="100%" stopColor="#ffffff" /></linearGradient>
+                     <linearGradient id="silverGradRight" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#ffffff" /><stop offset="100%" stopColor="#475569" /></linearGradient>
+                   </defs>
                 </svg>
-                {/* Center Pin */}
-                <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: 'linear-gradient(135deg, #fcd34d 0%, #b45309 100%)', boxShadow: '0 2px 5px rgba(0,0,0,0.5)', zIndex: 15 }} />
+                {/* Center Brass Pin */}
+                <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'radial-gradient(circle at 30% 30%, #fef3c7 0%, #b45309 60%, #451a03 100%)', boxShadow: '0 4px 8px rgba(0,0,0,0.6), inset 0 -2px 4px rgba(0,0,0,0.4)', zIndex: 15 }} />
               </motion.div>
 
-              {/* Interactive Slices and Labels */}
+              {/* Glass Dome Reflection Overlay */}
+              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'linear-gradient(145deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 40%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.4) 100%)', pointerEvents: 'none', zIndex: 18 }}></div>
+              <div style={{ position: 'absolute', top: '5%', left: '15%', width: '70%', height: '40%', borderRadius: '50%', background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.25) 0%, transparent 70%)', pointerEvents: 'none', transform: 'rotate(-25deg)', zIndex: 18 }}></div>
+
               {DIRECTIONS.map((dir) => {
                 const isActive = activeDir === dir.id;
                 const isHovered = hoveredDir === dir.id;
@@ -636,7 +640,7 @@ export default function Directions({ onComplete, onBack }) {
                         transform: `rotate(-${dir.angle}deg)`,
                         color: isActive ? '#38bdf8' : (isHovered ? '#fff' : '#94a3b8'),
                         fontWeight: '900',
-                        fontSize: dir.id.length === 1 ? '1.35rem' : '1.05rem',
+                        fontSize: dir.id.length === 1 ? '1.55rem' : '1.25rem',
                         textShadow: isActive ? '0 0 10px rgba(56, 189, 248, 0.9)' : 'none',
                         transition: 'all 0.2s',
                         fontFamily: 'Space Grotesk, sans-serif'
@@ -659,7 +663,7 @@ export default function Directions({ onComplete, onBack }) {
 
           {/* Prompt below compass */}
           <div style={{ zIndex: 30, display: 'flex', gap: '6px', alignItems: 'center', flexShrink: 0 }}>
-            <span style={{ fontSize: '11.5px', color: '#94A3B8', fontWeight: 600 }}>
+            <span style={{ fontSize: '13.5px', color: '#94A3B8', fontWeight: 600 }}>
               💡 Click any quadrant on the compass to point the needle
             </span>
           </div>
