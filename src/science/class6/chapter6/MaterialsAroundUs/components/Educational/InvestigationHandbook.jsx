@@ -131,7 +131,7 @@ const PotterySpotlight = ({ page1Layout }) => {
               style={{
                 width: '32px', height: '32px', 
                 borderRadius: '50%',
-                background: currentClue === c.id ? 'var(--lesson-accent)' : (currentClue > c.id ? 'var(--lesson-success)' : 'var(--lesson-border)'),
+                background: currentClue === c.id ? 'var(--lesson-accent)' : (currentClue > c.id ? '#a65842' : 'var(--lesson-border)'),
                 color: currentClue === c.id || currentClue > c.id ? 'white' : 'var(--lesson-muted)',
                 display: 'flex', justifyContent: 'center', alignItems: 'center',
                 fontWeight: 'bold', fontSize: '14px', cursor: 'pointer',
@@ -154,7 +154,7 @@ const PotterySpotlight = ({ page1Layout }) => {
             <div style={{ 
               height: '4px', 
               width: '40px',
-              background: currentClue > c.id ? 'var(--lesson-success)' : 'var(--lesson-border)',
+              background: currentClue > c.id ? '#a65842' : 'var(--lesson-border)',
               margin: '0 4px',
               flexShrink: 1,
               transform: 'translateY(-8px)'
@@ -220,7 +220,7 @@ const PotterySpotlight = ({ page1Layout }) => {
              </button>
           ) : (
              <div style={{
-                 background: 'var(--lesson-success)', color: 'white', borderRadius: '24px',
+                 background: '#a65842', color: 'white', borderRadius: '24px',
                  padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)', fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
 
                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
