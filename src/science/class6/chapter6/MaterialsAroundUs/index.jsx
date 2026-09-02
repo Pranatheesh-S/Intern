@@ -105,7 +105,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       const nextIndex = currentFlowIndex + 1;
       const nextNode = chapterFlow[nextIndex];
       
-      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
+      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage3_use' || nextNode.id === 'stage4_1' || nextNode.id === 'stage4_4' || nextNode.id === 'stage6_a' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
         setShowHandbook(false);
       } else {
         setShowHandbook(true);
@@ -144,7 +144,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       ) : showIntroSpread ? (
         <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />
       ) : (
-        <div className="activity-workspace materials-around-us-theme flex h-screen bg-[var(--surface)] overflow-hidden" style={{ paddingTop: 0, paddingBottom: '72px' }}>
+        <div className="activity-workspace materials-around-us-theme flex h-screen bg-[var(--lesson-surface)] overflow-hidden" style={{ paddingTop: 0, paddingBottom: '72px' }}>
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
         {/* Toggle Button */}
         <button
@@ -155,8 +155,8 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             top: '50%',
             transform: 'translateY(-50%)',
             zIndex: 101,
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
+            background: 'var(--lesson-surface)',
+            border: '1px solid var(--lesson-border)',
             borderLeft: 'none',
             borderTopRightRadius: '8px',
             borderBottomRightRadius: '8px',
@@ -164,7 +164,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             cursor: 'pointer',
             boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
             transition: 'left 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-            color: 'var(--text-primary)',
+            color: 'var(--lesson-text)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -181,7 +181,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             position: 'absolute', 
             left: 0,
             top: 0, bottom: 0, zIndex: 100, 
-            background: 'var(--surface)', borderRight: '1px solid var(--border)', 
+            background: 'var(--lesson-surface)', borderRight: '1px solid var(--lesson-border)', 
             display: 'flex', flexDirection: 'column', 
             overflow: 'hidden', boxShadow: isTimelineOpen ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
             width: '320px', 
@@ -190,7 +190,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           }}
         >
           <div style={{ width: '320px', padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '0.9rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '0.9rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
               Investigation Progress
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', overflowY: 'auto', paddingRight: '0.5rem' }}>
@@ -230,9 +230,9 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                         padding: '0.75rem',
                         marginLeft: `${indentLevel * 1}rem`,
                         borderRadius: '8px',
-                        background: isActive ? 'var(--accent-bg)' : 'transparent',
-                        border: `1px solid ${isActive ? 'var(--accent-border)' : 'transparent'}`,
-                        color: isPast ? 'var(--text-muted)' : isActive ? 'var(--accent)' : 'var(--text-primary)',
+                        background: isActive ? 'var(--lesson-accent-bg)' : 'transparent',
+                        border: `1px solid ${isActive ? 'var(--lesson-accent-border)' : 'transparent'}`,
+                        color: isPast ? 'var(--lesson-muted)' : isActive ? 'var(--lesson-accent)' : 'var(--lesson-text)',
                         transition: 'all 0.2s',
                         opacity: isLocked ? 0.4 : 1,
                         cursor: isLocked ? 'not-allowed' : 'pointer',
@@ -244,7 +244,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                         <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {item.title}
                         </span>
-                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--lesson-muted)' }}>
                           {item.type === 'mission' ? 'Mission Briefing' : item.type === 'activity' ? item.subtitle : 'Evidence Review'}
                         </span>
                       </div>
@@ -278,7 +278,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                           borderRadius: '8px',
                           background: 'rgba(0,0,0,0.03)',
                           border: 'none',
-                          color: isLocked ? 'var(--text-muted)' : 'var(--text-primary)',
+                          color: isLocked ? 'var(--lesson-muted)' : 'var(--lesson-text)',
                           fontWeight: 'bold',
                           cursor: isLocked ? 'not-allowed' : 'pointer',
                           textAlign: 'left',
@@ -286,7 +286,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                         }}
                       >
                         <span style={{ fontSize: '0.9rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{group.title}</span>
-                        <span style={{ fontSize: '0.8rem', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: 'var(--text-muted)' }}>▶</span>
+                        <span style={{ fontSize: '0.8rem', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: 'var(--lesson-muted)' }}>▶</span>
                       </button>
                       {isExpanded && !isLocked && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.25rem' }}>
@@ -427,7 +427,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           <button 
             onClick={onBackToDashboard} 
             className="outline" 
-            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.45rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', display: 'flex', alignItems: 'center' }}
           >
             <ArrowLeft size={24} /> Dashboard
           </button>
@@ -506,7 +506,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 }
               }
 
-              if (!showHandbook && currentNode.type === 'activity' && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') {
+              if (!showHandbook && currentNode.type === 'activity' && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) {
                 setShowHandbook(true);
               } else if (currentFlowIndex > 0) {
                 const prevIndex = currentFlowIndex - 1;
@@ -522,7 +522,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               }
             }}
             className="outline"
-            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.45rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
           >
             <ArrowLeft size={24} /> Back
           </button>
@@ -539,24 +539,24 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               setStageCompleted(false);
             }}
             className="outline"
-            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.45rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
           >
             <RefreshCw size={22} /> Reset Activity
           </button>
 
           {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
             <button 
-              onClick={showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c' ? () => setShowHandbook(false) : handleNext}
-              disabled={(showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') ? false : !stageCompleted}
-              className={((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'primary' : 'outline'}
+              onClick={showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id) ? () => setShowHandbook(false) : handleNext}
+              disabled={(showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) ? false : !stageCompleted}
+              className={((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted) ? 'primary' : 'outline'}
               style={{ 
                 padding: '0.85rem 1.8rem', 
-                fontSize: '1.35rem', 
+                fontSize: '1.5rem', 
                 fontWeight: 'bold',
                 gap: '0.75rem', 
                 borderRadius: '10px',
-                opacity: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 1 : 0.5,
-                cursor: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'pointer' : 'not-allowed',
+                opacity: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted) ? 1 : 0.5,
+                cursor: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted) ? 'pointer' : 'not-allowed',
                 transition: 'all 0.3s',
                 display: 'flex',
                 alignItems: 'center'

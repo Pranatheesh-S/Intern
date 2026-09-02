@@ -44,14 +44,14 @@ export default function Barrier3_Properties({ onComplete, addXp }) {
               flexDirection: 'column',
               gap: '1.5rem',
               alignItems: 'center',
-              border: '2px solid var(--success-border)',
-              background: 'var(--success-bg)'
+              border: '2px solid var(--lesson-success-border)',
+              background: 'var(--lesson-success-bg)'
             }}
           >
-            <CheckCircle size={48} style={{ color: 'var(--success)' }} />
+            <CheckCircle size={48} style={{ color: 'var(--lesson-success)' }} />
             <div>
-              <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--success)', fontSize: '1.5rem' }}>Barrier 3 Complete!</h2>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+              <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--lesson-success)', fontSize: '1.5rem' }}>Barrier 3 Complete!</h2>
+              <p style={{ margin: 0, color: 'var(--lesson-secondary)', lineHeight: '1.6' }}>
                 You have successfully tested Lustre, Hardness, Transparency, and Solubility. 
                 All these properties help us decide what materials to use for what objects! 
                 Now, there is one final question to answer...

@@ -74,17 +74,17 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
   const bottleVisualRef = useRef({ pos: BOTTLE_INIT, tilt: 0 }); // Tracks Framer Motion visual state
 
   const colors = {
-    cardBg:        '#fdfbf7',
-    cardBorder:    '#e7e5e4',
-    textDark:      '#431407',
-    textMedium:    '#57534e',
-    accent:        '#c2410c',
-    successBg:     '#f0fdf4',
-    successBorder: '#bbf7d0',
-    successText:   '#166534',
-    thinkBg:       '#fff7ed',
-    thinkBorder:   '#ffedd5',
-    thinkText:     '#9a3412',
+    cardBg:        'var(--lesson-background)',
+    cardBorder:    'var(--lesson-border)',
+    textDark:      'var(--lesson-primary)',
+    textMedium:    'var(--lesson-secondary)',
+    accent:        'var(--lesson-accent)',
+    successBg:     'var(--lesson-success-bg)',
+    successBorder: 'var(--lesson-success-border)',
+    successText:   'var(--lesson-success)',
+    thinkBg:       'white7ed',
+    thinkBorder:   'var(--lesson-warning-bg)',
+    thinkText:     'var(--lesson-primary)',
   };
 
   /* ──────────────────────────────────────
@@ -584,7 +584,7 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                 flex: 1, position: 'relative', borderRadius: '12px',
                 overflow: 'hidden',
                 minHeight: 0,
-                background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)',
+                background: 'linear-gradient(180deg, var(--lesson-background) 0%, var(--lesson-border) 100%)',
                 boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.03)',
                 border: `1.5px solid ${colors.cardBorder}`,
                 display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
@@ -599,8 +599,8 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                   position: 'absolute',
                   bottom: 0, left: '-50%', right: '-50%',
                   height: `${GROUND_Y}px`,
-                  background: 'linear-gradient(to bottom, #cbd5e1 0%, #94a3b8 100%)',
-                  borderTop: '2px solid #f1f5f9',
+                  background: 'linear-gradient(to bottom, var(--lesson-border) 0%, var(--lesson-muted) 100%)',
+                  borderTop: '2px solid var(--lesson-surface)',
                   boxShadow: '0 -4px 15px rgba(0,0,0,0.06)',
                   zIndex: 0
                 }} />
@@ -635,9 +635,9 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       <stop offset="100%" stopColor="rgba(255,255,255,0.85)" />
                     </linearGradient>
                     <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#0284c7" />
-                      <stop offset="15%" stopColor="#38bdf8" />
-                      <stop offset="50%" stopColor="#0ea5e9" />
+                      <stop offset="0%" stopColor="var(--lesson-accent)" />
+                      <stop offset="15%" stopColor="var(--lesson-accent)" />
+                      <stop offset="50%" stopColor="var(--lesson-accent)" />
                       <stop offset="85%" stopColor="#0369a1" />
                       <stop offset="100%" stopColor="#075985" />
                     </linearGradient>
@@ -718,7 +718,7 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       <ellipse cx="60" cy="20" rx="37" ry="6" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
                     </svg>
 
-                    <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '12px', background: 'rgba(255,255,255,0.92)', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center', width: 'max-content' }}>
+                    <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '12px', background: 'rgba(255,255,255,0.92)', border: '1px solid var(--lesson-border)', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center', width: 'max-content' }}>
                       <div style={{ fontWeight: '800', fontSize: '1.05rem', color: colors.textDark }}>Tumbler A</div>
                       <div style={{ fontSize: '0.85rem', color: colors.textMedium, fontWeight: '600' }}>
                         {waterLevelA > 0 ? `${Math.round(waterLevelA * 100)}% Volume` : 'Empty (200ml)'}
@@ -787,7 +787,7 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       <ellipse cx="60" cy="20" rx="37" ry="6" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
                     </svg>
 
-                    <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '12px', background: 'rgba(255,255,255,0.92)', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center', width: 'max-content' }}>
+                    <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '12px', background: 'rgba(255,255,255,0.92)', border: '1px solid var(--lesson-border)', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center', width: 'max-content' }}>
                       <div style={{ fontWeight: '800', fontSize: '1.05rem', color: colors.textDark }}>Tumbler B</div>
                       <div style={{ fontSize: '0.85rem', color: colors.textMedium, fontWeight: '600' }}>
                         {waterLevelB >= 0.95 ? 'Almost Full' : waterLevelB > 0 ? `${Math.round(waterLevelB * 100)}% Volume` : 'Empty (200ml)'}
@@ -902,13 +902,13 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       }}
                     >
                       {/* Collar (neck ring stays attached to cap) */}
-                      <rect x="44" y="22" width="32" height="5" rx="2" fill="#0284c7" stroke="#0369a1" strokeWidth="1" />
+                      <rect x="44" y="22" width="32" height="5" rx="2" fill="var(--lesson-accent)" stroke="#0369a1" strokeWidth="1" />
                       <rect x="46" y="23" width="28" height="2" rx="1" fill="rgba(255,255,255,0.4)" />
 
                       {/* Cap body */}
-                      <rect x="43" y="5" width="34" height="22" rx="3" fill="#0ea5e9" stroke="#0284c7" strokeWidth="1.5" />
+                      <rect x="43" y="5" width="34" height="22" rx="3" fill="var(--lesson-accent)" stroke="var(--lesson-accent)" strokeWidth="1.5" />
                       {/* Top rim of cap */}
-                      <ellipse cx="60" cy="5" rx="17" ry="4" fill="#38bdf8" stroke="#0284c7" strokeWidth="1" />
+                      <ellipse cx="60" cy="5" rx="17" ry="4" fill="var(--lesson-accent)" stroke="var(--lesson-accent)" strokeWidth="1" />
                       {/* Cap highlight */}
                       <rect x="46" y="9" width="28" height="3" rx="1" fill="rgba(255,255,255,0.5)" />
                       {/* Ridges */}
@@ -951,39 +951,39 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
         </div>
 
         {/* ────────── RIGHT PANEL ────────── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem', minHeight: 0, overflow: 'hidden' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', minHeight: 0, overflow: 'visible' }}>
 
           {/* Investigation Log */}
-          <div style={{ background: colors.cardBg, borderRadius: '12px', border: `1px solid ${colors.cardBorder}`, padding: '0.25rem 0.5rem', display: 'flex', flexDirection: 'column', gap: '0.15rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', flexShrink: 0 }}>
-            <h4 style={{ margin: 0, fontSize: '24px', color: colors.textDark, display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800' }}>
-              <LayoutGrid size={24} color={colors.textDark} /> Investigation Log
+          <div style={{ background: colors.cardBg, borderRadius: '10px', border: `1px solid ${colors.cardBorder}`, padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '4px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', flexShrink: 0 }}>
+            <h4 style={{ margin: 0, fontSize: '22px', color: colors.textDark, display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '800' }}>
+              <LayoutGrid size={22} color={colors.textDark} /> Investigation Log
             </h4>
             <AnimatePresence mode="popLayout">
               {waterLevelA >= 0.49 && (
-                <motion.div key="obsA" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '0.25rem 0.5rem', borderRadius: '10px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '0.5rem', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                  <div style={{ width: '36px', height: '48px', position: 'relative', flexShrink: 0 }}>
+                <motion.div key="obsA" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '6px 10px', borderRadius: '8px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '8px', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <div style={{ width: '24px', height: '30px', position: 'relative', flexShrink: 0 }}>
                     <img src="/images/realistic_tumbler_water_half.jpg" alt="Tumbler A" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
                   </div>
                   <div>
-                    <div style={{ color: colors.accent, fontWeight: '800', fontSize: '20px' }}>Observation 1</div>
-                    <div style={{ fontSize: '18px', color: colors.textDark, marginTop: '2px', lineHeight: '1.4', fontWeight: '600' }}>Tumbler A is half-filled with water (50% Volume).</div>
+                    <div style={{ color: colors.accent, fontWeight: '800', fontSize: '16px' }}>Observation 1</div>
+                    <div style={{ fontSize: '15px', color: colors.textDark, marginTop: '1px', lineHeight: '1.2', fontWeight: '600' }}>Tumbler A is half-filled with water (50% Volume).</div>
                   </div>
                 </motion.div>
               )}
               {waterLevelB >= 0.94 && (
-                <motion.div key="obsB" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '0.25rem 0.5rem', borderRadius: '10px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '0.5rem', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                  <div style={{ width: '36px', height: '48px', position: 'relative', flexShrink: 0 }}>
+                <motion.div key="obsB" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '6px 10px', borderRadius: '8px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '8px', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <div style={{ width: '24px', height: '30px', position: 'relative', flexShrink: 0 }}>
                     <img src="/images/realistic_tumbler_water_full.jpg" alt="Tumbler B" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
                   </div>
                   <div>
-                    <div style={{ color: colors.accent, fontWeight: '800', fontSize: '20px' }}>Observation 2</div>
-                    <div style={{ fontSize: '18px', color: colors.textDark, marginTop: '2px', lineHeight: '1.4', fontWeight: '600' }}>Tumbler B is almost completely filled with water.</div>
+                    <div style={{ color: colors.accent, fontWeight: '800', fontSize: '16px' }}>Observation 2</div>
+                    <div style={{ fontSize: '15px', color: colors.textDark, marginTop: '1px', lineHeight: '1.2', fontWeight: '600' }}>Tumbler B is almost completely filled with water.</div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
             {waterLevelA < 0.49 && waterLevelB < 0.94 && (
-              <div style={{ textAlign: 'center', color: colors.textMedium, fontSize: '18px', padding: '0.5rem 0', fontStyle: 'italic', fontWeight: '500' }}>
+              <div style={{ textAlign: 'center', color: colors.textMedium, fontSize: '15px', padding: '4px 0', fontStyle: 'italic', fontWeight: '500' }}>
                 Waiting for observations...
               </div>
             )}
@@ -992,14 +992,15 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
           {/* Scientific Conclusion */}
           <AnimatePresence>
             {waterLevelB >= 0.90 && (
-              <motion.div key="conclusion" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} style={{ background: colors.successBg, padding: '0.25rem 0.5rem', borderRadius: '12px', border: `1px solid ${colors.successBorder}`, flexShrink: 0 }}>
-                <div style={{ color: colors.successText, fontWeight: '800', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '24px' }}>
+              <motion.div key="conclusion" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} style={{ background: colors.successBg, padding: '8px 12px', borderRadius: '10px', border: `1px solid ${colors.successBorder}`, flexShrink: 0 }}>
+                <div style={{ color: colors.successText, fontWeight: '800', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '22px' }}>
                   🧪 Scientific Conclusion
                 </div>
-                <div style={{ fontSize: '18px', color: colors.successText, lineHeight: '1.25', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={20} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> Even though the tumblers have the same capacity, the water levels differ.</div>
-                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={20} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> The water in Tumbler A occupies less space than the water in Tumbler B.</div>
-                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={20} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> The space occupied by an object or substance is called its <strong>volume!</strong></div>
+                <div style={{ fontSize: '15px', color: colors.successText, lineHeight: '1.2', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> The bottle has a limited amount of space.</div>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> <span>The space occupied by an object or substance is called its <strong style={{ color: 'var(--lesson-text)', background: '#fef08a', padding: '0 4px', fontWeight: '900' }}>VOLUME</strong>.</span></div>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> Different containers can have different volumes.</div>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> We can observe and compare volume by pouring water!</div>
                 </div>
               </motion.div>
             )}
@@ -1008,21 +1009,21 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
           {/* Think More */}
           <AnimatePresence>
             {waterLevelB >= 0.90 && (
-              <motion.div key="think" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ background: colors.thinkBg, padding: '0.25rem 0.5rem', borderRadius: '12px', border: `1px solid ${colors.thinkBorder}`, display: 'flex', flexDirection: 'column', gap: '0.15rem', flexShrink: 0, boxSizing: 'border-box' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ color: colors.accent, fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '24px' }}>
-                    <HelpCircle size={24} /> Think More!
+              <motion.div key="think" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ background: colors.thinkBg, padding: '10px 12px', borderRadius: '10px', border: `1px solid ${colors.thinkBorder}`, display: 'flex', flexDirection: 'column', gap: '4px', flexShrink: 0, height: 'auto', boxSizing: 'border-box', overflow: 'visible' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                  <div style={{ color: colors.accent, fontWeight: '800', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '22px' }}>
+                    <HelpCircle size={22} /> Think More!
                   </div>
                 </div>
-                <div style={{ fontSize: '18px', color: colors.thinkText, lineHeight: '1.2', fontWeight: '700' }}>
+                <div style={{ fontSize: '16px', color: colors.thinkText, lineHeight: '1.2', fontWeight: '700', flexShrink: 0 }}>
                   What if we pour the water from Tumbler B back into the bottle? What will you observe?
                 </div>
-                <div style={{ fontSize: '16px', fontStyle: 'italic', color: colors.textDark, opacity: 0.85, lineHeight: '1.2', fontWeight: '500' }}>
-                  <Info size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
+                <div style={{ fontSize: '14px', fontStyle: 'italic', color: colors.textDark, opacity: 0.85, lineHeight: '1.2', fontWeight: '500', flexShrink: 0 }}>
+                  <Info size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
                   Hint: The bottle may not be able to hold all the water. What might happen if there is more water than the bottle can hold?
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', overflow: 'visible' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flexShrink: 0 }}>
                     {THINK_OPTIONS.map((opt, i) => {
                       const isCorrectSelection = thinkFeedback && thinkFeedback.type === 'success' && selectedOption === i;
                       return (
@@ -1033,33 +1034,34 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                           handleCheckAnswer(i);
                         }}
                         style={{
-                          padding: '6px 12px',
-                          borderRadius: '8px',
-                          border: `2px solid ${isCorrectSelection ? '#22c55e' : (selectedOption === i ? colors.accent : colors.cardBorder)}`,
-                          background: isCorrectSelection ? '#f0fdf4' : (selectedOption === i ? '#fff7ed' : 'white'),
-                          color: isCorrectSelection ? '#15803d' : (selectedOption === i ? colors.accent : colors.textDark),
-                          fontSize: '17px',
+                          padding: '6px 10px',
+                          borderRadius: '6px',
+                          border: `2px solid ${isCorrectSelection ? 'var(--lesson-success)' : (selectedOption === i ? colors.accent : colors.cardBorder)}`,
+                          background: isCorrectSelection ? 'var(--lesson-success-bg)' : (selectedOption === i ? 'white7ed' : 'white'),
+                          color: isCorrectSelection ? 'var(--lesson-success)' : (selectedOption === i ? colors.accent : colors.textDark),
+                          fontSize: '15px',
                           lineHeight: '1.2',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '10px',
+                          gap: '6px',
                           fontWeight: selectedOption === i ? '700' : '600',
                           boxShadow: selectedOption === i ? '0 2px 4px rgba(0,0,0,0.05)' : 'none',
                           transition: 'all 0.2s ease',
-                          minHeight: '42px'
+                          minHeight: '38px',
+                          flexShrink: 0
                         }}
                       >
                         <div style={{ 
-                          width: '24px', height: '24px', borderRadius: '50%', 
-                          border: `2px solid ${isCorrectSelection ? '#22c55e' : (selectedOption === i ? colors.accent : '#cbd5e1')}`,
+                          width: '16px', height: '16px', borderRadius: '50%', 
+                          border: `2px solid ${isCorrectSelection ? 'var(--lesson-success)' : (selectedOption === i ? colors.accent : 'var(--lesson-border)')}`,
                           display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0,
                           background: 'white'
                         }}>
                           {isCorrectSelection ? (
-                             <CheckCircle2 size={18} color="#15803d" />
+                             <CheckCircle2 size={12} color="var(--lesson-success)" />
                           ) : (
-                             selectedOption === i && <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: colors.accent }} />
+                             selectedOption === i && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: colors.accent }} />
                           )}
                         </div>
                         {opt}
@@ -1068,9 +1070,9 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                   </div>
                   <AnimatePresence>
                     {thinkFeedback && (
-                      <motion.div key="feedback" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ overflow: 'hidden' }}>
-                        <div style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: thinkFeedback.type === 'success' ? colors.successBg : '#fef2f2', border: `1px solid ${thinkFeedback.type === 'success' ? colors.successBorder : '#fecaca'}`, color: thinkFeedback.type === 'success' ? colors.successText : '#b91c1c', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'flex-start', gap: '8px', boxSizing: 'border-box' }}>
-                          {thinkFeedback.type === 'success' ? <CheckCircle2 size={20} style={{ flexShrink: 0, marginTop: '2px' }} /> : <AlertCircle size={20} style={{ flexShrink: 0, marginTop: '2px' }} />}
+                      <motion.div key="feedback" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ overflow: 'hidden', flexShrink: 0 }}>
+                        <div style={{ padding: '6px 10px', borderRadius: '6px', background: thinkFeedback.type === 'success' ? colors.successBg : 'var(--lesson-danger-bg)', border: `1px solid ${thinkFeedback.type === 'success' ? colors.successBorder : 'var(--lesson-danger-border)'}`, color: thinkFeedback.type === 'success' ? colors.successText : 'var(--lesson-danger)', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'flex-start', gap: '6px', boxSizing: 'border-box', marginTop: '2px' }}>
+                          {thinkFeedback.type === 'success' ? <CheckCircle2 size={14} style={{ flexShrink: 0, marginTop: '1px' }} /> : <AlertCircle size={14} style={{ flexShrink: 0, marginTop: '1px' }} />}
                           <div>{thinkFeedback.text}</div>
                         </div>
                       </motion.div>
