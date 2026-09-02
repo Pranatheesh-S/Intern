@@ -289,12 +289,15 @@ export default function TwoFriendsActivity({ onBack, onNextActivity }) {
              <div style={{ position: 'absolute', left: `${50 + (sunLon/360)*100}%`, top: '50%', transform: 'translate(-50%, -50%)', fontSize: '24px', filter: 'drop-shadow(0 0 10px #f59e0b)' }}>☀️</div>
              
              {/* City dots & labels */}
-             {data.mapDots.map((dot, idx) => (
-               <React.Fragment key={idx}>
-                 <div style={{ position: 'absolute', left: `${50 + (dot.lon/360)*100}%`, top: `${dot.latPercent}%`, transform: 'translate(-50%, -50%)', width: '6px', height: '6px', background: dot.color, borderRadius: '50%', boxShadow: '0 0 0 2px #fff', zIndex: 2 }} />
-                 <div style={{ position: 'absolute', left: `${50 + (dot.lon/360)*100}%`, top: `${dot.latPercent}%`, transform: `translate(-50%, ${dot.labelOffset}px)`, color: dot.labelColor, fontSize: '9px', fontWeight: 'bold', textShadow: '0px 1px 2px #000', zIndex: 2 }}>{dot.label}</div>
-               </React.Fragment>
-             ))}
+             {data.mapDots.map((dot, idx) => {
+               const avatar = idx === 0 ? data.friendA.avatar : data.friendB.avatar;
+               return (
+                 <React.Fragment key={idx}>
+                   <div style={{ position: 'absolute', left: `${50 + (dot.lon/360)*100}%`, top: `${dot.latPercent}%`, transform: 'translate(-50%, -50%)', fontSize: '20px', filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.7))', zIndex: 2 }}>{avatar}</div>
+                   <div style={{ position: 'absolute', left: `${50 + (dot.lon/360)*100}%`, top: `${dot.latPercent}%`, transform: `translate(-50%, ${dot.labelOffset > 0 ? dot.labelOffset + 12 : dot.labelOffset - 12}px)`, color: dot.labelColor, fontSize: '9px', fontWeight: 'bold', textShadow: '0px 1px 2px #000', zIndex: 2 }}>{dot.label}</div>
+                 </React.Fragment>
+               );
+             })}
              
              <div style={{ position: 'absolute', bottom: 4, width: '100%', textAlign: 'center', fontSize: '9px', color: '#94a3b8', zIndex: 2 }}>
                ☀️ = where the Sun is overhead now • shaded = night side • friend A • friend B

@@ -272,12 +272,12 @@ const MISSIONS = [
     id: 'ka',
     stateName: 'Karnataka',
     destination: 'Bengaluru',
-    fact: 'Garden City & High-Tech Capital on the Deccan Plateau (920m elevation).',
+    fact: 'The Garden City on the Deccan Plateau (920m high).',
     landmark: 'Vidhana Soudha & Lalbagh Gardens',
     landmarkIcon: '🏛️',
     type: 'direction',
-    story: 'We are departing from our coastal base camp in Chennai, Tamil Nadu.\nOur first journey takes us up to the garden city of Bengaluru in Karnataka across the Eastern Ghats.',
-    question: 'Which cardinal direction should we travel from Chennai to reach Bengaluru?',
+    story: 'We start from the coast of Chennai in Tamil Nadu.\nOur first stop is the garden city of Bengaluru in Karnataka.',
+    question: 'Which main direction should we travel from Chennai to reach Bengaluru?',
     options: ['West', 'North', 'South', 'East'],
     correct: 'West',
     bearing: 268,
@@ -289,9 +289,9 @@ const MISSIONS = [
     mach: 'Mach 0.74',
     weather: 'Sunny • 24°C',
     wind: '12 km/h W',
-    feedbackWrong: 'Look at the map compass: Bengaluru lies directly to the left (West) of Chennai across the peninsula.',
+    feedbackWrong: 'Look at the compass: Bengaluru is directly to the left (West) of Chennai.',
     feedbackSuccess: 'Spot on! Bengaluru lies directly West (268°) of Chennai on the elevated Deccan Plateau.',
-    learning: '🧭 Cardinal directions (N, S, E, W) provide primary navigational headings across regions.',
+    learning: '🧭 Main directions (N, S, E, W) help us find our way across big regions.',
     direction: 'West',
     highlightTerm: 'Deccan Plateau',
     windowScene: '⛰️ Flying over the rugged Eastern Ghats hills into the elevated granite Deccan plateau.'
@@ -300,12 +300,12 @@ const MISSIONS = [
     id: 'mh',
     stateName: 'Maharashtra',
     destination: 'Mumbai',
-    fact: 'Financial Capital on the Arabian Sea coast, home to the Gateway of India.',
+    fact: 'A big city on the Arabian Sea coast, home to the Gateway of India.',
     landmark: 'Gateway of India & Marine Drive',
     landmarkIcon: '🏙️',
     type: 'distance',
-    story: 'Next, let\'s navigate across the subcontinent to Mumbai in Maharashtra along the Arabian Sea.\nLet\'s compare this long journey against our initial flight to Bengaluru.',
-    question: 'Looking at the map distance from Chennai, which destination is farther away?',
+    story: 'Next, we travel to Mumbai in Maharashtra by the Arabian Sea.\nLet\'s compare this long trip to our first flight to Bengaluru.',
+    question: 'Looking at the map, which place is farther from Chennai?',
     options: ['Mumbai (Much farther)', 'Bengaluru (Closer)', 'Both are at equal distance'],
     correct: 'Mumbai (Much farther)',
     bearing: 318,
@@ -317,9 +317,9 @@ const MISSIONS = [
     mach: 'Mach 0.78',
     weather: 'Coastal Breeze • 29°C',
     wind: '18 km/h NW',
-    feedbackWrong: 'Compare the route lines: Mumbai (~1,300 km) is nearly 4 times farther than Bengaluru (~350 km).',
-    feedbackSuccess: 'Correct! Mumbai is much farther (~1,300 km). Maps allow us to measure distances and calculate travel times accurately.',
-    learning: '📏 Map scales let us calculate distances between distant states.',
+    feedbackWrong: 'Compare the lines: Mumbai is much farther away than Bengaluru.',
+    feedbackSuccess: 'Correct! Mumbai is much farther. Maps help us measure distances easily.',
+    learning: '📏 Map scales help us find distances between places.',
     direction: 'North-West',
     highlightTerm: 'Arabian Sea Coast',
     windowScene: '🌊 Descending past the Western Ghats (Sahyadri) over the sparkling Arabian Sea shoreline.'
@@ -328,12 +328,12 @@ const MISSIONS = [
     id: 'ap',
     stateName: 'Andhra Pradesh',
     destination: 'Amaravati',
-    fact: 'Historic Buddhist heritage center in the fertile Krishna River delta.',
-    landmark: 'Amaravati Stupa & Krishna River',
+    fact: 'An old city in the fertile Krishna River delta.',
+    landmark: 'Amaravati Temple & Krishna River',
     landmarkIcon: '☸️',
     type: 'direction',
-    story: 'Now let\'s head to our northern coastal neighbor Andhra Pradesh.\nAmaravati sits right above Tamil Nadu along the fertile Krishna River basin.',
-    question: 'Which direction should we navigate from Chennai to reach Amaravati in Andhra Pradesh?',
+    story: 'Now let\'s head to our neighbor, Andhra Pradesh.\nAmaravati sits just above Tamil Nadu on the map.',
+    question: 'Which direction should we travel from Chennai to reach Amaravati?',
     options: ['North', 'South', 'East', 'West'],
     correct: 'North',
     bearing: 358,
@@ -345,23 +345,23 @@ const MISSIONS = [
     mach: 'Mach 0.75',
     weather: 'Clear Skies • 31°C',
     wind: '10 km/h N',
-    feedbackWrong: 'Andhra Pradesh lies directly upwards (North) from Tamil Nadu on the map.',
-    feedbackSuccess: 'Excellent! Amaravati is located directly North (358°) of Chennai along the eastern coast.',
-    learning: '🧭 Maps help us identify neighboring states and relative geographical positions.',
+    feedbackWrong: 'Amaravati is directly up (North) from Chennai on the map.',
+    feedbackSuccess: 'Excellent! Amaravati is straight North of Chennai.',
+    learning: '🧭 Maps help us find our neighbor states.',
     direction: 'North',
-    highlightTerm: 'Krishna River Delta',
+    highlightTerm: 'Krishna River',
     windowScene: '🌾 Flying over emerald rice paddy fields and the wide flowing waters of the Krishna River.'
   },
   {
     id: 'wb',
     stateName: 'West Bengal',
     destination: 'Kolkata',
-    fact: 'City of Joy on the Hooghly River, famous for the iconic Howrah Bridge.',
-    landmark: 'Howrah Bridge & Hooghly Delta',
+    fact: 'Known as the City of Joy, famous for the Howrah Bridge.',
+    landmark: 'Howrah Bridge & Hooghly River',
     landmarkIcon: '🌉',
     type: 'direction',
-    story: 'Our journey now spans across the eastern seaboard towards West Bengal.\nKolkata lies in the upper-right quadrant of the India map along the Bay of Bengal.',
-    question: 'Which intermediate direction must we travel from Chennai to reach Kolkata?',
+    story: 'We now travel up the east coast to West Bengal.\nKolkata is in the upper-right part of the map by the sea.',
+    question: 'Which direction should we travel from Chennai to reach Kolkata?',
     options: ['North-East', 'North-West', 'South-East', 'South-West'],
     correct: 'North-East',
     bearing: 38,
@@ -373,23 +373,23 @@ const MISSIONS = [
     mach: 'Mach 0.80',
     weather: 'Humid • 28°C',
     wind: '15 km/h NE',
-    feedbackWrong: 'Kolkata lies between North and East (upper-right). That is North-East.',
-    feedbackSuccess: 'Perfect! Kolkata lies in the North-East direction along the Bay of Bengal coastline.',
-    learning: '🗺 Intermediate directions (NE, NW, SE, SW) provide accurate 8-point compass navigation.',
+    feedbackWrong: 'Kolkata is between North and East (upper-right). That is North-East.',
+    feedbackSuccess: 'Perfect! Kolkata is in the North-East direction.',
+    learning: '🗺 In-between directions (NE, NW, SE, SW) help us point to exact locations.',
     direction: 'North-East',
-    highlightTerm: 'Ganga-Brahmaputra Delta',
+    highlightTerm: 'Ganga River',
     windowScene: '🌉 Overflying the vast mangrove Sundarbans delta and the iconic Howrah Bridge.'
   },
   {
     id: 'rj',
     stateName: 'Rajasthan',
     destination: 'Jaipur',
-    fact: 'The royal Pink City at the gateway of the Thar Desert, famed for Hawa Mahal.',
-    landmark: 'Hawa Mahal & Aravalli Forts',
+    fact: 'The Pink City near the Thar Desert, famous for Hawa Mahal.',
+    landmark: 'Hawa Mahal & Old Forts',
     landmarkIcon: '🏰',
     type: 'direction',
-    story: 'Next, we travel towards the royal desert state of Rajasthan in northwestern India.\nJaipur is situated in the upper-left region of the map across the Tropic of Cancer.',
-    question: 'To reach Jaipur in Rajasthan from Chennai, which intermediate direction should we follow?',
+    story: 'Next, we travel to the desert state of Rajasthan.\nJaipur is in the upper-left part of the India map.',
+    question: 'Which direction should we travel to reach Jaipur?',
     options: ['North-West', 'North-East', 'South-West', 'South-East'],
     correct: 'North-West',
     bearing: 338,
@@ -401,9 +401,9 @@ const MISSIONS = [
     mach: 'Mach 0.81',
     weather: 'Dry & Sunny • 33°C',
     wind: '20 km/h NW',
-    feedbackWrong: 'Jaipur is in the upper-left of India, between North and West (North-West).',
-    feedbackSuccess: 'Brilliant! Jaipur lies in the North-West direction from Chennai across central India.',
-    learning: '🧭 Knowing all cardinal and intermediate directions allows us to map routes across nations.',
+    feedbackWrong: 'Jaipur is in the upper-left, between North and West (North-West).',
+    feedbackSuccess: 'Brilliant! Jaipur is in the North-West direction from Chennai.',
+    learning: '🧭 Knowing all directions helps us travel anywhere.',
     direction: 'North-West',
     highlightTerm: 'Thar Desert & Aravalli',
     windowScene: '🏜️ Golden desert sands, ancient Aravalli hill ranges, and terracotta pink palace domes.'
@@ -412,12 +412,12 @@ const MISSIONS = [
     id: 'as',
     stateName: 'Assam',
     destination: 'Assam (Dispur)',
-    fact: 'Gateway to the North-East, world-famous for lush tea estates and the Brahmaputra.',
+    fact: 'Famous for its beautiful tea gardens and the Brahmaputra River.',
     landmark: 'Tea Gardens & Brahmaputra Valley',
     landmarkIcon: '🍵',
     type: 'direction',
-    story: 'Our grand final destination is in the picturesque eastern corner of India.\nAssam lies in the lush North-Eastern hills along the mighty Brahmaputra River valley.',
-    question: 'Which direction from Chennai is Assam located on the India map?',
+    story: 'Our final stop is in the beautiful eastern corner of India.\nAssam is in the green hills near the big Brahmaputra River.',
+    question: 'Which direction is Assam from Chennai on the map?',
     options: ['North-East', 'North-West', 'South-East', 'West'],
     correct: 'North-East',
     bearing: 48,
@@ -430,10 +430,10 @@ const MISSIONS = [
     weather: 'Lush Mist • 22°C',
     wind: '14 km/h NE',
     feedbackWrong: 'Assam is in the far upper-right corner of India (North-East).',
-    feedbackSuccess: 'Outstanding! Assam is located in the far North-East region of India.',
-    learning: '🗺 Maps are indispensable tools that guide pilots, navigators, and explorers across the world.',
+    feedbackSuccess: 'Outstanding! Assam is in the far North-East of India.',
+    learning: '🗺 Maps are amazing tools that guide explorers across the world.',
     direction: 'North-East',
-    highlightTerm: 'Brahmaputra Valley',
+    highlightTerm: 'Brahmaputra River',
     windowScene: '🍵 Rolling green tea plantations, morning clouds, and the vast Brahmaputra River.'
   }
 ];
@@ -653,20 +653,20 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           <Sparkles size={11} color="#D97706" /> Interactive National Mission
         </div>
 
-        <h2 style={{ fontFamily: '"Fraunces", serif', color: '#78350F', fontSize: '20px', fontWeight: 900, margin: '2px 0 4px 0', lineHeight: 1.15 }}>
+        <h2 style={{ fontFamily: '"Fraunces", serif', color: '#78350F', fontSize: '22px', fontWeight: 900, margin: '2px 0 4px 0', lineHeight: 1.15 }}>
           Travel Across India!
         </h2>
         
-        <p style={{ margin: 0, fontFamily: '"Space Grotesk", sans-serif', color: '#3D2E24', fontSize: '12px', fontWeight: 600, lineHeight: 1.4, textAlign: 'justify', textJustify: 'inter-word' }}>
-          Master how compasses point across <span style={{ color: '#92400E', background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', fontWeight: 800, border: '1px solid #FDE68A' }}>Cardinal (N, S, E, W)</span> and <span style={{ color: '#1D4ED8', background: '#DBEAFE', padding: '1px 5px', borderRadius: '4px', fontWeight: 800, border: '1px solid #BFDBFE' }}>Intermediate Directions (NE, NW, SE, SW)</span> by navigating 6 real-world routes across India starting from Chennai.
+        <p style={{ margin: 0, fontFamily: '"Space Grotesk", sans-serif', color: '#3D2E24', fontSize: '14px', fontWeight: 600, lineHeight: 1.4, textAlign: 'justify', textJustify: 'inter-word' }}>
+          Learn how a compass points to <span style={{ color: '#92400E', background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', fontWeight: 800, border: '1px solid #FDE68A' }}>Main Directions (N, S, E, W)</span> and <span style={{ color: '#1D4ED8', background: '#DBEAFE', padding: '1px 5px', borderRadius: '4px', fontWeight: 800, border: '1px solid #BFDBFE' }}>In-Between Directions (NE, NW, SE, SW)</span> by travelling to 6 real places across India, starting from Chennai.
         </p>
       </div>
 
       {/* 6 Missions Roadmap Grid */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '11px', fontWeight: 800, color: '#78350F', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Journey Itinerary (6 Stops)</span>
-          <span style={{ fontSize: '10.5px', fontWeight: 700, color: '#166534', background: '#DCFCE7', padding: '1px 6px', borderRadius: '4px' }}>Total ~8,350 km</span>
+          <span style={{ fontSize: '13px', fontWeight: 800, color: '#78350F', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Journey Plan (6 Stops)</span>
+          <span style={{ fontSize: '12px', fontWeight: 700, color: '#166534', background: '#DCFCE7', padding: '1px 6px', borderRadius: '4px' }}>Total ~8,350 km</span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px' }}>
@@ -681,12 +681,12 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
               gap: '6px',
               boxShadow: '0 1px 4px rgba(60,40,20,0.03)'
             }}>
-              <span style={{ fontSize: '16px' }}>{m.landmarkIcon}</span>
+              <span style={{ fontSize: '20px' }}>{m.landmarkIcon}</span>
               <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: '11px', fontWeight: 800, color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div style={{ fontSize: '13px', fontWeight: 800, color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {idx + 1}. {m.destination}
                 </div>
-                <div style={{ fontSize: '10px', color: '#92400E', fontWeight: 700 }}>
+                <div style={{ fontSize: '12px', color: '#92400E', fontWeight: 700 }}>
                   {m.direction} • {m.distance} km
                 </div>
               </div>
@@ -695,13 +695,6 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         </div>
       </div>
 
-      {/* Pro Tip Box */}
-      <div style={{ background: '#FFF9F0', border: '1.2px dashed #F2DFBC', padding: '6px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <span style={{ fontSize: '14px' }}>🧭</span>
-        <span style={{ fontSize: '11px', color: '#78350F', fontWeight: 700, textAlign: 'justify', textJustify: 'inter-word', lineHeight: 1.35 }}>
-          <b>Explorer Tip:</b> Read each destination clue, check the direction from Chennai, and select the correct compass bearing.
-        </span>
-      </div>
 
       {/* Start Button */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -752,55 +745,32 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '10px',
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
               background: '#FEF3C7',
               border: '1.2px solid #FDE68A',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '18px',
+              fontSize: '22px',
               flexShrink: 0
             }}>
               {mission.landmarkIcon}
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ color: '#92400E', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#FEF3C7', padding: '1px 6px', borderRadius: '4px', border: '1px solid #FDE68A' }}>
+                <span style={{ color: '#92400E', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#FEF3C7', padding: '1px 6px', borderRadius: '4px', border: '1px solid #FDE68A' }}>
                   Mission {missionIndex + 1} of 6
                 </span>
-                <span style={{ fontSize: '11px', color: '#166534', fontWeight: 800, background: '#DCFCE7', padding: '1px 5px', borderRadius: '4px' }}>
+                <span style={{ fontSize: '13px', color: '#166534', fontWeight: 800, background: '#DCFCE7', padding: '1px 5px', borderRadius: '4px' }}>
                   ~{mission.distance} km
                 </span>
               </div>
-              <h3 style={{ fontFamily: '"Fraunces", serif', color: '#78350F', fontSize: '17px', margin: '2px 0 0 0', fontWeight: 900, lineHeight: 1.15 }}>
+              <h3 style={{ fontFamily: '"Fraunces", serif', color: '#78350F', fontSize: '20px', margin: '2px 0 0 0', fontWeight: 900, lineHeight: 1.15 }}>
                 {mission.destination}
               </h3>
             </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <button
-              onClick={() => speakText(`${mission.story}. Question: ${mission.question}`)}
-              style={{
-                background: '#FEF3C7',
-                border: '1.2px solid #FDE68A',
-                padding: '4px 10px',
-                borderRadius: '8px',
-                color: '#92400E',
-                fontWeight: 800,
-                fontSize: '11.5px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                cursor: 'pointer',
-                fontFamily: '"Space Grotesk", sans-serif'
-              }}
-              title="Listen to Story (Read Aloud)"
-            >
-              <Volume1 size={13} color="#D97706" /> Listen 🔊
-            </button>
           </div>
         </div>
 
@@ -808,48 +778,48 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         <div style={{
           background: '#FFFFFF',
           border: '1.5px solid #F2DFBC',
-          padding: '10px 12px',
+          padding: '12px 14px',
           borderRadius: '12px',
           boxShadow: '0 2px 8px rgba(60,40,20,0.04)',
           flexShrink: 0
         }}>
-          <div style={{ fontSize: '11px', color: '#78350F', fontWeight: 900, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <Landmark size={13} color="#D97706" /> 
+          <div style={{ fontSize: '14px', color: '#78350F', fontWeight: 900, marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <Landmark size={16} color="#D97706" /> 
             <span>{mission.landmark}</span> • 
             <span style={{ color: '#1D4ED8', background: '#DBEAFE', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
               {mission.highlightTerm}
             </span>
           </div>
           
-          <div style={{ fontSize: '12.5px', color: '#0F172A', lineHeight: 1.45, fontWeight: 600, fontFamily: '"Space Grotesk", sans-serif', textAlign: 'justify', textJustify: 'inter-word' }}>
+          <div style={{ fontSize: '15.5px', color: '#0F172A', lineHeight: 1.45, fontWeight: 600, fontFamily: '"Space Grotesk", sans-serif', textAlign: 'justify', textJustify: 'inter-word' }}>
             {missionIndex === 0 && (
               <p style={{ margin: 0 }}>
-                Departing from coastal <strong style={{ color: '#15803D' }}>Chennai (Tamil Nadu)</strong>. Our voyage heads up to <strong style={{ color: '#B45309' }}>Bengaluru (Karnataka)</strong> on the elevated <span style={{ background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', color: '#92400E', fontWeight: 800, border: '1px solid #FDE68A' }}>Deccan Plateau</span> (920m elevation).
+                We start from the coast of <strong style={{ color: '#15803D' }}>Chennai (Tamil Nadu)</strong>. Our first stop is <strong style={{ color: '#B45309' }}>Bengaluru (Karnataka)</strong> on the <span style={{ background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', color: '#92400E', fontWeight: 800, border: '1px solid #FDE68A' }}>Deccan Plateau</span>.
               </p>
             )}
             {missionIndex === 1 && (
               <p style={{ margin: 0 }}>
-                Navigating to financial hub <strong style={{ color: '#B45309' }}>Mumbai (Maharashtra)</strong> on the western <span style={{ background: '#E0F2FE', padding: '1px 5px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Arabian Sea Coast</span>. Compare this distance (~1,300 km) with Bengaluru (~350 km).
+                Next, we travel to <strong style={{ color: '#B45309' }}>Mumbai (Maharashtra)</strong> by the <span style={{ background: '#E0F2FE', padding: '1px 5px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Arabian Sea Coast</span>. This long trip (~1,300 km) is much farther than Bengaluru (~350 km).
               </p>
             )}
             {missionIndex === 2 && (
               <p style={{ margin: 0 }}>
-                Traveling to our northern coastal neighbor <strong style={{ color: '#B45309' }}>Amaravati (Andhra Pradesh)</strong> along the fertile <span style={{ background: '#E0F2FE', padding: '1px 5px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Krishna River basin</span>.
+                Now let's head to our neighbor, <strong style={{ color: '#B45309' }}>Amaravati (Andhra Pradesh)</strong>, near the <span style={{ background: '#E0F2FE', padding: '1px 5px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Krishna River basin</span>.
               </p>
             )}
             {missionIndex === 3 && (
               <p style={{ margin: 0 }}>
-                Crossing the eastern seaboard towards <strong style={{ color: '#B45309' }}>Kolkata (West Bengal)</strong> in the historic <span style={{ background: '#DCFCE7', padding: '1px 5px', borderRadius: '4px', color: '#15803D', fontWeight: 800, border: '1px solid #BBF7D0' }}>Ganga Delta</span> along the Bay of Bengal.
+                We travel up the east coast to <strong style={{ color: '#B45309' }}>Kolkata (West Bengal)</strong> in the <span style={{ background: '#DCFCE7', padding: '1px 5px', borderRadius: '4px', color: '#15803D', fontWeight: 800, border: '1px solid #BBF7D0' }}>Ganga River</span> near the sea.
               </p>
             )}
             {missionIndex === 4 && (
               <p style={{ margin: 0 }}>
-                Journeying to the royal Pink City <strong style={{ color: '#B45309' }}>Jaipur (Rajasthan)</strong> near the gateway of the golden <span style={{ background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', color: '#92400E', fontWeight: 800, border: '1px solid #FDE68A' }}>Thar Desert</span> and Aravalli ranges.
+                Next, we travel to the Pink City of <strong style={{ color: '#B45309' }}>Jaipur (Rajasthan)</strong> near the <span style={{ background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', color: '#92400E', fontWeight: 800, border: '1px solid #FDE68A' }}>Thar Desert</span>.
               </p>
             )}
             {missionIndex === 5 && (
               <p style={{ margin: 0 }}>
-                Our grand finale brings us to <strong style={{ color: '#B45309' }}>Assam (Dispur)</strong> nestled in the lush tea hills along the mighty <span style={{ background: '#E0F2FE', padding: '1px 5px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Brahmaputra River valley</span>.
+                Our final stop is <strong style={{ color: '#B45309' }}>Assam (Dispur)</strong> in the green hills near the <span style={{ background: '#E0F2FE', padding: '1px 5px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Brahmaputra River</span>.
               </p>
             )}
           </div>
@@ -860,23 +830,23 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           background: '#FFF9F0',
           border: '1.2px dashed #F2DFBC',
           borderRadius: '10px',
-          padding: '8px 12px',
+          padding: '12px 14px',
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gap: '6px',
+          gap: '8px',
           flexShrink: 0
         }}>
-          <div style={{ fontSize: '11.5px', color: '#78350F', fontWeight: 700 }}>
-            📍 <b>Origin:</b> <span style={{ color: '#15803D' }}>Chennai</span>
+          <div style={{ fontSize: '14.5px', color: '#78350F', fontWeight: 700 }}>
+            📍 <b>Start:</b> <span style={{ color: '#15803D' }}>Chennai</span>
           </div>
-          <div style={{ fontSize: '11.5px', color: '#78350F', fontWeight: 700 }}>
-            🎯 <b>Target:</b> <span style={{ color: '#1D4ED8' }}>{mission.destination}</span>
+          <div style={{ fontSize: '14.5px', color: '#78350F', fontWeight: 700 }}>
+            🎯 <b>Going To:</b> <span style={{ color: '#1D4ED8' }}>{mission.destination}</span>
           </div>
-          <div style={{ fontSize: '11.5px', color: '#78350F', fontWeight: 700 }}>
-            🧭 <b>Bearing:</b> <span style={{ color: '#92400E' }}>{mission.bearingLabel}</span>
+          <div style={{ fontSize: '14.5px', color: '#78350F', fontWeight: 700 }}>
+            🧭 <b>Direction:</b> <span style={{ color: '#92400E' }}>{mission.bearingLabel}</span>
           </div>
-          <div style={{ fontSize: '11.5px', color: '#78350F', fontWeight: 700 }}>
-            💡 <b>Zone:</b> <span style={{ color: '#0369A1' }}>{mission.highlightTerm}</span>
+          <div style={{ fontSize: '14.5px', color: '#78350F', fontWeight: 700 }}>
+            💡 <b>Region:</b> <span style={{ color: '#0369A1' }}>{mission.highlightTerm}</span>
           </div>
         </div>
 
@@ -891,27 +861,27 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
             flexShrink: 0
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#38BDF8', fontSize: '11.5px', fontWeight: 900 }}>
-                {travelMode === 'plane' ? <Plane size={14} color="#38BDF8" /> : <Train size={14} color="#38BDF8" />}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#38BDF8', fontSize: '12px', fontWeight: 900 }}>
+                {travelMode === 'plane' ? <Plane size={15} color="#38BDF8" /> : <Train size={15} color="#38BDF8" />}
                 <span>{travelMode === 'plane' ? '✈️ AIRBUS A350 EN ROUTE' : '🚆 VANDE BHARAT EXPRESS EN ROUTE'}</span>
               </div>
-              <div style={{ fontSize: '11px', color: '#FDE047', fontWeight: 900 }}>
+              <div style={{ fontSize: '11.5px', color: '#FDE047', fontWeight: 900 }}>
                 Heading: {mission.bearing}° {mission.direction} • {mission.altitude}
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', textAlign: 'center', marginBottom: '6px' }}>
               <div style={{ background: 'rgba(255,255,255,0.08)', padding: '5px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <div style={{ fontSize: '9.5px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>DISTANCE</div>
-                <div style={{ fontSize: '14px', fontWeight: 900, color: '#38BDF8' }}>{liveDistance} km</div>
+                <div style={{ fontSize: '10px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>DISTANCE</div>
+                <div style={{ fontSize: '15px', fontWeight: 900, color: '#38BDF8' }}>{liveDistance} km</div>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.08)', padding: '5px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <div style={{ fontSize: '9.5px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>SPEED</div>
-                <div style={{ fontSize: '14px', fontWeight: 900, color: '#34D399' }}>{liveSpeed} km/h</div>
+                <div style={{ fontSize: '10px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>SPEED</div>
+                <div style={{ fontSize: '15px', fontWeight: 900, color: '#34D399' }}>{liveSpeed} km/h</div>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.08)', padding: '5px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <div style={{ fontSize: '9.5px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>EST. TIME</div>
-                <div style={{ fontSize: '13.5px', fontWeight: 900, color: '#FBBF24' }}>
+                <div style={{ fontSize: '10px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>EST. TIME</div>
+                <div style={{ fontSize: '14.5px', fontWeight: 900, color: '#FBBF24' }}>
                   {travelMode === 'plane' ? mission.flightTime : mission.trainTime}
                 </div>
               </div>
@@ -921,24 +891,24 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
               background: 'rgba(0, 0, 0, 0.5)',
               border: '1px solid rgba(56, 189, 248, 0.4)',
               borderRadius: '6px',
-              padding: '5px 9px',
-              fontSize: '11px',
+              padding: '6px 10px',
+              fontSize: '12px',
               color: '#F0F9FF',
               display: 'flex',
               alignItems: 'center',
               gap: '6px'
             }}>
-              <span style={{ fontSize: '13px' }}>🪟</span>
+              <span style={{ fontSize: '14px' }}>🪟</span>
               <span><strong style={{ color: '#38BDF8' }}>Window View:</strong> {mission.windowScene}</span>
             </div>
           </div>
         ) : (
           <div style={{ flexShrink: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#78350F', fontSize: '13px', fontWeight: 900, marginBottom: '6px', fontFamily: '"Space Grotesk", sans-serif' }}>
-              <HelpCircle size={14} color="#D97706" /> {mission.question}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#78350F', fontSize: '15px', fontWeight: 900, marginBottom: '10px', fontFamily: '"Space Grotesk", sans-serif' }}>
+              <HelpCircle size={18} color="#D97706" /> {mission.question}
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
               {mission.options.map((opt, optIdx) => {
                 let isSelectedCorrect = feedback?.type === 'success' && opt === mission.correct;
                 let isSelectedWrong = feedback?.type === 'error' && feedback.picked === opt;
@@ -966,11 +936,11 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                     disabled={!!feedback?.type || animating}
                     style={{
                       gridColumn: isSpanned ? 'span 2' : 'span 1',
-                      padding: '7px 10px',
+                      padding: '9px 12px',
                       background: optBg,
                       border: `1.5px solid ${optBorder}`,
                       borderRadius: '8px',
-                      fontSize: '12.5px',
+                      fontSize: '14px',
                       fontWeight: 900,
                       color: optColor,
                       cursor: (!!feedback?.type || animating) ? 'default' : 'pointer',
@@ -980,11 +950,11 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '5px',
+                      gap: '6px',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
                     }}
                   >
-                    <span style={{ fontSize: '13px' }}>🧭</span> {opt}
+                    <span style={{ fontSize: '15px' }}>🧭</span> {opt}
                   </button>
                 );
               })}
@@ -996,50 +966,28 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           <div style={{ 
             background: feedback.type === 'success' ? '#F0FDF4' : '#FEF2F2', 
             border: `1.2px solid ${feedback.type === 'success' ? '#86EFAC' : '#FECACA'}`, 
-            padding: '6px 10px', 
+            padding: '10px 14px', 
             borderRadius: '8px',
             marginBottom: '4px',
             flexShrink: 0
           }}>
-            <div style={{ color: feedback.type === 'success' ? '#166534' : '#991B1B', fontWeight: 800, fontSize: '11.5px', display: 'flex', alignItems: 'flex-start', gap: '5px' }}>
-              {feedback.type === 'success' ? <Award size={14} color="#16A34A" style={{ flexShrink: 0 }} /> : <Navigation size={14} color="#EF4444" style={{ flexShrink: 0, transform: 'rotate(180deg)' }} />}
-              <div style={{ whiteSpace: 'pre-line', lineHeight: 1.35, fontFamily: '"Space Grotesk", sans-serif', textAlign: 'justify', textJustify: 'inter-word' }}>
+            <div style={{ color: feedback.type === 'success' ? '#166534' : '#991B1B', fontWeight: 800, fontSize: '13.5px', display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+              {feedback.type === 'success' ? <Award size={18} color="#16A34A" style={{ flexShrink: 0, marginTop: '2px' }} /> : <Navigation size={18} color="#EF4444" style={{ flexShrink: 0, transform: 'rotate(180deg)', marginTop: '2px' }} />}
+              <div style={{ whiteSpace: 'pre-line', lineHeight: 1.45, fontFamily: '"Space Grotesk", sans-serif', textAlign: 'justify', textJustify: 'inter-word' }}>
                 {feedback.text}
               </div>
             </div>
             
             {feedback.type === 'error' && (
-              <button onClick={() => setFeedback(null)} style={{ marginTop: '4px', background: '#EF4444', color: '#FFFFFF', border: 'none', padding: '3px 8px', borderRadius: '5px', fontSize: '11px', fontWeight: 800, cursor: 'pointer' }}>
+              <button onClick={() => setFeedback(null)} style={{ marginTop: '8px', background: '#EF4444', color: '#FFFFFF', border: 'none', padding: '5px 12px', borderRadius: '5px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}>
                 Try Another Option
-              </button>
-            )}
-
-            {feedback.type === 'success' && !animating && (
-              <button 
-                onClick={handleNextMission} 
-                style={{
-                  marginTop: '5px',
-                  background: missionIndex === MISSIONS.length - 1 ? '#16A34A' : '#D97706',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  padding: '5px 12px',
-                  borderRadius: '6px',
-                  fontSize: '11.5px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                {missionIndex === MISSIONS.length - 1 ? 'Complete All Missions 🎉' : 'Next Destination →'}
               </button>
             )}
           </div>
         )}
         
         {missionIndex > 0 && !feedback?.type && !animating && (
-          <div style={{ padding: '6px 12px', background: '#FEF3C7', border: '1.5px solid #F59E0B', borderRadius: '8px', color: '#78350F', fontSize: '11.5px', fontWeight: 800, textAlign: 'justify', textJustify: 'inter-word', lineHeight: 1.35, fontFamily: '"Space Grotesk", sans-serif', flexShrink: 0, boxShadow: '0 2px 6px rgba(217,119,6,0.1)' }}>
+          <div style={{ padding: '10px 14px', background: '#FEF3C7', border: '1.5px solid #F59E0B', borderRadius: '8px', color: '#78350F', fontSize: '13.5px', fontWeight: 800, textAlign: 'justify', textJustify: 'inter-word', lineHeight: 1.45, fontFamily: '"Space Grotesk", sans-serif', flexShrink: 0, boxShadow: '0 2px 6px rgba(217,119,6,0.1)' }}>
             💡 {MISSIONS[missionIndex - 1].learning}
           </div>
         )}

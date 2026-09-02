@@ -58,7 +58,7 @@
 
 .coords-mini-title {
   color: #78350F;
-  font-size: 44px;
+  font-size: clamp(28px, 5vw, 44px);
   font-weight: 900;
   font-family: var(--serif, "Fraunces", Georgia, serif);
   line-height: 1.1;
@@ -218,9 +218,9 @@
   gap: 12px;
   color: #78350F;
   font-weight: 900;
-  font-size: 24px;
+  font-size: clamp(18px, 3vw, 24px);
   font-family: var(--serif, "Fraunces", Georgia, serif);
-  margin-bottom: 55px;
+  margin-bottom: 30px;
 }
 
 .compass-icon {
@@ -275,7 +275,7 @@
 
 .city-card-top h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: clamp(18px, 3vw, 24px);
   font-weight: 900;
   color: #78350F;
   font-family: var(--serif, "Fraunces", Georgia, serif);
@@ -497,6 +497,7 @@
 @media (max-width: 900px) {
   .coords-minigame-container {
     flex-direction: column;
+    overflow-y: auto;
   }
   .coords-mini-right {
     width: 100%;
@@ -504,6 +505,9 @@
   }
   .coords-mini-header { padding: 24px; }
   .coords-mini-map-box { margin: 0 24px 24px 24px; min-height: 300px; }
+  .coords-mini-info-box { padding: 14px 16px; margin-bottom: 16px; }
+  .coords-mini-city-card { padding: 16px; margin-bottom: 24px; }
+  .slider-row.inputs { flex-direction: column; gap: 10px; }
 }
 
 /* Axis Labels */

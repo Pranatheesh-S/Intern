@@ -64,12 +64,12 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Target size={26} style={{ color: 'var(--accent)' }} /> 
+      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
+        <h3 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Target size={26} style={{ color: 'var(--lesson-accent)' }} /> 
           Investigation: Sports Equipment Properties
         </h3>
-        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)' }}>
           Why aren't all balls made of the same material? Click each ball to analyze its properties and discover how its material matches its purpose.
         </p>
       </div>
@@ -98,7 +98,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
               >
                 <img src={ball.icon} alt={ball.name} style={{ width: '30px', height: '30px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                 <span style={{ fontWeight: 'bold' }}>{ball.name}</span>
-                {inspected[ball.id] && <CheckCircle size={18} style={{ color: activeBall === ball.id ? '#fff' : 'var(--success)' }} />}
+                {inspected[ball.id] && <CheckCircle size={18} style={{ color: activeBall === ball.id ? 'white' : 'var(--lesson-success)' }} />}
               </button>
             ))}
           </div>
@@ -118,30 +118,30 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
                     const ball = balls.find(b => b.id === activeBall);
                     return (
                       <>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.75rem' }}>
                           <img src={ball.icon} alt={ball.name} style={{ width: '64px', height: '64px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                           <div>
-                            <h2 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>{ball.name}</h2>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Scientific Profile</span>
+                            <h2 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: '1.5rem' }}>{ball.name}</h2>
+                            <span style={{ color: 'var(--lesson-muted)', fontSize: '0.95rem' }}>Scientific Profile</span>
                           </div>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1 }}>
-                          <div style={{ background: 'var(--surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.4rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Primary Material</span>
-                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--text-primary)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.material}</div>
+                          <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontSize: '1.4rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Primary Material</span>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--lesson-text)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.material}</div>
                           </div>
-                          <div style={{ background: 'var(--surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.4rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Hardness Level</span>
-                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--text-primary)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.hardness}</div>
+                          <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontSize: '1.4rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Hardness Level</span>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--lesson-text)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.hardness}</div>
                           </div>
-                          <div style={{ background: 'var(--surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.4rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Weight</span>
-                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--text-primary)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.weight}</div>
+                          <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontSize: '1.4rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Weight</span>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--lesson-text)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.weight}</div>
                           </div>
-                          <div style={{ background: 'var(--surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.4rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Design Purpose</span>
-                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--accent)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.purpose}</div>
+                          <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <span style={{ fontSize: '1.4rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Design Purpose</span>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.8rem', color: 'var(--lesson-accent)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.purpose}</div>
                           </div>
                         </div>
 
@@ -149,7 +149,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 }}
-                          style={{ padding: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px dashed var(--accent)', borderRadius: '8px', color: 'var(--accent)', fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem', lineHeight: '1.4' }}
+                          style={{ padding: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px dashed var(--lesson-accent)', borderRadius: '8px', color: 'var(--lesson-accent)', fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem', lineHeight: '1.4' }}
                         >
                           <span style={{ fontSize: '1.5rem' }}>👉</span> 
                           <span><strong>Detective Task:</strong> Observe the <strong>Drop Test</strong> on the right to see how this material's hardness affects its bounce!</span>
@@ -159,7 +159,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
                   })()}
                 </motion.div>
               ) : (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', justifyContent: 'center', height: '100%' }}>
+                <div style={{ textAlign: 'center', color: 'var(--lesson-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', justifyContent: 'center', height: '100%' }}>
                   <Search size={48} style={{ opacity: 0.5 }} />
                   <p>Select a sports ball from the top to analyze its material properties.</p>
                 </div>
@@ -169,9 +169,9 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
         </div>
 
         {/* RIGHT: Drop Test Panel */}
-        <div className="glass-panel" style={{ background: 'var(--neutral-bg)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', flex: 1, minHeight: 0, justifyContent: 'center' }}>
-          <h4 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '2rem' }}>Drop Test: Bounce Comparison</h4>
-          <p style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-secondary)', textAlign: 'center', lineHeight: '1.3' }}>Observe how the material's hardness affects its bounce height when dropped from the same level.</p>
+        <div className="glass-panel" style={{ background: 'var(--neutral-bg)', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', flex: 1, minHeight: 0, justifyContent: 'center' }}>
+          <h4 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: '2rem' }}>Drop Test: Bounce Comparison</h4>
+          <p style={{ margin: 0, fontSize: '1.6rem', color: 'var(--lesson-secondary)', textAlign: 'center', lineHeight: '1.3' }}>Observe how the material's hardness affects its bounce height when dropped from the same level.</p>
           
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem', marginBottom: '1rem' }}>
             <button 
@@ -194,11 +194,11 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
 
           <svg width="100%" style={{ maxWidth: '400px', flex: 1, minHeight: 0 }} viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
             {/* Ground */}
-            <line x1="20" y1="150" x2="280" y2="150" stroke="var(--border)" strokeWidth="4" strokeLinecap="round" />
+            <line x1="20" y1="150" x2="280" y2="150" stroke="var(--lesson-border)" strokeWidth="4" strokeLinecap="round" />
             
             {/* Tennis Ball */}
             <g>
-              <text x="60" y="170" fontSize="14" fill="var(--text-muted)" textAnchor="middle">Tennis Ball</text>
+              <text x="60" y="170" fontSize="14" fill="var(--lesson-muted)" textAnchor="middle">Tennis Ball</text>
               <motion.g 
                 animate={dropState === 'dropping' ? { y: [0, 120, 30, 120, 60, 120, 90, 120, 105, 120, 115, 120, 120] } : { y: 0 }} 
                 transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
@@ -209,7 +209,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
 
             {/* Cricket Ball */}
             <g>
-              <text x="150" y="170" fontSize="14" fill="var(--text-muted)" textAnchor="middle">Cricket Ball</text>
+              <text x="150" y="170" fontSize="14" fill="var(--lesson-muted)" textAnchor="middle">Cricket Ball</text>
               <motion.g 
                 animate={dropState === 'dropping' ? { y: [0, 120, 110, 120, 115, 120, 120, 120, 120, 120, 120, 120, 120] } : { y: 0 }} 
                 transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
@@ -220,7 +220,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
 
             {/* Sponge Ball */}
             <g>
-              <text x="240" y="170" fontSize="14" fill="var(--text-muted)" textAnchor="middle">Sponge Ball</text>
+              <text x="240" y="170" fontSize="14" fill="var(--lesson-muted)" textAnchor="middle">Sponge Ball</text>
               <motion.g 
                 animate={dropState === 'dropping' ? { y: [0, 120, 80, 120, 100, 120, 110, 120, 115, 120, 120, 120, 120] } : { y: 0 }} 
                 transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
@@ -237,18 +237,18 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           className="glass-panel"
-          style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1.25rem' }}
+          style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1.25rem' }}
         >
           <div>
-            <h4 style={{ margin: '0 0 0.25rem 0', color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem' }}>
+            <h4 style={{ margin: '0 0 0.25rem 0', color: 'var(--lesson-success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem' }}>
               <CheckCircle size={24} /> Analysis Complete
             </h4>
-            <p style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+            <p style={{ margin: 0, fontSize: '1.2rem', color: 'var(--lesson-secondary)', lineHeight: '1.4' }}>
               <strong>Conclusion:</strong> We cannot use a soft rubber ball for cricket, nor a hard leather ball for tennis!<br/>
               Different purposes require materials with completely different properties.
             </p>
           </div>
-          <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0, paddingLeft: '1rem' }}>
+          <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--lesson-text)', margin: 0, paddingLeft: '1rem' }}>
             Click "Proceed to next"!
           </p>
         </motion.div>

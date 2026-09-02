@@ -2338,12 +2338,12 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             overflow: 'hidden',
             boxShadow: '0 2px 8px rgba(60, 40, 20, 0.04)'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#B45309', letterSpacing: '0.8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <span style={{ fontSize: '11px', fontWeight: 900, color: '#B45309', letterSpacing: '0.8px' }}>
                 📍 PLACES VISITED
               </span>
               <span style={{
-                fontSize: '9px',
+                fontSize: '11px',
                 fontWeight: 800,
                 color: [
                   'RS', 'AP', 'PG', 'HO', 'NP', 'BK', 'SC', 'MK', 'MU'
@@ -2377,7 +2377,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
               gridTemplateRows: 'repeat(5, 1fr)',
-              gap: '3px',
+              gap: '4px',
               flex: 1,
               minHeight: 0
             }}>
@@ -2403,20 +2403,21 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                       gap: '4px',
                       padding: '2px 5px',
                       borderRadius: '5px',
-                      fontSize: '9.5px',
+                      fontSize: '12px',
                       fontWeight: isVisited || isCurrent ? 800 : 600,
                       background: isCurrent
                         ? '#FEF3C7'
                         : isVisited
                         ? '#ECFDF5'
                         : '#F8FAFC',
-                      border: `1px solid ${
+                      border: `1.5px solid ${
                         isCurrent
                           ? '#F59E0B'
                           : isVisited
                           ? '#A7F3D0'
                           : '#E2E8F0'
                       }`,
+                      boxShadow: isCurrent ? '0 0 8px rgba(245, 158, 11, 0.4)' : 'none',
                       color: isCurrent
                         ? '#92400E'
                         : isVisited
@@ -2428,12 +2429,12 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                       textOverflow: 'ellipsis'
                     }}
                   >
-                    <span style={{ fontSize: '10px', flexShrink: 0 }}>{lm.icon}</span>
+                    <span style={{ fontSize: '13px', flexShrink: 0 }}>{lm.icon}</span>
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>
                       {lm.name}
                     </span>
                     {isVisited && (
-                      <span style={{ fontSize: '8.5px', color: '#10B981', fontWeight: 900, flexShrink: 0 }}>
+                      <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 900, flexShrink: 0 }}>
                         ✓
                       </span>
                     )}

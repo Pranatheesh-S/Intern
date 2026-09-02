@@ -151,7 +151,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                 <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 6px rgba(60,40,20,0.03)' }}>
                   <h2 style={{ fontSize: '1.15rem', color: '#92400E', margin: '0 0 4px 0', fontFamily: '"Fraunces", serif', fontWeight: 900 }}>What are Symbols?</h2>
                   <p style={{ color: '#3D2E24', fontSize: '13px', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                    Real places are too huge to draw exactly on a map. Instead of full buildings, roads, and rivers, we use standardized symbols to make map reading quick and universal.
+                    Real places are too big to draw on a map. Instead of drawing real buildings, roads, and rivers, we use simple symbols to make maps easy to read.
                   </p>
                 </div>
 
@@ -209,7 +209,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                 <div style={{ background: '#FEF3C7', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #FDE68A', display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Lightbulb size={22} color="#D97706" style={{ flexShrink: 0 }} />
                   <p style={{ color: '#78350F', margin: 0, fontSize: '13px', lineHeight: 1.45, fontWeight: 700, textAlign: 'justify', textJustify: 'inter-word' }}>
-                    <strong style={{ fontSize: '13.5px', fontWeight: 900 }}>Remember:</strong> Standardized conventional symbols and colors make reading any atlas or topographic map easy across countries worldwide.
+                    <strong style={{ fontSize: '13.5px', fontWeight: 900 }}>Remember:</strong> Standard symbols and colors help everyone around the world read maps easily.
                   </p>
                 </div>
               </div>
@@ -379,7 +379,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                             }}
                             whileHover={{ scale: 1.05 }}
                           >
-                            <SymbolDisplay Icon={symbol.Icon} width={62} height={30} />
+                            <SymbolDisplay Icon={symbol.Icon} width={90} height={45} />
                           </motion.div>
                         );
                       })}

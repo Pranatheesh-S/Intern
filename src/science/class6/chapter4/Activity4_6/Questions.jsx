@@ -106,18 +106,18 @@ export default function Questions({ onComplete, onNext }) {
           width: '90%', 
           padding: '2.5rem 3rem', 
           textAlign: 'center', 
-          background: '#ffffff', 
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
           borderRadius: '30px', 
-          border: '1px solid #cbd5e1',
-          boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+          border: '1.5px solid #FDE68A',
+          boxShadow: '0 15px 40px rgba(217, 119, 6, 0.12)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: '1.25rem'
         }}>
-          <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Quiz Completed!</h2>
+          <h2 style={{ fontSize: '2rem', margin: 0, color: '#064E3B', fontWeight: 900 }}>Quiz Completed!</h2>
           
-          <p style={{ color: '#475569', margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
+          <p style={{ color: '#065F46', margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>
             You scored {score} out of {questions.length}
           </p>
 
@@ -126,26 +126,14 @@ export default function Questions({ onComplete, onNext }) {
               if (onComplete) onComplete(score);
               if (onNext) onNext();
             }}
+            className="gold-glow-btn"
             style={{
               padding: '1.1rem 3rem',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#ffffff',
-              border: 'none',
               borderRadius: '40px',
-              fontSize: '1.15rem',
-              fontWeight: 800,
+              fontSize: '1.18rem',
+              fontWeight: 900,
               cursor: 'pointer',
-              boxShadow: '0 6px 20px rgba(217, 119, 6, 0.4)',
-              transition: 'all 0.25s ease',
               marginTop: '0.5rem'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(217, 119, 6, 0.6)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(217, 119, 6, 0.4)';
             }}
           >
             Proceed to Challenge
@@ -178,36 +166,36 @@ export default function Questions({ onComplete, onNext }) {
 
         {/* Main Quiz Card matching Poles of Magnet */}
         <div className="glass-panel" style={{ 
-          background: '#FFFFFF', 
-          border: '1.5px solid #A7F3D0',
-          borderRadius: '20px', 
-          padding: '1.25rem 1.75rem', 
-          boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+          border: '1.5px solid #FDE68A',
+          borderRadius: '24px', 
+          padding: '1.5rem 2rem', 
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.75rem',
+          gap: '0.85rem',
           width: '100%',
           boxSizing: 'border-box'
         }}>
           {/* Title */}
-          <h3 style={{ margin: 0, color: '#064E3B', fontSize: 'clamp(1.15rem, 1.5vw, 1.35rem)', fontWeight: 900 }}>
+          <h3 style={{ margin: 0, color: '#064E3B', fontSize: 'clamp(1.2rem, 1.5vw, 1.4rem)', fontWeight: 900 }}>
             {q.title}
           </h3>
 
           {/* Question Text */}
-          <p style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)', margin: 0, lineHeight: '1.5', fontWeight: 600, color: '#334155' }}>
+          <p style={{ fontSize: 'clamp(0.98rem, 1.3vw, 1.12rem)', margin: 0, lineHeight: '1.55', fontWeight: 600, color: '#064E3B' }}>
             {q.question}
           </p>
 
           {/* Option Buttons */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             {q.options.map((option, index) => {
               const isSelected = selectedOption === option;
               const isCorrect = option === q.correctAnswer;
 
               let bgColor = '#FFFFFF';
-              let borderColor = '#CBD5E1';
-              let textColor = '#1E293B';
+              let borderColor = '#FDE68A';
+              let textColor = '#064E3B';
               let icon = null;
 
               if (showFeedback) {
@@ -215,12 +203,12 @@ export default function Questions({ onComplete, onNext }) {
                   bgColor = '#DCFCE7';
                   borderColor = '#16A34A';
                   textColor = '#065F46';
-                  icon = <CheckCircle size={18} color="#16A34A" />;
+                  icon = <CheckCircle size={20} color="#16A34A" />;
                 } else if (isSelected) {
                   bgColor = '#FEE2E2';
                   borderColor = '#EF4444';
                   textColor = '#991B1B';
-                  icon = <XCircle size={18} color="#EF4444" />;
+                  icon = <XCircle size={20} color="#EF4444" />;
                 }
               } else if (isSelected) {
                 borderColor = '#D97706';
@@ -238,14 +226,14 @@ export default function Questions({ onComplete, onNext }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: '12px',
+                    padding: '0.85rem 1.35rem',
+                    borderRadius: '16px',
                     background: bgColor,
                     border: `1.5px solid ${borderColor}`,
                     color: textColor,
                     cursor: showFeedback ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '0.96rem',
+                    fontSize: '1.02rem',
                     fontWeight: 800,
                     transition: 'all 0.2s ease',
                     boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
@@ -262,31 +250,22 @@ export default function Questions({ onComplete, onNext }) {
           {/* Explanation & Next Question Button */}
           {showFeedback && (
             <div style={{ marginTop: '0.5rem', animation: 'fadeIn 0.35s ease' }}>
-              <div style={{ padding: '0.75rem 1.15rem', background: '#F0FDF4', borderRadius: '12px', border: '1.5px solid #A7F3D0', borderLeft: '4px solid #D97706' }}>
-                <h4 style={{ margin: '0 0 0.2rem 0', fontSize: '0.92rem', fontWeight: 900, color: '#064E3B' }}>Explanation</h4>
-                <p style={{ margin: 0, color: '#334155', fontSize: '0.9rem', lineHeight: '1.5', fontWeight: 600 }}>{q.explanation}</p>
+              <div style={{ padding: '0.85rem 1.25rem', background: '#FFFFFF', borderRadius: '16px', border: '1.5px solid #FDE68A', borderLeft: '5px solid #D97706' }}>
+                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: 900, color: '#064E3B' }}>Explanation</h4>
+                <p style={{ margin: 0, color: '#065F46', fontSize: '0.96rem', lineHeight: '1.55', fontWeight: 600 }}>{q.explanation}</p>
               </div>
               
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.6rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
                 <button
                   onClick={handleNext}
+                  className="gold-glow-btn"
                   style={{
-                    padding: '0.75rem 2rem',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#FFFFFF',
-                    border: 'none',
+                    padding: '0.85rem 2.25rem',
                     borderRadius: '25px',
-                    fontSize: '0.96rem',
+                    fontSize: '1.05rem',
                     fontWeight: 900,
                     cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                     transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.03)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
                   {currentQuestion === questions.length - 1 ? 'Proceed to Challenge Mode' : 'Next Question'}

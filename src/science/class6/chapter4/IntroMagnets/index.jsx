@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Magnet, ArrowRight, Volume2, VolumeX, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
+import { ArrowLeft, Magnet, ArrowRight, Volume2, VolumeX, RotateCcw } from 'lucide-react';
 import { voiceService, ELEVENLABS_VOICES } from '../../../../services/elevenLabsService';
 
 export default function IntroMagnets({ onBackToDashboard, onComplete }) {
@@ -11,29 +11,8 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const [visibleLineCount, setVisibleLineCount] = useState(1);
   const [spokenCharIndex, setSpokenCharIndex] = useState(-1);
   const [hasFinishedAudio, setHasFinishedAudio] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const delayTimerRef = useRef(null);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
 
   const scenes = [
     {
@@ -43,7 +22,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         {
           role: 'teacher',
           text: "Reshma lived in a coastal town of Kerala and loved writing short stories. Since her grandmother enjoyed listening to her stories, Reshma decided to write a special story as a birthday gift for her grandmother's 60th birthday.",
-          pos: { top: '3%', left: '2%', width: '30%' },
+          pos: { top: '3%', left: '2%', width: '34%' },
           audioUrl: '/IntroMagnets/audio/scene1_line1.mp3'
         },
         {
@@ -61,7 +40,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         {
           role: 'teacher',
           text: "The Spice Ship. Her story was about a ship carrying spices like pepper, cardamom, and cinnamon from Kerala for trade in the olden days. The sailors used the stars at night to find the right direction across the sea.",
-          pos: { top: '3%', left: '2%', width: '30%' },
+          pos: { top: '3%', left: '2%', width: '34%' },
           audioUrl: '/IntroMagnets/audio/scene2_line1.mp3'
         },
         {
@@ -79,7 +58,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         {
           role: 'teacher',
           text: "The Storm. Suddenly, in her story, the ship was caught in a fierce storm. Thick clouds covered the sky, and the stars disappeared. Reshma wondered how the sailors could continue their journey without seeing the stars.",
-          pos: { top: '3%', left: '2%', width: '30%' },
+          pos: { top: '3%', left: '2%', width: '34%' },
           audioUrl: '/IntroMagnets/audio/scene3_line1.mp3'
         },
         {
@@ -91,13 +70,13 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       ]
     },
     {
-      img: '/IntroMagnets/scene_4.png',
+      img: '/IntroMagnets/scene_4.jpg',
       subtitle: "Searching for an Answer",
       lines: [
         {
           role: 'teacher',
           text: "Searching for an Answer. Unable to continue her story, Reshma searched the internet and visited her school library. She discovered that sailors used a magnetic compass to find directions even when the stars were hidden.",
-          pos: { top: '3%', left: '2%', width: '30%' },
+          pos: { top: '3%', left: '2%', width: '34%' },
           audioUrl: '/IntroMagnets/audio/scene4_line1.mp3'
         },
         {
@@ -187,7 +166,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       ]
     },
     {
-      img: '/lodestone_history.jpg',
+      img: '/IntroMagnets/scene_6_magnets.jpg',
       subtitle: "Lodestones to Artificial Magnets",
       lines: [
         {
@@ -241,7 +220,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
       let color = isEduCard ? '#F5EEDB' : '#2C221E';
       let fontWeight = 500;
-      let fontSize = isEduCard ? '1.08rem' : '1.12rem';
 
       if (isCurrentWord) {
         // TEXT COLOR ONLY HIGHLIGHT (No Background, No Popups)
@@ -253,25 +231,18 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       }
 
       return (
-        <span
-          key={i}
-          style={{
-            color,
-            fontWeight,
-            fontSize,
-            backgroundColor: 'transparent',
-            padding: 0,
-            borderRadius: 0,
-            boxShadow: 'none',
-            transform: 'none',
-            transition: 'color 0.15s ease',
-            display: 'inline-block',
-            marginRight: '0.25rem',
-            lineHeight: 1.55
-          }}
-        >
-          {word}
-        </span>
+        <React.Fragment key={i}>
+          <span
+            style={{
+              color,
+              fontWeight,
+              transition: 'color 0.15s ease'
+            }}
+          >
+            {word}
+          </span>
+          {i < words.length - 1 ? ' ' : ''}
+        </React.Fragment>
       );
     });
   };
@@ -397,8 +368,8 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const currentScene = scenes[currentPage - 1];
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'linear-gradient(135deg, #EBF5F6 0%, #EDF8F7 100%)', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
-      {/* Light Pastel Magnetic Field Vector Lines Background SVG */}
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'linear-gradient(135deg, #0B1026 0%, #101738 100%)', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
+      {/* Dark Blue Theme Magnetic Field Vector Lines Background SVG */}
       <svg 
         style={{
           position: 'absolute',
@@ -412,18 +383,17 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(13, 148, 136, 0.15)" strokeWidth="3" fill="none" />
-        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(244, 63, 94, 0.15)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(59, 130, 246, 0.22)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(245, 158, 11, 0.2)" strokeWidth="3" fill="none" />
       </svg>
 
 
       
-      {/* Background Image Container */}
+      {/* Fullscreen Background Image Container */}
       <div style={{
         position: 'relative',
         width: '100%',
         height: '100%',
-        maxHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -432,9 +402,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         <div style={{
           position: 'relative',
           width: '100%',
-          maxHeight: '100vh',
-          aspectRatio: '16/9',
-          margin: 'auto',
+          height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
@@ -445,28 +413,135 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'contain'
+              objectFit: 'cover',
+              objectPosition: 'center',
+              imageRendering: '-webkit-optimize-contrast',
+              WebkitBackfaceVisibility: 'hidden',
+              backfaceVisibility: 'hidden',
+              filter: 'contrast(1.02) saturate(1.05)',
+              willChange: 'auto'
             }}
           />
 
         {/* Dynamic Text Overlay Layer */}
         {currentPage === 6 ? (
           /* Scene 6: Educational Summary Cards */
-          <div style={{
-            position: 'absolute',
-            top: '3.5%',
-            left: '4%',
-            right: '4%',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            zIndex: 20
-          }}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '1.25rem'
+          <>
+            {/* Top Right Controls in top bar */}
+            <div style={{ 
+              position: 'absolute', 
+              top: '1.25rem', 
+              right: '1.75rem', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.85rem', 
+              zIndex: 99999 
             }}>
+              <button
+                onClick={() => playSceneAudio(currentPage)}
+                style={{
+                  padding: '0.85rem 1.5rem',
+                  borderRadius: '35px',
+                  border: '1.5px solid rgba(255,255,255,0.4)',
+                  background: 'rgba(0,0,0,0.75)',
+                  backdropFilter: 'blur(8px)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '1.05rem',
+                  boxShadow: '0 6px 20px rgba(0,0,0,0.45)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                  e.currentTarget.style.background = 'rgba(0,0,0,0.85)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.background = 'rgba(0,0,0,0.75)';
+                }}
+                title="Replay Voiceover"
+              >
+                <RotateCcw size={20} /> Replay Audio
+              </button>
+
+              <button
+                onClick={toggleMute}
+                style={{
+                  padding: '0.85rem 1.5rem',
+                  borderRadius: '35px',
+                  border: '1.5px solid rgba(255,255,255,0.4)',
+                  background: isMuted ? 'rgba(239, 68, 68, 0.85)' : 'rgba(16, 185, 129, 0.85)',
+                  backdropFilter: 'blur(8px)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '1.05rem',
+                  boxShadow: '0 6px 20px rgba(0,0,0,0.45)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+                title={isMuted ? 'Unmute Voiceover' : 'Mute Voiceover'}
+              >
+                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                {isMuted ? 'Voice Muted' : 'Voice ON'}
+              </button>
+
+              <button
+                onClick={handleFinish}
+                style={{
+                  padding: '0.85rem 1.85rem',
+                  borderRadius: '35px',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  fontWeight: 800,
+                  fontSize: '1.05rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  boxShadow: '0 6px 22px rgba(217, 119, 6, 0.5)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                  e.currentTarget.style.boxShadow = '0 8px 26px rgba(217, 119, 6, 0.7)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = '0 6px 22px rgba(217, 119, 6, 0.5)';
+                }}
+                title="Finish Story"
+              >
+                Finish Story <ArrowRight size={20} color="#ffffff" />
+              </button>
+            </div>
+
+            {/* Summary Cards Grid */}
+            <div style={{
+              position: 'absolute',
+              top: '10.5rem',
+              left: '4%',
+              right: '4%',
+              zIndex: 20
+            }}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '1.25rem'
+              }}>
               {currentScene.lines.map((line, idx) => {
                 const isActive = idx === activeLineIndex && isPlaying;
                 const titles = ['Lodestones:', 'Used by Sailors:', 'Shift to Artificial Magnets:'];
@@ -478,8 +553,8 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                       background: isActive ? '#0F1926' : 'rgba(15, 25, 38, 0.92)',
                       backdropFilter: 'blur(14px)',
                       border: isActive ? '2px solid #F3C969' : '1.5px solid #D4AF37',
-                      borderRadius: '16px',
-                      padding: '1rem 1.2rem',
+                      borderRadius: '18px',
+                      padding: '1.15rem 1.35rem',
                       boxShadow: isActive ? '0 12px 35px rgba(212, 175, 55, 0.35)' : '0 8px 24px rgba(0,0,0,0.6)',
                       transition: 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
                       transform: isActive ? 'scale(1.02)' : 'scale(1)',
@@ -488,7 +563,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                   >
                     <h3 style={{
                       margin: '0 0 0.5rem 0',
-                      fontSize: '1.2rem',
+                      fontSize: '1.45rem',
                       fontWeight: 800,
                       color: '#F3C969',
                       letterSpacing: '0.02em',
@@ -497,62 +572,15 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                     }}>
                       {titles[idx]}
                     </h3>
-                    <p style={{ margin: 0, fontSize: '0.96rem', lineHeight: 1.55, color: '#F5EEDB' }}>
+                    <p style={{ margin: 0, fontSize: '1.28rem', lineHeight: 1.6, color: '#F5EEDB', textAlign: 'justify' }}>
                       {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, true)}
                     </p>
                   </div>
                 );
               })}
             </div>
-
-            {/* Voiceover Controls in Scene 6 */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', zIndex: 99999 }}>
-              <button
-                onClick={() => playSceneAudio(currentPage)}
-                style={{
-                  padding: '0.6rem 1.1rem',
-                  borderRadius: '30px',
-                  border: '1px solid rgba(255,255,255,0.4)',
-                  background: 'rgba(0,0,0,0.75)',
-                  backdropFilter: 'blur(8px)',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  fontSize: '0.85rem',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
-                }}
-                title="Replay Voiceover"
-              >
-                <RotateCcw size={16} /> Replay Audio
-              </button>
-
-              <button
-                onClick={toggleMute}
-                style={{
-                  padding: '0.6rem 1.1rem',
-                  borderRadius: '30px',
-                  border: '1px solid rgba(255,255,255,0.4)',
-                  background: isMuted ? 'rgba(239, 68, 68, 0.85)' : 'rgba(16, 185, 129, 0.85)',
-                  backdropFilter: 'blur(8px)',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  fontSize: '0.85rem',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
-                }}
-                title={isMuted ? 'Unmute Voiceover' : 'Mute Voiceover'}
-              >
-                {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                {isMuted ? 'Voice Muted' : 'Voice ON'}
-              </button>
-            </div>
           </div>
+        </>
         ) : (
           /* Story Scenes 1-5 Narrative Boxes & Comic Thought Bubbles */
           <div style={{
@@ -576,30 +604,37 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                       top: pos.top,
                       left: pos.left,
                       width: pos.width,
-                      maxWidth: '380px',
+                      maxWidth: '480px',
                       background: '#F5E8C7',
                       border: '1.5px solid #5A3E28',
-                      borderRadius: '14px',
-                      padding: '0.75rem 1rem',
-                      boxShadow: '0 6px 18px rgba(44, 34, 30, 0.35)',
+                      borderRadius: '18px',
+                      padding: '1rem 1.25rem',
+                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
                       pointerEvents: 'auto',
                       zIndex: isActive ? 25 : 20,
                       transition: 'all 0.25s ease'
                     }}
                   >
                     <div style={{
-                      fontSize: '0.92rem',
+                      fontSize: '1.18rem',
                       fontWeight: 800,
                       letterSpacing: '0.08em',
                       color: '#5A3E28',
                       textTransform: 'uppercase',
-                      marginBottom: '0.35rem',
+                      marginBottom: '0.4rem',
                       borderBottom: '1px solid rgba(90, 62, 40, 0.25)',
-                      paddingBottom: '0.2rem'
+                      paddingBottom: '0.25rem'
                     }}>
                       {currentScene.subtitle}
                     </div>
-                    <p style={{ margin: 0, fontSize: '1.12rem', lineHeight: 1.5, color: '#2C221E' }}>
+                    <p style={{ 
+                      margin: 0, 
+                      fontSize: '1.42rem', 
+                      lineHeight: 1.6, 
+                      color: '#2C221E', 
+                      textAlign: 'justify',
+                      textJustify: 'inter-word'
+                    }}>
                       {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, false)}
                     </p>
                   </div>
@@ -617,12 +652,12 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                     position: 'absolute',
                     top: pos.top,
                     left: pos.left,
-                    width: pos.width || '210px',
+                    width: pos.width || '230px',
                     background: '#F5E8C7',
                     border: '1.5px solid #5A3E28',
                     borderRadius: '35px',
-                    padding: '0.45rem 0.75rem',
-                    boxShadow: '0 6px 16px rgba(44, 34, 30, 0.3)',
+                    padding: '0.55rem 0.95rem',
+                    boxShadow: '0 6px 16px rgba(0, 0, 0, 0.35)',
                     transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
                     pointerEvents: 'auto',
                     zIndex: isActive ? 25 : 20
@@ -654,7 +689,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                     </div>
                   )}
 
-                  <p style={{ margin: 0, fontSize: '0.94rem', lineHeight: 1.5, color: '#2C221E', textAlign: 'center' }}>
+                  <p style={{ margin: 0, fontSize: '1.25rem', lineHeight: 1.55, color: '#2C221E', textAlign: 'center', fontWeight: 600 }}>
                     {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, false)}
                   </p>
                 </div>
@@ -667,73 +702,50 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
       {/* Voiceover Controls */}
       {currentPage !== 6 && (
-        <div style={{ position: 'absolute', top: '2rem', right: '2rem', display: 'flex', gap: '0.75rem', zIndex: 99999 }}>
+        <div style={{ position: 'absolute', top: '1.25rem', right: '1.75rem', display: 'flex', gap: '0.85rem', zIndex: 99999 }}>
           <button
             onClick={() => playSceneAudio(currentPage)}
             style={{
-              padding: '0.6rem 1.1rem',
-              borderRadius: '30px',
-              border: '1px solid rgba(255,255,255,0.4)',
+              padding: '0.85rem 1.5rem',
+              borderRadius: '35px',
+              border: '1.5px solid rgba(255,255,255,0.4)',
               background: 'rgba(0,0,0,0.75)',
               backdropFilter: 'blur(8px)',
               color: 'white',
               cursor: 'pointer',
-              fontWeight: 'bold',
+              fontWeight: 800,
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              fontSize: '0.85rem',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+              gap: '0.5rem',
+              fontSize: '1.05rem',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.45)'
             }}
             title="Replay Voiceover"
           >
-            <RotateCcw size={16} /> Replay Audio
+            <RotateCcw size={20} /> Replay Audio
           </button>
 
           <button
             onClick={toggleMute}
             style={{
-              padding: '0.6rem 1.1rem',
-              borderRadius: '30px',
-              border: '1px solid rgba(255,255,255,0.4)',
+              padding: '0.85rem 1.5rem',
+              borderRadius: '35px',
+              border: '1.5px solid rgba(255,255,255,0.4)',
               background: isMuted ? 'rgba(239, 68, 68, 0.85)' : 'rgba(16, 185, 129, 0.85)',
               backdropFilter: 'blur(8px)',
               color: 'white',
               cursor: 'pointer',
-              fontWeight: 'bold',
+              fontWeight: 800,
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              fontSize: '0.85rem',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+              gap: '0.5rem',
+              fontSize: '1.05rem',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.45)'
             }}
             title={isMuted ? 'Unmute Voiceover' : 'Mute Voiceover'}
           >
-            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             {isMuted ? 'Voice Muted' : 'Voice ON'}
-          </button>
-
-          <button
-            onClick={toggleFullscreen}
-            style={{
-              padding: '0.6rem 1.1rem',
-              borderRadius: '30px',
-              border: '1px solid rgba(255,255,255,0.4)',
-              background: 'rgba(0,0,0,0.75)',
-              backdropFilter: 'blur(8px)',
-              color: 'white',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              fontSize: '0.85rem',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
-            }}
-            title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-          >
-            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-            {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           </button>
         </div>
       )}
@@ -756,18 +768,19 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
             }
           }}
           style={{ 
-            padding: '0.75rem 2rem', 
-            borderRadius: '30px', 
-            border: '1px solid rgba(255,255,255,0.3)', 
+            padding: '0.85rem 2.2rem', 
+            borderRadius: '35px', 
+            border: '1.5px solid rgba(255,255,255,0.3)', 
             background: 'rgba(0,0,0,0.65)', 
             backdropFilter: 'blur(6px)', 
             color: 'white', 
             cursor: 'pointer', 
-            fontWeight: 'bold', 
+            fontWeight: 800, 
+            fontSize: '1.05rem',
             display: 'flex', 
             alignItems: 'center', 
-            gap: '0.5rem',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
+            gap: '0.6rem',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.45)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
@@ -779,12 +792,12 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
             e.currentTarget.style.background = 'rgba(0,0,0,0.65)';
           }}
         >
-          <ArrowLeft size={16} /> Back
+          <ArrowLeft size={20} /> Back
         </button>
       </div>
 
-      {/* Controls */}
-      {currentPage < scenes.length ? (
+      {/* Controls - Next button on scenes 1 to 5 */}
+      {currentPage < scenes.length && (
         <div style={{ 
           position: 'absolute', 
           bottom: '1.25rem', 
@@ -794,47 +807,29 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         }}>
           <button 
             onClick={handleNext}
-            style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
-          >
-            Next
-          </button>
-        </div>
-      ) : (
-        <div style={{ 
-          position: 'absolute', 
-          top: '50%', 
-          right: '2.5rem', 
-          transform: 'translateY(-50%)', 
-          display: 'flex', 
-          zIndex: 99999 
-        }}>
-          <button 
-            onClick={handleFinish}
             style={{ 
-              padding: '1.1rem 2.75rem', 
-              borderRadius: '40px', 
-              border: 'none', 
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', 
-              color: '#ffffff', 
+              padding: '0.85rem 2.5rem', 
+              borderRadius: '35px', 
+              border: '1.5px solid rgba(255,255,255,0.3)', 
+              background: 'rgba(0,0,0,0.65)', 
+              backdropFilter: 'blur(6px)', 
+              color: 'white', 
               cursor: 'pointer', 
               fontWeight: 800,
-              fontSize: '1.25rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              boxShadow: '0 8px 25px rgba(217, 119, 6, 0.45)',
-              transition: 'all 0.25s ease'
+              fontSize: '1.05rem',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.45)',
+              transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.boxShadow = '0 12px 30px rgba(217, 119, 6, 0.65)';
+              e.currentTarget.style.background = 'rgba(0,0,0,0.85)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(217, 119, 6, 0.45)';
+              e.currentTarget.style.background = 'rgba(0,0,0,0.65)';
             }}
           >
-            Finish Story <ArrowRight size={24} color="#ffffff" />
+            Next
           </button>
         </div>
       )}

@@ -71,10 +71,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const toggleNode = (id) => setExpandedNodes(prev => ({ ...prev, [id]: !prev[id] }));
 
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
-  
+
+  // Pour Water activity (stage8_b) must be completely silent — no audio of any kind.
+  const isSilentStage = () => chapterFlow[currentFlowIndex]?.id === 'stage8_b';
+
   const addXp = (amount) => {
     setXp(prev => prev + amount);
-    try { playSuccess(); } catch (e) {}
+    if (!isSilentStage()) {
+      try { playSuccess(); } catch (e) {}
+    }
   };
 
   const handleNext = () => {
@@ -139,7 +144,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       ) : showIntroSpread ? (
         <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />
       ) : (
-        <div className="activity-workspace materials-around-us-theme flex h-screen bg-[var(--surface)] overflow-hidden" style={{ paddingTop: 0, paddingBottom: '72px' }}>
+        <div className="activity-workspace materials-around-us-theme flex h-screen bg-[var(--lesson-surface)] overflow-hidden" style={{ paddingTop: 0, paddingBottom: '72px' }}>
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
         {/* Toggle Button */}
         <button
@@ -150,8 +155,8 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             top: '50%',
             transform: 'translateY(-50%)',
             zIndex: 101,
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
+            background: 'var(--lesson-surface)',
+            border: '1px solid var(--lesson-border)',
             borderLeft: 'none',
             borderTopRightRadius: '8px',
             borderBottomRightRadius: '8px',
@@ -159,7 +164,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             cursor: 'pointer',
             boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
             transition: 'left 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-            color: 'var(--text-primary)',
+            color: 'var(--lesson-text)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
@@ -176,7 +181,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             position: 'absolute', 
             left: 0,
             top: 0, bottom: 0, zIndex: 100, 
-            background: 'var(--surface)', borderRight: '1px solid var(--border)', 
+            background: 'var(--lesson-surface)', borderRight: '1px solid var(--lesson-border)', 
             display: 'flex', flexDirection: 'column', 
             overflow: 'hidden', boxShadow: isTimelineOpen ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
             width: '320px', 
@@ -185,7 +190,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           }}
         >
           <div style={{ width: '320px', padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '0.9rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '0.9rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
               Investigation Progress
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', overflowY: 'auto', paddingRight: '0.5rem' }}>
@@ -208,7 +213,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       disabled={isLocked}
                       onClick={() => {
                         if (!isLocked) {
-                          try { playSuccess(); } catch (e) {}
+                          if (!isSilentStage()) { try { playSuccess(); } catch (e) {} }
                           if (item.type === 'mission') {
                             setShowHandbook(true);
                           } else {
@@ -225,9 +230,9 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                         padding: '0.75rem',
                         marginLeft: `${indentLevel * 1}rem`,
                         borderRadius: '8px',
-                        background: isActive ? 'var(--accent-bg)' : 'transparent',
-                        border: `1px solid ${isActive ? 'var(--accent-border)' : 'transparent'}`,
-                        color: isPast ? 'var(--text-muted)' : isActive ? 'var(--accent)' : 'var(--text-primary)',
+                        background: isActive ? 'var(--lesson-accent-bg)' : 'transparent',
+                        border: `1px solid ${isActive ? 'var(--lesson-accent-border)' : 'transparent'}`,
+                        color: isPast ? 'var(--lesson-muted)' : isActive ? 'var(--lesson-accent)' : 'var(--lesson-text)',
                         transition: 'all 0.2s',
                         opacity: isLocked ? 0.4 : 1,
                         cursor: isLocked ? 'not-allowed' : 'pointer',
@@ -239,7 +244,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                         <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {item.title}
                         </span>
-                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--lesson-muted)' }}>
                           {item.type === 'mission' ? 'Mission Briefing' : item.type === 'activity' ? item.subtitle : 'Evidence Review'}
                         </span>
                       </div>
@@ -273,7 +278,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                           borderRadius: '8px',
                           background: 'rgba(0,0,0,0.03)',
                           border: 'none',
-                          color: isLocked ? 'var(--text-muted)' : 'var(--text-primary)',
+                          color: isLocked ? 'var(--lesson-muted)' : 'var(--lesson-text)',
                           fontWeight: 'bold',
                           cursor: isLocked ? 'not-allowed' : 'pointer',
                           textAlign: 'left',
@@ -281,7 +286,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                         }}
                       >
                         <span style={{ fontSize: '0.9rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{group.title}</span>
-                        <span style={{ fontSize: '0.8rem', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: 'var(--text-muted)' }}>▶</span>
+                        <span style={{ fontSize: '0.8rem', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: 'var(--lesson-muted)' }}>▶</span>
                       </button>
                       {isExpanded && !isLocked && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.25rem' }}>
@@ -305,7 +310,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </div>
 
         {/* Main Content Area - Full Width */}
-        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto' }}>
+        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto', marginLeft: isTimelineOpen ? '320px' : '0px', transition: 'margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
           {currentNode.type === 'mission' && (
             <MissionBriefingSpread 
               data={currentNode} 

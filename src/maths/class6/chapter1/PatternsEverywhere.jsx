@@ -5,24 +5,25 @@ const Card = ({ title, children }) => (
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '0.5rem',
-    width: '130px'
+    gap: '12px',
+    width: '260px'
   }}>
     <div style={{
       width: '100%',
-      height: '80px',
-      background: '#f1f5f9',
+      height: '160px',
+      background: '#0a1122',
       borderRadius: '8px',
       overflow: 'hidden',
       position: 'relative',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+      border: '1px solid rgba(255,255,255,0.1)',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
     }}>
       {children}
     </div>
     <span style={{
-      fontSize: '0.95rem',
+      fontSize: '15px',
       fontWeight: '800',
-      color: '#334155',
+      color: '#e2e8f0',
       textAlign: 'center',
       lineHeight: '1.3'
     }}>
@@ -209,22 +210,9 @@ const RailwayLine = () => (
 );
 
 
-export default function PatternsEverywhere() {
+export default function PatternsEverywhere({ onNext, onPrev }) {
   return (
-    <div style={{
-      background: '#ffffff',
-      borderRadius: '16px',
-      border: '1px solid #e2e8f0',
-      padding: '1.5rem',
-      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
-      maxWidth: '100%',
-      width: '100%',
-      boxSizing: 'border-box',
-      display: 'flex',
-      flexDirection: 'column',
-      flex: 1,
-      minHeight: 0
-    }}>
+    <div className="dark-coords-page">
       {/* Keyframes */}
       <style>{`
         @keyframes sun-move {
@@ -291,100 +279,89 @@ export default function PatternsEverywhere() {
         }
       `}</style>
 
-      {/* Title */}
-      <h2 style={{
-        fontSize: '2rem',
-        fontWeight: '900',
-        color: '#1e3a8a',
-        margin: '0 0 1.25rem 0'
-      }}>
-        Patterns are everywhere
-      </h2>
+      <div className="dark-coords-main-content">
+        <div className="dark-coords-left">
+          <div className="dark-top-title">Patterns in the World</div>
+          
+          <div className="dark-globe-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.02)',
+              borderRadius: '24px',
+              padding: '40px',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '32px',
+              maxWidth: '1000px',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.2)'
+            }}>
+              <Card title="the sun's daily arc"><SunArc /></Card>
+              <Card title="a floor being tiled"><FloorTiling /></Card>
+              <Card title="a wall being built"><WallBuilding /></Card>
+              <Card title="a song's beat"><SongBeat /></Card>
+              <Card title="your own heartbeat"><Heartbeat /></Card>
+              <Card title="the railway line"><RailwayLine /></Card>
+            </div>
+            
+            <div style={{
+              marginTop: '48px',
+              color: '#94a3b8',
+              fontSize: '18px',
+              fontWeight: '600',
+              textAlign: 'center',
+              maxWidth: '800px',
+              background: 'rgba(255,255,255,0.05)',
+              padding: '20px 32px',
+              borderRadius: '16px',
+              border: '1px solid rgba(255,255,255,0.05)',
+              lineHeight: '1.6',
+              marginBottom: '80px'
+            }}>
+              Six patterns you met before breakfast — all of them alive: the sunrise, a floor being tiled, a wall being built, the beat of a song, your own heartbeat, and the railway line.
+            </div>
+          </div>
 
-      {/* Intro Text */}
-      <p style={{
-        fontSize: '1.25rem',
-        fontWeight: '500',
-        color: '#334155',
-        lineHeight: '1.7',
-        margin: '0 0 2rem 0'
-      }}>
-        Such patterns indeed exist all around us — in nature, in our homes and schools, and in the motion of the sun, moon and stars. They occur in everything we do and see: shopping and cooking, throwing a ball and playing games, understanding weather patterns and using technology.
-      </p>
+          <div className="dark-bottom-nav">
+            <button className="dark-nav-btn" onClick={onPrev}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+              Back
+            </button>
+            <div className="dark-nav-dots">
+              <div className="dark-nav-dot" />
+              <div className="dark-nav-dot active" />
+              <div className="dark-nav-dot" />
+              <div className="dark-nav-dot" />
+            </div>
+            <button className="dark-nav-btn next" onClick={onNext}>
+              Next
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-      {/* Cards Container */}
-      <div style={{
-        background: '#fffbeb', // Light yellow/creamy background
-        borderRadius: '16px',
-        padding: '1.5rem',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        gap: '1rem',
-        marginBottom: '1rem',
-        border: '1px solid #fde68a'
-      }}>
-        <Card title="the sun's daily arc"><SunArc /></Card>
-        <Card title="a floor being tiled"><FloorTiling /></Card>
-        <Card title="a wall being built"><WallBuilding /></Card>
-        <Card title="a song's beat"><SongBeat /></Card>
-        <Card title="your own heartbeat"><Heartbeat /></Card>
-        <Card title="the railway line"><RailwayLine /></Card>
+        <div className="dark-coords-right">
+          <div className="dark-step-eyebrow">STEP 2 OF 4</div>
+          <h2 className="dark-step-title">Patterns are everywhere</h2>
+          
+          <div className="dark-step-text">
+            Such patterns indeed exist all around us — in nature, in our homes and schools, and in the motion of the sun, moon and stars. They occur in everything we do and see: shopping and cooking, throwing a ball and playing games, understanding weather patterns and using technology.
+          </div>
+          
+          <div className="dark-step-text">
+            The search for patterns and their explanations can be a fun and creative endeavour. It is for this reason that mathematicians think of mathematics both as an <strong>art</strong> and as a <strong>science</strong>.
+          </div>
+
+
+          
+          <div className="dark-step-text">
+            For example, understanding patterns in the motion of stars, planets and their satellites led humankind to the theory of gravitation — which let us launch satellites and send rockets to the Moon and Mars. Understanding patterns in genomes has helped in diagnosing and curing diseases.
+          </div>
+        </div>
       </div>
-
-      <p style={{
-        fontSize: '1.1rem',
-        fontWeight: '600',
-        color: '#475569',
-        textAlign: 'center',
-        margin: '0 0 2rem 0'
-      }}>
-        Six patterns you met before breakfast — all of them alive: the sunrise, a floor being tiled, a wall being built, the beat of a song, your own heartbeat, and the railway line.
-      </p>
-
-      {/* Mid Text */}
-      <p style={{
-        fontSize: '1.25rem',
-        fontWeight: '500',
-        color: '#1e293b',
-        lineHeight: '1.7',
-        margin: '0 0 2rem 0'
-      }}>
-        The search for patterns and their explanations can be a fun and creative endeavour. It is for this reason that mathematicians think of mathematics both as an <strong style={{fontWeight: '800'}}>art</strong> and as a <strong style={{fontWeight: '800'}}>science</strong>.
-      </p>
-
-      {/* Callout Box */}
-      <div style={{
-        background: '#f0f9ff',
-        border: '2px solid #bae6fd',
-        borderRadius: '12px',
-        padding: '1.75rem',
-        marginBottom: '2rem'
-      }}>
-        <p style={{
-          fontSize: '1.25rem',
-          fontWeight: '500',
-          color: '#0f172a',
-          margin: 0,
-          lineHeight: '1.7'
-        }}>
-          <strong style={{ color: '#0369a1', fontWeight: '900' }}>The big idea of this chapter:</strong> mathematics aims not just to find out <em>what</em> patterns exist, but also the explanation for <em>why</em> they exist. Those explanations can then be used far beyond where they were discovered — which helps propel humanity forward.
-        </p>
-      </div>
-
-      {/* Final Text */}
-      <p style={{
-        fontSize: '1.25rem',
-        fontWeight: '500',
-        color: '#334155',
-        lineHeight: '1.7',
-        margin: 0,
-        paddingBottom: '3rem'
-      }}>
-        For example, understanding patterns in the motion of stars, planets and their satellites led humankind to the theory of gravitation — which let us launch satellites and send rockets to the Moon and Mars. Understanding patterns in genomes has helped in diagnosing and curing diseases.
-      </p>
-
     </div>
   );
 }

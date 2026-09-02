@@ -28,11 +28,11 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
   const totalDiff = Math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
   
   let tempClass = "cold";
-  if (totalDiff < 12) tempClass = "hot";
-  else if (totalDiff < 40) tempClass = "warm";
+  if (totalDiff < 3) tempClass = "hot";
+  else if (totalDiff < 15) tempClass = "warm";
 
   const handleConfirm = () => {
-    if (latDiff <= 6 && lonDiff <= 6) {
+    if (latDiff <= 1.5 && lonDiff <= 1.5) {
       setModalState('correct');
       setShowCelebration(true);
     } else {
@@ -185,12 +185,13 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
           <div className="slider-row inputs">
             <div className="slider-wrapper">
               <div className="slider-tooltip lat-tooltip" style={{ left: `${((userLat + 90) / 180) * 100}%` }}>
-                {Math.abs(userLat)}&deg;{userLat >= 0 ? 'N' : 'S'}
+                {Math.abs(userLat).toFixed(1)}&deg;{userLat >= 0 ? 'N' : 'S'}
               </div>
               <input 
                 type="range" 
                 min="-90" 
                 max="90" 
+                step="0.1"
                 value={userLat} 
                 onChange={(e) => setUserLat(Number(e.target.value))} 
                 className="styled-slider lat-slider" 
@@ -200,12 +201,13 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
             
             <div className="slider-wrapper">
               <div className="slider-tooltip lon-tooltip" style={{ left: `${((userLon + 180) / 360) * 100}%` }}>
-                {Math.abs(userLon)}&deg;{userLon >= 0 ? 'E' : 'W'}
+                {Math.abs(userLon).toFixed(1)}&deg;{userLon >= 0 ? 'E' : 'W'}
               </div>
               <input 
                 type="range" 
                 min="-180" 
                 max="180" 
+                step="0.1"
                 value={userLon} 
                 onChange={(e) => setUserLon(Number(e.target.value))} 
                 className="styled-slider lon-slider" 

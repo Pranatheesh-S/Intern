@@ -75,10 +75,10 @@ export default function ChallengeMode({ onComplete }) {
           width: '90%', 
           padding: '2.5rem 3rem', 
           textAlign: 'center', 
-          background: '#ffffff', 
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
           borderRadius: '30px', 
-          border: '1px solid #cbd5e1',
-          boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+          border: '1.5px solid #FDE68A',
+          boxShadow: '0 8px 30px rgba(217, 119, 6, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -132,21 +132,17 @@ export default function ChallengeMode({ onComplete }) {
             {onComplete && (
               <button 
                 onClick={onComplete} 
+                className="gold-glow-btn"
                 style={{ 
                   flex: 1,
-                  padding: '0.9rem 1.5rem', 
-                  fontSize: '1rem', 
+                  padding: '0.95rem 1.8rem', 
+                  fontSize: '1.05rem', 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                  color: '#ffffff',
-                  border: 'none',
                   borderRadius: '30px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)'
+                  cursor: 'pointer'
                 }}
               >
                 Finish Activity <ArrowRight size={18} color="#ffffff" />
@@ -208,11 +204,11 @@ export default function ChallengeMode({ onComplete }) {
 
         {/* Main Card Container */}
         <div className="glass-panel" style={{ 
-          background: '#FFFFFF', 
-          border: '2px solid #A7F3D0',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+          border: '1.5px solid #FDE68A',
           borderRadius: '28px', 
           padding: '2.75rem 3.25rem', 
-          boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
+          boxShadow: '0 10px 32px rgba(217, 119, 6, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1.6rem',
@@ -364,23 +360,17 @@ export default function ChallengeMode({ onComplete }) {
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   onClick={handleNext}
+                  className="gold-glow-btn"
                   style={{
-                    padding: '1.05rem 3rem',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#ffffff',
-                    border: 'none',
+                    padding: '1rem 3rem',
                     borderRadius: '30px',
-                    fontSize: '1.28rem',
+                    fontSize: '1.25rem',
                     fontWeight: 900,
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)',
-                    transition: 'all 0.25s ease',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.65rem'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                 >
                   {currentChallenge < challenges.length - 1 ? 'Next Challenge' : 'See Final Score'} <ArrowRight size={24} color="#ffffff" />
                 </button>

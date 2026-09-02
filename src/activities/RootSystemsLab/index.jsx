@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, RefreshCw, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext';
+import darkForestBg from '../../assets/dark_forest_bg.jpg';
 
 const PLANTS = [
   { id: 'mustard', name: 'Mustard', emoji: '🌼', rootType: 'taproot', rootColor: '#b45309', potColor: '#b45309',
@@ -357,42 +358,41 @@ export default function RootSystemsLab({ onBackToDashboard }) {
   const doneCount = Object.keys(checked).filter(k => checked[k]).length;
 
   const containerBg = isLight ? '#fdfaf6' : '#1a0f05';
-  const textColor = isLight ? '#451a03' : '#fef3c7';
-  const textMuted = isLight ? '#7c2d12' : '#92400e';
-  const textFaint = isLight ? '#9a3412' : '#78350f';
+  const containerBg = `url(${darkForestBg}) center/cover no-repeat fixed`;
+  const textColor = '#0f172a';
+  const textMuted = '#334155';
+  const textFaint = '#475569';
   
-  const sidebarBg = isLight ? '#fbf4eb' : '#120b03';
-  const sidebarBorder = isLight ? '#fed7aa' : 'rgba(180,83,9,0.3)';
-  const resetBtnBorder = isLight ? '#f97316' : 'rgba(255,255,255,0.1)';
-  const resetBtnColor = isLight ? '#ea580c' : '#78350f';
+  const sidebarBg = 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)';
+  const sidebarBorder = 'rgba(167, 243, 208, 0.95)';
+  const resetBtnBorder = 'rgba(167, 243, 208, 0.95)';
+  const resetBtnColor = '#0f172a';
   
-  const mainBg = isLight ? '#fdfaf6' : '#1a0f05';
-  const cardBg = isLight ? '#ffffff' : '#120b03';
-  const cardBorder = isLight ? '#fed7aa' : 'rgba(180,83,9,0.3)';
+  const mainBg = 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)';
+  const cardBg = '#ffffff';
+  const cardBorder = 'rgba(167, 243, 208, 0.95)';
   
-  const excavationViewBg = isLight ? '#fdf6ee' : '#1c0e05';
-  const soilGradient = isLight 
-    ? 'linear-gradient(180deg, #b45309 0%, #7c2d12 50%, #451a03 100%)'
-    : 'linear-gradient(180deg, #3d1c0a 0%, #2d1408 50%, #1a0b04 100%)';
-  const soilBorder = isLight ? '#b45309' : '#5c2d0f';
+  const excavationViewBg = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
+  const soilGradient = 'linear-gradient(180deg, #b45309 0%, #7c2d12 50%, #451a03 100%)';
+  const soilBorder = '#b45309';
   
-  const progressTrackBg = isLight ? '#ffedd5' : '#2a1608';
+  const progressTrackBg = '#cbd5e1';
   
-  const buttonDugBg = isLight ? '#ffedd5' : '#2a1608';
-  const buttonDugText = isLight ? '#b45309' : '#78350f';
+  const buttonDugBg = '#f1f5f9';
+  const buttonDugText = '#064e3b';
   
-  const closeUpDescBg = isLight ? '#fff7ed' : '#1c0e05';
-  const closeUpDescText = isLight ? '#7c2d12' : '#fde68a';
+  const closeUpDescBg = 'rgba(240, 250, 244, 0.98)';
+  const closeUpDescText = '#064e3b';
   
-  const classificationAlertText = isLight ? '#7c2d12' : '#fde68a';
-  const optBg = isLight ? '#fffaf5' : 'rgba(255,255,255,0.03)';
-  const optBorder = isLight ? '#ffedd5' : 'rgba(255,255,255,0.08)';
-  const optText = isLight ? '#ea580c' : '#92400e';
+  const classificationAlertText = '#0f172a';
+  const optBg = '#ffffff';
+  const optBorder = 'rgba(167, 243, 208, 0.95)';
+  const optText = '#0f172a';
   
-  const doneOverlayBg = isLight ? 'rgba(253, 250, 246, 0.98)' : 'rgba(26,15,5,0.96)';
-  const doneOverlaySub = isLight ? '#7c2d12' : '#92400e';
-  const doneRedoBg = isLight ? '#ffedd5' : '#2a1608';
-  const doneRedoText = isLight ? '#ea580c' : '#fef3c7';
+  const doneOverlayBg = 'rgba(248, 250, 252, 0.98)';
+  const doneOverlaySub = '#334155';
+  const doneRedoBg = '#cbd5e1';
+  const doneRedoText = '#0f172a';
 
   useEffect(() => {
     if (!digging) return;
@@ -446,41 +446,51 @@ export default function RootSystemsLab({ onBackToDashboard }) {
   return (
     <div style={{ display: 'flex', height: '100%', background: containerBg, color: textColor, fontFamily: 'system-ui, sans-serif', overflow: 'hidden' }}>
       {/* Left — Plant list */}
-      <aside style={{ width: 220, background: sidebarBg, borderRight: `1px solid ${sidebarBorder}`, padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto' }}>
-        <button onClick={onBackToDashboard} style={{ background: 'none', border: 'none', color: textMuted, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', padding: 0 }}>
-          <ArrowLeft size={14} /> Back
+      <aside style={{ width: 220, background: sidebarBg, backdropFilter: 'blur(16px)', borderRight: `1.5px solid ${sidebarBorder}`, padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto', boxShadow: '4px 0 20px rgba(0, 0, 0, 0.15)' }}>
+        <button onClick={onBackToDashboard} style={{ background: 'none', border: 'none', color: '#0f172a', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', padding: 0 }}>
+          <ArrowLeft size={14} color="#0f172a" /> Back
         </button>
         <div>
-          <div style={{ fontSize: '0.65rem', color: isLight ? '#f97316' : '#f59e0b', textTransform: 'uppercase', fontWeight: 'bold' }}>Activity 2.6</div>
-          <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor }}>⛏️ Root Excavation Station</div>
-          <div style={{ fontSize: '0.7rem', color: textMuted, marginTop: '0.2rem' }}>{doneCount}/{PLANTS.length} identified</div>
+          <div style={{ fontSize: '0.65rem', color: '#0284c7', textTransform: 'uppercase', fontWeight: 'bold' }}>Activity 2.6</div>
+          <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#0f172a' }}>⛏️ Root Excavation Station</div>
+          <div style={{ fontSize: '0.7rem', color: '#0f172a', marginTop: '0.2rem', fontWeight: '700' }}>{doneCount}/{PLANTS.length} identified</div>
         </div>
         <div style={{ height: 4, background: progressTrackBg, borderRadius: 4, overflow: 'hidden' }}>
           <div style={{ height: '100%', background: 'linear-gradient(90deg, #f59e0b, #84cc16)', width: `${(doneCount / PLANTS.length) * 100}%`, transition: 'width 0.5s' }} />
         </div>
-        <div style={{ fontSize: '0.7rem', color: textFaint, fontStyle: 'italic' }}>Select a plant → dig it up → wash roots → classify!</div>
-        {PLANTS.map(p => (
-          <button key={p.id} onClick={() => setSelectedPlant(p.id)} style={{ background: selectedPlant === p.id ? (isLight ? '#fed7aa' : 'rgba(180,83,9,0.2)') : (isLight ? '#ffffff' : 'rgba(255,255,255,0.03)'), border: `1px solid ${checked[p.id] === true ? 'rgba(132,204,22,0.5)' : checked[p.id] === false ? 'rgba(248,113,113,0.4)' : selectedPlant === p.id ? 'rgba(245,158,11,0.5)' : (isLight ? '#fed7aa' : 'rgba(255,255,255,0.06)')}`, borderRadius: '10px', padding: '0.75rem 0.9rem', cursor: 'pointer', color: textColor, textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.6rem', transition: 'all 0.2s' }}>
-            <span style={{ fontSize: '1.4rem' }}>{p.emoji}</span>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.92rem', fontWeight: 600 }}>{p.name}</div>
-              {checked[p.id] === true && <div style={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 'bold', marginTop: '0.15rem' }}>✅ {p.rootType === 'taproot' ? 'Taproot' : 'Fibrous'}</div>}
-              {digProgress[p.id] >= 100 && !checked[p.id] && <div style={{ fontSize: '0.78rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: 'bold', marginTop: '0.15rem' }}>⛏️ Dug up</div>}
-            </div>
-          </button>
-        ))}
-        <button onClick={handleReset} style={{ marginTop: 'auto', background: 'none', border: `1px solid ${resetBtnBorder}`, color: resetBtnColor, padding: '0.4rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontWeight: 'bold' }}>
-          <RefreshCw size={12} /> Reset Lab
+        <div style={{ fontSize: '0.7rem', color: '#1e293b', fontStyle: 'italic', fontWeight: '600' }}>Select a plant → dig it up → wash roots → classify!</div>
+        {PLANTS.map(p => {
+          const isSelected = selectedPlant === p.id;
+          const isCheckedTrue = checked[p.id] === true;
+          const isCheckedFalse = checked[p.id] === false;
+          const cardBorderColor = isCheckedTrue ? 'rgba(132,204,22,0.7)' : isCheckedFalse ? 'rgba(248,113,113,0.7)' : isSelected ? '#f59e0b' : '#cbd5e1';
+          const cardBgColor = isSelected ? 'rgba(245, 158, 11, 0.16)' : '#ffffff';
+
+          return (
+            <button key={p.id} onClick={() => setSelectedPlant(p.id)} style={{ background: cardBgColor, border: `1.5px solid ${cardBorderColor}`, borderRadius: '10px', padding: '0.75rem 0.9rem', cursor: 'pointer', color: '#0f172a', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.6rem', transition: 'all 0.2s', boxShadow: isSelected ? '0 4px 12px rgba(245,158,11,0.2)' : '0 2px 4px rgba(0,0,0,0.04)' }}>
+              <span style={{ fontSize: '1.4rem' }}>{p.emoji}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0f172a' }}>{p.name}</div>
+                {isCheckedTrue && <div style={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 'bold', marginTop: '0.15rem' }}>✅ {p.rootType === 'taproot' ? 'Taproot' : 'Fibrous'}</div>}
+                {digProgress[p.id] >= 100 && !checked[p.id] && <div style={{ fontSize: '0.78rem', color: '#ea580c', fontWeight: 'bold', marginTop: '0.15rem' }}>⛏️ Dug up</div>}
+              </div>
+            </button>
+          );
+        })}
+        <button onClick={handleReset} style={{ marginTop: 'auto', background: '#ffffff', border: `1px solid ${resetBtnBorder}`, color: '#0f172a', padding: '0.4rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(0,0,0,0.04)' }}>
+          <RefreshCw size={12} color="#0f172a" /> Reset Lab
         </button>
       </aside>
 
       {/* Main workbench */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', background: mainBg, backdropFilter: 'blur(16px)' }}>
         {!selectedPlant ? (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: textFaint, textAlign: 'center', padding: '2rem' }}>
-            <div style={{ fontSize: '3rem', opacity: 0.4 }}>⛏️</div>
-            <div style={{ fontSize: '1rem', color: textMuted, fontWeight: 'bold' }}>Select a potted plant from the left panel</div>
-            <div style={{ fontSize: '0.8rem' }}>You'll dig it up, wash the roots, and classify them!</div>
+            <div style={{ background: 'linear-gradient(135deg, #064e3b 0%, #022c22 100%)', border: '1.5px solid rgba(52, 211, 153, 0.5)', boxShadow: '0 8px 32px rgba(6, 78, 59, 0.25)', padding: '2rem 2.5rem', borderRadius: '20px', maxWidth: '520px', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ fontSize: '4rem', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))' }}>⛏️</div>
+              <div style={{ fontSize: '1.35rem', color: '#facc15', fontWeight: '900', letterSpacing: '0.01em', lineHeight: '1.3' }}>Select a potted plant from the left panel</div>
+              <div style={{ fontSize: '1.05rem', color: '#ffffff', fontWeight: '800', lineHeight: '1.5' }}>You'll dig it up, wash the roots, and classify them!</div>
+            </div>
           </div>
         ) : (
           <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

@@ -1,160 +1,315 @@
 import React from 'react';
 import { motion, useTransform } from 'framer-motion';
 
-export const RealisticCup = ({ material, velocityX = null }) => {
-  // If velocity is provided, we create a subtle reactive slosh.
-  // Otherwise, fallback to 0.
-  const smoothVelocity = velocityX || 0;
-  
-  // Subtle rotation for liquids/materials based on horizontal velocity
-  const sloshRotate = velocityX ? useTransform(velocityX, [-1000, 1000], [-10, 10]) : 0;
-  // Pebbles have very rigid settling, maybe a slight shift
-  const pebbleShift = velocityX ? useTransform(velocityX, [-1000, 1000], [-2, 2]) : 0;
+const WaterMaterial = ({ velocityX }) => {
+  // Map horizontal drag velocity to a very subtle liquid surface tilt (max ~3deg)
+  const surfaceTilt = velocityX ? useTransform(velocityX, [-600, 600], [-3, 3]) : 0;
+  const meniscusShift = velocityX ? useTransform(velocityX, [-600, 600], [2, -2]) : 0;
 
   return (
-    <svg viewBox="0 0 100 120" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))', overflow: 'visible', pointerEvents: 'none' }}>
-      <defs>
-        <pattern id="sandPat" patternUnits="userSpaceOnUse" width="12" height="12">
-          <rect width="12" height="12" fill="#cda876" />
-          <circle cx="2" cy="2" r="0.8" fill="#8c5020" opacity="0.7"/>
-          <circle cx="8" cy="4" r="1.2" fill="#e8d8b0" opacity="0.9"/>
-          <circle cx="4" cy="9" r="1" fill="#7a3a10" opacity="0.6"/>
-          <circle cx="10" cy="10" r="0.8" fill="#4d2f1a" opacity="0.5"/>
-          <circle cx="6" cy="6" r="0.5" fill="#f4e4c1" opacity="0.8"/>
-        </pattern>
-        <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="rgba(56, 189, 248, 0.4)" />
-          <stop offset="50%" stopColor="rgba(56, 189, 248, 0.7)" />
-          <stop offset="100%" stopColor="rgba(14, 165, 233, 0.5)" />
-        </linearGradient>
-        <linearGradient id="glassGlare" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.7)" />
-          <stop offset="20%" stopColor="rgba(255,255,255,0.1)" />
-          <stop offset="80%" stopColor="rgba(255,255,255,0.0)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0.4)" />
-        </linearGradient>
+    <div style={{ 
+      width: '100%', height: '100%', position: 'relative',
+      background: 'linear-gradient(180deg, rgba(160, 210, 230, 0.1) 0%, rgba(130, 190, 220, 0.25) 50%, rgba(80, 150, 190, 0.6) 100%)',
+      boxShadow: 'inset 0 -15px 25px rgba(0, 60, 100, 0.4), inset 5px 0 12px rgba(255,255,255,0.25), inset -5px 0 12px rgba(0, 30, 50, 0.1)',
+      borderRadius: 'inherit'
+    }}>
+      
+      {/* Meniscus / Liquid Surface Boundary with physics inertia */}
+      <motion.div 
+        style={{
+          position: 'absolute', top: '-6px', left: 0, right: 0, height: '12px',
+          borderRadius: '50%',
+          border: '1.5px solid rgba(255, 255, 255, 0.8)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(180, 210, 230, 0.1) 60%, rgba(120, 180, 210, 0.4) 100%)',
+          boxShadow: 'inset 0 1px 3px rgba(255,255,255,0.9), inset 0 -2px 4px rgba(0, 80, 130, 0.25), 0 3px 6px rgba(0, 50, 90, 0.15)',
+          overflow: 'hidden',
+          rotate: surfaceTilt,
+          x: meniscusShift
+        }}
+      >
+        {/* Soft horizontal surface reflection */}
+        <div style={{
+          position: 'absolute', top: '2px', left: '15%', right: '15%', height: '3px',
+          background: 'rgba(255,255,255,0.7)',
+          borderRadius: '50%',
+          filter: 'blur(1px)'
+        }} />
+      </motion.div>
+      
+      {/* Meniscus upward curvature climbing the cup wall */}
+      <motion.div 
+        style={{
+          position: 'absolute', top: '-4px', left: '-2px', right: '-2px', height: '16px',
+          borderRadius: '50%',
+          borderTop: '2px solid rgba(255,255,255,0.6)',
+          filter: 'blur(1px)',
+          pointerEvents: 'none',
+          rotate: surfaceTilt
+        }} 
+      />
+
+      {/* Volume Refraction */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backdropFilter: 'blur(3px)',
+        pointerEvents: 'none',
+        borderRadius: 'inherit'
+      }} />
+
+      {/* Internal light scattering */}
+      <div style={{
+        position: 'absolute', top: '25%', bottom: '10%', left: '20%', right: '20%',
+        background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, transparent 60%)',
+        mixBlendMode: 'overlay',
+        pointerEvents: 'none',
+        filter: 'blur(3px)'
+      }} />
+    </div>
+  );
+};
+
+const SandMaterial = ({ velocityX }) => {
+  const sandShift = velocityX ? useTransform(velocityX, [-600, 600], [-1.5, 1.5]) : 0;
+
+  return (
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#d3ba9b' }}>
+      
+      {/* Photorealistic Sand Grain Texture */}
+      <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <defs>
+          <filter id="sandGrain" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="1.8" numOctaves="4" result="noise" />
+            <feDiffuseLighting in="noise" surfaceScale="2" diffuseConstant="1.1" lightingColor="white8f0" result="light">
+              <feDistantLight azimuth="45" elevation="45" />
+            </feDiffuseLighting>
+            <feBlend mode="overlay" in="light" in2="SourceGraphic" result="lit" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0, 1 0 0 0 0, 1 0 0 0 0, 0 0 0 0.4 0" in="noise" result="crevices" />
+            <feBlend mode="multiply" in="lit" in2="crevices" />
+          </filter>
+        </defs>
+        <rect width="100%" height="100%" fill="#cca985" filter="url(#sandGrain)" />
+      </svg>
+      
+      {/* Compaction depth */}
+      <div style={{ 
+        position: 'absolute', inset: 0, 
+        background: 'linear-gradient(180deg, transparent 30%, rgba(50, 25, 0, 0.5) 100%)',
+        pointerEvents: 'none'
+      }} />
+
+      {/* 3D Cylinder Shading */}
+      <div style={{ 
+        position: 'absolute', inset: 0, 
+        background: 'linear-gradient(90deg, rgba(0,0,0,0.4) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.5) 100%)',
+        pointerEvents: 'none'
+      }} />
+      
+      {/* Uneven natural sand surface at the top with slight physics response */}
+      <motion.svg 
+        style={{ position: 'absolute', top: '-5px', left: 0, width: '100%', height: '14px', x: sandShift }} 
+        preserveAspectRatio="none"
+      >
+        <path d="M0,7 Q15,1 40,4 T80,3 T100,6 L100,14 L0,14 Z" fill="rgba(60, 40, 20, 0.6)" />
+        <path d="M0,8 Q20,3 45,7 T85,5 T100,9 L100,14 L0,14 Z" fill="#ddc3a3" />
+        <path d="M0,8 Q20,3 45,7 T85,5 T100,9" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.8" />
+      </motion.svg>
+    </div>
+  );
+};
+
+const PebblesMaterial = ({ velocityX }) => {
+  const pebbleShift = velocityX ? useTransform(velocityX, [-600, 600], [-1, 1]) : 0;
+
+  const pathA = "M -10,-5 C -2,-12 8,-10 14,-2 C 18,6 12,12 4,14 C -6,16 -14,8 -10,-5 Z";
+  const pathB = "M 0,-12 C 10,-9 14,-1 10,7 C 6,15 -7,13 -11,5 C -15,-3 -8,-14 0,-12 Z";
+  const pathC = "M -14,-3 C -9,-9 11,-7 16,-1 C 21,5 12,11 0,13 C -11,15 -19,4 -14,-3 Z";
+  const pathD = "M -7,-10 C 6,-11 11,-4 9,6 C 7,16 -4,13 -9,9 C -14,4 -17,-5 -7,-10 Z";
+  const pathE = "M -12,-6 C -6,-15 8,-12 12,-4 C 16,4 10,14 0,16 C -10,18 -18,2 -12,-6 Z";
+  const pathF = "M 2,-14 C 12,-11 15,1 9,10 C 3,18 -8,15 -12,7 C -16,-1 -8,-16 2,-14 Z";
+
+  const c = {
+    slate: '#6B7075',
+    limestone: '#C2BBB1',
+    sandstone: '#B3997A',
+    granite: '#85817B',
+    basalt: '#4A4A4A',
+    quartz: '#DED7CE',
+    flint: '#5A5652',
+    warmGray: '#8F8982',
+    earth: '#87705B'
+  };
+
+  const pebbles = [
+    { d: pathC, x: 10, y: 41, s: 0.9, r: 10, f: c.flint },
+    { d: pathE, x: 25, y: 40, s: 1.1, r: -20, f: c.granite },
+    { d: pathA, x: 42, y: 42, s: 0.8, r: 45, f: c.basalt },
+    { d: pathF, x: 55, y: 39, s: 1.0, r: -15, f: c.earth },
+    { d: pathB, x: 68, y: 40, s: 0.9, r: 30, f: c.slate },
+    { d: pathA, x: 5,  y: 33, s: 1.0, r: 70, f: c.sandstone },
+    { d: pathD, x: 20, y: 34, s: 1.2, r: 15, f: c.warmGray },
+    { d: pathC, x: 38, y: 32, s: 0.9, r: -35, f: c.quartz },
+    { d: pathE, x: 52, y: 33, s: 1.1, r: 85, f: c.limestone },
+    { d: pathF, x: 68, y: 31, s: 0.8, r: -50, f: c.granite },
+    { d: pathB, x: 12, y: 24, s: 0.9, r: -10, f: c.slate },
+    { d: pathC, x: 30, y: 26, s: 1.0, r: 50, f: c.flint },
+    { d: pathA, x: 48, y: 24, s: 1.1, r: -80, f: c.earth },
+    { d: pathD, x: 65, y: 25, s: 0.9, r: 25, f: c.basalt },
+    { d: pathE, x: 8,  y: 15, s: 0.8, r: 35, f: c.quartz },
+    { d: pathD, x: 25, y: 16, s: 1.0, r: -40, f: c.sandstone },
+    { d: pathF, x: 40, y: 14, s: 0.9, r: 120, f: c.limestone },
+    { d: pathB, x: 58, y: 15, s: 1.1, r: 15, f: c.warmGray },
+    { d: pathC, x: 72, y: 17, s: 0.8, r: -60, f: c.slate },
+  ];
+  
+  return (
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#1c1b1a' }}>
+      <motion.svg 
+        width="100%" height="100%" 
+        style={{ position: 'absolute', inset: 0, x: pebbleShift }} 
+        viewBox="0 0 74 42" 
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <filter id="stoneTexture" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0, 1 0 0 0 0, 1 0 0 0 0, 0 0 0 0.15 0" in="noise" result="coloredNoise" />
+            <feBlend in="SourceGraphic" in2="coloredNoise" mode="multiply" />
+          </filter>
+
+          <linearGradient id="stoneLight" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.6)" />
+            <stop offset="35%" stopColor="rgba(255,255,255,0.1)" />
+            <stop offset="65%" stopColor="rgba(0,0,0,0.2)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.8)" />
+          </linearGradient>
+
+          <radialGradient id="stoneHighlight" cx="25%" cy="25%" r="60%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.4)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+        </defs>
         
-        {/* Subtle drop shadow for pebbles */}
-        <filter id="pebbleShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="1" stdDeviation="0.5" floodOpacity="0.3" />
-        </filter>
-      </defs>
+        <g>
+          {pebbles.map((p, i) => (
+            <g key={i} transform={`translate(${p.x}, ${p.y}) rotate(${p.r}) scale(${p.s})`}>
+              <path d={p.d} fill="rgba(0,0,0,0.9)" transform="translate(1, 2.5) scale(1.05)" filter="blur(1.5px)" />
+              <path d={p.d} fill={p.f} filter="url(#stoneTexture)" />
+              <path d={p.d} fill="url(#stoneLight)" />
+              <path d={p.d} fill="url(#stoneHighlight)" />
+            </g>
+          ))}
+        </g>
+      </motion.svg>
 
-      {/* Back Wall of Cylinder Jar */}
-      <path d="M 20 45 L 80 45 L 80 105 A 30 8 0 0 1 20 105 Z" fill="rgba(240, 245, 250, 0.4)" stroke="rgba(200, 210, 220, 0.5)" strokeWidth="1"/>
-      <ellipse cx="50" cy="45" rx="30" ry="8" fill="rgba(240, 245, 250, 0.3)" stroke="rgba(200, 210, 220, 0.5)" strokeWidth="1.5" />
+      <div style={{ 
+        position: 'absolute', inset: 0, 
+        background: 'linear-gradient(90deg, rgba(0,0,0,0.5) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.6) 100%)',
+        pointerEvents: 'none'
+      }} />
+      <div style={{ 
+        position: 'absolute', inset: 0, 
+        background: 'linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.8) 100%)',
+        pointerEvents: 'none'
+      }} />
+    </div>
+  );
+};
 
-      {/* Materials */}
-      {material === 'water' && (
-        <motion.g style={{ originX: '50px', originY: '70px', rotate: sloshRotate }}>
-          {/* Liquid Body */}
-          <path d="M 20 70 L 80 70 L 80 105 A 30 8 0 0 1 20 105 Z" fill="url(#waterGrad)" />
-          {/* Liquid Surface */}
-          <motion.ellipse 
-            cx="50" cy="70" rx="30" ry="8" 
-            fill="rgba(125, 211, 252, 0.6)" stroke="rgba(56, 189, 248, 0.8)" strokeWidth="1"
-            animate={{ cy: [70, 71, 70], ry: [8, 7.5, 8] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          />
-          <motion.ellipse 
-            cx="50" cy="70" rx="28" ry="6.5" fill="rgba(255, 255, 255, 0.4)" 
-            animate={{ cy: [70, 71, 70] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", delay: 0.2 }}
-          />
-        </motion.g>
-      )}
-
-      {material === 'sand' && (
-        <motion.g style={{ originX: '50px', originY: '70px', rotate: sloshRotate }}>
-          {/* Sand Body */}
-          <path d="M 20 70 Q 35 67, 50 71 T 80 69 L 80 105 A 30 8 0 0 1 20 105 Z" fill="url(#sandPat)" />
-          {/* Sand Surface Line */}
-          <path d="M 20 70 Q 35 67, 50 71 T 80 69" fill="none" stroke="#a46b34" strokeWidth="1.5" opacity="0.8"/>
-          {/* Inner shadow for volume */}
-          <path d="M 20 70 L 25 75 L 25 102 A 25 6 0 0 0 75 102 L 75 75 L 80 70 L 80 105 A 30 8 0 0 1 20 105 Z" fill="rgba(0,0,0,0.1)" />
-        </motion.g>
-      )}
-
-      {material === 'pebbles' && (
-        <motion.g style={{ x: pebbleShift }}>
-          {/* Very bottom filler */}
-          <path d="M 25 100 L 75 100 L 80 105 A 30 8 0 0 1 20 105 Z" fill="#44403c" opacity="0.8"/>
-
-          {/* Rendering individual pebbles. We keep the static rendering but wrap in motion if we wanted per-pebble anim. Group shift is enough. */}
-          <g filter="url(#pebbleShadow)">
-            {/* Layer 1 - Bottom */}
-            <ellipse cx="26" cy="103" rx="5" ry="3.5" fill="#78716c" transform="rotate(-15 26 103)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="35" cy="104" rx="4" ry="3" fill="#a8a29e" transform="rotate(20 35 104)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="44" cy="103" rx="6" ry="4" fill="#57534e" transform="rotate(-5 44 103)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="54" cy="104" rx="5" ry="3.5" fill="#8b7355" transform="rotate(30 54 104)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="64" cy="102" rx="4.5" ry="3.5" fill="#d6d3d1" transform="rotate(-25 64 102)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="74" cy="103" rx="5" ry="3.5" fill="#a8a29e" transform="rotate(10 74 103)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-
-            {/* Layer 2 */}
-            <ellipse cx="24" cy="98" rx="4" ry="3" fill="#8b7355" transform="rotate(10 24 98)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="32" cy="97" rx="5" ry="4" fill="#6a635a" transform="rotate(-35 32 97)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="41" cy="99" rx="4.5" ry="3" fill="#a8a29e" transform="rotate(15 41 99)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="50" cy="96" rx="5.5" ry="4" fill="#9c9385" transform="rotate(-10 50 96)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="59" cy="98" rx="4" ry="3.5" fill="#57534e" transform="rotate(45 59 98)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="68" cy="96" rx="4.5" ry="3" fill="#78716c" transform="rotate(-20 68 96)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="76" cy="97" rx="4" ry="3.5" fill="#d6d3d1" transform="rotate(20 76 97)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-
-            {/* Layer 3 */}
-            <ellipse cx="27" cy="92" rx="5" ry="4" fill="#a8a29e" transform="rotate(-40 27 92)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="36" cy="91" rx="4" ry="3.5" fill="#78716c" transform="rotate(25 36 91)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="45" cy="93" rx="5.5" ry="3" fill="#d6d3d1" transform="rotate(-5 45 93)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="54" cy="90" rx="4.5" ry="4" fill="#6a635a" transform="rotate(15 54 90)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="63" cy="91" rx="5" ry="3.5" fill="#a8a29e" transform="rotate(-30 63 91)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="73" cy="92" rx="4.5" ry="3" fill="#57534e" transform="rotate(35 73 92)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-
-            {/* Layer 4 */}
-            <ellipse cx="24" cy="87" rx="4.5" ry="3" fill="#57534e" transform="rotate(35 24 87)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="33" cy="85" rx="5" ry="4" fill="#8b7355" transform="rotate(-15 33 85)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="42" cy="86" rx="4" ry="3.5" fill="#d6d3d1" transform="rotate(20 42 86)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="51" cy="84" rx="5.5" ry="3.5" fill="#78716c" transform="rotate(-10 51 84)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="60" cy="86" rx="4" ry="3" fill="#9c9385" transform="rotate(40 60 86)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="69" cy="84" rx="4.5" ry="3.5" fill="#6a635a" transform="rotate(-25 69 84)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="76" cy="86" rx="4" ry="3" fill="#a8a29e" transform="rotate(15 76 86)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-
-            {/* Layer 5 */}
-            <ellipse cx="28" cy="81" rx="5" ry="3.5" fill="#9c9385" transform="rotate(-5 28 81)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="37" cy="79" rx="4.5" ry="4" fill="#57534e" transform="rotate(30 37 79)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="47" cy="81" rx="5" ry="3" fill="#a8a29e" transform="rotate(-20 47 81)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="56" cy="78" rx="4" ry="3.5" fill="#78716c" transform="rotate(15 56 78)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="65" cy="80" rx="4.5" ry="3" fill="#8b7355" transform="rotate(-40 65 80)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="74" cy="79" rx="4" ry="3.5" fill="#57534e" transform="rotate(10 74 79)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-
-            {/* Layer 6 (Surface) */}
-            <ellipse cx="25" cy="75" rx="4" ry="3" fill="#d6d3d1" transform="rotate(25 25 75)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="33" cy="74" rx="4.5" ry="3.5" fill="#6a635a" transform="rotate(-15 33 74)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="42" cy="73" rx="5" ry="3" fill="#78716c" transform="rotate(10 42 73)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="52" cy="75" rx="4.5" ry="4" fill="#a8a29e" transform="rotate(-35 52 75)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="61" cy="73" rx="4" ry="3.5" fill="#57534e" transform="rotate(20 61 73)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="70" cy="75" rx="3.5" ry="2.5" fill="#9c9385" transform="rotate(-5 70 75)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="77" cy="74" rx="4" ry="3" fill="#a8a29e" transform="rotate(30 77 74)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-
-            {/* Surface overlapping pebbles */}
-            <ellipse cx="38" cy="70" rx="4" ry="3" fill="#8b7355" transform="rotate(-25 38 70)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="48" cy="69" rx="4.5" ry="3.5" fill="#d6d3d1" transform="rotate(15 48 69)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-            <ellipse cx="58" cy="71" rx="3.5" ry="2.5" fill="#6a635a" transform="rotate(-40 58 71)" stroke="rgba(0,0,0,0.3)" strokeWidth="0.5"/>
-          </g>
-        </motion.g>
-      )}
-
-      {/* Front of the Cylinder (Glass glare and reflection) */}
-      <path d="M 20 45 L 80 45 L 80 105 A 30 8 0 0 1 20 105 Z" fill="url(#glassGlare)" />
+export const RealisticCup = ({ material, velocityX = 0 }) => {
+  return (
+    <div style={{ 
+      position: 'relative', 
+      width: '100%', 
+      height: '100%', 
+      borderRadius: '4px 4px 16px 16px',
+      transform: 'translateZ(0)'
+    }}>
       
-      {/* Front rim */}
-      <path d="M 20 45 A 30 8 0 0 0 80 45" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
-      <path d="M 18 45 A 32 9 0 0 0 82 45" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
+      {/* Grounding Contact Shadows */}
+      <div style={{
+        position: 'absolute', bottom: '-8px', left: '10%', right: '10%', height: '10px',
+        background: 'rgba(0,0,0,0.5)',
+        borderRadius: '50%',
+        filter: 'blur(5px)',
+        zIndex: -1
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '-4px', left: '20%', right: '20%', height: '5px',
+        background: 'rgba(0,0,0,0.7)',
+        borderRadius: '50%',
+        filter: 'blur(2px)',
+        zIndex: -1
+      }} />
       
-      {/* Left Highlight */}
-      <path d="M 23 55 L 23 95" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="3" strokeLinecap="round" />
-      {/* Right Edge Glow */}
-      <path d="M 77 55 L 77 95" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" />
+      {/* Back wall of the glass */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(90deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.02) 20%, rgba(255,255,255,0.02) 80%, rgba(255,255,255,0.25) 100%)',
+        borderRadius: 'inherit',
+        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1), inset 6px 0 10px rgba(0,0,0,0.05)',
+        backdropFilter: 'blur(1px) brightness(1.02)'
+      }} />
       
-      {/* Bottom Curve Highlight */}
-      <path d="M 28 103 A 22 6 0 0 0 72 103" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" />
-    </svg>
+      {/* The actual material filling the cup */}
+      <div style={{
+        position: 'absolute', bottom: '10px', left: '4px', right: '4px', height: '42%',
+        borderRadius: '2px 2px 10px 10px',
+        overflow: 'hidden',
+        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)'
+      }}>
+         {material === 'water' && <WaterMaterial velocityX={velocityX} />}
+         {material === 'sand' && <SandMaterial velocityX={velocityX} />}
+         {material === 'pebbles' && <PebblesMaterial velocityX={velocityX} />}
+      </div>
+
+      {/* Solid Thick Glass Base */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: '12px',
+        background: 'linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.8) 80%, rgba(255,255,255,0.5) 100%)',
+        borderRadius: '0 0 16px 16px',
+        boxShadow: 'inset 0 4px 8px rgba(255,255,255,0.9), inset 0 -4px 6px rgba(0,0,0,0.5)',
+        backdropFilter: 'blur(3px)'
+      }} />
+
+      {/* Front wall glass & specular highlights */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        borderRadius: 'inherit',
+        borderLeft: '1.5px solid rgba(255,255,255,0.95)',
+        borderRight: '2px solid rgba(255,255,255,0.7)',
+        borderBottom: '1.5px solid rgba(255,255,255,0.5)',
+        boxShadow: 'inset 8px 0 15px rgba(255,255,255,0.8), inset -8px 0 20px rgba(0,0,0,0.3), inset 0 -12px 15px rgba(255,255,255,0.5)',
+        pointerEvents: 'none'
+      }}>
+        {/* Specular reflection */}
+        <div style={{
+          position: 'absolute', top: '10%', bottom: '15%', left: '12%', width: '25%',
+          background: 'linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%)',
+          borderRadius: '50%',
+          transform: 'skewX(-4deg)',
+          filter: 'blur(3px)'
+        }} />
+
+        {/* Sharp lab ceiling highlight */}
+        <div style={{
+          position: 'absolute', top: '2px', bottom: '14px', left: '18%', width: '6%',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 60%, rgba(255,255,255,0) 100%)',
+          borderRadius: '10px',
+          transform: 'skewX(-2deg)'
+        }} />
+      </div>
+
+      {/* Top Rim of the Cup */}
+      <div style={{
+        position: 'absolute', top: '-5px', left: '-1.5px', right: '-1.5px', height: '10px',
+        borderRadius: '50%',
+        border: '1.5px solid rgba(255,255,255,0.95)',
+        borderBottom: '1px solid rgba(255,255,255,0.3)',
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 100%)',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.05), inset 0 2px 4px rgba(255,255,255,1), inset 0 -1px 2px rgba(255,255,255,0.6)',
+        backdropFilter: 'blur(1px)'
+      }} />
+      
+    </div>
   );
 };

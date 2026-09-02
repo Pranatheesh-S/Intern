@@ -1,18 +1,31 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Maximize2, Minimize2 } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Play, Pause } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import '../MagneticPoles.css';
 
 // ---------------------------------------------------------
 // Realistic Parchment Paper Box Enclosure
 // ---------------------------------------------------------
-function PaperBoxEnclosure() {
+function PaperBoxEnclosure({ isVibrating, isPaused }) {
   const paperTexture = useTexture('/MagneticPoles/paper_texture.jpg');
+  const paperGroupRef = useRef();
+
+  useFrame((state) => {
+    if (!paperGroupRef.current || isPaused) return;
+    if (isVibrating) {
+      paperGroupRef.current.position.y = Math.sin(state.clock.elapsedTime * 90) * 0.035;
+      paperGroupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 70) * 0.003;
+    } else {
+      paperGroupRef.current.position.y = 0;
+      paperGroupRef.current.rotation.z = 0;
+    }
+  });
 
   return (
-    <>
+    <group ref={paperGroupRef}>
       {/* 1. Bottom Paper Base */}
       <mesh receiveShadow position={[0, -0.01, 0]}>
         <boxGeometry args={[26, 0.04, 16]} />
@@ -36,7 +49,7 @@ function PaperBoxEnclosure() {
         <boxGeometry args={[0.04, 4.8, 16]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
-    </>
+    </group>
   );
 }
 
@@ -168,14 +181,14 @@ function Magnet3D() {
 // ---------------------------------------------------------
 // Smooth Intro Animation Group (Bottom-Left to Center Growth)
 // ---------------------------------------------------------
-function AnimatedLabGroup({ children }) {
+function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
   const groupRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasStarted(true);
-    }, 1000);
+    }, 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -184,12 +197,12 @@ function AnimatedLabGroup({ children }) {
     const dt = Math.min(delta, 0.1);
 
     // Initial: Positioned on the left tabletop parallel to the compass & ruler on the right
-    const targetX = hasStarted ? 0 : -4.8;
-    const targetY = hasStarted ? -0.5 : -4.2;
-    const targetZ = hasStarted ? 0 : 6.5;
-    const targetScale = hasStarted ? 1.0 : 0.22;
+    const targetX = hasStarted ? 0 : -5.8;
+    const targetY = hasStarted ? -0.4 : -3.5;
+    const targetZ = hasStarted ? 0 : 0.5;
+    const targetScale = (hasStarted ? 0.50 : 0.08) * zoomScale;
 
-    const speed = 3.4;
+    const speed = 3.6;
     groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, dt * speed);
     groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, dt * speed);
     groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, dt * speed);
@@ -200,7 +213,7 @@ function AnimatedLabGroup({ children }) {
   });
 
   return (
-    <group ref={groupRef} position={[-4.8, -4.2, 6.5]} scale={[0.22, 0.22, 0.22]}>
+    <group ref={groupRef} position={[-5.8, -3.5, 0.5]} scale={[0.08, 0.08, 0.08]}>
       {children}
     </group>
   );
@@ -210,10 +223,11 @@ function AnimatedLabGroup({ children }) {
 // 2. High-Contrast 3D Iron Filings System with 3D Lifting
 // ---------------------------------------------------------
 
-function FilingsSystem({ step, isSprinkling, isVibrating }) {
+function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) {
   const count = 14000;
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const lastCycleRef = useRef(-1);
 
   // Magnet pole centers matching the floating 12x1.3x1.9 bar magnet
   const poles = useMemo(() => ({ nX: -4.8, nZ: 0.0, sX: 4.8, sZ: 0.0, span: 4.0 }), []);
@@ -228,6 +242,7 @@ function FilingsSystem({ step, isSprinkling, isVibrating }) {
       const randX = (Math.random() - 0.5) * 23;
       const randZ = (Math.random() - 0.5) * 13.5;
       const randomEuler = new THREE.Euler(Math.PI / 2, (Math.random() - 0.5) * Math.PI, 0);
+      const initialQ = new THREE.Quaternion().setFromEuler(randomEuler);
 
       let targetX, targetZ;
       const clusterRoll = Math.random();
@@ -265,13 +280,14 @@ function FilingsSystem({ step, isSprinkling, isVibrating }) {
         targetZ,
         scale: 0.65 + Math.random() * 0.45,
         x: randX,
-        y: 11 + Math.random() * 5,
+        y: 8 + Math.random() * 4.5,
         z: randZ,
-        floatY: 0.25 + Math.random() * 4.5,
-        q: new THREE.Quaternion().setFromEuler(randomEuler),
+        floatY: 0.04,
+        initialQ,
+        q: new THREE.Quaternion().copy(initialQ),
         targetQ: new THREE.Quaternion(),
         visible: false,
-        delay: Math.random() * 0.9,
+        delay: Math.random() * 0.75,
       });
     }
     return data;
@@ -293,36 +309,52 @@ function FilingsSystem({ step, isSprinkling, isVibrating }) {
   );
 
   useFrame((state, delta) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || isPaused) return;
     const dt = Math.min(delta, 0.1);
 
-    particles.forEach((p, i) => {
-      // Step 1: Initial reset
-      if (step === 'initial' && !isSprinkling) {
+    if (lastCycleRef.current !== cycleKey) {
+      lastCycleRef.current = cycleKey;
+      particles.forEach((p) => {
         p.visible = false;
-        p.y = 11 + Math.random() * 5;
         p.x = p.originX;
         p.z = p.originZ;
-        p.delay = Math.random() * 0.9;
-      }
+        p.y = 8 + Math.random() * 4.5;
+        p.q.copy(p.initialQ);
+        p.delay = Math.random() * 0.75;
+      });
+    }
 
-      // Step 2: Sprinkling down - suspended floating in 3D air around the magnet
-      if (isSprinkling || step === 'scattered') {
+    particles.forEach((p, i) => {
+      // Step 1: Sprinkling down - suspended floating in 3D air onto the paper
+      if (isSprinkling || step === 'initial') {
         p.delay -= dt;
         if (p.delay <= 0) {
           p.visible = true;
-          if (p.y > p.floatY) {
-            p.y -= dt * 20;
+          if (p.y > 0.04) {
+            p.y -= dt * 18;
           } else {
-            p.y = p.floatY;
+            p.y = 0.04;
           }
+          p.x = p.originX;
+          p.z = p.originZ;
+          p.q.copy(p.initialQ);
         }
       }
 
-      // Step 3: Tapped - align to magnetic field lines and lift in 3D air
-      if (step === 'tapped' || (isVibrating && step === 'tapped')) {
-        p.x = THREE.MathUtils.lerp(p.x, p.targetX, dt * 5.0);
-        p.z = THREE.MathUtils.lerp(p.z, p.targetZ, dt * 5.0);
+      // Step 2: Scattered flat across paper
+      if (step === 'scattered') {
+        p.visible = true;
+        p.y = 0.04;
+        p.x = p.originX;
+        p.z = p.originZ;
+        p.q.copy(p.initialQ);
+      }
+
+      // Step 3: Tapped - align to magnetic field lines and cluster at poles
+      if (step === 'tapped' || step === 'complete') {
+        p.visible = true;
+        p.x = THREE.MathUtils.lerp(p.x, p.targetX, dt * 5.2);
+        p.z = THREE.MathUtils.lerp(p.z, p.targetZ, dt * 5.2);
 
         const dxN = p.x - poles.nX;
         const dyN = p.y - poleY;
@@ -349,9 +381,9 @@ function FilingsSystem({ step, isSprinkling, isVibrating }) {
           const minDist = Math.min(distN, distS);
           if (minDist < 3.0) {
             const spikeHeight = (3.0 - minDist) * 0.75;
-            p.y = THREE.MathUtils.lerp(p.y, 0.03 + spikeHeight * Math.abs(By / Bmag), dt * 6);
+            p.y = THREE.MathUtils.lerp(p.y, 0.04 + spikeHeight * Math.abs(By / Bmag), dt * 6);
           } else {
-            p.y = THREE.MathUtils.lerp(p.y, 0.03, dt * 6);
+            p.y = THREE.MathUtils.lerp(p.y, 0.04, dt * 6);
           }
         }
       }
@@ -388,58 +420,109 @@ function FilingsSystem({ step, isSprinkling, isVibrating }) {
 // ---------------------------------------------------------
 export default function Stage1_Investigate({ onComplete }) {
   const [step, setStep] = useState('initial');
+  const [cycleKey, setCycleKey] = useState(0);
   const [tapCount, setTapCount] = useState(0);
   const [quizAnswer, setQuizAnswer] = useState(null);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
+  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
+  isPausedRef.current = isPaused;
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
+  const phaseRef = useRef('sprinkle'); // 'sprinkle', 'scattered', 'tapping', 'observing'
+  const phaseStartTimeRef = useRef(Date.now());
+  const remainingMsRef = useRef(1800);
+  const timeoutRef = useRef(null);
+
+  const clearLoopTimers = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   };
 
-  const handleScatter = () => {
-    setIsSprinkling(true);
-    setTimeout(() => {
-      setIsSprinkling(false);
-      setStep('scattered');
-    }, 1100);
+  const advanceToNextPhase = (completedPhase) => {
+    if (isPausedRef.current) return;
+    if (completedPhase === 'sprinkle') {
+      executePhase('scattered', 800);
+    } else if (completedPhase === 'scattered') {
+      executePhase('tapping', 750);
+    } else if (completedPhase === 'tapping') {
+      executePhase('observing', 3500);
+    } else if (completedPhase === 'observing') {
+      executePhase('sprinkle', 1800);
+    }
   };
 
-  const handleTap = () => {
-    if (tapCount >= 1) return;
-    setIsVibrating(true);
-    setTimeout(() => {
+  const executePhase = (phase, duration) => {
+    clearLoopTimers();
+    phaseRef.current = phase;
+    remainingMsRef.current = duration;
+    phaseStartTimeRef.current = Date.now();
+
+    if (phase === 'sprinkle') {
+      setCycleKey((k) => k + 1);
+      setStep('initial');
+      setIsSprinkling(true);
       setIsVibrating(false);
-      setTapCount(1);
+    } else if (phase === 'scattered') {
+      setStep('scattered');
+      setIsSprinkling(false);
+      setIsVibrating(false);
+    } else if (phase === 'tapping') {
       setStep('tapped');
-    }, 350);
+      setIsSprinkling(false);
+      setIsVibrating(true);
+      setTapCount((prev) => Math.max(prev, 1));
+    } else if (phase === 'observing') {
+      setStep('tapped');
+      setIsSprinkling(false);
+      setIsVibrating(false);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      advanceToNextPhase(phase);
+    }, duration);
+  };
+
+  // Start continuous loop on initial mount
+  useEffect(() => {
+    executePhase('sprinkle', 1800);
+    return () => clearLoopTimers();
+  }, []);
+
+  const handleTogglePause = () => {
+    if (!isPaused) {
+      // Pausing: calculate remaining time for current phase
+      clearLoopTimers();
+      const elapsed = Date.now() - phaseStartTimeRef.current;
+      remainingMsRef.current = Math.max(50, remainingMsRef.current - elapsed);
+      setIsPaused(true);
+      isPausedRef.current = true;
+    } else {
+      // Resuming: continue remaining time of current phase
+      setIsPaused(false);
+      isPausedRef.current = false;
+      phaseStartTimeRef.current = Date.now();
+      const currentPhase = phaseRef.current;
+      const rem = remainingMsRef.current;
+
+      timeoutRef.current = setTimeout(() => {
+        advanceToNextPhase(currentPhase);
+      }, rem);
+    }
   };
 
   const handleReset = () => {
-    setStep('initial');
+    clearLoopTimers();
+    setIsPaused(false);
+    isPausedRef.current = false;
     setTapCount(0);
     setQuizAnswer(null);
     setShowFeedbackModal(false);
-    setIsSprinkling(false);
-    setIsVibrating(false);
+    executePhase('sprinkle', 1800);
   };
 
   const handleQuizAnswer = (answer) => {
@@ -492,20 +575,20 @@ export default function Stage1_Investigate({ onComplete }) {
                 width: '64px',
                 height: '64px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
+                background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 20px rgba(16, 185, 129, 0.25)'
+                boxShadow: '0 8px 20px rgba(217, 119, 6, 0.25)'
               }}>
-                <CheckCircle size={36} color="#059669" />
+                <CheckCircle size={36} color="#D97706" />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#064E3B' }}>
                   Observation Verified!
                 </h3>
-                <p style={{ margin: 0, color: '#334155', fontSize: '1.02rem', lineHeight: 1.6, fontWeight: 700 }}>
+                <p style={{ margin: 0, color: '#065F46', fontSize: '1.02rem', lineHeight: 1.6, fontWeight: 700 }}>
                   🎉 Correct! Magnetic attraction is strongest at the ends, known as the Magnetic Poles
                 </p>
               </div>
@@ -554,40 +637,10 @@ export default function Stage1_Investigate({ onComplete }) {
             backgroundPosition: 'center'
           }}
         >
-          {/* Small Fullscreen Button */}
-          <button
-            onClick={toggleFullscreen}
-            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-            style={{
-              position: 'absolute',
-              top: 16,
-              right: 20,
-              zIndex: 30,
-              background: 'rgba(255, 255, 255, 0.92)',
-              border: '1px solid rgba(255, 255, 255, 0.85)',
-              borderRadius: '12px',
-              padding: '7px 12px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              color: '#0F172A',
-              fontSize: '0.78rem',
-              fontWeight: 800,
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
-            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
-          </button>
-
           <Canvas 
             shadows 
             gl={{ alpha: true, antialias: true }} 
-            camera={{ position: [0, 5, 24], fov: 45 }}
+            camera={{ position: [0, 5.5, 25], fov: 42 }}
           >
             <Suspense fallback={null}>
               <ambientLight intensity={0.8} />
@@ -601,19 +654,19 @@ export default function Stage1_Investigate({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <AnimatedLabGroup>
+              <AnimatedLabGroup zoomScale={1.0}>
                 <RotatableMagnetGroup>
                   <Magnet3D />
-                  <FilingsSystem step={step} isSprinkling={isSprinkling} isVibrating={isVibrating} />
+                  <FilingsSystem step={step} isSprinkling={isSprinkling} isVibrating={isVibrating} cycleKey={cycleKey} isPaused={isPaused} />
                 </RotatableMagnetGroup>
-                <PaperBoxEnclosure />
+                <PaperBoxEnclosure isVibrating={isVibrating} isPaused={isPaused} />
 
                 {/* Soft Drop Shadow under Paper */}
                 <ContactShadows position={[0, -0.08, 0]} opacity={0.65} scale={32} blur={2.2} far={4} color="#000000" />
               </AnimatedLabGroup>
               <OrbitControls
                 makeDefault
-                target={[0, 1.2, 0]}
+                target={[0, 0.8, 0]}
                 minAzimuthAngle={0}
                 maxAzimuthAngle={0}
                 maxPolarAngle={Math.PI / 2.05}
@@ -627,44 +680,60 @@ export default function Stage1_Investigate({ onComplete }) {
         </div>
       </div>
 
-      {/* Control Panel (Activity 4.3 Theme) */}
+      {/* Control Panel (Unified Warm Orange Theme) */}
       <div style={{ 
         flex: '1.15', 
-        background: '#FFFFFF', 
-        border: '2px solid #A7F3D0', 
+        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+        border: '1.5px solid #FDE68A', 
         borderRadius: '24px', 
-        padding: '1.5rem 1.6rem', 
-        boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)', 
+        padding: '1.25rem 1.35rem', 
+        boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)', 
         display: 'flex', 
         flexDirection: 'column', 
-        justifyContent: 'space-between', 
-        gap: '1.1rem', 
+        gap: '1rem', 
         minWidth: 0,
-        overflowY: 'auto' 
+        overflowY: 'auto',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <BookOpen size={26} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
-                Stage 1: Investigation
-              </h3>
-            </div>
-            <span style={{
-              background: '#FEF3C7',
-              color: '#92400E',
-              fontWeight: 900,
-              fontSize: '0.85rem',
-              padding: '0.35rem 0.75rem',
-              borderRadius: '12px',
-              border: '1.5px solid #FDE68A'
-            }}>
-              Step {(step === 'tapped' || step === 'complete') ? 3 : step === 'scattered' ? 2 : 1} of 3
-            </span>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <BookOpen size={26} color="#059669" />
+            <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#064E3B', fontWeight: 900 }}>
+              Stage 1: Investigation
+            </h3>
+          </div>
+          <span style={{
+            background: '#DCFCE7',
+            color: '#15803D',
+            fontWeight: 900,
+            fontSize: '0.88rem',
+            padding: '0.35rem 0.8rem',
+            borderRadius: '12px',
+            border: '1.5px solid #86EFAC'
+          }}>
+            Step {step === 'tapped' || step === 'complete' ? 3 : (step === 'scattered' || isVibrating) ? 2 : 1} of 3
+          </span>
+        </div>
+
+        {/* CONTAINER 1: Steps of Instructions */}
+        <div style={{
+          background: '#FFFFFF',
+          border: '1.5px solid #FDE68A',
+          borderRadius: '20px',
+          padding: '1.1rem 1.2rem',
+          boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.85rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #FEF3C7', paddingBottom: '0.5rem' }}>
+            <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#064E3B', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <span>📋</span> Steps of Instructions
+            </h4>
           </div>
 
-          {/* All 3 Steps Visible From Initial Load */}
+          {/* All 3 Steps */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {[
               {
@@ -683,7 +752,7 @@ export default function Stage1_Investigate({ onComplete }) {
                 desc: 'Observe where filings cluster the most and answer the observation question.'
               }
             ].map((s) => {
-              const currentStepNum = (step === 'tapped' || step === 'complete') ? 3 : step === 'scattered' ? 2 : 1;
+              const currentStepNum = (step === 'tapped' || step === 'complete') ? 3 : (step === 'scattered' || isVibrating) ? 2 : 1;
               const isCurrent = currentStepNum === s.stepNum;
               const isPast = currentStepNum > s.stepNum || (s.stepNum === 3 && step === 'complete');
 
@@ -691,46 +760,41 @@ export default function Stage1_Investigate({ onComplete }) {
                 <div
                   key={s.stepNum}
                   style={{
-                    padding: '0.95rem 1.15rem',
-                    borderRadius: '16px',
-                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
-                    border: isCurrent 
-                      ? '2.5px solid #F59E0B' 
-                      : isPast 
-                      ? '2px solid #10B981' 
-                      : '2px solid #CBD5E1',
-                    boxShadow: isCurrent 
-                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
-                      : isPast 
-                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
-                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    padding: '0.2rem 0',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                       <span style={{
-                        width: '26px',
-                        height: '26px',
+                        width: '28px',
+                        height: '28px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#059669' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '0.85rem',
-                        fontWeight: 900,
+                        fontSize: '0.9rem',
+                        fontWeight: 800,
                         flexShrink: 0
                       }}>
                         {s.stepNum}
                       </span>
-                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                      <span style={{ 
+                        fontWeight: 800, 
+                        fontSize: '1.1rem', 
+                        color: isCurrent ? '#064E3B' : isPast ? '#047857' : '#334155' 
+                      }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                    {isPast && <CheckCircle size={20} color="#059669" />}
                   </div>
-                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.15rem 0 0 2.3rem', fontSize: '0.96rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -738,118 +802,100 @@ export default function Stage1_Investigate({ onComplete }) {
             })}
           </div>
 
-          {/* Action Buttons */}
-          <div style={{ width: '100%', display: 'flex', gap: '0.75rem', marginTop: '0.2rem' }}>
+          {/* Action Buttons: Pause / Resume & Reset */}
+          <div style={{ width: '100%', display: 'flex', gap: '0.65rem', marginTop: '0.35rem', paddingTop: '0.5rem', borderTop: '1px solid #FEF3C7' }}>
             <button
-              onClick={handleScatter}
-              disabled={step !== 'initial' || isSprinkling}
+              onClick={handleTogglePause}
+              className="gold-glow-btn"
               style={{ 
-                flex: 1, 
-                padding: '0.95rem 0.5rem', 
-                fontSize: '0.98rem', 
+                flex: 2, 
+                padding: '0.85rem 1rem', 
+                fontSize: '1.02rem', 
                 fontWeight: 900, 
-                borderRadius: '16px', 
-                background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
-                color: step === 'initial' ? '#FFFFFF' : '#94A3B8', 
+                borderRadius: '14px', 
+                color: '#FFFFFF', 
                 border: 'none', 
-                cursor: step === 'initial' ? 'pointer' : 'not-allowed', 
+                cursor: 'pointer', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '5px',
-                boxShadow: step === 'initial' ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
+                gap: '8px',
                 transition: 'all 0.2s ease'
               }}
             >
-              🧪 1. Sprinkle
-            </button>
-            
-            <button
-              onClick={handleTap}
-              disabled={step !== 'scattered' || tapCount >= 1}
-              style={{ 
-                flex: 1, 
-                padding: '0.95rem 0.5rem', 
-                fontSize: '0.98rem', 
-                fontWeight: 900, 
-                borderRadius: '16px', 
-                background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
-                color: (step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8', 
-                border: 'none', 
-                cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: '5px',
-                boxShadow: (step === 'scattered' && tapCount === 0) ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <Hand size={17} /> {tapCount === 0 ? '2. Tap Paper' : 'Tapped ✓'}
+              {!isPaused ? (
+                <>
+                  <Pause size={18} fill="#FFFFFF" color="#FFFFFF" /> Pause Investigation
+                </>
+              ) : (
+                <>
+                  <Play size={18} fill="#FFFFFF" color="#FFFFFF" /> Resume Investigation
+                </>
+              )}
             </button>
             
             <button
               onClick={handleReset}
-              disabled={step === 'initial'}
               style={{ 
                 flex: 1, 
-                padding: '0.95rem 0.5rem', 
+                padding: '0.85rem 0.6rem', 
                 fontSize: '0.98rem', 
-                fontWeight: 900, 
-                borderRadius: '16px', 
+                fontWeight: 800, 
+                borderRadius: '14px', 
                 background: '#FFFFFF', 
-                color: step !== 'initial' ? '#1E293B' : '#94A3B8', 
-                border: '1.5px solid #CBD5E1', 
-                cursor: step !== 'initial' ? 'pointer' : 'not-allowed', 
+                color: '#92400E', 
+                border: '1.5px solid #FDE68A', 
+                cursor: 'pointer', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '5px',
+                gap: '6px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
                 transition: 'all 0.2s ease'
               }}
             >
-              <RotateCcw size={17} /> Reset
+              <RotateCcw size={16} /> Reset
             </button>
           </div>
         </div>
 
-        {/* Observation Quiz Pop-up Card */}
+        {/* CONTAINER 2: Observation Question */}
         <div style={{ 
-          background: '#F0FDF4', 
-          border: '2px solid #A7F3D0', 
-          borderRadius: '20px', 
-          padding: '1.3rem 1.4rem', 
+          background: '#FFFFFF',
+          border: '1.5px solid #A7F3D0',
+          borderRadius: '20px',
+          padding: '1.1rem 1.2rem',
+          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.06)',
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '0.9rem',
-          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
+          gap: '0.85rem'
         }}>
-          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.18rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-            <AlertCircle size={24} color="#D97706" /> Observation Question
+          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.2rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <AlertCircle size={22} color="#059669" /> Observation Question
           </h4>
-          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 700 }}>
+          <p style={{ margin: 0, color: '#065F46', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 600 }}>
             Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
             <button
               onClick={() => handleQuizAnswer('uniformly')}
               style={{ 
-                padding: '0.95rem 1.2rem', 
+                padding: '0.85rem 1.1rem', 
                 textAlign: 'left', 
                 fontSize: '0.98rem', 
-                fontWeight: 800, 
+                fontWeight: 700, 
                 borderRadius: '14px', 
                 cursor: 'pointer', 
-                background: quizAnswer === 'uniformly' ? '#FEE2E2' : '#FFFFFF', 
-                borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#CBD5E1', 
-                borderWidth: '2px', 
+                background: quizAnswer === 'uniformly' ? '#FEE2E2' : '#F8FAFC', 
+                borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#E2E8F0', 
+                borderWidth: '1.5px', 
                 borderStyle: 'solid', 
-                color: quizAnswer === 'uniformly' ? '#991B1B' : '#0F172A', 
+                color: quizAnswer === 'uniformly' ? '#991B1B' : '#065F46', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -860,26 +906,26 @@ export default function Stage1_Investigate({ onComplete }) {
             <button
               onClick={() => handleQuizAnswer('ends')}
               style={{ 
-                padding: '0.95rem 1.2rem', 
+                padding: '0.85rem 1.1rem', 
                 textAlign: 'left', 
                 fontSize: '0.98rem', 
-                fontWeight: 800, 
+                fontWeight: 700, 
                 borderRadius: '14px', 
                 cursor: 'pointer', 
-                background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : '#FFFFFF', 
-                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#16A34A' : '#CBD5E1', 
-                borderWidth: '2px', 
+                background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : '#F8FAFC', 
+                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#10B981' : '#E2E8F0', 
+                borderWidth: '1.5px', 
                 borderStyle: 'solid', 
-                color: (quizAnswer === 'ends' || step === 'complete') ? '#065F46' : '#0F172A', 
+                color: (quizAnswer === 'ends' || step === 'complete') ? '#064E3B' : '#065F46', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
                 transition: 'all 0.2s ease'
               }}
             >
               <span>B) Most filings cluster at the two ends (Poles)</span>
-              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={20} color="#16A34A" />}
+              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={20} color="#10B981" />}
             </button>
           </div>
 
@@ -890,14 +936,15 @@ export default function Stage1_Investigate({ onComplete }) {
               <button
                 onClick={onComplete}
                 disabled={!isReadyToProceed}
+                className={isReadyToProceed ? 'gold-glow-btn' : ''}
                 style={{ 
                   width: '100%', 
-                  padding: '1rem', 
+                  padding: '0.95rem', 
                   fontSize: '1.05rem', 
                   fontWeight: 900, 
-                  borderRadius: '16px', 
+                  borderRadius: '14px', 
                   background: isReadyToProceed 
-                    ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' 
+                    ? undefined 
                     : '#F1F5F9', 
                   color: isReadyToProceed 
                     ? '#FFFFFF' 
@@ -911,14 +958,11 @@ export default function Stage1_Investigate({ onComplete }) {
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center', 
-                  gap: '0.55rem',
-                  boxShadow: isReadyToProceed 
-                    ? '0 4px 16px rgba(217, 119, 6, 0.4)' 
-                    : 'none',
+                  gap: '0.6rem',
                   transition: 'all 0.25s ease'
                 }}
               >
-                Proceed to Stage 2 <ArrowRight size={20} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
+                Proceed to Stage 2 <ArrowRight size={18} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
               </button>
             );
           })()}

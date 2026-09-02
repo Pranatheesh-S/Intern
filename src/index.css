@@ -548,15 +548,15 @@ button.outline.active {
 
 .header-title h1 {
   margin: 0;
-  font-size: var(--text-2xl);
+  font-size: clamp(1.75rem, 2.3vw, 2.15rem);
   font-weight: 800;
   letter-spacing: -0.03em;
 }
 
 .header-subtitle {
-  font-size: var(--text-sm);
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
   color: var(--text-muted);
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
 }
 
 /* ═══════════════════════════════════════════

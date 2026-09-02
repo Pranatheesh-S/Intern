@@ -4,6 +4,51 @@ import confetti from 'canvas-confetti';
 import natureWalkScene from '../../assets/nature_walk_scene.png';
 import { useTheme } from '../../ThemeContext.jsx';
 
+const PLANT_BUTTON_THEMES = {
+  hibiscus: {
+    bg: 'linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)',
+    border: '1px solid rgba(244, 63, 94, 0.35)',
+    color: '#881337',
+    shadow: '0 2px 8px rgba(225, 29, 72, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fecdd3 0%, #fda4af 100%)'
+  },
+  tulsi: {
+    bg: 'linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%)',
+    border: '1px solid rgba(16, 185, 129, 0.35)',
+    color: '#064e3b',
+    shadow: '0 2px 8px rgba(16, 185, 129, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)'
+  },
+  grass: {
+    bg: 'linear-gradient(135deg, #ecfccb 0%, #d9f99d 100%)',
+    border: '1px solid rgba(132, 204, 22, 0.35)',
+    color: '#365314',
+    shadow: '0 2px 8px rgba(132, 204, 22, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #d9f99d 0%, #bef264 100%)'
+  },
+  neem: {
+    bg: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+    border: '1px solid rgba(34, 197, 94, 0.35)',
+    color: '#14532d',
+    shadow: '0 2px 8px rgba(34, 197, 94, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #bbf7d0 0%, #86efac 100%)'
+  },
+  rose: {
+    bg: 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)',
+    border: '1px solid rgba(251, 113, 133, 0.35)',
+    color: '#9f1239',
+    shadow: '0 2px 8px rgba(244, 63, 94, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)'
+  },
+  sunflower: {
+    bg: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
+    border: '1px solid rgba(234, 179, 8, 0.35)',
+    color: '#713f12',
+    shadow: '0 2px 8px rgba(234, 179, 8, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fef08a 0%, #fde047 100%)'
+  }
+};
+
 /* ─────────────────────────────────────────────
    TARGET ORGANISMS (8 required species)
 ───────────────────────────────────────────── */
@@ -455,27 +500,95 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
       <div className="split-frame" style={{ flex: 1, minHeight: 0 }}>
         {/* ============ LEFT COLUMN: LESSON & JOURNAL ============ */}
-        <div className="frame-page-left">
-          <div className="textbook-eyebrow">Activity 2.1 · {typeFilter === 'plant' ? 'Plants Walk' : 'Animals Walk'}</div>
-          <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)' }}>
-            {typeFilter === 'plant' ? '🌿 Virtual Plants Walk' : '🐾 Virtual Animals Walk'}
-          </h1>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '13.5px', color: 'var(--mut)', lineHeight: '1.5' }}>
-            <p>
-              Join <b>Dr. Raghu</b> and <b>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the {typeFilter === 'plant' ? 'plant life' : 'animal life'} in our area!
-            </p>
-            <p>
-              Your objective is to observe different {typeFilter === 'plant' ? 'plant types (herbs, shrubs, trees, and water lilies)' : 'animal behaviors and modes of movement'}. When you spot an organism on the right, <b>click and hold</b> your scanner lens on it to examine its details.
-            </p>
-            <p>
-              You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
-            </p>
-          </div>
+        <div 
+          className="frame-page-left act21-dark-left" 
+          style={{
+            background: '#123D2A',
+            ...(typeFilter === 'plant' ? { 
+              display: 'flex', 
+              flexDirection: 'column', 
+              height: '100%',
+              boxSizing: 'border-box',
+              justifyContent: 'space-between'
+            } : {})
+          }}
+        >
+          {typeFilter === 'plant' ? (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              justifyContent: 'space-around',
+              minHeight: 0,
+              paddingBottom: '1rem'
+            }}>
+              <div>
+                <div className="textbook-eyebrow" style={{ marginBottom: '0.35rem', fontSize: '1.25rem', fontWeight: '700', letterSpacing: '0.15em' }}>
+                  Activity 2.1 · Plants Walk
+                </div>
+                <h1 className="textbook-title" style={{ 
+                  fontFamily: 'var(--serif-font)',
+                  color: '#ffffff',
+                  fontSize: 'clamp(1.75rem, 2.2vw, 2.15rem)',
+                  fontWeight: '900',
+                  lineHeight: '1.2',
+                  textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+                  letterSpacing: '0.01em',
+                  margin: '0 0 0.5rem 0'
+                }}>
+                  🌿 Virtual Plants Walk
+                </h1>
+              </div>
 
-          <div className="textbook-explore" style={{ marginTop: '1.25rem' }}>
-            ✏️ <b>Your Mission:</b> Scan and identify all <b>{filteredTargets.length} target {typeFilter === 'plant' ? 'plant' : 'animal'} species</b> to complete Table {typeFilter === 'plant' ? '2.1' : '2.2'} in your journal. Toggle hints if you need help finding them.
-          </div>
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '1.5rem'
+              }}>
+                <p style={{ 
+                  color: '#fbbf24', 
+                  margin: 0, 
+                  fontSize: 'clamp(1.18rem, 1.45vw, 1.32rem)', 
+                  lineHeight: '1.75',
+                  letterSpacing: '0.01em'
+                }}>
+                  Join <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>Dr. Raghu</b> and <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>plant life</b> in our area!
+                </p>
+                <p style={{ 
+                  color: '#fbbf24', 
+                  margin: 0, 
+                  fontSize: 'clamp(1.18rem, 1.45vw, 1.32rem)', 
+                  lineHeight: '1.75',
+                  letterSpacing: '0.01em'
+                }}>
+                  Your objective is to observe different plant types (herbs, shrubs, trees, and water lilies). When you spot an organism on the right, <b>click and hold</b> your scanner lens on it to examine its details.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="textbook-eyebrow">Activity 2.1 · Animals Walk</div>
+              <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)' }}>
+                🐾 Virtual Animals Walk
+              </h1>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '13.5px', color: 'var(--mut)', lineHeight: '1.5' }}>
+                <p>
+                  Join <b>Dr. Raghu</b> and <b>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the {typeFilter === 'plant' ? 'plant life' : 'animal life'} in our area!
+                </p>
+                <p>
+                  Your objective is to observe different animal behaviors and modes of movement. When you spot an organism on the right, <b>click and hold</b> your scanner lens directly on it to examine its details.
+                </p>
+                <p>
+                  You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
+                </p>
+              </div>
+
+              <div className="textbook-explore" style={{ marginTop: '1.25rem' }}>
+                ✏️ <b>Your Mission:</b> Observe all <b>{filteredTargets.length} target animal species</b> to complete Table 2.2 in your journal.
+              </div>
+            </>
+          )}
 
           {/* Scanned Organism Verification Pane */}
           {scannedOrganism && (
@@ -562,27 +675,40 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
           {/* Activity status checkup at bottom */}
           <div style={{ marginTop: 'auto', paddingTop: '1.25rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <span style={{ fontSize: '12.5px', fontWeight: 'bold', color: 'var(--navy)' }}>
-                Field Journal Progress
-              </span>
-              <span style={{ fontSize: '12px', fontWeight: 'bold', color: notebook.length >= filteredTargets.length ? '#16a34a' : 'var(--accent)' }}>
-                {notebook.length} / {filteredTargets.length} Logged
-              </span>
-            </div>
-            
-            <div style={{ width: '100%', height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '1rem' }}>
-              <div style={{ height: '100%', background: notebook.length >= filteredTargets.length ? '#10b981' : 'var(--accent)', width: `${(notebook.length / Math.max(1, filteredTargets.length)) * 100}%`, transition: 'width 0.4s ease' }} />
-            </div>
+            {typeFilter === 'plant' ? (
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button onClick={() => setShowHints(h => !h)} className="outline" style={{ flex: 1, padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
+                </button>
+                <button onClick={handleReset} className="outline" style={{ padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <RefreshCw size={13} /> Reset
+                </button>
+              </div>
+            ) : (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                  <span style={{ fontSize: '12.5px', fontWeight: 'bold', color: 'var(--navy)' }}>
+                    Field Journal Progress
+                  </span>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: notebook.length >= filteredTargets.length ? '#16a34a' : 'var(--accent)' }}>
+                    {notebook.length} / {filteredTargets.length} Logged
+                  </span>
+                </div>
+                
+                <div style={{ width: '100%', height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '1rem' }}>
+                  <div style={{ height: '100%', background: notebook.length >= filteredTargets.length ? '#10b981' : 'var(--accent)', width: `${(notebook.length / Math.max(1, filteredTargets.length)) * 100}%`, transition: 'width 0.4s ease' }} />
+                </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button onClick={() => setShowHints(h => !h)} className="outline" style={{ flex: 1, padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
-              </button>
-              <button onClick={handleReset} className="outline" style={{ padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <RefreshCw size={13} /> Reset
-              </button>
-            </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button onClick={() => setShowHints(h => !h)} className="outline" style={{ flex: 1, padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
+                  </button>
+                  <button onClick={handleReset} className="outline" style={{ padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <RefreshCw size={13} /> Reset
+                  </button>
+                </div>
+              </>
+            )}
 
             {notebook.length >= filteredTargets.length && (
               <button 
@@ -609,12 +735,13 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
         </div>
 
         {/* ============ RIGHT COLUMN: WORKSPACE ============ */}
-        <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.5rem', borderBottom: '1px solid var(--cardline)', marginBottom: '0.75rem' }}>
-            <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--mut)' }}>
-              🎯 neighbourhood &amp; school garden map
-            </span>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, ...(typeFilter === 'plant' ? { paddingTop: 0 } : {}) }}>
+          {typeFilter !== 'plant' && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.5rem', borderBottom: '1px solid var(--cardline)', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--mut)' }}>
+                🎯 neighbourhood &amp; school garden map
+              </span>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               {onNextSection && (
                 <button 
                   onClick={onNextSection} 
@@ -747,25 +874,30 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
           {/* Readout panel inside right page */}
           <div className="readout" style={{ marginTop: '0.85rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
               {filteredTargets.map(t => {
                 const logged = notebook.includes(t.id);
+                const isPlant = typeFilter === 'plant';
+                const plantTheme = isPlant ? (PLANT_BUTTON_THEMES[t.id] || PLANT_BUTTON_THEMES.tulsi) : null;
                 return (
                   <span key={t.id} style={{
-                    fontSize: '11px',
-                    padding: '0.25rem 0.5rem',
-                    borderRadius: '6px',
-                    border: '1px solid var(--cardline)',
-                    background: logged ? '#ecfdf5' : '#f8fafc',
-                    color: logged ? '#10b981' : 'var(--mut)',
+                    fontSize: isPlant ? '14px' : '11px',
+                    padding: isPlant ? '0.45rem 0.85rem' : '0.25rem 0.5rem',
+                    borderRadius: '10px',
+                    border: isPlant ? plantTheme.border : '1px solid var(--cardline)',
+                    background: isPlant ? plantTheme.bg : (logged ? '#ecfdf5' : '#f8fafc'),
+                    color: isPlant ? plantTheme.color : (logged ? '#10b981' : 'var(--mut)'),
+                    boxShadow: isPlant ? plantTheme.shadow : 'none',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '4px',
-                    fontWeight: logged ? '600' : '400'
+                    gap: '6px',
+                    fontWeight: isPlant ? '700' : (logged ? '600' : '400')
                   }}>
-                    <span>{t.emoji}</span>
-                    <span>{t.name.split(' ')[0]}</span>
-                    {logged && <CheckCircle size={10} />}
+                    <span style={{ fontSize: isPlant ? '16px' : 'inherit' }}>{t.emoji}</span>
+                    <span style={{ color: isPlant ? plantTheme.color : 'inherit', fontWeight: isPlant ? '700' : 'inherit' }}>
+                      {t.name.split(' ')[0]}
+                    </span>
+                    {logged && <CheckCircle size={isPlant ? 14 : 10} color={isPlant ? plantTheme.color : "#16a34a"} />}
                   </span>
                 );
               })}
