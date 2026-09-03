@@ -18,7 +18,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
       icon: imgBallTennis,
       material: 'Rubber & Felt',
       hardness: 'Medium (Squeezable)',
-      weight: 'Light',
+      weight: 'Lightweight',
       purpose: 'High bounce, safe for rackets'
     },
     {
@@ -27,7 +27,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
       icon: imgBallCricket,
       material: 'Leather & Cork',
       hardness: 'Very Hard',
-      weight: 'Heavy',
+      weight: 'Heavyweight',
       purpose: 'Fast bowling, durable impacts'
     },
     {
@@ -36,7 +36,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
       icon: imgBallSponge,
       material: 'Soft Sponge / Foam',
       hardness: 'Very Soft & Flexible',
-      weight: 'Light (low density)',
+      weight: 'Very Lightweight',
       purpose: 'Hand exercise, stress relief'
     }
   ];
@@ -177,46 +177,46 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
             </button>
           </div>
 
-          <svg width="100%" style={{ maxWidth: '600px', flex: 1, minHeight: 0 }} viewBox="0 0 450 180" preserveAspectRatio="xMidYMid meet">
+          <svg width="100%" style={{ maxWidth: '600px', flex: 1, minHeight: 0 }} viewBox="0 0 450 220" preserveAspectRatio="xMidYMid meet">
             {/* Ground */}
-            <line x1="20" y1="150" x2="430" y2="150" stroke="var(--lesson-border)" strokeWidth="4" strokeLinecap="round" />
+            <line x1="20" y1="190" x2="430" y2="190" stroke="var(--lesson-border)" strokeWidth="4" strokeLinecap="round" />
             
             {/* Tennis Ball */}
             <g>
               <motion.g 
-                animate={dropState === 'dropping' ? { y: [0, 90, 20, 90, 45, 90, 65, 90, 80, 90, 85, 90, 90] } : { y: 0 }} 
+                animate={dropState === 'dropping' ? { y: [0, 120, 25, 120, 60, 120, 85, 120, 105, 120, 113, 120, 120] } : { y: 0 }} 
                 transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
               >
-                <image href={imgBallTennis} x="45" y="0" width="60" height="60" style={{ mixBlendMode: 'multiply' }} />
+                <image href={imgBallTennis} x="40" y="0" width="70" height="70" style={{ mixBlendMode: 'multiply' }} />
               </motion.g>
             </g>
 
             {/* Cricket Ball */}
             <g>
               <motion.g 
-                animate={dropState === 'dropping' ? { y: [0, 90, 80, 90, 85, 90, 90, 90, 90, 90, 90, 90, 90] } : { y: 0 }} 
+                animate={dropState === 'dropping' ? { y: [0, 120, 105, 120, 113, 120, 120, 120, 120, 120, 120, 120, 120] } : { y: 0 }} 
                 transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
               >
-                <image href={imgBallCricket} x="195" y="0" width="60" height="60" style={{ mixBlendMode: 'multiply' }} />
+                <image href={imgBallCricket} x="190" y="0" width="70" height="70" style={{ mixBlendMode: 'multiply' }} />
               </motion.g>
             </g>
 
             {/* Sponge Ball */}
             <g>
               <motion.g 
-                animate={dropState === 'dropping' ? { y: [0, 90, 60, 90, 75, 90, 80, 90, 85, 90, 90, 90, 90] } : { y: 0 }} 
+                animate={dropState === 'dropping' ? { y: [0, 120, 80, 120, 100, 120, 105, 120, 113, 120, 120, 120, 120] } : { y: 0 }} 
                 transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
               >
-                <image href={imgBallSponge} x="345" y="0" width="60" height="60" style={{ mixBlendMode: 'multiply' }} />
+                <image href={imgBallSponge} x="340" y="0" width="70" height="70" style={{ mixBlendMode: 'multiply' }} />
               </motion.g>
             </g>
           </svg>
 
           {/* HTML Labels below the SVG */}
           <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%', maxWidth: '600px', padding: '0 1rem', marginTop: '-0.5rem' }}>
-            <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 1rem', borderRadius: '6px', border: '1px solid var(--lesson-border)', fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>Tennis Ball</div>
-            <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 1rem', borderRadius: '6px', border: '1px solid var(--lesson-border)', fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>Cricket Ball</div>
-            <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 1rem', borderRadius: '6px', border: '1px solid var(--lesson-border)', fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>Sponge Ball</div>
+            <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 1rem', borderRadius: '6px', border: '2px solid var(--lesson-accent)', fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>Tennis Ball</div>
+            <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 1rem', borderRadius: '6px', border: '2px solid var(--lesson-accent)', fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>Cricket Ball</div>
+            <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 1rem', borderRadius: '6px', border: '2px solid var(--lesson-accent)', fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>Sponge Ball</div>
           </div>
         </div>
       </div>
