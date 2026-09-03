@@ -7,6 +7,7 @@ import Stage4_LustreHardness from './components/Stage4_LustreHardness';
 import Stage4a_Appearance_Observe from './components/Stage4a_Appearance_Observe';
 import Stage4b_Appearance_Group from './components/Stage4b_Appearance_Group';
 import Stage4c_Hardness_Observe from './components/Stage4c_Hardness_Observe';
+import Stage4d_MaterialIdentification from './components/Stage4d_MaterialIdentification';
 import Stage6a_Surveillance from './components/Stage6a_Surveillance';
 import Stage6b_Classify from './components/Stage6b_Classify';
 import Stage7a_SolubilitySim from './components/Stage7a_SolubilitySim';
@@ -194,6 +195,7 @@ export const chapterFlow = [
   },
   
   { type: 'activity', id: 'stage4_4', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 1: Observe Hardness', component: Stage4c_Hardness_Observe, handbook: Handbook_Hardness, layout: '3fr 7fr' },
+  { type: 'activity', id: 'stage4_5', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 2: Material Identification', component: Stage4d_MaterialIdentification, handbook: Handbook_Hardness, layout: '3fr 7fr' },
   
   // Checkpoint for 6.3.2
   {
