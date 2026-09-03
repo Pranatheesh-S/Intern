@@ -20,21 +20,21 @@ function PaperBoxEnclosure() {
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
 
-      {/* 2. Back Paper Wall */}
-      <mesh receiveShadow position={[0, 2.4, -8.0]}>
-        <boxGeometry args={[26, 4.8, 0.04]} />
+      {/* 2. Back Paper Wall - Increased Height */}
+      <mesh receiveShadow position={[0, 3.9, -8.0]}>
+        <boxGeometry args={[26, 7.8, 0.04]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
 
-      {/* 3. Left Paper Wall */}
-      <mesh receiveShadow position={[-13.0, 2.4, 0]}>
-        <boxGeometry args={[0.04, 4.8, 16]} />
+      {/* 3. Left Paper Wall - Increased Height */}
+      <mesh receiveShadow position={[-13.0, 3.9, 0]}>
+        <boxGeometry args={[0.04, 7.8, 16]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
 
-      {/* 4. Right Paper Wall */}
-      <mesh receiveShadow position={[13.0, 2.4, 0]}>
-        <boxGeometry args={[0.04, 4.8, 16]} />
+      {/* 4. Right Paper Wall - Increased Height */}
+      <mesh receiveShadow position={[13.0, 3.9, 0]}>
+        <boxGeometry args={[0.04, 7.8, 16]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
     </>
@@ -99,8 +99,8 @@ function RotatableMagnetGroup({ children }) {
       }}
     >
       {/* Invisible hit cylinder around magnet to catch drag gestures */}
-      <mesh visible={false} position={[0, 2.2, 0]}>
-        <cylinderGeometry args={[11, 11, 4.5, 32]} />
+      <mesh visible={false} position={[0, 4.0, 0]}>
+        <cylinderGeometry args={[12, 12, 5.5, 32]} />
         <meshBasicMaterial transparent opacity={0} />
       </mesh>
       {children}
@@ -136,13 +136,13 @@ function BreakingMagnet3D({ broken, showPoles }) {
   });
 
   return (
-    <group position={[0, 2.5, 0]}>
+    <group position={[0, 4.2, 0]} scale={[1.35, 2.2, 1.35]}>
       {/* ---------------- LEFT PIECE (Length: 6.0, Height: 1.3, Depth: 1.9) ---------------- */}
       <group ref={leftGroupRef} position={[0, 0, 0]}>
         {/* Left Sub-Half: North Pole (3.0 length) */}
         <mesh position={[-4.5, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[3.0, 1.3, 1.9]} />
-          <meshStandardMaterial color="#C51E28" roughness={0.55} metalness={0.12} />
+          <meshStandardMaterial color="#124982" roughness={0.4} metalness={0.25} />
         </mesh>
         
         {/* North Pole Letter */}
@@ -160,9 +160,9 @@ function BreakingMagnet3D({ broken, showPoles }) {
         <mesh position={[-1.5, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[3.0, 1.3, 1.9]} />
           <meshStandardMaterial
-            color={showPoles ? '#1848B8' : '#C51E28'}
-            roughness={0.55}
-            metalness={0.12}
+            color={showPoles ? '#A31820' : '#124982'}
+            roughness={0.4}
+            metalness={0.25}
           />
         </mesh>
 
@@ -186,9 +186,9 @@ function BreakingMagnet3D({ broken, showPoles }) {
         <mesh position={[1.5, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[3.0, 1.3, 1.9]} />
           <meshStandardMaterial
-            color={showPoles ? '#C51E28' : '#1848B8'}
-            roughness={0.55}
-            metalness={0.12}
+            color={showPoles ? '#124982' : '#A31820'}
+            roughness={0.4}
+            metalness={0.25}
           />
         </mesh>
 
@@ -208,7 +208,7 @@ function BreakingMagnet3D({ broken, showPoles }) {
         {/* Right Sub-Half: South Pole (3.0 length) */}
         <mesh position={[4.5, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[3.0, 1.3, 1.9]} />
-          <meshStandardMaterial color="#1848B8" roughness={0.55} metalness={0.12} />
+          <meshStandardMaterial color="#A31820" roughness={0.4} metalness={0.25} />
         </mesh>
 
         {/* South Pole Letter */}
@@ -392,7 +392,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
       <div
         style={{
           flex: '1.15',
-          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+          background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
           border: '1.5px solid #FDE68A',
           borderRadius: '24px',
           padding: '1.25rem 1.35rem',
@@ -408,19 +408,19 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <Scissors size={26} color="#059669" />
-            <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#064E3B', fontWeight: 900 }}>
+            <Scissors size={26} color="#D97706" />
+            <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#78350F', fontWeight: 900 }}>
               Stage 2: Breaking Magnet
             </h3>
           </div>
           <span style={{
-            background: '#DCFCE7',
-            color: '#15803D',
+            background: (broken && showPoles && quizAnswer === 'no') ? '#DCFCE7' : '#FEF3C7',
+            color: (broken && showPoles && quizAnswer === 'no') ? '#15803D' : '#92400E',
             fontWeight: 900,
             fontSize: '0.88rem',
             padding: '0.35rem 0.8rem',
             borderRadius: '12px',
-            border: '1.5px solid #86EFAC'
+            border: (broken && showPoles && quizAnswer === 'no') ? '1.5px solid #86EFAC' : '1.5px solid #F59E0B'
           }}>
             Step {broken && showPoles ? 3 : broken ? 2 : 1} of 3
           </span>
@@ -428,7 +428,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
 
         {/* CONTAINER 1: Steps of Instructions */}
         <div style={{
-          background: '#FFFFFF',
+          background: 'rgba(255, 255, 255, 0.96)',
           border: '1.5px solid #FDE68A',
           borderRadius: '20px',
           padding: '1.1rem 1.2rem',
@@ -438,7 +438,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
           gap: '0.85rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #FEF3C7', paddingBottom: '0.5rem' }}>
-            <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#064E3B', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#78350F', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
               <span>📋</span> Steps of Instructions
             </h4>
           </div>
@@ -470,7 +470,15 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 <div
                   key={s.stepNum}
                   style={{
-                    padding: '0.2rem 0',
+                    padding: '0.65rem 0.85rem',
+                    borderRadius: '14px',
+                    background: isPast ? '#DCFCE7' : isCurrent ? '#FEF3C7' : 'rgba(255, 255, 255, 0.7)',
+                    border: isPast ? '1.5px solid #86EFAC' : isCurrent ? '1.5px solid #F59E0B' : '1.5px solid transparent',
+                    boxShadow: isPast 
+                      ? '0 3px 10px rgba(16, 185, 129, 0.1)' 
+                      : isCurrent 
+                      ? '0 3px 10px rgba(245, 158, 11, 0.12)' 
+                      : 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.2rem',
@@ -483,28 +491,29 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
-                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#059669' : '#64748B',
-                        color: '#FFFFFF',
+                        background: isPast ? '#059669' : '#FEF3C7',
+                        border: isPast ? '2px solid #059669' : '2px solid #F59E0B',
+                        color: isPast ? '#FFFFFF' : '#92400E',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '0.9rem',
-                        fontWeight: 800,
+                        fontSize: '0.92rem',
+                        fontWeight: 900,
                         flexShrink: 0
                       }}>
                         {s.stepNum}
                       </span>
                       <span style={{ 
-                        fontWeight: 800, 
+                        fontWeight: 900, 
                         fontSize: '1.1rem', 
-                        color: isCurrent ? '#064E3B' : isPast ? '#047857' : '#334155' 
+                        color: isPast ? '#15803D' : isCurrent ? '#92400E' : '#78350F' 
                       }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={20} color="#059669" />}
+                    {isPast && <CheckCircle size={20} color="#16A34A" />}
                   </div>
-                  <p style={{ margin: '0.15rem 0 0 2.3rem', fontSize: '0.96rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.15rem 0 0 2.3rem', fontSize: '0.96rem', color: isPast ? '#166534' : '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -591,11 +600,11 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         {/* CONTAINER 2: Observation & Conclusion Quiz */}
         <div
           style={{
-            background: '#FFFFFF',
-            border: '1.5px solid #A7F3D0',
+            background: quizAnswer === 'no' ? '#DCFCE7' : 'rgba(255, 255, 255, 0.96)',
+            border: quizAnswer === 'no' ? '1.5px solid #86EFAC' : '1.5px solid #FDE68A',
             borderRadius: '20px',
             padding: '1.1rem 1.2rem',
-            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.06)',
+            boxShadow: quizAnswer === 'no' ? '0 4px 14px rgba(16, 185, 129, 0.12)' : '0 4px 14px rgba(217, 119, 6, 0.05)',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.85rem'
@@ -603,7 +612,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         >
           <h4
             style={{
-              color: '#064E3B',
+              color: quizAnswer === 'no' ? '#15803D' : '#78350F',
               margin: 0,
               fontSize: '1.2rem',
               fontWeight: 900,
@@ -612,9 +621,9 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               gap: '0.55rem',
             }}
           >
-            <AlertCircle size={22} color="#059669" /> Observation & Conclusion
+            <AlertCircle size={22} color={quizAnswer === 'no' ? '#16A34A' : '#D97706'} /> Observation & Conclusion
           </h4>
-          <p style={{ margin: 0, color: '#065F46', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 600 }}>
+          <p style={{ margin: 0, color: quizAnswer === 'no' ? '#166534' : '#065F46', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 600 }}>
             Based on what happens when a magnet breaks, is it possible to obtain a magnet with only a single pole?
           </p>
 

@@ -30,7 +30,7 @@ const STEPS = [
   {
     step: 1,
     title: "Step 1: Start at Bottom-Left Corner",
-    desc: "The flat bar magnet rests at the bottom-left corner. The compass needle points naturally to Earth's Magnetic North (0° N)."
+    desc: "Click the Run button present inside the activity area and observe. The flat bar magnet rests at the bottom-left corner. The compass needle points naturally to Earth's Magnetic North (0° N)."
   },
   {
     step: 2,
@@ -720,7 +720,7 @@ export default function Simulation({ onComplete, onNext }) {
     >
       {/* Left Column: Activity Step Instructions & Controls */}
       <div className="custom-scroll" style={{
-        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+        background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
         borderRadius: '24px',
         border: '1.5px solid #FDE68A',
         padding: '1.5rem',
@@ -736,24 +736,47 @@ export default function Simulation({ onComplete, onNext }) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <CompassIcon size={28} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
+              <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#78350F', fontWeight: 900, letterSpacing: '-0.02em' }}>
                 Activity 4.6 Lab
               </h3>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
               <span style={{
-                background: '#DCFCE7',
-                color: '#15803D',
+                background: '#FEF3C7',
+                color: '#92400E',
                 fontWeight: 900,
                 fontSize: '0.92rem',
                 padding: '0.35rem 0.85rem',
                 borderRadius: '12px',
-                border: '1.5px solid #86EFAC',
-                boxShadow: '0 2px 6px rgba(16, 185, 129, 0.12)'
+                border: '1.5px solid #F59E0B',
+                boxShadow: '0 2px 6px rgba(217, 119, 6, 0.12)'
               }}>
                 Step {currentStep} of 4
               </span>
             </div>
+          </div>
+
+          {/* Action Prompt Banner */}
+          <div style={{
+            background: 'linear-gradient(135deg, #FEF3C7 0%, #FFFBEB 100%)',
+            border: '1.5px solid #FDE68A',
+            borderRadius: '16px',
+            padding: '0.9rem 1.15rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            boxShadow: '0 2px 8px rgba(217, 119, 6, 0.08)'
+          }}>
+            <span style={{ fontSize: '1.35rem', lineHeight: 1 }}>▶️</span>
+            <p style={{
+              margin: 0,
+              fontSize: '1.02rem',
+              color: '#78350F',
+              fontWeight: 800,
+              lineHeight: 1.5
+            }}>
+              Click the <strong>Run</strong> button present inside the activity area and observe:
+            </p>
           </div>
 
           {/* All 4 Interactive Steps */}
@@ -771,17 +794,13 @@ export default function Simulation({ onComplete, onNext }) {
                   style={{
                     padding: '1.05rem 1.35rem',
                     borderRadius: '18px',
-                    background: isCurrent ? '#FEF3C7' : isPast ? '#DCFCE7' : '#FFFFFF',
+                    background: 'rgba(255, 255, 255, 0.96)',
                     border: isCurrent 
                       ? '2px solid #F59E0B' 
-                      : isPast 
-                      ? '1.5px solid #86EFAC' 
                       : '1.5px solid #FDE68A',
                     boxShadow: isCurrent 
                       ? '0 6px 20px rgba(245, 158, 11, 0.15)' 
-                      : isPast
-                      ? '0 3px 10px rgba(16, 185, 129, 0.08)'
-                      : '0 2px 6px rgba(0,0,0,0.03)',
+                      : '0 3px 10px rgba(217, 119, 6, 0.05)',
                     transition: 'all 0.3s ease'
                   }}
                 >
@@ -791,10 +810,9 @@ export default function Simulation({ onComplete, onNext }) {
                         width: '30px',
                         height: '30px',
                         borderRadius: '50%',
-                        background: isCurrent 
-                          ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' 
-                          : isPast ? '#059669' : '#64748B',
-                        color: '#FFFFFF',
+                        background: '#FEF3C7',
+                        border: '2px solid #F59E0B',
+                        color: '#92400E',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -804,7 +822,7 @@ export default function Simulation({ onComplete, onNext }) {
                       }}>
                         {s.step}
                       </span>
-                      <span style={{ fontWeight: 900, fontSize: '1.14rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#064E3B' }}>
+                      <span style={{ fontWeight: 900, fontSize: '1.14rem', color: isCurrent ? '#92400E' : '#78350F' }}>
                         {s.title}
                       </span>
                     </div>
@@ -818,221 +836,22 @@ export default function Simulation({ onComplete, onNext }) {
             })}
           </div>
 
-          {/* Live Status Diagnostic Card */}
-          <div style={{
-            padding: '1.15rem 1.4rem',
-            background: '#FFFFFF',
-            borderRadius: '20px',
-            border: '1.5px solid #FDE68A',
-            color: '#064E3B',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.98rem' }}>
-              <span style={{ color: '#047857', fontWeight: 800 }}>Magnet Orientation:</span>
-              <strong style={{ color: isFlipped ? '#2563EB' : '#DC2626', fontSize: '1.05rem', fontWeight: 900 }}>
-                {isFlipped ? '[[ 🔵 S ][ 🔴 N ]]' : '[[ 🔴 N ][ 🔵 S ]]'}
-              </strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.98rem' }}>
-              <span style={{ color: '#047857', fontWeight: 800 }}>Position:</span>
-              <strong style={{ color: '#D97706', textTransform: 'uppercase', fontSize: '1.05rem', fontWeight: 900 }}>
-                {currentStation === 'top-left' ? '↖️ Top-Left Station' : currentStation === 'bottom-right' ? '↘️ Bottom-Right Station' : '📍 Bottom-Left Corner'}
-              </strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: statusMessage ? '8px' : '0', fontSize: '0.98rem' }}>
-              <span style={{ color: '#047857', fontWeight: 800 }}>Needle Deflection:</span>
-              <strong style={{ color: '#059669', fontSize: '1.02rem', fontWeight: 900 }}>{activeInteraction}</strong>
-            </div>
-            {statusMessage && (
-              <div style={{ 
-                marginTop: '10px', 
-                padding: '8px 14px', 
-                background: '#FEF3C7', 
-                borderRadius: '12px', 
-                border: '1.5px solid #FDE68A', 
-                color: '#92400E', 
-                fontWeight: 900,
-                fontSize: '0.94rem'
-              }}>
-                {statusMessage}
-              </div>
-            )}
-          </div>
         </div>
 
-        {/* Primary Action Controls */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '1.25rem' }}>
-          {/* Main Sequential Auto-Play Button */}
-          <button
-            type="button"
-            onClick={runFullSequence}
-            disabled={isAnimating}
-            className="gold-glow-btn"
-            style={{
-              width: '100%',
-              padding: '1.1rem',
-              borderRadius: '18px',
-              color: '#FFFFFF',
-              fontWeight: 900,
-              fontSize: '1.12rem',
-              cursor: isAnimating ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.75rem',
-              transition: 'all 0.25s ease',
-              opacity: isAnimating ? 0.75 : 1
-            }}
-          >
-            <Play size={20} fill="#FFFFFF" color="#FFFFFF" className={isAnimating ? 'animate-pulse' : ''} />
-            {isAnimating ? 'Running Experiment Sequence...' : '▶️ Run Full Experiment Flow'}
-          </button>
-
-          {/* Interactive Direct Actions Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-            {/* Move to Top-Left Button */}
-            <button
-              type="button"
-              onClick={moveToTopLeft}
-              disabled={isAnimating}
-              className={currentStation === 'top-left' ? "gold-glow-btn" : ""}
-              style={{
-                padding: '0.8rem 0',
-                borderRadius: '14px',
-                border: currentStation === 'top-left' ? 'none' : '1.5px solid #FDE68A',
-                background: currentStation === 'top-left' ? undefined : '#FFFFFF',
-                color: currentStation === 'top-left' ? '#FFFFFF' : '#065F46',
-                fontSize: '0.92rem',
-                fontWeight: 900,
-                cursor: 'pointer',
-                boxShadow: currentStation === 'top-left' ? undefined : '0 2px 6px rgba(0,0,0,0.03)',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px'
-              }}
-            >
-              <ArrowUpRight size={16} /> 1. Top-Left
-            </button>
-
-            {/* Move to Bottom-Right Button */}
-            <button
-              type="button"
-              onClick={moveToBottomRight}
-              disabled={isAnimating}
-              className={currentStation === 'bottom-right' ? "gold-glow-btn" : ""}
-              style={{
-                padding: '0.8rem 0',
-                borderRadius: '14px',
-                border: currentStation === 'bottom-right' ? 'none' : '1.5px solid #FDE68A',
-                background: currentStation === 'bottom-right' ? undefined : '#FFFFFF',
-                color: currentStation === 'bottom-right' ? '#FFFFFF' : '#065F46',
-                fontSize: '0.92rem',
-                fontWeight: 900,
-                cursor: 'pointer',
-                boxShadow: currentStation === 'bottom-right' ? undefined : '0 2px 6px rgba(0,0,0,0.03)',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px'
-              }}
-            >
-              <ArrowDownRight size={16} /> 2. Bottom-Rt
-            </button>
-
-            {/* Flip Magnet Polarity Button */}
-            <button
-              type="button"
-              onClick={handleFlipMagnet}
-              disabled={isAnimating}
-              style={{
-                padding: '0.8rem 0',
-                borderRadius: '14px',
-                border: isFlipped ? '2px solid #F59E0B' : '1.5px solid #FDE68A',
-                background: isFlipped ? '#FEF3C7' : '#FFFFFF',
-                color: isFlipped ? '#92400E' : '#065F46',
-                fontSize: '0.92rem',
-                fontWeight: 900,
-                cursor: 'pointer',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px'
-              }}
-            >
-              <RefreshCw size={15} /> 3. Flip
-            </button>
-          </div>
-
-          {/* Return to Corner & Reset Buttons */}
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button
-              type="button"
-              onClick={moveToCorner}
-              disabled={isAnimating}
-              style={{
-                flex: 1,
-                padding: '0.85rem',
-                borderRadius: '16px',
-                border: '1.5px solid #FDE68A',
-                background: currentStation === 'corner' ? '#FEF3C7' : '#FFFFFF',
-                color: currentStation === 'corner' ? '#92400E' : '#065F46',
-                fontWeight: 900,
-                fontSize: '0.98rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              📍 Corner Rest
-            </button>
-
-            <button
-              type="button"
-              onClick={handleReset}
-              style={{
-                flex: 1,
-                padding: '0.85rem',
-                borderRadius: '16px',
-                border: '1.5px solid #FDE68A',
-                background: '#FFFFFF',
-                color: '#92400E',
-                fontWeight: 900,
-                fontSize: '0.98rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <RotateCcw size={18} /> Reset
-            </button>
-          </div>
-
-          {/* Proceed to Quiz Button */}
-          {isCompleted && (
+        {/* Proceed to Quiz Button (when completed) */}
+        {isCompleted && (
+          <div style={{ marginTop: '1.25rem' }}>
             <button
               type="button"
               onClick={onNext}
               className="gold-glow-btn"
               style={{
                 width: '100%',
-                padding: '0.95rem',
-                borderRadius: '16px',
+                padding: '1rem',
+                borderRadius: '18px',
                 color: '#FFFFFF',
                 fontWeight: 900,
-                fontSize: '1.08rem',
+                fontSize: '1.12rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -1041,87 +860,119 @@ export default function Simulation({ onComplete, onNext }) {
                 transition: 'all 0.2s ease'
               }}
             >
-              Proceed to Quiz <ArrowRight size={18} />
+              Proceed to Quiz <ArrowRight size={20} />
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* Right Column: Nautical Sea Workspace Arena */}
+      {/* Right Column: Nautical Sea Workspace Arena with Vintage Parchment Map Background */}
       <div 
         ref={workspaceRef}
         style={{
           position: 'relative',
           borderRadius: '24px',
           overflow: 'hidden',
-          border: '1.5px solid #A7F3D0',
-          background: 'radial-gradient(ellipse at center, #1E3A8A 0%, #0F172A 100%)',
-          boxShadow: 'inset 0 0 80px rgba(0,0,0,0.5), 0 8px 32px rgba(6, 78, 59, 0.08)',
+          border: '2px solid #D97706',
+          backgroundImage: `url('/Activity4_6/nautical_map_bg.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          boxShadow: 'inset 0 0 60px rgba(0,0,0,0.25), 0 8px 32px rgba(6, 78, 59, 0.12)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           userSelect: 'none'
         }}
       >
-        {/* Deep Ocean Waves Grid Pattern */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          opacity: 0.15,
-          backgroundImage: 'radial-gradient(#38BDF8 1px, transparent 1px)',
-          backgroundSize: '24px 24px'
-        }} />
-
-        {/* Live Bearing Top Badge */}
+        {/* Top Control Bar across Activity Area (Zero Overlap, Clean Separation) */}
         <div style={{
           position: 'absolute',
           top: '1rem',
           left: '1rem',
-          background: 'rgba(255, 253, 245, 0.95)',
-          border: '1.5px solid #EADBB6',
-          borderRadius: '16px',
-          padding: '0.4rem 0.95rem',
+          right: '1rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.6rem',
-          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
-          zIndex: 20
+          justifyContent: 'space-between',
+          zIndex: 30,
+          pointerEvents: 'none',
+          gap: '0.75rem'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#78350F', fontSize: '0.85rem', fontWeight: 900 }}>
-            <CompassIcon size={17} color="#D97706" />
-            <span>BEARING: <strong style={{ color: '#C2410C' }}>{Math.round((compassAngle % 360 + 360) % 360)}°</strong> {getBearingName(compassAngle)}</span>
-          </div>
-        </div>
-
-        {/* Fullscreen Button */}
-        <button
-          onClick={toggleFullscreen}
-          title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-          style={{
-            position: 'absolute',
-            top: '1rem',
-            right: '1rem',
-            zIndex: 30,
-            background: 'rgba(255, 255, 255, 0.92)',
-            border: '1.5px solid rgba(255, 255, 255, 0.85)',
-            borderRadius: '14px',
-            padding: '0.4rem 0.85rem',
-            cursor: 'pointer',
+          {/* Left: Live Bearing Badge (Moved Leftside, Fully Visible & Clear of Fullscreen) */}
+          <div style={{
+            pointerEvents: 'auto',
+            background: 'rgba(255, 253, 245, 0.96)',
+            border: '1.5px solid #EADBB6',
+            borderRadius: '16px',
+            padding: '0.45rem 1.05rem',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            color: '#0F172A',
-            fontSize: '0.82rem',
-            fontWeight: 800,
+            gap: '0.55rem',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
             backdropFilter: 'blur(8px)',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
-          <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
-        </button>
+            flexShrink: 0
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#78350F', fontSize: '0.9rem', fontWeight: 900 }}>
+              <CompassIcon size={18} color="#D97706" />
+              <span>BEARING: <strong style={{ color: '#C2410C' }}>{Math.round((compassAngle % 360 + 360) % 360)}°</strong> {getBearingName(compassAngle)}</span>
+            </div>
+          </div>
+
+          {/* Top Center: "▶️ Run" Button at the Top of Activity Area */}
+          <div style={{ pointerEvents: 'auto', flexShrink: 0 }}>
+            <button
+              type="button"
+              onClick={runFullSequence}
+              disabled={isAnimating}
+              className="gold-glow-btn"
+              style={{
+                padding: '0.65rem 1.75rem',
+                borderRadius: '16px',
+                color: '#FFFFFF',
+                fontWeight: 900,
+                fontSize: '1.08rem',
+                cursor: isAnimating ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.55rem',
+                transition: 'all 0.25s ease',
+                opacity: isAnimating ? 0.85 : 1,
+                boxShadow: '0 4px 18px rgba(217, 119, 6, 0.5)'
+              }}
+            >
+              <Play size={19} fill="#FFFFFF" color="#FFFFFF" className={isAnimating ? 'animate-pulse' : ''} />
+              {isAnimating ? 'Running...' : '▶️ Run'}
+            </button>
+          </div>
+
+          {/* Right: Fullscreen Button */}
+          <div style={{ pointerEvents: 'auto', flexShrink: 0 }}>
+            <button
+              onClick={toggleFullscreen}
+              title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+              style={{
+                background: 'rgba(255, 255, 255, 0.92)',
+                border: '1.5px solid rgba(255, 255, 255, 0.85)',
+                borderRadius: '14px',
+                padding: '0.45rem 0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                color: '#0F172A',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+              <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+            </button>
+          </div>
+        </div>
 
         {/* Central Arena: Compass + Flat Horizontal Dual-Pole Bar Magnet */}
         <div style={{

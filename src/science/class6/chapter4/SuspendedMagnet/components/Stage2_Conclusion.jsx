@@ -123,7 +123,7 @@ export default function Stage2_Conclusion({ onComplete }) {
             border: '1.5px solid #A7F3D0', 
             overflow: 'hidden', 
             boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)', 
-            backgroundImage: `url('/SuspendedMagnet/wooden_stand_lab_bg.jpg')`, 
+            backgroundImage: `url('/SuspendedMagnet/conclusion_bg.jpg')`, 
             backgroundSize: 'cover', 
             backgroundPosition: 'center', 
             display: 'flex', 
@@ -211,7 +211,7 @@ export default function Stage2_Conclusion({ onComplete }) {
       {/* Right Side: Guide & Control Panel (Enlarged Spacious Typography) */}
       <div style={{ 
         flex: '1.05', 
-        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+        background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', 
         border: '1.5px solid #FDE68A', 
         borderRadius: '24px', 
         padding: '1.5rem 1.65rem', 
@@ -241,13 +241,13 @@ export default function Stage2_Conclusion({ onComplete }) {
             letterSpacing: '0.5px',
             alignSelf: 'flex-start'
           }}>
-            <Sparkles size={18} color="#10B981" /> EXPERIMENT CONCLUSION
+            <Sparkles size={18} color="#16A34A" /> EXPERIMENT CONCLUSION
           </div>
 
           <h2 style={{ 
             fontSize: '1.75rem', 
             fontWeight: 900, 
-            color: '#064E3B', 
+            color: '#78350F', 
             margin: 0,
             lineHeight: 1.25,
             letterSpacing: '-0.02em'
@@ -267,20 +267,20 @@ export default function Stage2_Conclusion({ onComplete }) {
 
           {/* Finding Directions with the Sun Info Card */}
           <div style={{
-            background: '#FFFFFF',
-            border: '1.5px solid #FDE68A',
+            background: '#DCFCE7',
+            border: '1.5px solid #86EFAC',
             borderRadius: '20px',
             padding: '1.25rem 1.45rem',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '0.95rem',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
+            boxShadow: '0 4px 14px rgba(16, 185, 129, 0.12)'
           }}>
             <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>☀️</span>
             <p style={{ 
               margin: 0, 
               fontSize: '1.06rem', 
-              color: '#78350F', 
+              color: '#166534', 
               lineHeight: 1.65, 
               fontWeight: 700 
             }}>
@@ -290,13 +290,13 @@ export default function Stage2_Conclusion({ onComplete }) {
 
           {/* Interactive Controls Card */}
           <div style={{ 
-            background: '#FFFFFF', 
+            background: 'rgba(255, 255, 255, 0.96)', 
             border: '1.5px solid #FDE68A', 
             borderRadius: '20px', 
             padding: '1.3rem 1.45rem',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
+            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.05)'
           }}>
-            <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#064E3B', letterSpacing: '0.5px', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#78350F', letterSpacing: '0.5px', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
               <Compass size={20} color="#D97706" /> COMPASS CONTROLS
             </div>
 
@@ -342,7 +342,7 @@ export default function Stage2_Conclusion({ onComplete }) {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          borderTop: '1.5px solid #FDE68A',
+          borderTop: '1.5px solid #E2E8F0',
           paddingTop: '0.9rem'
         }}>
           <span style={{ fontSize: '1.02rem', color: '#047857', fontWeight: 800, fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>

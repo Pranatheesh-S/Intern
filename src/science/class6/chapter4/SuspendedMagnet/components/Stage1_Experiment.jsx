@@ -432,7 +432,7 @@ export default function Stage1_Experiment({ onComplete }) {
           border: '1.5px solid #A7F3D0',
           overflow: 'hidden',
           boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)',
-          backgroundImage: `url('/SuspendedMagnet/wooden_stand_lab_bg.jpg')`,
+          backgroundImage: `url('/SuspendedMagnet/let_us_experiment_bg.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}>
@@ -536,7 +536,7 @@ export default function Stage1_Experiment({ onComplete }) {
       {/* Right Side: Guide & Control Panel (Enlarged Spacious Typography) */}
       <div style={{
         flex: '1.15',
-        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+        background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
         border: '1.5px solid #FDE68A',
         borderRadius: '24px',
         padding: '1.45rem 1.6rem',
@@ -555,18 +555,18 @@ export default function Stage1_Experiment({ onComplete }) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <BookOpen size={28} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.48rem', color: '#064E3B', fontWeight: 900 }}>
+              <h3 style={{ margin: 0, fontSize: '1.48rem', color: '#78350F', fontWeight: 900 }}>
                 Stage 1: Experiment
               </h3>
             </div>
             <span style={{
-              background: '#DCFCE7',
-              color: '#15803D',
+              background: quizAnswer === 'yes' ? '#DCFCE7' : '#FEF3C7',
+              color: quizAnswer === 'yes' ? '#15803D' : '#92400E',
               fontWeight: 900,
               fontSize: '0.96rem',
               padding: '0.38rem 0.95rem',
               borderRadius: '14px',
-              border: '1.5px solid #86EFAC'
+              border: quizAnswer === 'yes' ? '1.5px solid #86EFAC' : '1.5px solid #F59E0B'
             }}>
               Step {spinCount >= 1 ? (quizAnswer === 'yes' ? 3 : 2) : 1} of 3
             </span>
@@ -600,16 +600,18 @@ export default function Stage1_Experiment({ onComplete }) {
                   key={s.stepNum}
                   style={{
                     padding: '1rem 1.25rem',
-                    borderRadius: '16px',
-                    background: isCurrent ? '#FEF3C7' : isPast ? '#DCFCE7' : '#FFFFFF',
-                    border: isCurrent 
-                      ? '2px solid #F59E0B' 
-                      : isPast 
+                    borderRadius: '18px',
+                    background: isPast ? '#DCFCE7' : isCurrent ? '#FEF3C7' : 'rgba(255, 255, 255, 0.96)',
+                    border: isPast 
                       ? '1.5px solid #86EFAC' 
+                      : isCurrent 
+                      ? '2px solid #F59E0B' 
                       : '1.5px solid #FDE68A',
-                    boxShadow: isCurrent 
+                    boxShadow: isPast
+                      ? '0 3px 10px rgba(16, 185, 129, 0.12)'
+                      : isCurrent 
                       ? '0 4px 14px rgba(245, 158, 11, 0.18)' 
-                      : '0 2px 8px rgba(0,0,0,0.03)',
+                      : '0 3px 10px rgba(217, 119, 6, 0.05)',
                     transition: 'all 0.3s ease'
                   }}
                 >
@@ -619,8 +621,9 @@ export default function Stage1_Experiment({ onComplete }) {
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#CBD5E1',
-                        color: '#FFFFFF',
+                        background: isPast ? '#059669' : '#FEF3C7',
+                        border: isPast ? '2px solid #059669' : '2px solid #F59E0B',
+                        color: isPast ? '#FFFFFF' : '#92400E',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -630,13 +633,13 @@ export default function Stage1_Experiment({ onComplete }) {
                       }}>
                         {s.stepNum}
                       </span>
-                      <span style={{ fontWeight: 900, fontSize: '1.18rem', color: isCurrent ? '#064E3B' : isPast ? '#065F46' : '#064E3B' }}>
+                      <span style={{ fontWeight: 900, fontSize: '1.18rem', color: isPast ? '#15803D' : isCurrent ? '#92400E' : '#78350F' }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                    {isPast && <CheckCircle size={20} color="#16A34A" />}
                   </div>
-                  <p style={{ margin: '0.4rem 0 0 0', fontSize: '1.04rem', color: '#065F46', lineHeight: 1.55, fontWeight: 700 }}>
+                  <p style={{ margin: '0.4rem 0 0 0', fontSize: '1.04rem', color: isPast ? '#166534' : '#065F46', lineHeight: 1.55, fontWeight: 700 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -700,16 +703,16 @@ export default function Stage1_Experiment({ onComplete }) {
 
         {/* Observation Question Card */}
         <div style={{
-          background: '#FFFFFF',
-          border: '1.5px solid #FDE68A',
+          background: quizAnswer === 'yes' ? '#DCFCE7' : 'rgba(255, 255, 255, 0.96)',
+          border: quizAnswer === 'yes' ? '1.5px solid #86EFAC' : '1.5px solid #FDE68A',
           padding: '1.3rem 1.45rem',
           borderRadius: '20px',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.95rem',
-          boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
+          boxShadow: quizAnswer === 'yes' ? '0 4px 14px rgba(16, 185, 129, 0.12)' : '0 4px 14px rgba(217, 119, 6, 0.05)'
         }}>
-          <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#064E3B', lineHeight: 1.55, fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
+          <div style={{ fontSize: '1.15rem', fontWeight: 900, color: quizAnswer === 'yes' ? '#15803D' : '#78350F', lineHeight: 1.55, fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
             Quick Check: Does a freely suspended magnet always settle in the North-South direction?
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
