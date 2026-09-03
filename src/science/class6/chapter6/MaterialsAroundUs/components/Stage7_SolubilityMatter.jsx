@@ -69,11 +69,11 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Beaker size={22} style={{ color: 'var(--lesson-accent)' }} /> 
           {mode === 'solubility' ? 'Solubility in Water' : mode === 'matter' ? 'What is Matter?' : '6.3.4 - 6.4: Solubility, Mass, Volume & Matter'}
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--heading-sub)', lineHeight: '1.5' }}>
           {mode === 'solubility' ? 'Let\'s explore solubility by testing if different substances dissolve in water.' : mode === 'matter' ? 'Let\'s explore mass (how heavy it is) and volume (space occupied).' : 'Let\'s explore chemical and physical properties: solubility in water, mass, and volume.'}
         </p>
       </div>

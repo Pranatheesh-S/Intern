@@ -213,7 +213,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
           
           <div style={{ padding: '1.5rem 1.5rem 0.5rem 1.5rem', borderBottom: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
             <Brain size={24} color="var(--lesson-primary)" />
-            <h3 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: '1.3rem' }}>Quick Summary</h3>
+            <h3 style={{ margin: 0, color: 'var(--heading-main)', fontSize: '1.3rem' }}>Quick Summary</h3>
           </div>
           
           <div style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1, overflowY: 'auto' }}>

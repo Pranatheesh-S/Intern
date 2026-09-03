@@ -65,11 +65,11 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Target size={26} style={{ color: 'var(--lesson-accent)' }} /> 
           Investigation: Sports Equipment Properties
         </h3>
-        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--heading-sub)' }}>
           Why aren't all balls made of the same material? Click each ball to analyze its properties and discover how its material matches its purpose.
         </p>
       </div>
@@ -170,7 +170,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
 
         {/* RIGHT: Drop Test Panel */}
         <div className="glass-panel" style={{ background: 'var(--neutral-bg)', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', flex: 1, minHeight: 0, justifyContent: 'center' }}>
-          <h4 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: '2rem' }}>Drop Test: Bounce Comparison</h4>
+          <h4 style={{ margin: 0, color: 'var(--heading-section)', fontSize: '2rem' }}>Drop Test: Bounce Comparison</h4>
           <p style={{ margin: 0, fontSize: '1.6rem', color: 'var(--lesson-secondary)', textAlign: 'center', lineHeight: '1.3' }}>Observe how the material's hardness affects its bounce height when dropped from the same level.</p>
           
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem', marginBottom: '1rem' }}>

@@ -140,7 +140,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                   
                   {/* Right: Explanation */}
                   <div style={{ flex: '1.2', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <h3 style={{ fontSize: '2.5rem', color: 'var(--lesson-primary)', margin: '0 0 32px 0', lineHeight: '1.2', fontWeight: '900' }}>WHY CAN'T I ADD MORE WATER?</h3>
+                    <h3 style={{ fontSize: '2.5rem', color: 'var(--heading-main)', margin: '0 0 32px 0', lineHeight: '1.2', fontWeight: '900' }}>WHY CAN'T I ADD MORE WATER?</h3>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: '1.6rem', lineHeight: '1.5' }}>
@@ -186,8 +186,8 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                   
                   {/* 1. TITLE, SUBTITLE, EXPLANATION */}
                   <div style={{ marginBottom: '20px' }}>
-                    <h3 style={{ fontSize: '32px', color: 'var(--lesson-primary)', margin: '0 0 6px 0', fontWeight: '900', letterSpacing: '-0.5px' }}>Volume in Everyday Life</h3>
-                    <p style={{ margin: '0 0 12px 0', color: 'var(--lesson-text)', fontSize: '20px', lineHeight: '1.3', fontWeight: '600' }}>
+                    <h3 style={{ fontSize: '32px', color: 'var(--heading-main)', margin: '0 0 6px 0', fontWeight: '900', letterSpacing: '-0.5px' }}>Volume in Everyday Life</h3>
+                    <p style={{ margin: '0 0 12px 0', color: 'var(--heading-sub)', fontSize: '20px', lineHeight: '1.3', fontWeight: '600' }}>
                       How much space can a container hold?
                     </p>
                     <p style={{ margin: '0 0 2px 0', color: 'var(--lesson-text)', fontSize: '18px', lineHeight: '1.45' }}>
@@ -290,8 +290,8 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
               style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '24px', gap: '16px', boxSizing: 'border-box', overflow: 'hidden' }}
             >
               <div style={{ flexShrink: 0 }}>
-                <h3 style={{ fontSize: '1.8rem', color: 'var(--lesson-primary)', margin: '0 0 8px 0', fontWeight: '900' }}>Explore Different Volumes</h3>
-                <p style={{ color: 'var(--lesson-text)', fontSize: '1.2rem', margin: 0 }}>Click each container to discover how much it can hold.</p>
+                <h3 style={{ fontSize: '1.8rem', color: 'var(--heading-main)', margin: '0 0 8px 0', fontWeight: '900' }}>Explore Different Volumes</h3>
+                <p style={{ color: 'var(--heading-sub)', fontSize: '1.2rem', margin: 0 }}>Click each container to discover how much it can hold.</p>
               </div>
               
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', flex: 1, minHeight: 0 }}>

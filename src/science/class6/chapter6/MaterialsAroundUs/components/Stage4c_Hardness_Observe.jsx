@@ -149,7 +149,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
         <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           🕵️ Material Detective – Press & Identify
         </h3>
-        <p style={{ margin: 0, fontSize: '1.35rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1.35rem', color: 'var(--heading-sub)' }}>
           Press each object, observe what happens and identify the material it is made of.
         </p>
       </div>

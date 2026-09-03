@@ -581,10 +581,10 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
       {/* Header */}
       <div style={{ background: 'var(--lesson-background)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
+          <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
             <Search size={32} color="var(--lesson-accent)" /> Phase 1: Solubility Simulator
           </h3>
-          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
+          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--heading-sub)', fontWeight: '500' }}>
             Activity 6.7: Let us explore how different materials behave when we mix them in water.
           </p>
         </div>
@@ -704,7 +704,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
         {/* Right Side: Observation Console */}
         <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-          <h4 style={{ margin: '0 0 1rem 0', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
+          <h4 style={{ margin: '0 0 1rem 0', color: 'var(--heading-section)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
             <Camera size={28} color="var(--lesson-accent)" /> Observation Console
           </h4>
           

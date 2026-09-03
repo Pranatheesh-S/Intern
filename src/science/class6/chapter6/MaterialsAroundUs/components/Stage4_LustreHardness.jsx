@@ -125,11 +125,11 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
       
       {/* Header */}
       <div className="glass-panel" style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '0.25rem', border: '1px solid var(--lesson-accent-border)', padding: '1rem' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Sparkles size={22} style={{ color: 'var(--lesson-accent)' }} /> 
           Lustre Restoration Lab
         </h3>
-        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--heading-sub)' }}>
           Can you bring back the shine? Choose a material, then scrub its surface to remove the dull outer layer and reveal what is underneath.
         </p>
       </div>

@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle } from 'lucide-react';
-import Stage4_LustreHardness from './Stage4_LustreHardness';
 import Stage6_Transparency from './Stage6_Transparency';
 import Stage7_SolubilityMatter from './Stage7_SolubilityMatter';
 
 export default function Barrier3_Properties({ onComplete, addXp }) {
-  const [stage, setStage] = useState(1);
+  const [stage, setStage] = useState(2);
 
   return (
     <div style={{ width: '100%' }}>
       <AnimatePresence mode="wait">
-        {stage === 1 && (
-          <motion.div key="stage1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <Stage4_LustreHardness onComplete={() => setStage(2)} addXp={addXp} />
-          </motion.div>
-        )}
-        
         {stage === 2 && (
           <motion.div key="stage2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Stage6_Transparency onComplete={() => setStage(3)} addXp={addXp} />

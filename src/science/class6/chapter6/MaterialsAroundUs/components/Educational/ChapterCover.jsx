@@ -204,7 +204,7 @@ export default function ChapterCover({ onOpenBook, onBack }) {
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingTop: '13vh',
-        paddingBottom: '17vh',
+        paddingBottom: '21vh', // Increased to move button up
         boxSizing: 'border-box'
       }}>
         {/* TYPOGRAPHY UI LAYER */}
@@ -268,8 +268,8 @@ export default function ChapterCover({ onOpenBook, onBack }) {
           aria-label="Enter Lab"
           title="Enter Lab"
           style={{
-            width: '84%', // 37.79% of 100vw = 83.9% of 45vw container
-            height: 'min(13.4vh, 90px)', // Original was 13.38% of height
+            width: '78%',
+            height: 'min(11.5vh, 78px)',
             background: 'linear-gradient(180deg, #1e4bb2 0%, #061a55 100%)',
             border: '1.5px solid rgba(167, 219, 255, 0.6)',
             borderRadius: '9999px',
@@ -279,7 +279,7 @@ export default function ChapterCover({ onOpenBook, onBack }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 5%',
+            padding: '0 11%', // Increased to move content more toward center
             color: 'white',
             fontFamily: '"Inter", "Outfit", sans-serif',
             flexShrink: 0
@@ -295,16 +295,16 @@ export default function ChapterCover({ onOpenBook, onBack }) {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
             {/* Custom Flask Icon mimicking the reference */}
-            <svg width="clamp(24px, 3.5vw, 60px)" height="clamp(24px, 3.5vw, 60px)" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="clamp(26px, min(3.8vw, 5.5vh), 64px)" height="clamp(26px, min(3.8vw, 5.5vh), 64px)" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M10 2v7.31M14 9.31V2M8.5 2h7M14 9.31L4.72 20.55A2.16 2.16 0 0 0 6.64 24h10.72a2.16 2.16 0 0 0 1.92-3.45L14 9.31Z" />
               <path d="M6 16h12" />
               <circle cx="10" cy="19" r="1" fill="white" stroke="none" />
               <circle cx="13" cy="21" r="1.5" fill="white" stroke="none" />
               <circle cx="15" cy="18" r="0.8" fill="white" stroke="none" />
             </svg>
-            <span style={{ fontSize: 'clamp(18px, min(2.8vw, 4vh), 48px)', fontWeight: 900, letterSpacing: '0.02em', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>ENTER LAB</span>
+            <span style={{ fontSize: 'clamp(20px, min(3.1vw, 4.3vh), 52px)', fontWeight: 900, letterSpacing: '0.02em', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>ENTER LAB</span>
           </div>
-          <ArrowRight size={"clamp(20px, min(3vw, 4vh), 50px)"} strokeWidth={3} />
+          <ArrowRight size={"clamp(22px, min(3.2vw, 4.2vh), 54px)"} strokeWidth={3} />
         </button>
       </div>
 

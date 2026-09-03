@@ -94,10 +94,10 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       
       {/* Intro Header */}
       <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Eye size={26} color="var(--lesson-accent)" /> Explore materials through which one can see or cannot see
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-text)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--heading-sub)', lineHeight: '1.5' }}>
           Chief Blake is running a surveillance simulation! Click on the locations to see if the suspect is visible through the material. Then complete Activity 6.6 below.
         </p>
       </div>

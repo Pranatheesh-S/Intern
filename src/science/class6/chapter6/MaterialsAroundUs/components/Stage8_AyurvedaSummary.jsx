@@ -52,11 +52,11 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
 
       {/* Do You Know Section */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', border: '2px dashed var(--lesson-warning-border)', background: 'var(--lesson-warning-bg)', padding: '2rem' }}>
-        <h3 style={{ margin: 0, fontSize: 'var(--text-3xl)', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: 'var(--text-3xl)', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <BookOpen size={32} /> Do You Know? (Ancient Classification)
         </h3>
         
-        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--lesson-text)', lineHeight: '1.6' }}>
+        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--heading-sub)', lineHeight: '1.6' }}>
           A similar classification system existed in ancient India. <strong>Ayurveda</strong>, one of the Indian medical systems, has a system of grouping things using <strong>20 properties</strong> (<em>guṇa</em>—ten pairs of opposite properties).
         </p>
         
@@ -73,7 +73,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
 
       {/* Properties Grid */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
-        <h4 style={{ fontSize: 'var(--text-2xl)', color: 'var(--lesson-primary)', margin: '0 0 0.5rem 0' }}>The 10 Pairs of Opposite Properties:</h4>
+        <h4 style={{ fontSize: 'var(--text-2xl)', color: 'var(--heading-section)', margin: '0 0 0.5rem 0' }}>The 10 Pairs of Opposite Properties:</h4>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
           {gunasData.map((pair, idx) => (

@@ -52,10 +52,10 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
       {/* Header */}
       <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '800', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '800', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Scale size={24} color="var(--lesson-primary)" /> Phase 1: How heavy or light?
           </h3>
-          <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '600', color: 'var(--lesson-secondary)' }}>
+          <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '600', color: 'var(--heading-sub)' }}>
             Activity 6.8: Let us measure. Drag each cup to the digital balance to record its mass.
           </p>
         </div>
@@ -73,7 +73,7 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
         
         {/* Left Side: Material Evidence */}
         <div style={{ background: 'var(--lesson-card)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: 'var(--lesson-primary)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem' }}>MATERIAL EVIDENCE</h4>
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: 'var(--heading-section)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem' }}>MATERIAL EVIDENCE</h4>
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-evenly', gap: '0.75rem' }}>
             {cups.map(cup => {
               const hasBeenWeighed = weighedItems[cup.id];
@@ -122,7 +122,7 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
 
         {/* Middle: Weighing Station */}
         <div style={{ background: 'var(--lesson-card)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: 'var(--lesson-primary)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem' }}>DIGITAL WEIGHING STATION</h4>
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: 'var(--heading-section)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem' }}>DIGITAL WEIGHING STATION</h4>
           
           <div style={{ 
               flex: 1,

@@ -195,14 +195,14 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
       {/* Dynamic phase header */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: 'clamp(24px, 3vw, 30px)', fontWeight: '900', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: 'clamp(24px, 3vw, 30px)', fontWeight: '900', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <LayoutGrid size={24} style={{ color: 'var(--lesson-accent)' }} /> 
           {phase === 'briefing' && 'Case Briefing: Stage 1 Report'}
           {phase === 'use' && 'Case File 02 – Organizing by Purpose'}
           {phase === 'material' && 'Case File 02 – Scientific Classification'}
           {phase === 'demo' && 'Case File 02 – Multi-Property Insights'}
         </h3>
-        <p style={{ margin: 0, fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '600', color: 'var(--lesson-secondary)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '600', color: 'var(--heading-sub)', lineHeight: '1.5' }}>
           {phase === 'briefing' && 'Review your findings from the classroom scan before analyzing them.'}
           {phase === 'use' && 'Drag collected items to shelves, or select them based on how they are used.'}
           {phase === 'material' && 'Drag items from the evidence tray to the correct material basket.'}
@@ -232,8 +232,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             <div style={{ fontSize: 'clamp(40px, 5vw, 48px)' }}>🕵️‍♂️</div>
             <div>
-              <h3 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: 'clamp(30px, 3.5vw, 36px)', fontWeight: '900' }}>Investigation Report: Stage 1</h3>
-              <p style={{ color: 'var(--lesson-muted)', fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '600', marginTop: '0.5rem' }}>
+              <h3 style={{ margin: 0, color: 'var(--heading-main)', fontSize: 'clamp(30px, 3.5vw, 36px)', fontWeight: '900' }}>Investigation Report: Stage 1</h3>
+              <p style={{ color: 'var(--heading-sub)', fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '600', marginTop: '0.5rem' }}>
                 You have successfully identified the base materials of all classroom evidence.
               </p>
             </div>
@@ -289,7 +289,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             {/* Left Section: Evidence Tray */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
-              <h4 style={{ margin: 0, fontSize: 'clamp(24px, 3vw, 30px)', fontWeight: '900', color: 'var(--lesson-primary)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+              <h4 style={{ margin: 0, fontSize: 'clamp(24px, 3vw, 30px)', fontWeight: '900', color: 'var(--heading-section)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
                 Evidence Tray
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
@@ -362,7 +362,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
             {/* Right Section: Shelves */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
-              <h4 style={{ margin: 0, fontSize: 'calc(var(--text-xl) * 1.1)', fontWeight: '800', color: 'var(--lesson-primary)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+              <h4 style={{ margin: 0, fontSize: 'calc(var(--text-xl) * 1.1)', fontWeight: '800', color: 'var(--heading-section)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
                 Shelves (Organize by Use)
               </h4>
               <div style={{ display: 'grid', gridTemplateRows: 'repeat(3, 1fr)', gap: '0.65rem', flex: 1, minHeight: 0 }}>
@@ -510,7 +510,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                                 style={{
                                   fontSize: 'clamp(14px, 2vw, 17px)',
                                   fontWeight: '800',
-                                  color: 'whitefff',
+                                  color: '#FFFFFF',
                                 textShadow: '0 1px 2px rgba(0,0,0,0.9)',
                                 background: 'rgba(15, 23, 42, 0.92)',
                                 backdropFilter: 'blur(4px)',
@@ -566,11 +566,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                   <Check size={16} />
                   <span>All objects grouped successfully! Click "Proceed to next" in the bottom right corner!</span>
                 </div>
-              ) : (
-                <div style={{ fontSize: 'clamp(13px, 1.8vw, 16px)', color: 'var(--lesson-muted)', textAlign: 'center', padding: '0.2rem', background: 'rgba(0,0,0,0.03)', borderRadius: '6px' }}>
-                  💡 <strong>Tip:</strong> Drag items from the Evidence Tray directly into the shelves based on where they are used.
-                </div>
-              )}
+              ) : null}
             </div>
           </motion.div>
         )}
@@ -1027,7 +1023,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     <img src={items.find(i => i.id === activeDemoId)?.icon} alt="" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: 'clamp(22px, 3vw, 26px)', fontWeight: '900' }}>
+                    <h3 style={{ margin: 0, color: 'var(--heading-main)', fontSize: 'clamp(22px, 3vw, 26px)', fontWeight: '900' }}>
                       {items.find(i => i.id === activeDemoId)?.name}
                     </h3>
                     <span style={{ fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '600', color: 'var(--lesson-muted)' }}>Multi-Property Classification Profile</span>

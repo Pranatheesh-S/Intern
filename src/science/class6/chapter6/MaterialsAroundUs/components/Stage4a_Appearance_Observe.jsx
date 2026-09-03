@@ -695,7 +695,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
         display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0,
       }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: "1.6rem", color: "var(--lesson-primary)", fontWeight: 900 }}>
+          <h3 style={{ margin: 0, fontSize: "1.6rem", color: 'var(--heading-main)', fontWeight: 900 }}>
             🔦 Shine Hunt – Torch Observation Lab
           </h3>
           <p style={{ margin: "4px 0 0", fontSize: "1.1rem", color: "var(--lesson-accent)", fontWeight: 700 }}>

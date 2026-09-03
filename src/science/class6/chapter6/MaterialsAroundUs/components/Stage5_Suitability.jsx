@@ -110,10 +110,10 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Shield size={22} style={{ color: 'var(--lesson-accent)' }} /> Activity 6.3: Let Us Think (Material Suitability)
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--heading-sub)', lineHeight: '1.5' }}>
           Why is a window made of glass and not wood? Why is a cooking pot made of metal and not paper? 
           We choose materials based on their <strong>properties</strong> and the <strong>purpose</strong> of the object.
         </p>

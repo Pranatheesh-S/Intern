@@ -260,7 +260,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             <div style={{ borderBottom: '2px dashed var(--lesson-border)', paddingBottom: '20px', marginBottom: '12px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Search size={32} color="var(--lesson-primary)" />
-                <h4 style={{ margin: 0, fontSize: '2rem', letterSpacing: '1px', color: 'var(--lesson-primary)', fontWeight: '900' }}>EVIDENCE BOARD</h4>
+                <h4 style={{ margin: 0, fontSize: '2rem', letterSpacing: '1px', color: 'var(--heading-section)', fontWeight: '900' }}>EVIDENCE BOARD</h4>
               </div>
               <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: 'var(--lesson-accent)', color: 'white', padding: '6px 14px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
