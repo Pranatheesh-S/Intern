@@ -32,7 +32,7 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
               padding: '0.4rem 0.8rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', fontSize: '0.85rem'
             }}
           >
-            <ArrowLeft size={16} /> Back to Class 6 Wing
+            <ArrowLeft size={16} /> Back
           </button>
         </div>
 

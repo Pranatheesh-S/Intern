@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowRight, 
-  CheckCircle2, 
-  RotateCcw, 
+import {
+  ArrowRight,
+  CheckCircle2,
+  RotateCcw,
   Compass as CompassIcon,
   Sparkles,
   Maximize2,
@@ -65,7 +65,7 @@ function playMagneticSound(type = 'snap') {
       osc.start(now);
       osc.stop(now + 0.4);
     }
-  } catch (e) {}
+  } catch (e) { }
 }
 
 const getBearingName = (deg) => {
@@ -82,21 +82,21 @@ const getBearingName = (deg) => {
 };
 
 // -------------------------------------------------------------
-// 1. Ultra-Realistic 3D Alnico Steel Bar Magnet Component (210px x 62px)
+// 1. Ultra-Realistic 3D Alnico Steel Bar Magnet Component (180px x 54px)
 // -------------------------------------------------------------
 const MagnetVisual = ({ isFlipped, isTesting }) => (
-  <div style={{ 
-    width: '210px', 
-    height: '62px', 
+  <div style={{
+    width: '180px',
+    height: '54px',
     position: 'relative',
     userSelect: 'none',
-    filter: isTesting 
-      ? 'drop-shadow(0 22px 35px rgba(0,0,0,0.75)) drop-shadow(0 0 20px rgba(56, 189, 248, 0.45))' 
-      : 'drop-shadow(0 14px 24px rgba(0,0,0,0.55)) drop-shadow(0 4px 8px rgba(0,0,0,0.35))',
-    transform: isTesting ? 'scale(1.03)' : 'scale(1)',
+    filter: isTesting
+      ? 'drop-shadow(0 18px 28px rgba(0,0,0,0.75)) drop-shadow(0 0 16px rgba(56, 189, 248, 0.45))'
+      : 'drop-shadow(0 12px 20px rgba(0,0,0,0.55)) drop-shadow(0 4px 8px rgba(0,0,0,0.35))',
+    transform: isTesting ? 'scale(1.02)' : 'scale(1)',
     transition: 'transform 0.2s ease, filter 0.2s ease'
   }}>
-    <svg width="210" height="62" viewBox="0 0 210 62" style={{ overflow: 'visible' }}>
+    <svg width="180" height="54" viewBox="0 0 210 62" style={{ overflow: 'visible' }}>
       <defs>
         {/* Soft Dynamic Ground Ambient Shadow */}
         <filter id="magSoftShadow" x="-10%" y="-10%" width="120%" height="130%">
@@ -188,16 +188,27 @@ const MagnetVisual = ({ isFlipped, isTesting }) => (
 const BARRIER_HEIGHT = 420;
 
 // Standard material thickness width calculator for physical clearance & collision
-const getMaterialWidth = (type, thickness) => {
-  if (type === 'wood') return 360 + thickness * 20;
-  if (type === 'cardboard') return 280 + thickness * 20;
-  return 240 + thickness * 18;
+const getMaterialWidth = (type, thickness, stage = 1) => {
+  if (type === 'wood' && stage === 4) return 880 + thickness * 20;
+  if (type === 'wood') return 480 + thickness * 20;
+  if (type === 'cardboard') return 480 + thickness * 20;
+  if (type === 'plastic') return 460 + thickness * 20;
+  return 480 + thickness * 18;
+};
+
+const getMaterialHeight = (type, stage = 1) => {
+  if (type === 'wood' && stage === 4) return 560;
+  if (type === 'cardboard') return 480;
+  if (type === 'plastic') return 480;
+  if (type === 'glass') return 480;
+  return BARRIER_HEIGHT;
 };
 
 // 3D WebGL Material Barrier Visual Renderer
 const MaterialBarrierVisual = ({ type, stage = 1, thickness = 1 }) => {
-  const width = getMaterialWidth(type, thickness);
-  const height = BARRIER_HEIGHT;
+  const isTree = type === 'wood' && stage === 4;
+  const width = isTree ? '100%' : getMaterialWidth(type, thickness, stage);
+  const height = isTree ? '100%' : getMaterialHeight(type, stage);
   return <Barrier3DCanvas type={type} stage={stage} thickness={thickness} width={width} height={height} />;
 };
 
@@ -241,14 +252,14 @@ const STAGE_CONFIG = {
 };
 
 const MATERIALS = [
-  { id: 'wood', name: 'Wood & Plant (4 Stages)', materialName: 'Paper ➔ Wood Log ➔ Plant ➔ Tree', icon: '🌳', desc: 'Paper, Wood Log, Plant, and Tree' },
-  { id: 'plastic', name: 'PET Plastic Bottle (4 Sizes)', materialName: '200mL ➔ 500mL ➔ 1L ➔ 20L Can', icon: '🧴', desc: 'From pocket bottle to 20L water can' },
-  { id: 'glass', name: 'Crystal Glass (4 Vessels)', materialName: 'Small Glass ➔ Big Glass ➔ Bowl ➔ Jar', icon: '🥛', desc: 'Small glass, big tumbler, bowl, and jar' },
-  { id: 'cardboard', name: 'Cardboard (4 Types)', materialName: 'Small Box ➔ Sheet ➔ 3 Layers ➔ Carton', icon: '📦', desc: 'Small box, sheets, triple-layer, and carton' }
+  { id: 'wood', name: 'Wood & Plant', icon: '🌳', desc: 'Paper, Wood Log, Plant, and Tree' },
+  { id: 'plastic', name: 'PET Plastic Bottles', icon: '🧴', desc: 'From pocket bottle to 20L water can' },
+  { id: 'glass', name: 'Crystal Glass', icon: '🥛', desc: 'Small glass, big tumbler, bowl, and jar' },
+  { id: 'cardboard', name: 'Cardboards', icon: '📦', desc: 'Small box, sheets, triple-layer, and carton' }
 ];
 
-const COMPASS_SIZE = 280;
-const COMPASS_RADIUS = 140;
+const COMPASS_SIZE = 240;
+const COMPASS_RADIUS = 120;
 
 // Exact Red North Needle deflection angles facing North-West (NW) in normal polarity, and North-East (NE) when flipped:
 // - Stage 1: Level 1 Maximum Deflection -> Red North needle faces 300° NW (-60°) / when flipped: 60° NE (+60°)
@@ -318,11 +329,13 @@ export default function Simulation({ onComplete, onNext }) {
   const centerX = workspaceSize.width ? (workspaceSize.width / 2) : 420;
 
   // Geometry calculations
-  const matWidth = getMaterialWidth(activeMaterial, thickness);
+  const matWidth = getMaterialWidth(activeMaterial, thickness, currentStage);
+  const matHeight = getMaterialHeight(activeMaterial, currentStage);
   const compassX = Math.max(500, workspaceSize.width - COMPASS_RADIUS - 35);
   const magnetX = 145;
 
   const stageDeflection = STAGE_DEFLECTIONS[currentStage] || STAGE_DEFLECTIONS[1];
+  const isTreeStage = activeMaterial === 'wood' && currentStage === 4;
 
   // Helper to trigger object slide-in and delayed needle deflection
   // The compass needle stays at its current angle and NEVER moves to North-South (0°) while another object is coming
@@ -536,10 +549,10 @@ export default function Simulation({ onComplete, onNext }) {
       boxSizing: 'border-box',
       position: 'relative'
     }}>
-      
+
       {/* Left Column: Automatic Object Selection & Testing Hub */}
       <div className="custom-scroll" style={{
-        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+        background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
         backdropFilter: 'blur(14px)',
         borderRadius: '24px',
         border: '1.5px solid #FDE68A',
@@ -552,36 +565,54 @@ export default function Simulation({ onComplete, onNext }) {
         overflowY: 'auto'
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem', height: '100%', justifyContent: 'space-between' }}>
-          
-          {/* Header */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <ShieldCheck size={28} color="#D97706" />
-                <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
-                  Material Barrier Testing
-                </h3>
-              </div>
-              <span style={{ 
-                fontSize: '0.82rem', 
-                background: isAutoPlaying ? '#FEF3C7' : '#DCFCE7', 
-                color: isAutoPlaying ? '#92400E' : '#15803D', 
-                padding: '4px 10px', 
-                borderRadius: '12px', 
-                fontWeight: 900, 
-                border: isAutoPlaying ? '1.5px solid #F59E0B' : '1.5px solid #86EFAC' 
-              }}>
-                {isAutoPlaying ? '⚡ Auto Tour Active' : '👆 Manual Mode'}
-              </span>
-            </div>
 
-            <p style={{ margin: 0, fontSize: '0.96rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
-              Watch the objects automatically advance from <strong>Type 1 to Type 4</strong>. The <strong>Red North Needle</strong> alone deflects to the specified direction upon each object's arrival, maintaining its steady position during object transitions.
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <ShieldCheck size={32} color="#D97706" />
+            <h3 style={{ margin: 0, fontSize: '1.65rem', color: '#78350F', fontWeight: 900, letterSpacing: '-0.02em' }}>
+              Material Barrier Testing
+            </h3>
+          </div>
+
+          {/* Step 1 Individual Card */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.96)',
+            border: '1.5px solid #FDE68A',
+            borderRadius: '18px',
+            padding: '0.95rem 1.15rem',
+            boxShadow: '0 3px 10px rgba(217, 119, 6, 0.05)',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.75rem'
+          }}>
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: '#FEF3C7',
+              border: '2px solid #F59E0B',
+              color: '#92400E',
+              fontSize: '0.92rem',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              marginTop: '2px'
+            }}>1</div>
+            <p style={{ margin: 0, fontSize: '1.05rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
+              <strong>Select or Auto-Play:</strong> Objects automatically advance from <strong>Type 1 to Type 4</strong> (or choose any material card below to inspect individual sizes/shapes).
             </p>
           </div>
 
-          {/* Material Barrier Cards List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', flex: 1, justifyContent: 'space-around', margin: '0.25rem 0' }}>
+          {/* Standalone Material Barrier Cards (Full Width 2x2 Grid, No Wrapper Container) */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '0.65rem',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}>
             {MATERIALS.map((mat, idx) => {
               const isSelected = selectedMaterialIndex === idx;
               const isObserved = observations[mat.id] === 'deflects';
@@ -594,14 +625,17 @@ export default function Simulation({ onComplete, onNext }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '1rem 1.15rem',
-                    borderRadius: '18px',
+                    padding: '0.8rem 0.95rem',
+                    borderRadius: '16px',
                     border: isSelected ? '2.5px solid #F59E0B' : '1.5px solid #FDE68A',
-                    background: isSelected ? '#FEF3C7' : '#FFFFFF',
+                    background: isSelected ? 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' : '#FFFFFF',
                     cursor: 'pointer',
-                    boxShadow: isSelected ? '0 6px 18px rgba(245, 158, 11, 0.22)' : '0 2px 8px rgba(217, 119, 6, 0.04)',
-                    transition: 'all 0.25s ease',
-                    textAlign: 'left'
+                    boxShadow: isSelected ? '0 4px 14px rgba(245, 158, 11, 0.22)' : '0 2px 8px rgba(217, 119, 6, 0.05)',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'left',
+                    gap: '0.6rem',
+                    boxSizing: 'border-box',
+                    width: '100%'
                   }}
                   onMouseEnter={(e) => {
                     if (!isSelected) {
@@ -616,134 +650,150 @@ export default function Simulation({ onComplete, onNext }) {
                     }
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                     <div style={{
-                      width: '46px',
-                      height: '46px',
-                      borderRadius: '14px',
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '12px',
                       background: isSelected ? '#FDE68A' : '#FEF3C7',
-                      border: isSelected ? '2px solid #F59E0B' : '1.5px solid #FDE68A',
+                      border: isSelected ? '1.5px solid #F59E0B' : '1px solid #FDE68A',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.7rem',
+                      fontSize: '1.45rem',
                       flexShrink: 0
                     }}>
                       {mat.icon}
                     </div>
-                    <div>
-                      <div style={{ fontWeight: 900, fontSize: '1.08rem', color: isSelected ? '#92400E' : '#064E3B' }}>
-                        {mat.name}
-                      </div>
-                      <div style={{ fontSize: '0.86rem', color: '#64748B', fontWeight: 700, marginTop: '2px' }}>
-                        {mat.materialName}
-                      </div>
+
+                    <div style={{ fontWeight: 900, fontSize: '0.96rem', color: isSelected ? '#92400E' : '#78350F', lineHeight: 1.25 }}>
+                      {mat.name}
                     </div>
                   </div>
 
                   {isObserved ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', fontWeight: 900, color: '#15803D', background: '#DCFCE7', padding: '6px 12px', borderRadius: '12px', border: '1.5px solid #86EFAC' }}>
-                      <CheckCircle2 size={15} color="#16A34A" /> Tested
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.72rem', fontWeight: 900, color: '#15803D', background: '#DCFCE7', padding: '3px 7px', borderRadius: '10px', border: '1px solid #86EFAC', flexShrink: 0 }}>
+                      <CheckCircle2 size={12} color="#16A34A" />
                     </span>
                   ) : isSelected ? (
-                    <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#92400E', background: '#FDE68A', padding: '6px 12px', borderRadius: '12px', border: '1.5px solid #F59E0B' }}>
-                      Testing (1-4)
-                    </span>
-                  ) : (
-                    <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#94A3B8', padding: '5px 10px' }}>
-                      Ready
-                    </span>
-                  )}
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B', flexShrink: 0, boxShadow: '0 0 6px #F59E0B' }} />
+                  ) : null}
                 </button>
               );
             })}
           </div>
 
-          {/* Bottom Summary & Proceed Action when all tested */}
-          {allCompleted && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.35rem' }}>
-              {/* Highlighted Inline Scientific Takeaway Banner */}
-              <div style={{
-                background: 'linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%)',
-                border: '2px solid #10B981',
-                borderRadius: '16px',
-                padding: '0.85rem 1rem',
-                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.12)'
-              }}>
-                <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#047857', textTransform: 'uppercase', marginBottom: '3px' }}>
-                  Scientific Conclusion 💡
-                </div>
-                <p style={{
-                  margin: 0,
-                  fontSize: '0.9rem',
-                  fontWeight: 800,
-                  color: '#065F46',
-                  lineHeight: 1.4
-                }}>
-                  Magnetic force easily penetrates through non-magnetic objects: Wood, Plastic, Glass, and Cardboard!
-                </p>
-              </div>
+          {/* Step 2 Individual Card */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.96)',
+            border: '1.5px solid #FDE68A',
+            borderRadius: '18px',
+            padding: '0.95rem 1.15rem',
+            boxShadow: '0 3px 10px rgba(217, 119, 6, 0.05)',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.75rem'
+          }}>
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: '#FEF3C7',
+              border: '2px solid #F59E0B',
+              color: '#92400E',
+              fontSize: '0.92rem',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              marginTop: '2px'
+            }}>2</div>
+            <p style={{ margin: 0, fontSize: '1.05rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
+              <strong>Observe Deflection:</strong> Watch the <strong>Red North Needle</strong> deflect as each barrier arrives, proving magnetic fields easily pass through non-magnetic matter.
+            </p>
+          </div>
 
-              <button
-                onClick={onNext}
-                className="gold-glow-btn"
-                style={{
-                  width: '100%',
-                  padding: '0.95rem 1.4rem',
-                  borderRadius: '16px',
-                  fontSize: '1.05rem',
-                  fontWeight: 900,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <Sparkles size={18} /> Proceed to Concept Check <ArrowRight size={18} />
-              </button>
-            </div>
-          )}
+          {/* Step 3 Individual Card */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.96)',
+            border: '1.5px solid #FDE68A',
+            borderRadius: '18px',
+            padding: '0.95rem 1.15rem',
+            boxShadow: '0 3px 10px rgba(217, 119, 6, 0.05)',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.75rem'
+          }}>
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: '#FEF3C7',
+              border: '2px solid #F59E0B',
+              color: '#92400E',
+              fontSize: '0.92rem',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              marginTop: '2px'
+            }}>3</div>
+            <p style={{ margin: 0, fontSize: '1.05rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
+              <strong>Reverse Magnet Polarity:</strong> Click the <strong>Bar Magnet</strong> or the <strong>Flip button</strong> to switch between [N][S] and [S][N], reversing the needle's deflection direction.
+            </p>
+          </div>
+
+          {/* Bottom Summary & Proceed Action - Always Visible from Starting */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.35rem' }}>
+            <button
+              onClick={onNext}
+              className="gold-glow-btn"
+              style={{
+                width: '100%',
+                padding: '0.95rem 1.4rem',
+                borderRadius: '16px',
+                fontSize: '1.05rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Sparkles size={18} /> Proceed to Concept Check <ArrowRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Right Column: Ocean Themed Interactive Stage */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.65rem', height: '100%', minHeight: 0 }}>
-        
+
         {/* Top Header Stage Bar */}
-        <div style={{ 
-          padding: '0.5rem 0.9rem', 
-          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
-          border: '1.5px solid #FDE68A', 
-          borderRadius: '16px', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
+        <div style={{
+          padding: '0.5rem 0.9rem',
+          background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+          border: '1.5px solid #FDE68A',
+          borderRadius: '16px',
+          display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
           boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           gap: '0.5rem',
           flexWrap: 'wrap'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.2rem' }}>{activeMaterialObj.icon}</span>
-            <span style={{ fontWeight: 800, color: '#064E3B', fontSize: '0.88rem' }}>
-              Barrier: <strong>{activeMaterialObj.name}</strong>
-            </span>
-          </div>
-
-          {/* Dynamic 4-Part Evolution / Size Switcher for Active Material */}
+          {/* Dynamic 4-Part Evolution / Size Switcher for Active Material (No Outer Enclosing Box) */}
           {STAGE_CONFIG[activeMaterial] && (
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem',
-              background: '#FFFFFF',
-              padding: '3px 8px',
-              borderRadius: '20px',
-              border: '1.5px solid #FDE68A',
-              boxShadow: '0 2px 8px rgba(217, 119, 6, 0.08)'
+              gap: '0.35rem'
             }}>
-              <span style={{ fontSize: '0.76rem', fontWeight: 900, color: '#92400E', padding: '0 4px' }}>
+              <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#065F46', marginRight: '2px' }}>
                 {STAGE_CONFIG[activeMaterial].categoryLabel}
               </span>
               {STAGE_CONFIG[activeMaterial].stages.map(s => {
@@ -754,19 +804,31 @@ export default function Simulation({ onComplete, onNext }) {
                     onClick={() => handleSelectStage(s.stage)}
                     title={s.fullName}
                     style={{
-                      padding: '4px 10px',
-                      fontSize: '0.78rem',
+                      padding: '5px 12px',
+                      fontSize: '0.82rem',
                       fontWeight: 900,
                       borderRadius: '14px',
-                      border: isCurrent ? '1.5px solid #F59E0B' : '1px solid #E2E8F0',
-                      background: isCurrent ? 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' : '#F8FAFC',
-                      color: isCurrent ? '#92400E' : '#475569',
+                      border: isCurrent ? '1.5px solid #D97706' : '1.5px solid #A7F3D0',
+                      background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
+                      color: isCurrent ? '#FFFFFF' : '#065F46',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '4px',
-                      boxShadow: isCurrent ? '0 2px 6px rgba(245, 158, 11, 0.25)' : 'none',
+                      gap: '5px',
+                      boxShadow: isCurrent ? '0 3px 10px rgba(217, 119, 6, 0.35)' : '0 1px 4px rgba(0,0,0,0.04)',
                       transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isCurrent) {
+                        e.currentTarget.style.borderColor = '#10B981';
+                        e.currentTarget.style.background = '#ECFDF5';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isCurrent) {
+                        e.currentTarget.style.borderColor = '#A7F3D0';
+                        e.currentTarget.style.background = '#FFFFFF';
+                      }
                     }}
                   >
                     <span>{s.icon}</span>
@@ -781,91 +843,78 @@ export default function Simulation({ onComplete, onNext }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
             <button
               onClick={toggleAutoPlay}
-              className={isAutoPlaying ? "gold-glow-btn" : ""}
               title={isAutoPlaying ? "Pause Auto-Tour (1 to 4)" : "Start Auto-Tour (1 to 4)"}
               style={{
-                padding: '0.42rem 0.85rem',
-                fontSize: '0.8rem',
+                padding: '0.45rem 0.95rem',
+                fontSize: '0.82rem',
                 fontWeight: 900,
                 borderRadius: '16px',
-                border: isAutoPlaying ? 'none' : '1.5px solid #F59E0B',
-                background: isAutoPlaying ? undefined : '#FFFBEB',
-                color: isAutoPlaying ? '#FFFFFF' : '#92400E',
+                border: isAutoPlaying ? '1.5px solid #D97706' : '1.5px solid #A7F3D0',
+                background: isAutoPlaying ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
+                color: isAutoPlaying ? '#FFFFFF' : '#065F46',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem',
+                gap: '0.4rem',
+                boxShadow: isAutoPlaying ? '0 4px 14px rgba(217, 119, 6, 0.35)' : '0 1px 4px rgba(0,0,0,0.04)',
                 transition: 'all 0.2s ease'
               }}
-            >
-              {isAutoPlaying ? <Pause size={13} /> : <Play size={13} />}
-              {isAutoPlaying ? 'Pause Demo' : 'Play Auto (1➔4)'}
-            </button>
-
-            <button
-              onClick={handleReplayDemo}
-              title="Replay sequence from Type 1 to Type 4"
-              style={{
-                padding: '0.42rem 0.75rem',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                borderRadius: '16px',
-                border: '1.5px solid #CBD5E1',
-                background: '#FFFFFF',
-                color: '#334155',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem'
+              onMouseEnter={(e) => {
+                if (!isAutoPlaying) {
+                  e.currentTarget.style.borderColor = '#10B981';
+                  e.currentTarget.style.background = '#ECFDF5';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isAutoPlaying) {
+                  e.currentTarget.style.borderColor = '#A7F3D0';
+                  e.currentTarget.style.background = '#FFFFFF';
+                }
               }}
             >
-              <RefreshCw size={13} /> Replay
+              {isAutoPlaying ? <Pause size={14} /> : <Play size={14} />}
+              {isAutoPlaying ? 'Pause Demo' : 'Play Auto (1➔4)'}
             </button>
 
             <button
               onClick={flipMagnet}
               style={{
-                padding: '0.42rem 0.85rem',
-                fontSize: '0.8rem',
+                padding: '0.45rem 0.95rem',
+                fontSize: '0.82rem',
                 fontWeight: 900,
                 borderRadius: '16px',
-                border: isFlipped ? '1.5px solid #93C5FD' : '1.5px solid #FDE68A',
-                background: isFlipped ? '#EFF6FF' : '#FEF3C7',
-                color: isFlipped ? '#1D4ED8' : '#92400E',
+                border: isFlipped ? '1.5px solid #1D4ED8' : '1.5px solid #A7F3D0',
+                background: isFlipped ? 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' : '#FFFFFF',
+                color: isFlipped ? '#FFFFFF' : '#065F46',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem',
+                gap: '0.4rem',
+                boxShadow: isFlipped ? '0 4px 14px rgba(29, 78, 216, 0.35)' : '0 1px 4px rgba(0,0,0,0.04)',
                 transition: 'all 0.2s ease'
               }}
-            >
-              <RotateCcw size={13} /> {isFlipped ? 'Flip: [S][N] (NE)' : 'Flip: [N][S] (NW)'}
-            </button>
-            <button
-              onClick={handleNextObject}
-              style={{
-                padding: '0.4rem 0.85rem',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                borderRadius: '16px',
-                border: '1.5px solid #A7F3D0',
-                background: '#ECFDF5',
-                color: '#065F46',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem'
+              onMouseEnter={(e) => {
+                if (!isFlipped) {
+                  e.currentTarget.style.borderColor = '#10B981';
+                  e.currentTarget.style.background = '#ECFDF5';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isFlipped) {
+                  e.currentTarget.style.borderColor = '#A7F3D0';
+                  e.currentTarget.style.background = '#FFFFFF';
+                }
               }}
             >
-              Next <ChevronRight size={14} />
+              <RotateCcw size={14} /> {isFlipped ? 'Flip: [S][N] (NE)' : 'Flip: [N][S] (NW)'}
             </button>
           </div>
         </div>
 
         {/* Deep Ocean Interactive Workspace */}
-        <div 
-          id="simulation-workspace" 
-          ref={workspaceContainerRef} 
+        <div
+          id="simulation-workspace"
+          ref={workspaceContainerRef}
           style={{
             position: 'relative',
             flex: 1,
@@ -877,42 +926,6 @@ export default function Simulation({ onComplete, onNext }) {
             boxShadow: 'inset 0 0 70px rgba(0,0,0,0.5)'
           }}
         >
-          {/* Compass Live Bearing Tag - Focusing Strictly on Red North Needle */}
-          <div style={{
-            position: 'absolute',
-            top: '1rem',
-            left: '1rem',
-            background: 'rgba(255, 253, 245, 0.95)',
-            border: '1.5px solid #EADBB6',
-            borderRadius: '16px',
-            padding: '0.4rem 0.95rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
-            zIndex: 10
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#78350F', fontSize: '0.82rem', fontWeight: 900 }}>
-              <CompassIcon size={16} color="#D97706" />
-              <span>
-                RED NORTH NEEDLE: <strong style={{ color: '#C2410C' }}>{Math.round((needleRotation % 360 + 360) % 360)}°</strong> {getBearingName(needleRotation)}
-              </span>
-            </div>
-            <span style={{
-              background: isObjectArrived 
-                ? 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' 
-                : '#E2E8F0',
-              color: isObjectArrived ? '#92400E' : '#475569',
-              padding: '2px 8px',
-              borderRadius: '10px',
-              fontSize: '0.75rem',
-              fontWeight: 900,
-              border: isObjectArrived ? '1px solid #F59E0B' : '1px solid #CBD5E1'
-            }}>
-              {isObjectArrived ? stageDeflection.label : 'Object Transitioning...'}
-            </span>
-          </div>
-
           {/* Fullscreen Button */}
           <button
             onClick={toggleFullscreen}
@@ -943,21 +956,9 @@ export default function Simulation({ onComplete, onNext }) {
             <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
           </button>
 
-          {/* Horizontal Axis Guide Line */}
-          <div style={{
-            position: 'absolute',
-            top: `${centerY}px`,
-            left: '5%',
-            right: '5%',
-            height: '1px',
-            borderTop: '1px dashed rgba(56, 189, 248, 0.25)',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
-
           {/* Draggable / Fixed Objects Stage */}
           <div style={{ position: 'absolute', inset: 0 }}>
-            
+
             {/* Center Material Barrier Visual - Automatically Slides in from Left Container */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -968,8 +969,10 @@ export default function Simulation({ onComplete, onNext }) {
                 transition={{ type: 'spring', damping: 22, stiffness: 200 }}
                 style={{
                   position: 'absolute',
-                  left: centerX - (matWidth / 2),
-                  top: centerY - (BARRIER_HEIGHT / 2),
+                  left: isTreeStage ? 0 : centerX - (matWidth / 2),
+                  top: isTreeStage ? 0 : centerY - (matHeight / 2),
+                  width: isTreeStage ? '100%' : undefined,
+                  height: isTreeStage ? '100%' : undefined,
                   zIndex: 15,
                   pointerEvents: 'none'
                 }}
@@ -982,8 +985,11 @@ export default function Simulation({ onComplete, onNext }) {
             <div 
               style={{ 
                 position: 'absolute', 
-                left: compassX - COMPASS_RADIUS, 
-                top: centerY - COMPASS_RADIUS,
+                left: isTreeStage ? compassX - COMPASS_RADIUS - 10 : compassX - COMPASS_RADIUS, 
+                top: isTreeStage ? centerY + 175 - COMPASS_RADIUS : centerY - COMPASS_RADIUS,
+                transform: isTreeStage ? 'scale(0.55)' : 'scale(1)',
+                transformOrigin: 'center center',
+                transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 zIndex: 20, 
                 pointerEvents: 'none',
                 userSelect: 'none'
@@ -996,8 +1002,11 @@ export default function Simulation({ onComplete, onNext }) {
             <div 
               style={{ 
                 position: 'absolute', 
-                left: magnetX - 105, 
-                top: centerY - 31,
+                left: isTreeStage ? magnetX - 60 : magnetX - 90, 
+                top: isTreeStage ? centerY + 175 - 27 : centerY - 27,
+                transform: isTreeStage ? 'scale(0.55)' : 'scale(1)',
+                transformOrigin: 'center center',
+                transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 zIndex: 25, 
                 cursor: 'pointer',
                 userSelect: 'none'
@@ -1005,88 +1014,10 @@ export default function Simulation({ onComplete, onNext }) {
               onClick={flipMagnet}
               title={`Click to flip magnet polarity (${isFlipped ? '[S][N] ➔ [N][S]' : '[N][S] ➔ [S][N]'})`}
             >
-              {/* Magnet Polarity Status Badge */}
-              <div style={{
-                position: 'absolute',
-                top: '-25px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: isFlipped 
-                  ? 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)' 
-                  : 'linear-gradient(135deg, #991B1B 0%, #DC2626 100%)',
-                color: '#FFFFFF',
-                padding: '2px 10px',
-                borderRadius: '12px',
-                fontSize: '11px',
-                fontWeight: 900,
-                whiteSpace: 'nowrap',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                border: '1.5px solid rgba(255,255,255,0.4)',
-                pointerEvents: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}>
-                <span>{isFlipped ? '🧲 [S][N] ➔ Needle: NE' : '🧲 [N][S] ➔ Needle: NW'}</span>
-              </div>
               <MagnetVisual isFlipped={isFlipped} isTesting={true} />
             </div>
 
-            {/* Dynamic Magnetic Penetration Beam through barrier - illuminates when object is in place */}
-            <motion.div
-              animate={{ 
-                opacity: isObjectArrived ? [0.45, 0.9, 0.45] : 0.25,
-                scaleY: isObjectArrived ? [1, 1.15, 1] : 0.8
-              }}
-              transition={{ repeat: Infinity, duration: 1.2 }}
-              style={{
-                position: 'absolute',
-                left: magnetX + 105,
-                top: centerY - 20,
-                width: Math.max(0, compassX - COMPASS_RADIUS - (magnetX + 105)),
-                height: 40,
-                background: isFlipped 
-                  ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.45) 0%, rgba(56, 189, 248, 0.55) 50%, rgba(239, 68, 68, 0.45) 100%)'
-                  : 'linear-gradient(90deg, rgba(239, 68, 68, 0.45) 0%, rgba(56, 189, 248, 0.55) 50%, rgba(59, 130, 246, 0.45) 100%)',
-                borderRadius: '20px',
-                filter: 'blur(8px)',
-                pointerEvents: 'none',
-                zIndex: 12
-              }}
-            />
-
           </div>
-
-          {/* In-situ Feedback Alert */}
-          <AnimatePresence>
-            {feedback && (
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                style={{
-                  position: 'absolute',
-                  bottom: '16px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: '#FFFFFF',
-                  color: feedback.type === 'success' ? '#065F46' : '#1E3A8A',
-                  padding: '0.6rem 1.4rem',
-                  borderRadius: '25px',
-                  border: `2px solid ${feedback.type === 'success' ? '#10B981' : '#3B82F6'}`,
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                  fontWeight: 800,
-                  fontSize: '0.85rem',
-                  zIndex: 30,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                {feedback.text}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </div>
 

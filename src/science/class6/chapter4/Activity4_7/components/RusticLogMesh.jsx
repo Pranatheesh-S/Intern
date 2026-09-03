@@ -6,49 +6,60 @@ import * as THREE from 'three';
  * Features:
  * - Cylindrical trunk body with quad-like subdivided vertex grid (160 x 120)
  * - Cylindrical UV unwrapping aligned with longitudinal grain flow and organic surface waves & knot swirls
- * - Weathered dry cracked wood texture applied seamlessly to the curved body
- * - Separate solid neutral placeholder material for top & bottom flat cut ends
+ * - Photorealistic weathered bark texture applied seamlessly to the curved body
+ * - Authentic tree growth rings with heartwood, sapwood, radial cracks, and saw marks on cut ends
  * - Non-blocking asynchronous texture loading with instant procedural fallback
  */
 
-// ─── 1. Instant Fallback Weathered Wood Texture Generator ───
+// ─── 1. Instant Fallback Weathered Bark Texture Generator ───
 function generateWeatheredWoodFallbackTexture() {
   const canvas = document.createElement('canvas');
-  canvas.width = 512;
+  canvas.width = 1024;
   canvas.height = 1024;
   const ctx = canvas.getContext('2d');
 
-  // Weathered gray-brown wood base
-  const grad = ctx.createLinearGradient(0, 0, 512, 0);
-  grad.addColorStop(0.0, '#786652');
-  grad.addColorStop(0.3, '#968169');
-  grad.addColorStop(0.7, '#ab967d');
-  grad.addColorStop(1.0, '#786652');
+  // Deep rich earth-toned wood base
+  const grad = ctx.createLinearGradient(0, 0, 1024, 0);
+  grad.addColorStop(0.0, '#3e2d21');
+  grad.addColorStop(0.3, '#513b2b');
+  grad.addColorStop(0.5, '#654936');
+  grad.addColorStop(0.75, '#513b2b');
+  grad.addColorStop(1.0, '#3e2d21');
   ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 512, 1024);
+  ctx.fillRect(0, 0, 1024, 1024);
 
-  // Longitudinal grain streaks & cracks
-  for (let x = 0; x < 512; x += 3) {
-    const tone = Math.random() * 0.4 + 0.6;
-    ctx.strokeStyle = `rgba(${Math.floor(70 * tone)}, ${Math.floor(55 * tone)}, ${Math.floor(40 * tone)}, 0.65)`;
-    ctx.lineWidth = Math.random() * 2.5 + 1;
+  // Deep longitudinal bark grain furrows & ridges
+  for (let x = 0; x < 1024; x += 3) {
+    const tone = Math.random() * 0.45 + 0.55;
+    ctx.strokeStyle = `rgba(${Math.floor(55 * tone)}, ${Math.floor(38 * tone)}, ${Math.floor(24 * tone)}, 0.75)`;
+    ctx.lineWidth = Math.random() * 3.5 + 1.2;
     ctx.beginPath();
     ctx.moveTo(x, 0);
-    ctx.lineTo(x + (Math.random() - 0.5) * 8, 1024);
+    ctx.bezierCurveTo(
+      x + (Math.random() - 0.5) * 16, 340,
+      x + (Math.random() - 0.5) * 16, 680,
+      x, 1024
+    );
     ctx.stroke();
   }
 
-  // Weathered fissures
-  for (let i = 0; i < 30; i++) {
-    const x = Math.random() * 512;
-    const y = Math.random() * 700;
-    const len = Math.random() * 300 + 100;
-    ctx.strokeStyle = 'rgba(40, 30, 20, 0.85)';
-    ctx.lineWidth = Math.random() * 3 + 1.5;
+  // Weathered fissures & deep bark cracks
+  for (let i = 0; i < 45; i++) {
+    const x = Math.random() * 1024;
+    const y = Math.random() * 750;
+    const len = Math.random() * 350 + 120;
+    ctx.strokeStyle = 'rgba(28, 18, 11, 0.9)';
+    ctx.lineWidth = Math.random() * 4 + 2;
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.lineTo(x + (Math.random() - 0.5) * 10, y + len);
+    ctx.lineTo(x + (Math.random() - 0.5) * 12, y + len);
     ctx.stroke();
+  }
+
+  // Micro lichen & dry moss speckling
+  for (let i = 0; i < 500; i++) {
+    ctx.fillStyle = Math.random() > 0.5 ? 'rgba(100, 110, 80, 0.25)' : 'rgba(140, 105, 70, 0.3)';
+    ctx.fillRect(Math.random() * 1024, Math.random() * 1024, 3, 5);
   }
 
   const tex = new THREE.CanvasTexture(canvas);
@@ -58,7 +69,97 @@ function generateWeatheredWoodFallbackTexture() {
   return tex;
 }
 
-// ─── 2. Generate High-Precision Displaced Trunk Cylinder Geometry with Flow-Aligned UVs ───
+// ─── 2. Authentic Cut End Growth Rings Texture Generator ───
+function generateRealisticCutEndTexture() {
+  const size = 1024;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.47;
+
+  // Outer dark rough bark ring
+  ctx.fillStyle = '#2b1d14';
+  ctx.fillRect(0, 0, size, size);
+
+  // Radial wood gradient (warm dark heartwood core -> amber honey -> light sapwood)
+  const grad = ctx.createRadialGradient(cx, cy, 6, cx, cy, radius);
+  grad.addColorStop(0.0, '#5a2d0c');  // Deep amber heartwood pith
+  grad.addColorStop(0.25, '#7c3f14'); // Rich heartwood
+  grad.addColorStop(0.55, '#9a531e'); // Golden honey wood
+  grad.addColorStop(0.78, '#b86c2e'); // Outer heartwood
+  grad.addColorStop(0.90, '#d48d48'); // Light sapwood
+  grad.addColorStop(0.96, '#e0a362'); // Outer sapwood band
+  grad.addColorStop(0.985, '#452b1a'); // Inner bark layer (cambium)
+  grad.addColorStop(1.0, '#24160d');  // Outer rough bark
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // 60+ Fine Concentric Annual Growth Rings with natural organic wobble
+  for (let r = 8; r < radius - 6; r += 4.2) {
+    const isMajor = Math.floor(r / 20) % 2 === 0;
+    const alpha = isMajor ? 0.65 : 0.35;
+    ctx.strokeStyle = `rgba(75, 35, 12, ${alpha})`;
+    ctx.lineWidth = isMajor ? 2.2 : 1.1;
+
+    ctx.beginPath();
+    const pts = 80;
+    for (let p = 0; p <= pts; p++) {
+      const angle = (p / pts) * Math.PI * 2;
+      const wobble = Math.sin(angle * 5 + r * 0.4) * 2.5 + Math.cos(angle * 3) * 1.8;
+      const curR = r + wobble;
+      const x = cx + Math.cos(angle) * curR;
+      const y = cy + Math.sin(angle) * curR;
+      if (p === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  // Radiating Split Checks / Cracks
+  const crackAngles = [0.28, 0.75, 1.35, 1.95, 2.7, 3.4, 4.1, 4.85, 5.5, 6.0];
+  crackAngles.forEach((ang) => {
+    ctx.strokeStyle = 'rgba(30, 15, 6, 0.88)';
+    ctx.lineWidth = 2.0 + Math.random() * 1.8;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    let curR = 0;
+    const maxR = radius * (0.68 + Math.random() * 0.28);
+    while (curR < maxR) {
+      curR += 12;
+      const jitter = (Math.random() - 0.5) * 0.08;
+      const curAng = ang + jitter;
+      ctx.lineTo(cx + Math.cos(curAng) * curR, cy + Math.sin(curAng) * curR);
+    }
+    ctx.stroke();
+  });
+
+  // Saw blade curved micro-grooves
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.lineWidth = 1.0;
+  for (let y = -radius; y <= radius; y += 14) {
+    ctx.beginPath();
+    ctx.arc(cx, cy + y, radius * 1.2, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+  }
+
+  // Center pith core
+  ctx.beginPath();
+  ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+  ctx.fillStyle = '#3a1b08';
+  ctx.fill();
+
+  const tex = new THREE.CanvasTexture(canvas);
+  return tex;
+}
+
+// ─── 3. Generate High-Precision Displaced Trunk Cylinder Geometry with Flow-Aligned UVs ───
 function createDisplacedLogTrunkGeometry(length = 2.4, rBase = 0.54, rTop = 0.49, radSegs = 160, heightSegs = 120) {
   const geom = new THREE.BufferGeometry();
   const positions = [];
@@ -164,7 +265,7 @@ function createDisplacedLogTrunkGeometry(length = 2.4, rBase = 0.54, rTop = 0.49
   return geom;
 }
 
-// ─── 3. Generate High-Precision Flat Cut End Geometry with Growth Rings & Radial Fracture Cracks ───
+// ─── 4. Generate High-Precision Flat Cut End Geometry with Growth Rings & Radial Fracture Cracks ───
 function createDisplacedCutEndGeometry(radius = 0.54, isTop = false, ringSegs = 56, sectorSegs = 160) {
   const geom = new THREE.BufferGeometry();
   const positions = [];
@@ -251,13 +352,16 @@ function createDisplacedCutEndGeometry(radius = 0.54, isTop = false, ringSegs = 
   return geom;
 }
 
-// ─── 4. Main Rustic Log 3D Model Component ───
+// ─── Master Rustic Log Mesh Component ───
 export default function RusticLogMesh({ thickness = 1, viewMode = 'textured' }) {
-  const groupRef = useRef();
+  const meshRef = useRef();
 
-  // Instant fallback texture + async high-res image loader
-  const [barkTexture, setBarkTexture] = useState(() => generateWeatheredWoodFallbackTexture());
+  // Instant procedural fallback textures for high reliability
+  const fallbackBarkTex = useMemo(() => generateWeatheredWoodFallbackTexture(), []);
+  const cutEndTex = useMemo(() => generateRealisticCutEndTexture(), []);
+  const [barkTexture, setBarkTexture] = useState(fallbackBarkTex);
 
+  // Asynchronously attempt to load high-res disk texture if available
   useEffect(() => {
     const loader = new THREE.TextureLoader();
     loader.load(
@@ -266,35 +370,33 @@ export default function RusticLogMesh({ thickness = 1, viewMode = 'textured' }) 
         loadedTex.wrapS = THREE.RepeatWrapping;
         loadedTex.wrapT = THREE.RepeatWrapping;
         loadedTex.repeat.set(2.0, 1.0);
-        loadedTex.needsUpdate = true;
         setBarkTexture(loadedTex);
       },
       undefined,
-      (err) => {
-        console.warn('Texture load fallback:', err);
+      () => {
+        // Fallback texture remains active gracefully
       }
     );
   }, []);
 
-  // Procedural geometries
-  const trunkGeom = useMemo(() => createDisplacedLogTrunkGeometry(2.4, 0.54, 0.49, 160, 120), []);
-  const baseCutGeom = useMemo(() => createDisplacedCutEndGeometry(0.54, false, 56, 160), []);
-  const topCutGeom = useMemo(() => createDisplacedCutEndGeometry(0.49, true, 56, 160), []);
+  // Geometries
+  const trunkGeom = useMemo(() => createDisplacedLogTrunkGeometry(2.4, 0.54, 0.49), []);
+  const baseCutGeom = useMemo(() => createDisplacedCutEndGeometry(0.54, false), []);
+  const topCutGeom = useMemo(() => createDisplacedCutEndGeometry(0.49, true), []);
 
   const scale = 1 + thickness * 0.12;
 
-  // Visual modes: 'textured' (Weathered Wood Bark), 'clay' (Gray Clay Sculpt), 'quads' (Quad Topology)
   const isClay = viewMode === 'clay';
   const isQuads = viewMode === 'quads';
 
   return (
     <group
-      ref={groupRef}
-      position={[0, -0.05, 0]}
+      ref={meshRef}
+      position={[0, 0, 0]}
       scale={[scale, scale, scale]}
-      rotation={[0.12, -0.68, Math.PI / 2]} // Horizontal orientation showcasing cut ends and curved bark body
+      rotation={[0, -0.4, 0]}
     >
-      {/* ─── 1. Curved Cylindrical Body: Weathered Wood Texture Map along Longitudinal Grain Flow ─── */}
+      {/* ─── 1. Main Curved Displaced Trunk Body ─── */}
       <mesh
         geometry={trunkGeom}
         castShadow
@@ -312,15 +414,15 @@ export default function RusticLogMesh({ thickness = 1, viewMode = 'textured' }) 
           <meshStandardMaterial
             map={barkTexture}
             bumpMap={barkTexture}
-            bumpScale={0.048}
-            roughness={0.84}
+            bumpScale={0.055}
+            roughness={0.86}
             metalness={0.01}
             color="#ffffff"
           />
         )}
       </mesh>
 
-      {/* ─── 2. Base Flat Cut End: Separate Solid Neutral Placeholder Material ─── */}
+      {/* ─── 2. Base Flat Cut End: Growth Rings Material ─── */}
       <mesh
         geometry={baseCutGeom}
         position={[0, -1.2, 0]}
@@ -328,15 +430,26 @@ export default function RusticLogMesh({ thickness = 1, viewMode = 'textured' }) 
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial
-          color={isClay ? "#cbd5e1" : "#d6d3d1"} // Clean solid neutral placeholder tone
-          roughness={0.65}
-          metalness={0.02}
-          flatShading={false}
-        />
+        {isClay ? (
+          <meshStandardMaterial
+            color="#cbd5e1"
+            roughness={0.65}
+            metalness={0.02}
+            flatShading={false}
+          />
+        ) : (
+          <meshStandardMaterial
+            map={cutEndTex}
+            bumpMap={cutEndTex}
+            bumpScale={0.035}
+            roughness={0.78}
+            metalness={0.02}
+            color="#ffffff"
+          />
+        )}
       </mesh>
 
-      {/* ─── 3. Top Flat Cut End: Separate Solid Neutral Placeholder Material ─── */}
+      {/* ─── 3. Top Flat Cut End: Growth Rings Material ─── */}
       <mesh
         geometry={topCutGeom}
         position={[0, 1.2, 0]}
@@ -344,12 +457,23 @@ export default function RusticLogMesh({ thickness = 1, viewMode = 'textured' }) 
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial
-          color={isClay ? "#cbd5e1" : "#d6d3d1"} // Clean solid neutral placeholder tone
-          roughness={0.65}
-          metalness={0.02}
-          flatShading={false}
-        />
+        {isClay ? (
+          <meshStandardMaterial
+            color="#cbd5e1"
+            roughness={0.65}
+            metalness={0.02}
+            flatShading={false}
+          />
+        ) : (
+          <meshStandardMaterial
+            map={cutEndTex}
+            bumpMap={cutEndTex}
+            bumpScale={0.035}
+            roughness={0.78}
+            metalness={0.02}
+            color="#ffffff"
+          />
+        )}
       </mesh>
 
       {/* ─── 4. Quad-Topology Wireframe Overlay (When in Quads Mode) ─── */}

@@ -1,45 +1,54 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import ancientHeroImage from '../../../../../../assets/ancient-materials-hero.jpg';
 
 export default function ChapterIntroSpread({ onContinue, onBack }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [direction, setDirection] = useState(1);
+  const [animating, setAnimating] = useState(false);
+  const [page1Classes, setPage1Classes] = useState('page');
+  const [page2Classes, setPage2Classes] = useState('page hidden-page');
+  const [page1ZIndex, setPage1ZIndex] = useState('');
+  const [page2ZIndex, setPage2ZIndex] = useState('');
 
-  const handleNext = () => {
-    if (currentPage < 2) {
-      setDirection(1);
-      setCurrentPage(2);
+  const goToPage = (target) => {
+    if (animating || target === currentPage) return;
+    setAnimating(true);
+
+    const forward = target > currentPage;
+
+    const outgoingClasses = `page ${forward ? 'flip-out' : 'flip-out-rev'}`;
+    const incomingClasses = `page ${forward ? 'flip-in' : 'flip-in-rev'}`;
+
+    if (currentPage === 1) {
+      setPage1Classes(outgoingClasses);
+      setPage1ZIndex(1);
+      setPage2Classes(incomingClasses);
+      setPage2ZIndex(2);
+    } else {
+      setPage2Classes(outgoingClasses);
+      setPage2ZIndex(1);
+      setPage1Classes(incomingClasses);
+      setPage1ZIndex(2);
     }
-  };
 
-  const handlePrev = () => {
-    if (currentPage > 1) {
-      setDirection(-1);
-      setCurrentPage(1);
-    }
-  };
-
-  const pageVariants = {
-    enter: (dir) => ({
-      rotateY: dir > 0 ? 80 : -80,
-      opacity: 0,
-      scale: 0.96,
-    }),
-    center: {
-      rotateY: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (dir) => ({
-      rotateY: dir > 0 ? -80 : 80,
-      opacity: 0,
-      scale: 0.96,
-    })
+    setTimeout(() => {
+      if (target === 1) {
+        setPage1Classes('page');
+        setPage1ZIndex('');
+        setPage2Classes('page hidden-page');
+        setPage2ZIndex('');
+      } else {
+        setPage1Classes('page hidden-page');
+        setPage1ZIndex('');
+        setPage2Classes('page');
+        setPage2ZIndex('');
+      }
+      setCurrentPage(target);
+      setAnimating(false);
+    }, 520);
   };
 
   return (
-    <div className="slogan-stage">
+    <div className="chapter-intro-wrapper">
       <style>{`
         :root {
           --parchment: #f4ead9;
@@ -51,14 +60,29 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           --brass: #a9812f;
           --line: #d8c39c;
           --shadow: rgba(60, 38, 15, 0.25);
+          --heading-color: #800000;
         }
 
-        .slogan-stage {
+        .chapter-intro-wrapper * { box-sizing: border-box; }
+
+        @font-face {
+          font-family: 'system-serif';
+        }
+
+        .chapter-intro-wrapper {
+          margin: 0; padding: 0;
+          height: 100vh;
+          width: 100vw;
+          overflow: hidden;
+          background: var(--iron);
+          font-family: Georgia, 'Times New Roman', serif;
+          color: var(--ink);
+          box-sizing: border-box;
+        }
+
+        .stage {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
+          top: 0; left: 0; right: 0; bottom: 0;
           height: 100vh;
           width: 100vw;
           display: flex;
@@ -69,28 +93,12 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
             radial-gradient(circle at 20% 15%, rgba(255,255,255,0.03), transparent 40%),
             linear-gradient(160deg, #1b1712 0%, #100e0b 100%);
           overflow: hidden;
-          font-family: Georgia, 'Times New Roman', serif;
-          color: var(--ink);
-          box-sizing: border-box;
           z-index: 10000;
-          user-select: none;
         }
 
-        .slogan-stage * {
-          box-sizing: border-box;
-        }
-
-        .slogan-container {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
+        .frame {
           width: 100%;
-          height: 100%;
-          min-height: 0;
-        }
-
-        .slogan-frame {
-          width: 100%;
+          max-width: none;
           display: grid;
           grid-template-columns: 1fr 1fr;
           background: var(--parchment);
@@ -102,7 +110,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
         }
 
         /* ================= LEFT — static column ================= */
-        .slogan-left {
+        .left {
           position: relative;
           background: var(--parchment);
           padding: 2.4vh 2vw 2vh;
@@ -113,7 +121,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           overflow: hidden;
         }
 
-        .slogan-eyebrow {
+        .eyebrow {
           font-family: 'Trebuchet MS', sans-serif;
           letter-spacing: 2.5px;
           font-size: 1.7vh;
@@ -123,18 +131,18 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           flex: 0 0 auto;
         }
 
-        .slogan-title {
-          font-size: clamp(28px, 4.5vh, 52px);
+        .title {
+          font-size: clamp(33px, 5.3vh, 60px);
           line-height: 1.05;
           margin: 6px 0 1.4vh;
-          color: var(--ink);
+          color: var(--heading-color);
           font-weight: 700;
           letter-spacing: -0.5px;
           white-space: nowrap;
           flex: 0 0 auto;
         }
 
-        .slogan-left-image {
+        .left-image {
           position: relative;
           border-radius: 8px;
           overflow: hidden;
@@ -142,22 +150,16 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           flex: 1 1 auto;
           min-height: 0;
         }
-
-        .slogan-left-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
+        .left-image img {
+          width: 100%; height: 100%; object-fit: cover; display: block;
         }
-
-        .slogan-left-image::after {
+        .left-image::after {
           content: "";
-          position: absolute;
-          inset: 0;
+          position: absolute; inset: 0;
           box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
         }
 
-        .slogan-quote-block {
+        .quote-block {
           margin-top: 1.6vh;
           background: #fbf5e9;
           border-left: 4px solid var(--clay);
@@ -169,75 +171,106 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           flex-direction: column;
           justify-content: center;
         }
-
-        .slogan-quote-sanskrit {
+        .quote-sanskrit {
           font-size: clamp(17px, 2.5vh, 26px);
           line-height: 1.4;
           color: var(--ink);
           margin: 0 0 6px;
-          font-weight: 700;
         }
-
-        .slogan-quote-ref-small {
+        .quote-ref-small {
           font-size: clamp(13px, 1.65vh, 17px);
           color: #8a7355;
           font-style: italic;
           margin: 0 0 1vh;
-          font-weight: 700;
         }
-
-        .slogan-quote-en {
+        .quote-en {
           font-size: clamp(16px, 2.25vh, 24px);
           font-style: italic;
           line-height: 1.4;
           color: var(--ink);
           margin: 0 0 0.8vh;
-          font-weight: 700;
         }
-
-        .slogan-quote-source {
+        .quote-source {
           font-family: 'Trebuchet MS', sans-serif;
           font-size: clamp(13px, 1.65vh, 17px);
           color: var(--clay-deep);
-          font-weight: 700;
+          font-weight: 600;
         }
 
         /* ================= RIGHT — dynamic column ================= */
-        .slogan-right {
+        .right {
           position: relative;
-          background: whitedf8;
+          background: #fffdf8;
           display: flex;
           flex-direction: column;
           padding: 2.2vh 2vw 1.8vh;
           overflow: hidden;
           min-height: 0;
-          perspective: 1200px;
         }
 
-        .slogan-right-head {
+        .right-head {
           display: flex;
           align-items: center;
           gap: 10px;
           font-family: 'Trebuchet MS', sans-serif;
-          font-size: clamp(20px, 2.9vh, 27px);
+          font-size: clamp(23px, 3.4vh, 31px);
           font-weight: 700;
-          color: var(--ink);
+          color: #000000;
           margin-bottom: 1.4vh;
           flex: 0 0 auto;
         }
+        .right-head .icon { font-size: clamp(21px, 3.2vh, 29px); }
 
-        .slogan-right-head .icon {
-          font-size: clamp(21px, 3.2vh, 29px);
-        }
-
-        .slogan-page-stage {
+        .flip-stage {
           flex: 1 1 auto;
           min-height: 0;
           position: relative;
-          overflow: hidden;
+          perspective: 1800px;
         }
 
-        .slogan-card {
+        .page {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          backface-visibility: hidden;
+          transform-style: preserve-3d;
+          transform-origin: left center;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+        }
+
+        /* flip animation states */
+        .page.hidden-page { display: none; }
+
+        @keyframes flipOut {
+          0%   { transform: rotateY(0deg);   opacity: 1; }
+          100% { transform: rotateY(-100deg); opacity: 0; }
+        }
+        @keyframes flipIn {
+          0%   { transform: rotateY(100deg); opacity: 0; }
+          100% { transform: rotateY(0deg);   opacity: 1; }
+        }
+        @keyframes flipOutRev {
+          0%   { transform: rotateY(0deg);   opacity: 1; }
+          100% { transform: rotateY(100deg); opacity: 0; }
+        }
+        @keyframes flipInRev {
+          0%   { transform: rotateY(-100deg); opacity: 0; }
+          100% { transform: rotateY(0deg);    opacity: 1; }
+        }
+
+        .flip-out { animation: flipOut 0.5s ease forwards; }
+        .flip-in { animation: flipIn 0.5s ease forwards; }
+        .flip-out-rev { animation: flipOutRev 0.5s ease forwards; }
+        .flip-in-rev { animation: flipInRev 0.5s ease forwards; }
+
+        /* -------- content blocks shared -------- */
+        #page1, #page2 {
+          gap: 1vh;
+        }
+
+        .card {
           background: var(--parchment);
           border-radius: 8px;
           padding: 1.1vh 1.3vw;
@@ -250,24 +283,19 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           justify-content: center;
           overflow: hidden;
         }
-
-        .slogan-card h3 {
+        .card h3 {
           margin: 0 0 0.5vh;
-          font-size: clamp(16px, 2.45vh, 23px);
-          color: var(--ink);
-          font-weight: 700;
+          font-size: clamp(20px, 3.15vh, 28px);
+          color: var(--heading-color);
           flex: 0 0 auto;
         }
-
-        .slogan-card p, .slogan-card li {
-          font-size: clamp(14px, 2vh, 19px);
+        .card p, .card li {
+          font-size: clamp(15px, 2.15vh, 20px);
           line-height: 1.42;
           color: #45362a;
           margin: 0;
-          font-weight: 700;
         }
-
-        .slogan-label-row {
+        .label-row {
           display: flex;
           align-items: center;
           gap: 8px;
@@ -275,124 +303,149 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           font-size: clamp(12px, 1.5vh, 16px);
           font-weight: 700;
           letter-spacing: 1px;
-          color: var(--clay-deep);
+          color: #D46A92;
           text-transform: uppercase;
           margin-bottom: 0.5vh;
           flex: 0 0 auto;
         }
-
-        .slogan-label-row .dot {
-          width: 1.9vh;
-          height: 1.9vh;
+        .label-row .dot {
+          width: 1.9vh; height: 1.9vh;
           border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          display: flex; align-items: center; justify-content: center;
           background: var(--clay);
-          color: white;
+          color: #fff;
           font-size: 1.4vh;
           flex: 0 0 auto;
-          font-weight: 700;
         }
 
-        .slogan-callout {
-          background: white4e0;
+        .callout {
+          background: #fff4e0;
           border: 1px solid #ecd6a4;
         }
-        .slogan-callout ul {
-          padding-left: 1.6vh;
-          margin: 0.4vh 0 0;
-        }
-        .slogan-callout li {
-          margin-bottom: 0.3vh;
-        }
+        .callout ul { padding-left: 1.6vh; margin: 0.4vh 0 0; }
+        .callout li { margin-bottom: 0.3vh; color: #362a1c; font-size: clamp(15.5px, 2.25vh, 21px); }
 
-        .slogan-realworld {
+        .realworld {
           background: #eef4ec;
           border: 1px solid #cfe0c9;
         }
 
-        .slogan-two-col {
+        .two-col {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 0.8vw;
+          gap: 1vw;
           margin-bottom: 0;
           flex: 1 1 0;
           min-height: 0;
         }
-        .slogan-two-col .slogan-card {
-          margin-bottom: 0;
-          padding: 1vh 1vw;
-        }
-        .slogan-two-col .slogan-card p {
-          text-align: left;
-          line-height: 1.36;
+        .two-col .card { margin-bottom: 0; }
+        .material-dot {
+          display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+          margin-right: 6px; vertical-align: middle;
         }
 
-        .slogan-material-dot {
-          display: inline-block;
-          width: 11px;
-          height: 11px;
-          border-radius: 50%;
-          margin-right: 6px;
-          vertical-align: middle;
-        }
-
-        .slogan-timeline {
+        .timeline {
           margin-top: 0;
           display: flex;
           flex-direction: column;
-          justify-content: center;
+          justify-content: flex-start;
           height: 100%;
         }
-        .slogan-timeline-track {
+        .timeline-track {
           position: relative;
           display: flex;
           justify-content: space-between;
           padding: 0 6px;
           margin-bottom: 0;
         }
-        .slogan-timeline-track::before {
+        .timeline-track::before {
           content: "";
           position: absolute;
-          left: 6%;
-          right: 6%;
-          top: 0.7vh;
+          left: 6%; right: 6%; top: 0.7vh;
           height: 2px;
           background: var(--line);
         }
-        .slogan-tl-point {
+        .tl-point {
           position: relative;
           flex: 1;
           text-align: center;
           z-index: 1;
         }
-        .slogan-tl-point .node {
-          width: 1.4vh;
-          height: 1.4vh;
+        .tl-point .node {
+          width: 1.4vh; height: 1.4vh;
           border-radius: 50%;
           background: var(--clay);
-          border: 2px solid white;
+          border: 2px solid #fff;
           margin: 0 auto 0.7vh;
           box-shadow: 0 0 0 1px var(--clay);
         }
-        .slogan-tl-point .year {
+        .tl-point .year {
           font-family: 'Trebuchet MS', sans-serif;
           font-weight: 700;
           font-size: clamp(13px, 1.8vh, 17px);
           color: var(--ink);
           margin-bottom: 0.3vh;
         }
-        .slogan-tl-point .desc {
+        .tl-point .desc {
           font-size: clamp(12px, 1.6vh, 16px);
           color: #5c4c3a;
           line-height: 1.3;
           padding: 0 4px;
-          font-weight: 700;
+        }
+
+        /* -------- page 2 layout (fixes overlap) -------- */
+        #page2 {
+          gap: 0.9vh;
+        }
+        #page2 .label-row {
+          flex: 0 0 auto;
+          margin-bottom: 0.2vh;
+        }
+        #page2 .page-heading {
+          flex: 0 0 auto;
+          margin: 0;
+          font-size: clamp(19px, 2.85vh, 26px);
+          color: var(--heading-color);
+        }
+        #page2 .material-card {
+          flex: 0 0 auto;
+          padding: 1vh 1.3vw;
+        }
+        #page2 .material-card h3 {
+          margin-bottom: 0.3vh;
+          font-size: clamp(18px, 2.65vh, 24px);
+        }
+        #page2 .material-card p {
+          font-size: clamp(13.5px, 1.9vh, 17.5px);
+          line-height: 1.35;
+        }
+        #page2 .callout-box {
+          flex: 0 0 auto;
+          padding: 1vh 1.3vw;
+        }
+        #page2 .callout-box .label-row {
+          margin-bottom: 0.4vh;
+        }
+        #page2 .timeline-card {
+          flex: 1 1 0;
+          min-height: 0;
+          max-height: 19vh;
+          justify-content: flex-start;
+          padding: 0.7vh 1.3vw;
+        }
+        #page2 .timeline-card h3 {
+          margin: 0 0 0.4vh;
+          font-size: clamp(17px, 2.4vh, 21px);
+          color: var(--heading-color);
+          flex: 0 0 auto;
+        }
+        #page2 .timeline-card .timeline {
+          flex: 1 1 0;
+          min-height: 0;
         }
 
         /* -------- footer / pagination / nav -------- */
-        .slogan-right-foot {
+        .right-foot {
           margin-top: 1.2vh;
           padding-top: 1.2vh;
           border-top: 1px solid var(--line);
@@ -403,39 +456,28 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           flex: 0 0 auto;
         }
 
-        .slogan-page-indicator {
+        .page-indicator {
           font-family: 'Trebuchet MS', sans-serif;
           font-size: clamp(14px, 1.8vh, 17px);
           color: #7a6a55;
           display: flex;
           align-items: center;
           gap: 8px;
-          font-weight: 700;
         }
-        .slogan-dots {
-          display: flex;
-          gap: 6px;
-        }
-        .slogan-dots span {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
+        .dots { display: flex; gap: 6px; }
+        .dots span {
+          width: 7px; height: 7px; border-radius: 50%;
           background: var(--line);
           transition: background 0.25s ease;
         }
-        .slogan-dots span.active {
-          background: var(--clay);
-        }
+        .dots span.active { background: var(--clay); }
 
-        .slogan-nav-btns {
-          display: flex;
-          gap: 10px;
-        }
+        .nav-btns { display: flex; gap: 10px; }
 
-        .slogan-btn {
+        .chapter-intro-wrapper button {
           font-family: 'Trebuchet MS', sans-serif;
           font-size: clamp(14px, 1.85vh, 18px);
-          font-weight: 700;
+          font-weight: 600;
           padding: 1vh 1.4vw;
           border-radius: 7px;
           border: none;
@@ -443,220 +485,171 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
           white-space: nowrap;
         }
-        .slogan-btn:active {
-          transform: translateY(1px) scale(0.98);
-        }
+        .chapter-intro-wrapper button:active { transform: translateY(1px) scale(0.98); }
 
-        .slogan-btn-secondary {
+        .btn-secondary {
           background: #e8e0cf;
           color: var(--ink);
         }
-        .slogan-btn-secondary:hover:not(:disabled) {
-          background: #ddd2b8;
-        }
+        .btn-secondary:hover:not(:disabled) { background: #ddd2b8; }
 
-        .slogan-btn-primary {
+        .btn-primary {
           background: var(--ink);
           color: #fdf6e8;
         }
-        .slogan-btn-primary:hover:not(:disabled) {
-          box-shadow: 0 4px 12px -2px rgba(0,0,0,0.3);
-        }
+        .btn-primary:hover:not(:disabled) { box-shadow: 0 4px 12px -2px rgba(0,0,0,0.3); }
 
-        .slogan-btn:disabled {
+        .chapter-intro-wrapper button:disabled {
           opacity: 0.35;
           cursor: not-allowed;
         }
 
-        .slogan-bottom-bar {
+        .bottom-bar {
           width: 100%;
           display: flex;
           justify-content: space-between;
           margin-top: 1vh;
           flex: 0 0 auto;
         }
-        .slogan-bottom-bar button {
-          padding: 1.2vh 1.6vw;
-        }
+        .bottom-bar button { padding: 1.2vh 1.6vw; }
+
+        .chapter-intro-wrapper * { font-weight: 700 !important; }
+
+        .requested-light-green { color: #D46A92 !important; }
       `}</style>
 
-      <div className="slogan-container">
-        <div className="slogan-frame">
-          {/* ============ LEFT (STATIC) ============ */}
-          <div className="slogan-left">
-            <div className="slogan-eyebrow">Chapter 6 · Class 6 Science</div>
-            <h1 className="slogan-title">Materials Around Us</h1>
+      <div className="stage">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', width: '100%', height: '100%', minHeight: 0 }}>
 
-            <div className="slogan-left-image">
-              <img src={ancientHeroImage} alt="Ancient Indian pottery, brass vessels, minerals and metallurgy tools" />
-            </div>
+          <div className="frame">
+            {/* ============ LEFT (STATIC) ============ */}
+            <div className="left">
+              <div className="eyebrow"><span className="requested-light-green">Chapter 6 · Class 6 Science</span></div>
+              <h1 className="title">Materials Around Us</h1>
 
-            <div className="slogan-quote-block">
-              <p className="slogan-quote-sanskrit">उपादानं भवेत्तस्य (मूषायाः) मृत्तिका लोहमेव च।</p>
-              <p className="slogan-quote-ref-small">(रसरत्नसमुच्चय – १०.३)</p>
-              <p className="slogan-quote-en">"The materials used to make the crucible (a vessel used to melt substances) are clay and iron."</p>
-              <p className="slogan-quote-source">— Rasaratnasamuchchaya, 10.3</p>
-            </div>
-          </div>
-
-          {/* ============ RIGHT (DYNAMIC) ============ */}
-          <div className="slogan-right">
-            <div className="slogan-right-head">
-              <span className="icon">📖</span>
-              <span>Historical Facts – Ancient Indian Science</span>
-            </div>
-
-            <div className="slogan-page-stage">
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={currentPage}
-                  custom={direction}
-                  variants={pageVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    transformOrigin: direction > 0 ? 'left center' : 'right center',
-                    backfaceVisibility: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1vh',
-                    overflow: 'hidden'
-                  }}
-                >
-                  {currentPage === 1 ? (
-                    /* PAGE 1 */
-                    <>
-                      <div className="slogan-card">
-                        <h3>Ancient Indian Science – Early Materials Engineering</h3>
-                        <p>Ancient Indian scholars carefully selected materials based on their properties. Long before modern laboratories, they understood that different materials were suitable for different purposes.</p>
-                      </div>
-
-                      <div className="slogan-card">
-                        <div className="slogan-label-row"><span className="dot">📜</span> Ancient Source</div>
-                        <h3 style={{ marginBottom: '2px' }}>Rasaratnasamuchchaya</h3>
-                        <p>An important Sanskrit text on metallurgy, minerals, and traditional chemical practices.</p>
-                      </div>
-
-                      <div className="slogan-card">
-                        <div className="slogan-label-row"><span className="dot">🔬</span> Scientific Connection</div>
-                        <h3 style={{ marginBottom: '2px' }}>Properties Matter</h3>
-                        <p>Ancient Indians selected clay because it is heat resistant, and iron because it is strong — an early understanding of material properties.</p>
-                      </div>
-
-                      <div className="slogan-card">
-                        <div className="slogan-label-row"><span className="dot">🔥</span> Used For</div>
-                        <h3 style={{ marginBottom: '2px' }}>Crucible (Melting Vessel)</h3>
-                        <p>A crucible is a special container used to heat or melt substances at very high temperatures.</p>
-                      </div>
-                    </>
-                  ) : (
-                    /* PAGE 2 */
-                    <>
-                      <div className="slogan-label-row" style={{ marginBottom: '2px', flex: '0 0 auto' }}>
-                        <span className="dot">🧪</span> Material Choice
-                      </div>
-                      <h3 style={{ margin: '0 0 0.8vh', fontSize: 'clamp(17px, 2.5vh, 24px)', flex: '0 0 auto' }}>
-                        The Crucible Was Made of Two Materials
-                      </h3>
-
-                      <div className="slogan-two-col">
-                        <div className="slogan-card">
-                          <h3><span className="slogan-material-dot" style={{ background: '#FFFFFF' }}></span>Clay</h3>
-                          <p>Withstands high temperatures without melting easily — used for the outer body.</p>
-                        </div>
-                        <div className="slogan-card">
-                          <h3><span className="slogan-material-dot" style={{ background: 'var(--lesson-muted)' }}></span>Iron</h3>
-                          <p>Provides strength and durability, keeping the crucible stable during heating.</p>
-                        </div>
-                      </div>
-
-                      <div className="slogan-card slogan-callout">
-                        <div className="slogan-label-row" style={{ color: '#a9812f' }}>ⓘ Why This Matters For Our Chapter</div>
-                        <ul>
-                          <li>Different materials have different properties.</li>
-                          <li>We choose materials based on their use, not just their appearance.</li>
-                          <li>This is exactly why we classify materials in this chapter.</li>
-                        </ul>
-                      </div>
-
-                      <div className="slogan-card slogan-realworld">
-                        <div className="slogan-label-row" style={{ color: '#5c8a52' }}>🔗 Real-Life Example</div>
-                        <p>Just like ancient scientists used clay for crucibles, today we use clay to make bricks for houses because it is strong and resists heat. We use iron for cooking pans because it conducts heat well!</p>
-                      </div>
-
-                      <div className="slogan-card">
-                        <h3>Timeline of Indian Materials Science</h3>
-                        <div className="slogan-timeline">
-                          <div className="slogan-timeline-track">
-                            <div className="slogan-tl-point">
-                              <div className="node"></div>
-                              <div className="year">3000 BCE</div>
-                              <div className="desc">Indus Valley baked clay bricks</div>
-                            </div>
-                            <div className="slogan-tl-point">
-                              <div className="node"></div>
-                              <div className="year">400 CE</div>
-                              <div className="desc">Iron Pillar of Delhi built (rust-resistant iron)</div>
-                            </div>
-                            <div className="slogan-tl-point">
-                              <div className="node"></div>
-                              <div className="year">13th Century</div>
-                              <div className="desc">Rasaratnasamuchchaya written</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <div className="slogan-right-foot">
-              <div className="slogan-page-indicator">
-                <span>Page {currentPage} / 2</span>
-                <span className="slogan-dots">
-                  <span className={currentPage === 1 ? 'active' : ''}></span>
-                  <span className={currentPage === 2 ? 'active' : ''}></span>
-                </span>
+              <div className="left-image">
+                <img src={ancientHeroImage} alt="Ancient Indian pottery, brass vessels, minerals and metallurgy tools" />
               </div>
-              <div className="slogan-nav-btns">
-                <button
-                  className="slogan-btn slogan-btn-secondary"
-                  disabled={currentPage === 1}
-                  onClick={handlePrev}
-                >
-                  ← Previous Page
-                </button>
-                <button
-                  className="slogan-btn slogan-btn-primary"
-                  disabled={currentPage === 2}
-                  onClick={handleNext}
-                >
-                  Next Page →
-                </button>
+
+              <div className="quote-block">
+                <p className="quote-sanskrit">उपादनं भवेतस्य (मूणाया:) मुनिका लोहेन च ।</p>
+                <p className="quote-ref-small">(रसरतसमुच्चय – १०.३)</p>
+                <p className="quote-en">"The materials used to make the crucible (a vessel used to melt substances) are clay and iron."</p>
+                <p className="quote-source">— Rasaratnasamuchchaya, 10.3</p>
+              </div>
+            </div>
+
+            {/* ============ RIGHT (DYNAMIC) ============ */}
+            <div className="right">
+
+              <div className="right-head" id="rightHead">
+                <span className="icon">📖</span>
+                <span id="rightHeadText">Historical Facts – Ancient Indian Science</span>
+              </div>
+
+              <div className="flip-stage" id="flipStage">
+
+                {/* PAGE 1 */}
+                <div className={page1Classes} id="page1" style={{ zIndex: page1ZIndex }}>
+                  <div className="card">
+                    <h3>Ancient Indian Science – Early Materials Engineering</h3>
+                    <p>Long ago, Indian scientists picked the right material for each job. This was one of the first steps in materials science.</p>
+                  </div>
+
+                  <div className="card">
+                    <div className="label-row"><span className="dot">📜</span> Ancient Source</div>
+                    <h3 style={{ marginBottom: '2px' }}>Rasaratnasamuchchaya</h3>
+                    <p>An important Sanskrit text on metallurgy, minerals, and traditional chemical practices.</p>
+                  </div>
+
+                  <div className="card">
+                    <div className="label-row"><span className="dot">🔬</span> Scientific Connection</div>
+                    <h3 style={{ marginBottom: '2px' }}>Properties Matter</h3>
+                    <p>Clay does not burn easily, and iron is very strong. Ancient people chose materials based on properties like these.</p>
+                  </div>
+
+                  <div className="card">
+                    <div className="label-row"><span className="dot">🔥</span> Used For</div>
+                    <h3 style={{ marginBottom: '2px' }}>Crucible (Melting Vessel)</h3>
+                    <p>A crucible is a special container used to heat or melt substances at very high temperatures.</p>
+                  </div>
+                </div>
+
+                {/* PAGE 2 */}
+                <div className={page2Classes} id="page2" style={{ zIndex: page2ZIndex }}>
+                  <div className="label-row"><span className="dot">🧪</span> Material Choice</div>
+                  <h3 className="page-heading">The Crucible Was Made of Two Materials</h3>
+
+                  <div className="card material-card">
+                    <h3><span className="material-dot" style={{ background: '#4a3a2a' }}></span>Clay</h3>
+                    <p>Withstands high temperatures without melting easily — used for the outer body.</p>
+                  </div>
+
+                  <div className="card material-card">
+                    <h3><span className="material-dot" style={{ background: '#8a8a8a' }}></span>Iron</h3>
+                    <p>Provides strength and durability, keeping the crucible stable during heating.</p>
+                  </div>
+
+                  <div className="card callout callout-box">
+                    <div className="label-row" style={{ color: '#a9812f' }}>ⓘ Why This Matters For Our Chapter</div>
+                    <ul>
+                      <li>Different materials have different properties.</li>
+                      <li>We choose materials based on their use, not just their appearance.</li>
+                      <li>This is exactly why we classify materials in this chapter.</li>
+                    </ul>
+                  </div>
+
+                  <div className="card timeline-card">
+                    <h3>Timeline of Indian Materials Science</h3>
+                    <div className="timeline">
+                      <div className="timeline-track">
+                        <div className="tl-point">
+                          <div className="node"></div>
+                          <div className="year">3000 BCE</div>
+                          <div className="desc">Indus Valley baked clay bricks</div>
+                        </div>
+                        <div className="tl-point">
+                          <div className="node"></div>
+                          <div className="year">400 CE</div>
+                          <div className="desc">Iron Pillar of Delhi built (rust-resistant iron)</div>
+                        </div>
+                        <div className="tl-point">
+                          <div className="node"></div>
+                          <div className="year">13th Century</div>
+                          <div className="desc">Rasaratnasamuchchaya written</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="right-foot">
+                <div className="page-indicator">
+                  <span id="pageLabel">Page {currentPage} / 2</span>
+                  <span className="dots">
+                    <span id="dot1" className={currentPage === 1 ? 'active' : ''}></span>
+                    <span id="dot2" className={currentPage === 2 ? 'active' : ''}></span>
+                  </span>
+                </div>
+                <div className="nav-btns">
+                  <button className="btn-secondary" id="prevBtn" disabled={currentPage === 1} onClick={() => goToPage(1)}>← Previous Page</button>
+                  <button className="btn-primary" id="nextBtn" disabled={currentPage === 2} onClick={() => goToPage(2)}>Next Page →</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="slogan-bottom-bar">
-          <button className="slogan-btn slogan-btn-secondary" onClick={onBack}>
-            ← Back
-          </button>
-          <button 
-            className={`slogan-btn ${currentPage === 2 ? 'slogan-btn-secondary' : 'slogan-btn-primary'}`} 
-            onClick={onContinue}
-          >
-            Begin Investigation →
-          </button>
+          <div className="bottom-bar">
+            <button className="btn-secondary" id="backBtn" onClick={onBack}>← Back</button>
+            <button className="btn-primary" id="beginBtn" onClick={onContinue}>Begin Investigation →</button>
+          </div>
+
         </div>
       </div>
     </div>
   );
 }
+
 

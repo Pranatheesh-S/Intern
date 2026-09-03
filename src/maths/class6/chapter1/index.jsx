@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import WhatMaths from './WhatMaths';
 import PatternsEverywhere from './PatternsEverywhere';
@@ -12,6 +12,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import ErrorBoundary from '../../../components/ErrorBoundary';
+import ChapterBackFooter from './ChapterBackFooter';
 import PatternsInShapes, {
   Table3Polygons3D,
   Table3CompleteGraphs3D,
@@ -125,50 +126,66 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary fallback={<div style={{ color: '#0f172a', padding: '1.2rem', fontWeight: '800' }}>3D Studio initializing...</div>}>
-            <Canvas camera={{ position: [0, 0.1, 3.2], fov: 45 }} shadows dpr={[1, 2]}>
+            <Canvas camera={{ position: [0, 0.1, 4.8], fov: 45 }} shadows dpr={[1, 2]}>
               <ambientLight intensity={1.9} />
               <directionalLight position={[6, 12, 8]} intensity={2.5} castShadow />
               <directionalLight position={[-6, -4, -4]} intensity={1.3} color="#ffffff" />
               <pointLight position={[0, 6, 6]} intensity={1.5} color="#ffffff" />
 
-              <group scale={0.65}>
-              {activeShapeActivity === 1 && (
-                <Table3Polygons3D
-                  polygon={POLYGONS_DATA[polygonIdx || 0] || POLYGONS_DATA[0]}
-                  placedEdges={placedPolyEdges}
-                  viewMode={viewMode}
-                />
-              )}
-              {activeShapeActivity === 2 && (
-                <Table3CompleteGraphs3D
-                  graph={COMPLETE_GRAPHS_MODULAR_DATA[graphIdx || 0] || COMPLETE_GRAPHS_MODULAR_DATA[0]}
-                  activeComponentIds={activeComponentIds}
-                />
-              )}
-              {activeShapeActivity === 3 && (
-                <Table3StackedSquares3D
-                  rows={squareSize}
-                  placedLayers={placedSquareLayers}
-                />
-              )}
-              {activeShapeActivity === 4 && (
-                <Table3StackedTriangles3D
-                  rows={triangleRows}
-                  placedRows={placedTriLayers}
-                />
-              )}
-              {activeShapeActivity === 5 && (
-                <Table3KochSnowflake3D
-                  depth={kochDepth}
-                />
-              )}
-              </group>
+              <Suspense fallback={null}>
+                <group scale={0.9}>
+                {activeShapeActivity === 1 && (
+                  <Table3Polygons3D
+                    polygon={POLYGONS_DATA[polygonIdx || 0] || POLYGONS_DATA[0]}
+                    placedEdges={placedPolyEdges}
+                    viewMode={viewMode}
+                  />
+                )}
+                {activeShapeActivity === 2 && (
+                  <Table3CompleteGraphs3D
+                    graph={COMPLETE_GRAPHS_MODULAR_DATA[graphIdx || 0] || COMPLETE_GRAPHS_MODULAR_DATA[0]}
+                    activeComponentIds={activeComponentIds}
+                  />
+                )}
+                {activeShapeActivity === 3 && (
+                  <Table3StackedSquares3D
+                    rows={squareSize}
+                    placedLayers={placedSquareLayers}
+                  />
+                )}
+                {activeShapeActivity === 4 && (
+                  <Table3StackedTriangles3D
+                    rows={triangleRows}
+                    placedRows={placedTriLayers}
+                  />
+                )}
+                {activeShapeActivity === 5 && (
+                  <Table3KochSnowflake3D
+                    depth={kochDepth}
+                  />
+                )}
+                </group>
+              </Suspense>
 
               <OrbitControls enablePan={false} maxDistance={6} minDistance={1.8} />
             </Canvas>
           </ErrorBoundary>
 
-          <div style={{ position: 'absolute', top: '12px', left: '14px', background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(6px)', padding: '5px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', color: '#0f172a', fontSize: '0.82rem', fontWeight: '800', pointerEvents: 'none', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)' }}>
+          <div style={{
+            position: 'absolute',
+            top: '12px',
+            left: '14px',
+            background: 'rgba(15, 23, 42, 0.88)',
+            backdropFilter: 'blur(8px)',
+            padding: '5px 12px',
+            borderRadius: '10px',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
+            color: '#f1f5f9',
+            fontSize: '0.82rem',
+            fontWeight: '800',
+            pointerEvents: 'none',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.35)'
+          }}>
             {activeShapeActivity === 1 ? (viewMode === 'real' ? '🌍 Real-World 3D Object' : '📐 Geometric Regular Polygon 3D') : activeShapeActivity === 2 ? '✈️ 3D Direct City Flight Network (Airways)' : activeShapeActivity === 3 ? '🎨 3D Handcrafted Ceramic Heritage Tiles' : activeShapeActivity === 4 ? '🎱 3D Billiards 15-Ball Triangle Rack' : '🔲 3D Studio · Drag to Orbit'}
           </div>
         </div>
@@ -179,7 +196,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
-            <Canvas camera={{ position: [0, 2.2, 3.8], fov: 44 }}>
+            <Canvas camera={{ position: [0, 2.2, 5.5], fov: 44 }}>
               <ambientLight intensity={1.8} />
               <directionalLight position={[10, 12, 6]} intensity={2.4} castShadow />
               {currentSlide === 1 && <PhotorealisticStackedTrianglesBridge3D rows={s2nTriRows} />}
@@ -195,9 +212,9 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
-            <Canvas camera={{ position: [0, 0.8, 4.2], fov: 45 }}>
+            <Canvas camera={{ position: [0, 0.8, 6.0], fov: 45 }}>
               <ambientLight intensity={2.0} />
-              <group scale={0.65}>
+              <group scale={0.9}>
               {currentSlide === 1 && <CalendarDesk3D selectedCenter={labSelectedCenter} />}
               {currentSlide === 2 && <MarketProduce3D kgPotatoes={labKgPotatoes} kgTomatoes={labKgTomatoes} checkoutStep={checkoutStep} onCheckoutComplete={() => setCheckoutStep(0)} />}
               {currentSlide === 3 && <BotanicalFlower3D flowerKey={labSelectedFlower} />}
@@ -214,9 +231,9 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
-            <Canvas camera={{ position: [0, 1.2, 4.2], fov: 45 }}>
+            <Canvas camera={{ position: [0, 1.2, 6.0], fov: 45 }}>
               <ambientLight intensity={1.8} />
-              <group scale={0.65}>
+              <group scale={0.9}>
               <QuizPhotorealisticLab3D
                 activeQuestionId={activeQuizQuestionId}
                 isSubmitted={isQuizSubmitted}
@@ -236,41 +253,44 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
     return null;
   };
 
-  const renderBottomNav = (totalSlides, nextStepIndex, prevStepIndex) => (
-    <div className="math-bottom-nav">
-      <div className="math-slide-indicator">Slide {currentSlide} of {totalSlides}</div>
-      <div className="math-nav-dots">
-        {Array.from({ length: totalSlides }).map((_, i) => (
-          <div key={i} className={`math-nav-dot ${currentSlide === i + 1 ? 'active' : ''}`} />
-        ))}
-      </div>
-      <div style={{ display: 'flex', gap: '12px' }}>
-        <button className="math-btn-back" onClick={() => {
-          if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
-          else if (prevStepIndex) { setCurrentStep(prevStepIndex); setCurrentSlide(1); }
-        }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          Back
-        </button>
-        <button className="math-btn-next" onClick={() => {
-          if (currentSlide < totalSlides) setCurrentSlide(currentSlide + 1);
-          else if (nextStepIndex) { setCurrentStep(nextStepIndex); setCurrentSlide(1); }
-        }}>
-          Next
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-        </button>
-      </div>
-    </div>
-  );
-
   const renderLeftPanelContent = () => (
-    <div className="math-left-panel">
-      <div className="math-chapter-eyebrow">CHAPTER 1 · CLASS 6 MATHEMATICS</div>
-      <h1 className="math-chapter-title">Patterns in Mathematics</h1>
+    <div style={{ flex: 1, background: '#E0F2FE', borderRight: '1.5px solid #BAE6FD', padding: '24px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <div style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: '0.75rem', fontWeight: 900, color: '#1E3A8A', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '4px' }}>CHAPTER 1 · CLASS 6 MATHEMATICS</div>
+      <h1 style={{ fontFamily: '"Fraunces", serif', fontSize: '2.5rem', fontWeight: 800, color: '#1E40AF', margin: '0 0 16px 0', lineHeight: 1.15 }}>Patterns in Mathematics</h1>
       
-      <div className="math-3d-container">
-        <div className="math-3d-label">✨ INTERACTIVE 3D</div>
-        <div className="math-3d-hint">💡 Drag to Rotate · Scroll to Zoom</div>
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        flex: 1,
+        minHeight: 0,
+        borderRadius: '20px',
+        overflow: 'hidden',
+        background: 'radial-gradient(ellipse at 50% 30%, #0f172a 0%, #090d16 55%, #020617 100%)',
+        boxShadow: '0 12px 36px rgba(2, 6, 23, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+        border: '1.5px solid rgba(56, 189, 248, 0.3)'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '16px',
+          left: '16px',
+          background: 'linear-gradient(135deg, rgba(14, 116, 144, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
+          color: '#38bdf8',
+          padding: '6px 14px',
+          borderRadius: '20px',
+          fontSize: '0.75rem',
+          fontWeight: 900,
+          letterSpacing: '0.5px',
+          textTransform: 'uppercase',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          zIndex: 10,
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+          border: '1px solid rgba(56, 189, 248, 0.35)',
+          backdropFilter: 'blur(8px)'
+        }}>
+          ✨ INTERACTIVE 3D
+        </div>
         {renderTopShowcase()}
       </div>
     </div>
@@ -289,42 +309,33 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       display: 'flex',
       flexDirection: 'column',
       background: '#f8fafc',
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      fontFamily: '"Space Grotesk", sans-serif',
       overflow: 'hidden'
     }}>
-      {/* Workflow Header / Tabs */}
-      <div style={{ flexShrink: 0, width: '100%', minWidth: 0, marginBottom: '0.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'stretch', gap: '0.5rem', width: '100%', minWidth: 0 }}>
-          <button
-            type="button"
-            onClick={onBackToDashboard}
-            title="Back to Main Page"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.15rem',
-              padding: '0.35rem 0.4rem',
-              fontSize: '0.62rem',
-              fontWeight: '800',
-              color: '#0f172a',
-              border: '1.5px solid #cbd5e1',
-              borderRadius: '10px',
-              background: '#ffffff',
-              cursor: 'pointer',
-              flexShrink: 0,
-              minHeight: '64px',
-              width: '68px',
-              boxSizing: 'border-box',
-              lineHeight: 1.15,
-              textAlign: 'center'
-            }}
-          >
-            <ArrowLeft size={14} color="#0f172a" />
-            <span style={{ color: '#0f172a', fontWeight: '800' }}>Back to</span>
-            <span style={{ color: '#0f172a', fontWeight: '800' }}>Main Page</span>
-          </button>
+      <div style={{
+        width: '100%', height: '100%', minHeight: '600px', display: 'flex', flexDirection: 'column',
+        background: 'linear-gradient(160deg, #F0F8FF 0%, #E6F2FF 100%)', // Pastel Blue theme background
+        overflow: 'hidden', position: 'relative', borderRadius: '20px', border: '2px solid #BAE6FD',
+        boxShadow: '0 8px 30px rgba(15,23,42,0.06)'
+      }}>
+        {/* Top Header / Tabs Area */}
+        <div style={{ width: '100%', borderBottom: '1.5px solid #BAE6FD', background: 'rgba(255, 255, 255, 0.4)', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', gap: '12px', width: '100%', alignItems: 'center' }}>
+            <button
+              onClick={onBackToDashboard}
+              title="Back to Main Page"
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                gap: '0.15rem', padding: '0.35rem 0.4rem', fontSize: '0.62rem', fontWeight: '800',
+                color: '#1E3A8A', border: '1.5px solid #93C5FD', borderRadius: '10px',
+                background: '#ffffff', cursor: 'pointer', flexShrink: 0,
+                minHeight: '64px', width: '68px', boxSizing: 'border-box', lineHeight: 1.15, textAlign: 'center'
+              }}
+            >
+              <ArrowLeft size={14} color="#1E3A8A" />
+              <span style={{ color: '#1E3A8A', fontWeight: '800' }}>Back to</span>
+              <span style={{ color: '#1E3A8A', fontWeight: '800' }}>Main Page</span>
+            </button>
 
           <nav
             ref={navRef}
@@ -342,62 +353,52 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
             {tabs.map((tab) => {
               const isActive = currentStep === tab.id;
               const isCompleted = currentStep > tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  data-active={isActive}
-                  onClick={() => {
-                    if (!tab.locked) {
-                      setCurrentStep(tab.id);
-                      setCurrentSlide(1);
-                      setSubStep(1);
-                    }
-                  }}
-                  disabled={tab.locked}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.45rem 0.55rem',
-                    background: isActive ? '#ffffff' : '#f8fafc',
-                    border: `1.5px solid ${isActive ? '#8b5cf6' : '#cbd5e1'}`,
-                    borderRadius: '12px',
-                    width: '100%',
-                    minHeight: '64px',
-                    minWidth: '118px',
-                    opacity: 1,
-                    cursor: tab.locked ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s',
-                    boxShadow: isActive ? '0 4px 15px rgba(139, 92, 246, 0.25)' : 'none',
-                    textAlign: 'left',
-                    boxSizing: 'border-box',
-                    flexShrink: 0
-                  }}
-                >
-                  <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? '#8b5cf6' : (isCompleted ? '#8b5cf6' : '#64748b'), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0 }}>
-                    {isCompleted ? <CheckCircle size={12} /> : tab.id}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', minWidth: 0, flex: 1 }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#0f172a', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
-                    <span style={{ fontSize: '0.64rem', color: isActive ? '#8b5cf6' : '#334155', lineHeight: 1.2, whiteSpace: 'normal', width: '100%', fontWeight: '700' }}>{tab.subtitle}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </nav>
+                return (
+                  <button
+                    key={tab.id}
+                    data-active={isActive}
+                    onClick={() => {
+                      if (!tab.locked) {
+                        setCurrentStep(tab.id);
+                        setCurrentSlide(1);
+                        setSubStep(1);
+                      }
+                    }}
+                    disabled={tab.locked}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.45rem 0.55rem',
+                      background: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.5)',
+                      border: `1.5px solid ${isActive ? '#3B82F6' : '#BAE6FD'}`,
+                      borderRadius: '12px', width: '100%', minHeight: '64px', minWidth: '118px',
+                      opacity: 1, cursor: tab.locked ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s',
+                      boxShadow: isActive ? '0 4px 15px rgba(59, 130, 246, 0.15)' : 'none',
+                      textAlign: 'left', boxSizing: 'border-box', flexShrink: 0
+                    }}
+                  >
+                    <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? '#3B82F6' : (isCompleted ? '#3B82F6' : '#94A3B8'), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0 }}>
+                      {isCompleted ? <CheckCircle size={12} /> : tab.id}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', minWidth: 0, flex: 1 }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#1E3A8A', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
+                      <span style={{ fontSize: '0.64rem', color: isActive ? '#3B82F6' : '#64748B', lineHeight: 1.2, whiteSpace: 'normal', width: '100%', fontWeight: '700' }}>{tab.subtitle}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         </div>
-      </div>
 
-      {/* Main Content Area */}
-      <div style={{
-        width: '100%',
-        margin: '0 auto',
-        display: 'flex',
-        flex: 1,
-        flexDirection: 'column',
-        minHeight: 0
-      }}>
-        {currentStep === 1 ? (
+        {/* Main Content Area */}
+        <div style={{
+          width: '100%',
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          minHeight: 0
+        }}>
+          {currentStep === 1 ? (
           <>
             {subStep === 1 && <WhatMaths onNext={handleSubNext} onPrev={handleSubPrev} />}
             {subStep === 2 && <PatternsEverywhere onNext={handleSubNext} onPrev={handleSubPrev} />}
@@ -414,123 +415,169 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
         ) : currentStep === 4 ? (
           <RelationsAmongSequences onNext={() => { setCurrentStep(5); setCurrentSlide(1); }} />
         ) : currentStep === 5 ? (
-          <div className="math-responsive-layout">
+          <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
             {renderLeftPanelContent()}
-            <div className="math-right-panel">
-              <div className="math-section-header-area">
-                <div className="math-section-eyebrow">✨ SECTION 5</div>
-                <h2 className="math-section-title">📖 Patterns in Shapes</h2>
+            <div style={{ flex: 1, background: '#FFFFFF', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+              <div style={{ padding: '24px 24px 0 24px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#3B82F6', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '8px' }}>✨ SECTION 5</div>
+                <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '2.25rem', fontWeight: 800, color: '#1E40AF', margin: '0 0 16px 0' }}>📖 Patterns in Shapes</h2>
               </div>
-              <div className="math-inner-content-card">
-                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
-                  <PatternsInShapes
-                    activeActivity={currentSlide}
-                    setActiveActivity={(id) => setCurrentSlide(id)}
-                    viewMode={viewMode}
-                    setViewMode={setViewMode}
-                    polygonIdx={polygonIdx}
-                    setPolygonIdx={setPolygonIdx}
-                    placedPolyEdges={placedPolyEdges}
-                    setPlacedPolyEdges={setPlacedPolyEdges}
-                    graphIdx={graphIdx}
-                    setGraphIdx={setGraphIdx}
-                    activeComponentIds={activeComponentIds}
-                    setActiveComponentIds={setActiveComponentIds}
-                    squareSize={squareSize}
-                    setSquareSize={setSquareSize}
-                    placedSquareLayers={placedSquareLayers}
-                    setPlacedSquareLayers={setPlacedSquareLayers}
-                    triangleRows={triangleRows}
-                    setTriangleRows={setTriangleRows}
-                    placedTriLayers={placedTriLayers}
-                    setPlacedTriLayers={setPlacedTriLayers}
-                    kochDepth={kochDepth}
-                    setKochDepth={setKochDepth}
-                  />
-                </div>
-                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
-                  {renderBottomNav(5, 6, 4)}
-                </div>
+              <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px 24px 24px', minHeight: 0 }} className="hide-scrollbar chapter-content-justified">
+                <PatternsInShapes
+                  activeActivity={currentSlide}
+                  setActiveActivity={(id) => setCurrentSlide(id)}
+                  viewMode={viewMode}
+                  setViewMode={setViewMode}
+                  polygonIdx={polygonIdx}
+                  setPolygonIdx={setPolygonIdx}
+                  placedPolyEdges={placedPolyEdges}
+                  setPlacedPolyEdges={setPlacedPolyEdges}
+                  graphIdx={graphIdx}
+                  setGraphIdx={setGraphIdx}
+                  activeComponentIds={activeComponentIds}
+                  setActiveComponentIds={setActiveComponentIds}
+                  squareSize={squareSize}
+                  setSquareSize={setSquareSize}
+                  placedSquareLayers={placedSquareLayers}
+                  setPlacedSquareLayers={setPlacedSquareLayers}
+                  triangleRows={triangleRows}
+                  setTriangleRows={setTriangleRows}
+                  placedTriLayers={placedTriLayers}
+                  setPlacedTriLayers={setPlacedTriLayers}
+                  kochDepth={kochDepth}
+                  setKochDepth={setKochDepth}
+                />
               </div>
+              <ChapterBackFooter
+                onBack={() => {
+                  if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
+                  else { setCurrentStep(4); setCurrentSlide(1); }
+                }}
+                onNext={() => {
+                  if (currentSlide < 5) setCurrentSlide(currentSlide + 1);
+                  else { setCurrentStep(6); setCurrentSlide(1); }
+                }}
+                nextLabel="Next"
+                nextVariant="blue"
+                centerContent={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: '#1E3A8A' }}>
+                    <span>Slide {currentSlide} of 5</span>
+                  </div>
+                }
+              />
             </div>
           </div>
         ) : currentStep === 6 ? (
-          <div className="math-responsive-layout">
+          <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
             {renderLeftPanelContent()}
-            <div className="math-right-panel">
-              <div className="math-section-header-area">
-                <div className="math-section-eyebrow">✨ SECTION 6</div>
-                <h2 className="math-section-title">📖 Shapes to Numbers</h2>
+            <div style={{ flex: 1, background: '#FFFFFF', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+              <div style={{ padding: '24px 24px 0 24px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#3B82F6', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '8px' }}>✨ SECTION 6</div>
+                <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '2.25rem', fontWeight: 800, color: '#1E40AF', margin: '0 0 16px 0' }}>📖 Shapes to Numbers</h2>
               </div>
-              <div className="math-inner-content-card">
-                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
-                  <ShapesToNumbers 
-                    currentSlide={currentSlide}
-                    s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
-                    s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
-                    s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
-                    s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
-                  />
-                </div>
-                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
-                  {renderBottomNav(2, 7, 5)}
-                </div>
+              <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px 24px 24px', minHeight: 0 }} className="hide-scrollbar chapter-content-justified">
+                <ShapesToNumbers 
+                  currentSlide={currentSlide}
+                  s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
+                  s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
+                  s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
+                  s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
+                />
               </div>
+              <ChapterBackFooter
+                onBack={() => {
+                  if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
+                  else { setCurrentStep(5); setCurrentSlide(1); }
+                }}
+                onNext={() => {
+                  if (currentSlide < 2) setCurrentSlide(currentSlide + 1);
+                  else { setCurrentStep(7); setCurrentSlide(1); }
+                }}
+                nextLabel="Next"
+                nextVariant="blue"
+                centerContent={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: '#1E3A8A' }}>
+                    <span>Slide {currentSlide} of 2</span>
+                  </div>
+                }
+              />
             </div>
           </div>
         ) : currentStep === 7 ? (
-          <div className="math-responsive-layout">
+          <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
             {renderLeftPanelContent()}
-            <div className="math-right-panel">
-              <div className="math-section-header-area">
-                <div className="math-section-eyebrow">✨ SECTION 7</div>
-                <h2 className="math-section-title">📖 Real Life Math Lab</h2>
+            <div style={{ flex: 1, background: '#FFFFFF', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+              <div style={{ padding: '24px 24px 0 24px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#3B82F6', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '8px' }}>✨ SECTION 7</div>
+                <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '2.25rem', fontWeight: 800, color: '#1E40AF', margin: '0 0 16px 0' }}>📖 Real Life Math Lab</h2>
               </div>
-              <div className="math-inner-content-card">
-                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
-                  <RealLifeMathLab 
-                    currentSlide={currentSlide}
-                    labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
-                    labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
-                    labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
-                    labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
-                    labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
-                    checkoutStep={checkoutStep}
-                    onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
-                  />
-                </div>
-                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
-                  {renderBottomNav(4, 8, 6)}
-                </div>
+              <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px 24px 24px', minHeight: 0 }} className="hide-scrollbar chapter-content-justified">
+                <RealLifeMathLab 
+                  currentSlide={currentSlide}
+                  labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
+                  labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
+                  labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
+                  labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
+                  labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
+                  checkoutStep={checkoutStep}
+                  onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
+                />
               </div>
+              <ChapterBackFooter
+                onBack={() => {
+                  if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
+                  else { setCurrentStep(6); setCurrentSlide(1); }
+                }}
+                onNext={() => {
+                  if (currentSlide < 4) setCurrentSlide(currentSlide + 1);
+                  else { setCurrentStep(8); setCurrentSlide(1); }
+                }}
+                nextLabel="Next"
+                nextVariant="blue"
+                centerContent={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: '#1E3A8A' }}>
+                    <span>Slide {currentSlide} of 4</span>
+                  </div>
+                }
+              />
             </div>
           </div>
         ) : (
-          <div className="math-responsive-layout">
+          <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
             {renderLeftPanelContent()}
-            <div className="math-right-panel">
-              <div className="math-section-header-area">
-                <div className="math-section-eyebrow">✨ SECTION 8</div>
-                <h2 className="math-section-title">📖 Chapter Quiz & Solutions</h2>
+            <div style={{ flex: 1, background: '#FFFFFF', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+              <div style={{ padding: '24px 24px 0 24px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#3B82F6', letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '8px' }}>✨ SECTION 8</div>
+                <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '2.25rem', fontWeight: 800, color: '#1E40AF', margin: '0 0 16px 0' }}>📖 Chapter Quiz & Solutions</h2>
               </div>
-              <div className="math-inner-content-card">
-                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
-                  <ChapterQuizAndSolutions 
-                    currentSlide={currentSlide}
-                    quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
-                    isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
-                    quizScore={quizScore}
-                    activeQuizQuestionId={activeQuizQuestionId}
-                    setActiveQuizQuestionId={setActiveQuizQuestionId}
-                  />
-                </div>
-                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
-                  {renderBottomNav(4, null, 7)}
-                </div>
+              <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px 24px 24px', minHeight: 0 }} className="hide-scrollbar chapter-content-justified">
+                <ChapterQuizAndSolutions 
+                  currentSlide={currentSlide}
+                  quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
+                  isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
+                  quizScore={quizScore}
+                  activeQuizQuestionId={activeQuizQuestionId}
+                  setActiveQuizQuestionId={setActiveQuizQuestionId}
+                />
               </div>
+              <ChapterBackFooter
+                onBack={() => {
+                  if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
+                  else { setCurrentStep(7); setCurrentSlide(1); }
+                }}
+                onNext={currentSlide < 4 ? () => setCurrentSlide(currentSlide + 1) : null}
+                nextLabel={currentSlide < 4 ? "Next" : null}
+                nextVariant="blue"
+                centerContent={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: '#1E3A8A' }}>
+                    <span>Slide {currentSlide} of 4</span>
+                  </div>
+                }
+              />
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
