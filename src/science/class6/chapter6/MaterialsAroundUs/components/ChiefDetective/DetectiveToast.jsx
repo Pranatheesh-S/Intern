@@ -24,8 +24,8 @@ export default function DetectiveToast({ message, isVisible, onClose }) {
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
-            background: '#FFFFFF',
-            border: '2px solid #D9C9A3',
+            background: 'var(--lesson-surface)',
+            border: '2px solid var(--lesson-accent)',
             borderRadius: '12px',
             padding: '1rem',
             boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
@@ -37,10 +37,10 @@ export default function DetectiveToast({ message, isVisible, onClose }) {
           }}
         >
           <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--lesson-accent-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Radio size={20} style={{ color: '#A64B27' }} />
+            <Radio size={20} style={{ color: 'var(--lesson-accent)' }} />
           </div>
           <div>
-            <strong style={{ display: 'block', fontSize: '0.85rem', color: '#A64B27', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+            <strong style={{ display: 'block', fontSize: '0.85rem', color: 'var(--lesson-accent)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
               📡 Incoming Message
             </strong>
             <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--lesson-primary)' }}>

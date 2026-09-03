@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Box, CheckCircle, Lightbulb, Hand, ChevronsDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Box, CheckCircle, Lightbulb } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import cottonVideo from '../../../../../assets/1.cottonball.mp4';
 import spongeVideo from '../../../../../assets/1.sponge.mp4';
@@ -62,29 +62,6 @@ const objectsData = [
 ];
 
 export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
-  // Local state
-  const items = [
-    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, var(--lesson-surface), var(--lesson-border))', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: '#A64B27', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-success-border)', blockRadius: '20px' },
-    { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: '#A64B27', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-success-border)', blockRadius: '8px' },
-    { id: 'eraser', name: 'Eraser', type: 'soft', resultText: 'It changed shape slightly.', icon: (
-      <svg width="50" height="50" viewBox="0 0 50 50">
-        <g transform="rotate(-15 25 25)">
-          <rect x="6" y="16" width="38" height="18" rx="4" fill="#fda4af" />
-          <rect x="6" y="16" width="38" height="12" rx="4" fill="#fecdd3" />
-          <rect x="16" y="16" width="18" height="18" fill="#A64B27" />
-          <rect x="16" y="16" width="18" height="12" fill="var(--lesson-border)" />
-        </g>
-      </svg>
-    ), color: '#A64B27', bg: 'var(--lesson-success-bg)', blockBg: 'var(--lesson-border)', blockRadius: '4px' },
-    { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: 'var(--lesson-danger)', bg: 'var(--lesson-danger-bg)', blockBg: 'var(--lesson-muted)', blockRadius: '12px' },
-    { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, var(--lesson-border), var(--lesson-surface), var(--lesson-muted))', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: 'var(--lesson-danger)', bg: 'var(--lesson-danger-bg)', blockBg: 'var(--lesson-muted)', blockRadius: '0px' }
-  ];
-
-  const [testedItems, setTestedItems] = useState({});
-  const [activeAnim, setActiveAnim] = useState(null);
-  const [placedItems, setPlacedItems] = useState({ soft: [], hard: [] });
-
-  // Remote state
   const [selectedId, setSelectedId] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
@@ -100,29 +77,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
   const activeObj = objectsData.find(o => o.id === selectedId);
   const activeState = progress[selectedId];
 
-  // Local handlers
-  const handlePressLocal = (id) => {
-    if (activeAnim) return;
-    setActiveAnim(id);
-    setTimeout(() => {
-      setTestedItems(prev => {
-        if (!prev[id]) addXp(10);
-        return { ...prev, [id]: true };
-      });
-      // Automatically place the item
-      const item = items.find(i => i.id === id);
-      setPlacedItems(prev => {
-        if (prev[item.type].includes(id)) return prev;
-        return { ...prev, [item.type]: [...prev[item.type], id] };
-      });
-      setActiveAnim(null);
-    }, 1000);
-  };
-
-  const allTested = Object.keys(testedItems).length === items.length;
-  const allPlaced = placedItems.soft.length === 3 && placedItems.hard.length === 2;
-
-  // Remote handlers
+  // Reset video state when switching objects
   useEffect(() => {
     setIsPlaying(false);
     setIsVideoFinished(progress[selectedId].status !== 'untouched');
@@ -132,12 +87,13 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
     }
   }, [selectedId, progress]);
 
+  // Completion check
   const completedCount = Object.values(progress).filter(p => p.status === 'completed').length;
   useEffect(() => {
-    if (completedCount === objectsData.length && allPlaced) {
-      setTimeout(() => onComplete(), 2000);
+    if (completedCount === objectsData.length) {
+      onComplete();
     }
-  }, [completedCount, allPlaced, onComplete]);
+  }, [completedCount, onComplete]);
 
   const handlePress = () => {
     if (videoRef.current && !isPlaying) {
@@ -175,7 +131,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
             if (nextId) {
                setSelectedId(nextId);
             }
-         }, 2500); 
+         }, 2500); // slightly longer to let them read the explanation
       }
     } else {
       setProgress(prev => ({
@@ -188,7 +144,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '0.75rem', width: '100%', overflow: 'hidden' }}>
       
-      {/* Remote Header */}
+      {/* Header */}
       <div className="glass-panel" style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '0.15rem', border: '1px solid var(--accent-border)', padding: '0.75rem 1rem' }}>
         <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           🕵️ Material Detective – Press & Identify
@@ -198,13 +154,13 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
         </p>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', width: '100%', flex: 1, minHeight: 0, overflowY: 'auto' }}>
-        {/* Remote Left Panel */}
+      <div style={{ display: 'flex', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
+        {/* Left Panel */}
         <div className="glass-panel" style={{ flex: '0 0 300px', display: 'flex', flexDirection: 'column', gap: '0.75rem', border: '1px solid var(--border)', padding: '1rem', overflowY: 'hidden' }}>
           <h4 style={{ margin: 0, fontSize: '1.35rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
             Objects to Investigate ({completedCount} / 5)
           </h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
             {objectsData.map(obj => {
               const isCompleted = progress[obj.id].status === 'completed';
               const isSelected = selectedId === obj.id;
@@ -234,9 +190,9 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
             })}
           </div>
         </div>
-        
-        {/* Remote Center Panel */}
+               {/* Center Panel */}
         <div className="glass-panel" style={{ flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid var(--border)', padding: '1rem', position: 'relative', overflowY: 'hidden' }}>
+          
           <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
             <Search size={22} style={{ color: 'var(--text-muted)' }} /> 
             <span style={{ fontWeight: 'bold', fontSize: '1.35rem', color: 'var(--text-primary)' }}>Investigation {selectedId} of 5</span>
@@ -281,6 +237,8 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
 
           {isVideoFinished && (
             <div style={{ width: '100%', borderTop: '1px solid var(--border)', paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'fadeIn 0.3s' }}>
+              
+              {/* Question */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
                 <Box size={22} /> What material is it made of?
               </div>
@@ -308,6 +266,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
                 {activeObj.options.map((opt, i) => {
                   const isCorrect = opt === activeObj.correctMaterial;
                   const showCorrect = activeState.status === 'completed' && isCorrect;
+                  
                   return (
                     <button
                       key={i}
@@ -331,143 +290,8 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
             </div>
           )}
         </div>
+
       </div>
-
-      {/* Local Auto-Sorting Observation Section */}
-      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flexShrink: 0 }}>
-        
-        {/* Local Materials Row */}
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
-          {items.map(item => {
-            const isTesting = activeAnim === item.id;
-            const isTested = testedItems[item.id];
-            const isPlaced = placedItems.soft.includes(item.id) || placedItems.hard.includes(item.id);
-
-            return (
-              <div key={item.id} style={{ 
-                flex: 1, 
-                border: `1px solid ${isTested ? item.color : 'var(--lesson-border)'}`, 
-                borderRadius: '12px', 
-                padding: '1rem 0.5rem', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
-                gap: '1rem',
-                background: 'white',
-                position: 'relative',
-                opacity: isPlaced ? 0.5 : 1
-              }}>
-                <div style={{ fontSize: '1rem', fontWeight: 'bold', color: isTested ? item.color : 'var(--lesson-text)' }}>
-                  {item.name}
-                </div>
-                <div style={{ 
-                  width: '100%', height: '140px', 
-                  border: `1px solid ${isTested ? item.color : 'var(--lesson-border)'}`,
-                  borderRadius: '8px',
-                  background: isTested ? item.bg : 'var(--lesson-surface)',
-                  position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end',
-                  paddingBottom: '1rem', overflow: 'hidden', cursor: 'default'
-                }}>
-                  <div style={{ position: 'absolute', top: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <AnimatePresence>
-                      {isTesting && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 5 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ repeat: Infinity, duration: 0.5 }}
-                        >
-                          <ChevronsDown size={24} color={item.color} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <motion.div animate={{ y: isTesting ? 45 : 0 }} transition={{ duration: 0.3, yoyo: Infinity }} style={{ position: 'absolute', top: '10px', zIndex: 10 }}>
-                    <Hand size={48} color="var(--lesson-warning)" fill="var(--lesson-warning-border)" style={{ transform: 'rotate(-15deg)' }} />
-                  </motion.div>
-                  <motion.div
-                    animate={isTesting ? (item.type === 'soft' ? { scaleY: 0.5, scaleX: 1.2, y: 15 } : { y: [0, 2, 0, 2, 0] }) : { scaleY: 1, scaleX: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ fontSize: '4rem', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))', transformOrigin: 'bottom', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px' }}
-                  >
-                    {item.icon}
-                  </motion.div>
-                </div>
-                <div style={{ height: '95px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', width: '100%', padding: '0 0.5rem' }}>
-                  {isTested ? (
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ background: item.color, color: 'white', padding: '2px 12px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '2px' }}>
-                        {item.type === 'soft' ? 'Soft' : 'Hard'}
-                      </div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--lesson-secondary)', textAlign: 'center', lineHeight: '1.2' }}>{item.resultText}</div>
-                    </div>
-                  ) : <div style={{ flex: 1 }}></div>}
-                  <button 
-                    onClick={() => handlePressLocal(item.id)}
-                    disabled={activeAnim !== null}
-                    style={{
-                      background: '#A64B27', color: 'white', border: 'none',
-                      padding: '0.4rem 1.5rem', borderRadius: '20px',
-                      fontWeight: 'bold', cursor: activeAnim ? 'not-allowed' : 'pointer',
-                      fontSize: '0.9rem', width: '100%',
-                      boxShadow: '0 2px 4px rgba(59,130,246,0.3)', marginTop: '0.25rem'
-                    }}
-                  >
-                    Press
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>
-          <span style={{ fontSize: '1.2rem' }}>🔍</span> My Observation
-        </div>
-        <div style={{ fontSize: '0.95rem', color: 'var(--lesson-secondary)' }}>
-          As you test the materials, they will be automatically sorted into the correct boxes based on their properties.
-        </div>
-
-        <div style={{ display: 'flex', gap: '2rem', marginTop: '0.5rem' }}>
-          {/* Soft Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed #A64B27', borderRadius: '12px', background: 'var(--lesson-success-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
-            <div style={{ color: '#A64B27', fontWeight: 'bold', marginBottom: '1rem' }}>Soft (Easily Compressed)</div>
-            {placedItems.soft.length === 0 ? (
-              <div style={{ color: 'var(--lesson-success-border)', margin: 'auto' }}>Awaiting soft materials...</div>
-            ) : (
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {placedItems.soft.map(id => {
-                  const item = items.find(i => i.id === id);
-                  return <div key={id} style={{ fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{item.icon}</div>;
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Hard Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed var(--lesson-danger)', borderRadius: '12px', background: 'var(--lesson-danger-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
-            <div style={{ color: 'var(--lesson-danger)', fontWeight: 'bold', marginBottom: '1rem' }}>Hard (Difficult to Compress)</div>
-            {placedItems.hard.length === 0 ? (
-              <div style={{ color: 'var(--lesson-danger-border)', margin: 'auto' }}>Awaiting hard materials...</div>
-            ) : (
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {placedItems.hard.map(id => {
-                  const item = items.find(i => i.id === id);
-                  return <div key={id} style={{ fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{item.icon}</div>;
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      {/* Completion Toast */}
-      {(completedCount === objectsData.length && allPlaced) && (
-         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem', borderRadius: '8px', color: '#A64B27', textAlign: 'center', fontWeight: 'bold', marginTop: '1rem' }}>
-           <CheckCircle size={20} style={{ display: 'inline', marginBottom: '-4px', marginRight: '5px' }} />
-           Excellent classification! We are ready for the advanced scratch test.
-         </motion.div>
-      )}
       
       <style>{`
         .hover-lift:hover {

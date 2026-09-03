@@ -22,10 +22,10 @@ const StirringProgress = () => {
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '15px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--lesson-primary)', letterSpacing: '0.05em' }}>STIRRING</div>
-        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#A64B27', lineHeight: 1 }}>{percent}%</div>
+        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--lesson-accent)', lineHeight: 1 }}>{percent}%</div>
       </div>
-      <div style={{ width: '100%', height: '24px', background: 'white', border: '1px solid #D9C9A3', borderRadius: '12px', overflow: 'hidden', padding: '2px' }}>
-        <div style={{ height: '100%', background: '#A64B27', width: `${percent}%`, transition: 'width 0.1s linear', borderRadius: '8px' }} />
+      <div style={{ width: '100%', height: '24px', background: 'white', border: '1px solid #d6d3d1', borderRadius: '12px', overflow: 'hidden', padding: '2px' }}>
+        <div style={{ height: '100%', background: 'var(--lesson-accent)', width: `${percent}%`, transition: 'width 0.1s linear', borderRadius: '8px' }} />
       </div>
       <div style={{ fontSize: '1.1rem', color: '#78716c', fontWeight: '600', textTransform: 'uppercase' }}>Mixing...</div>
     </div>
@@ -582,14 +582,14 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
       <div style={{ background: 'var(--lesson-background)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
-            <Search size={32} color="#A64B27" /> Phase 1: Solubility Simulator
+            <Search size={32} color="var(--lesson-accent)" /> Phase 1: Solubility Simulator
           </h3>
           <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
             Activity 6.7: Let us explore how different materials behave when we mix them in water.
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ background: 'white', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '12px 18px', position: 'relative', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+          <div style={{ background: 'white', border: '1px solid #d6d3d1', borderRadius: '12px', padding: '12px 18px', position: 'relative', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
             <div style={{ fontSize: '1rem', color: 'var(--lesson-primary)', fontWeight: '600' }}>Does everything dissolve?</div>
             <div style={{ fontSize: '1rem', color: 'var(--lesson-primary)', fontWeight: '600' }}>Add to water, then stir!</div>
             <div style={{ position: 'absolute', right: '-8px', top: '24px', width: '16px', height: '16px', background: 'white', borderRight: '1px solid #d6d3d1', borderBottom: '1px solid #d6d3d1', transform: 'rotate(-45deg)' }} />
@@ -598,7 +598,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', flex: 1, minHeight: 0, background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)' }}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)' }}>
         
         {/* Left Side: Experiment */}
         <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--lesson-border)', boxSizing: 'border-box' }}>
@@ -617,7 +617,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     onClick={() => handleSelect(sub)}
                     style={{
                       background: isSelected ? 'var(--lesson-surface)' : 'white',
-                      border: `2px solid ${isSelected ? '#A64B27' : 'var(--lesson-border)'}`,
+                      border: `2px solid ${isSelected ? 'var(--lesson-accent)' : 'var(--lesson-border)'}`,
                       color: isSelected ? 'var(--lesson-primary)' : 'var(--lesson-text)',
                       padding: '1rem 0.5rem',
                       borderRadius: '16px',
@@ -633,11 +633,11 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     }}
                   >
                     <div style={{ position: 'relative', width: '60px', height: '60px' }}>
-                      <div style={{ width: '100%', height: '100%', background: '#FFFFFF', borderRadius: '50%', padding: '8px', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: '100%', height: '100%', background: 'var(--lesson-surface)', borderRadius: '50%', padding: '8px', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <img src={sub.image} alt={sub.name} style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '50%', mixBlendMode: 'multiply' }} />
                       </div>
                       {isObserved && (
-                        <div style={{ position: 'absolute', top: -2, right: -2, background: '#A64B27', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', border: '2px solid white', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>✓</div>
+                        <div style={{ position: 'absolute', top: -2, right: -2, background: 'var(--lesson-success)', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', border: '2px solid white', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>✓</div>
                       )}
                     </div>
                     <span style={{ fontSize: '0.95rem', textAlign: 'center', lineHeight: '1.2' }}>{sub.name}</span>
@@ -664,8 +664,8 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     alignItems: 'center',
                     gap: '0.75rem',
                     padding: '0.75rem 2rem',
-                    background: (stirState === 'stirring' || stirState === 'dropping') ? 'var(--text-light)' : '#A64B27',
-                    color: '#FFFFFF',
+                    background: (stirState === 'stirring' || stirState === 'dropping') ? 'var(--text-light)' : 'var(--lesson-accent)',
+                    color: 'white',
                     border: 'none',
                     borderRadius: '24px',
                     fontSize: '1rem',
@@ -680,7 +680,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                 
                 {stirState === 'resolved' && (
                   <div style={{
-                    color: selectedSubstance.type === 'Soluble' ? '#A64B27' : '#A64B27',
+                    color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)',
                     fontSize: '1.1rem',
                     fontWeight: 'bold',
                     background: 'rgba(255, 255, 255, 0.8)',
@@ -705,7 +705,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
         {/* Right Side: Observation Console */}
         <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
           <h4 style={{ margin: '0 0 1rem 0', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
-            <Camera size={28} color="#A64B27" /> Observation Console
+            <Camera size={28} color="var(--lesson-accent)" /> Observation Console
           </h4>
           
           <AnimatePresence mode="wait">
@@ -718,7 +718,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                 style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', background: 'var(--lesson-background)', borderRadius: '12px', padding: '1.5rem', border: '1px solid var(--lesson-border)', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  <div style={{ color: '#A64B27', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Material</div>
+                  <div style={{ color: 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Material</div>
                   <div style={{ fontSize: '1.5rem', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>{selectedSubstance.name}</div>
                 </div>
 
@@ -728,9 +728,9 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                   </div>
                 ) : (
                   <>
-                    <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #D9C9A3', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                      <div style={{ color: '#A64B27', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', fontWeight: 'bold', color: selectedSubstance.type === 'Soluble' ? '#A64B27' : '#A64B27' }}>
+                    <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #d6d3d1', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                      <div style={{ color: 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', fontWeight: 'bold', color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)' }}>
                         {selectedSubstance.type === 'Soluble' ? 'Disappears in water' : 'Does not disappear'}
                       </div>
                       <div style={{ color: '#44403c', fontSize: '1.1rem', lineHeight: '1.5' }}>
@@ -739,7 +739,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     </div>
 
                     <div style={{ background: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success-bg)' : 'var(--lesson-background)', borderRadius: '12px', padding: '1.5rem', border: `1px solid ${selectedSubstance.type === 'Soluble' ? 'var(--lesson-success-border)' : 'var(--lesson-border)'}`, boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                      <div style={{ color: selectedSubstance.type === 'Soluble' ? '#A64B27' : '#A64B27', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>Conclusion</div>
+                      <div style={{ color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>Conclusion</div>
                       <div style={{ color: selectedSubstance.type === 'Soluble' ? '#14532d' : 'var(--lesson-primary)', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: 'bold' }}>
                         {selectedSubstance.conclusion}
                       </div>
@@ -752,7 +752,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                 <StirringProgress />
               </div>
             ) : (
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#78716c', textAlign: 'center', border: '2px dashed #d6d3d1', borderRadius: '12px', padding: '2rem', background: '#FFFFFF' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#78716c', textAlign: 'center', border: '2px dashed #d6d3d1', borderRadius: '12px', padding: '2rem', background: '#fafaf9' }}>
                 <div style={{ background: 'white', padding: '15px', borderRadius: '50%', border: '1px solid var(--lesson-border)' }}>
                   <Droplets size={40} color="#a8a29e" />
                 </div>
@@ -777,7 +777,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
         boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
         flexShrink: 0
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#A64B27' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--lesson-accent)' }}>
           <div style={{ background: 'var(--lesson-warning-bg)', padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Target size={20} />
           </div>
@@ -787,7 +787,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
         <div style={{ 
           fontSize: '1rem', 
           fontWeight: 'bold', 
-          color: obsCount === substances.length ? '#A64B27' : 'var(--lesson-secondary)',
+          color: obsCount === substances.length ? 'var(--lesson-success)' : 'var(--lesson-secondary)',
           background: obsCount === substances.length ? 'var(--lesson-success-bg)' : '#f5f5f4',
           padding: '6px 12px',
           borderRadius: '16px',

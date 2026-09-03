@@ -17,7 +17,7 @@ export default function ChapterCover({ onOpenBook, onBack }) {
         overflow: 'hidden',
         zIndex: 10000,
         userSelect: 'none',
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#060A17'
       }}
     >
       <style>{`

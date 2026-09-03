@@ -10,7 +10,7 @@ export default function Handbook_Matter({ stageCompleted = false }) {
         background: 'white', borderRadius: '8px',
         boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
         display: 'flex', flexDirection: 'column', 
-        border: 'clamp(6px, 1.5vw, 18px) solid #D9C9A3',
+        border: 'clamp(6px, 1.5vw, 18px) solid #064e3b',
         position: 'relative',
         overflow: 'hidden'
     }}>
@@ -21,7 +21,7 @@ export default function Handbook_Matter({ stageCompleted = false }) {
       {bookPage === 1 ? (
         <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           {/* ================= LEFT PAGE ================= */}
-          <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#064e3b', fontWeight: 'bold', borderBottom: '4px solid #A64B27', paddingBottom: '8px', display: 'inline-block' }}>
+          <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#064e3b', fontWeight: 'bold', borderBottom: '4px solid var(--lesson-success)', paddingBottom: '8px', display: 'inline-block' }}>
             What is Matter?
           </h2>
 
@@ -32,10 +32,10 @@ export default function Handbook_Matter({ stageCompleted = false }) {
           <div style={{ fontSize: 'var(--text-xl)', color: 'var(--lesson-text)', lineHeight: '1.6', marginBottom: '24px' }}>
             <p style={{ margin: '0 0 16px 0' }}>Mass and volume are the two properties possessed by all materials.</p>
             <p style={{ margin: '0 0 16px 0' }}>Can we give a general name to anything that possesses these two properties?</p>
-            <p style={{ margin: '0 0 16px 0' }}>Anything that <strong style={{ color: '#A64B27' }}>occupies space</strong> and has <strong style={{ color: '#A64B27' }}>mass</strong> is called <strong style={{ color: '#064e3b' }}>matter</strong>.</p>
+            <p style={{ margin: '0 0 16px 0' }}>Anything that <strong style={{ color: 'var(--lesson-success)' }}>occupies space</strong> and has <strong style={{ color: 'var(--lesson-success)' }}>mass</strong> is called <strong style={{ color: '#064e3b' }}>matter</strong>.</p>
           </div>
 
-          <div style={{ background: '#FFFFFF', border: '2px dashed #6ee7b7', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#ecfdf5', border: '2px dashed #6ee7b7', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: 'var(--text-xl)' }}>💡</div>
             <div style={{ fontSize: 'var(--text-lg)', color: '#064e3b', lineHeight: '1.4' }}>
               <strong>Fact</strong><br/>
@@ -48,9 +48,9 @@ export default function Handbook_Matter({ stageCompleted = false }) {
             <div style={{ color: 'var(--lesson-muted)', fontSize: 'var(--text-base)' }}>Page 1</div>
             <button 
               onClick={() => { setBookPage(2); setIsHandbookRead(true); }}
-              style={{ background: '#A64B27', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: 'var(--text-base)', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(16, 185, 129, 0.3)' }}
-              onMouseOver={(e) => e.target.style.background = '#A64B27'}
-              onMouseOut={(e) => e.target.style.background = '#A64B27'}
+              style={{ background: 'var(--lesson-success)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: 'var(--text-base)', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(16, 185, 129, 0.3)' }}
+              onMouseOver={(e) => e.target.style.background = 'var(--lesson-success)'}
+              onMouseOut={(e) => e.target.style.background = 'var(--lesson-success)'}
             >
               Next Page ➔
             </button>
@@ -68,22 +68,22 @@ export default function Handbook_Matter({ stageCompleted = false }) {
             <p style={{ margin: '0' }}>We need to analyze strange cases, like invisible air and modern plastics, to determine how they fit into the world of matter.</p>
           </div>
 
-          <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', display: 'flex', position: 'relative' }}>
+          <div style={{ border: '2px solid var(--lesson-success)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', display: 'flex', position: 'relative' }}>
             <div style={{ flex: 1, paddingRight: '80px' }}>
-              <h4 style={{ margin: '0 0 12px 0', color: '#A64B27', fontSize: 'var(--text-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-success)', fontSize: 'var(--text-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 🎯 MISSION
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                  <input type="checkbox" checked={isHandbookRead} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
+                  <input type="checkbox" checked={isHandbookRead} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
                   Read the Handbook
                 </label>
                 <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                  <input type="checkbox" checked={stageCompleted} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
+                  <input type="checkbox" checked={stageCompleted} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
                   Investigate Air
                 </label>
                 <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                  <input type="checkbox" checked={stageCompleted} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
+                  <input type="checkbox" checked={stageCompleted} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
                   Analyze the properties of Plastic
                 </label>
               </div>

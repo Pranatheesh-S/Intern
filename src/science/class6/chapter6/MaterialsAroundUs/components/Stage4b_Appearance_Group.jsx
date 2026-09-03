@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 const CustomIcons = {
   copper: (
     <svg width="40" height="40" viewBox="0 0 40 40">
-      <path d="M5 20 Q10 5, 20 20 T35 20" fill="none" stroke="#A64B27" strokeWidth="5" strokeLinecap="round" />
-      <path d="M5 25 Q10 10, 20 25 T35 25" fill="none" stroke="#A64B27" strokeWidth="5" strokeLinecap="round" opacity="0.8" />
+      <path d="M5 20 Q10 5, 20 20 T35 20" fill="none" stroke="var(--lesson-accent)" strokeWidth="5" strokeLinecap="round" />
+      <path d="M5 25 Q10 10, 20 25 T35 25" fill="none" stroke="var(--lesson-accent)" strokeWidth="5" strokeLinecap="round" opacity="0.8" />
     </svg>
   ),
   iron: (
@@ -18,7 +18,7 @@ const CustomIcons = {
   ),
   glass: (
     <svg width="60" height="60" viewBox="0 0 40 40">
-      <circle cx="20" cy="20" r="14" fill="#cffafe" opacity="0.8" stroke="#A64B27" strokeWidth="2" />
+      <circle cx="20" cy="20" r="14" fill="#cffafe" opacity="0.8" stroke="var(--lesson-accent)" strokeWidth="2" />
       <path d="M 12 15 A 8 8 0 0 1 18 10" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.9" />
     </svg>
   ),
@@ -44,7 +44,7 @@ const CustomIcons = {
   ),
   rubber: (
     <svg width="60" height="60" viewBox="0 0 40 40">
-      <ellipse cx="20" cy="20" rx="14" ry="8" fill="none" stroke="#A64B27" strokeWidth="4" transform="rotate(-15 20 20)" />
+      <ellipse cx="20" cy="20" rx="14" ry="8" fill="none" stroke="var(--lesson-accent)" strokeWidth="4" transform="rotate(-15 20 20)" />
       <ellipse cx="20" cy="20" rx="14" ry="8" fill="none" stroke="var(--lesson-warning)" strokeWidth="2" transform="rotate(-15 20 20)" opacity="0.8" />
     </svg>
   ),
@@ -143,7 +143,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
   }, [items, observedItem, onComplete]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', height: '100%', background: '#FFFFFF', padding: '1rem', borderRadius: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', height: '100%', background: 'var(--lesson-surface)', padding: '1rem', borderRadius: '16px' }}>
       
       {/* Header & Lamp toggle */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -159,7 +159,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           <button 
             onClick={() => setLampOn(!lampOn)}
             style={{ 
-              background: lampOn ? 'var(--lesson-warning)' : '#A64B27', 
+              background: lampOn ? 'var(--lesson-warning)' : 'var(--lesson-accent)', 
               color: 'white', border: 'none', padding: '0.4rem 0.75rem', 
               borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer',
               fontWeight: 'bold', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
@@ -223,7 +223,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             {placed.shiny.map(item => (
-              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '8px', border: '1px solid #D9C9A3', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', width: '90px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '8px', border: '1px solid #fef08a', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', width: '90px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60px' }}>
                   <div>{item.icon}</div>
                 </div>
@@ -241,7 +241,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, 'dull')}
           style={{ 
-            border: '2px dashed var(--lesson-muted)', background: '#FFFFFF', borderRadius: '12px',
+            border: '2px dashed var(--lesson-muted)', background: 'var(--lesson-surface)', borderRadius: '12px',
             display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem',
             position: 'relative', overflowY: 'auto'
           }}
@@ -282,13 +282,13 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           <h4 style={{ margin: '0 0 0.15rem 0', color: 'var(--lesson-primary)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🔍 Observation Area
           </h4>
-          <p style={{ margin: 0, color: '#A64B27', fontSize: '0.85rem' }}>
+          <p style={{ margin: 0, color: 'var(--lesson-accent)', fontSize: '0.85rem' }}>
             Place any item under the lamp to observe how it looks.
           </p>
         </div>
         <div style={{ 
           border: '2px dashed var(--lesson-border)', borderRadius: '10px', padding: '0.4rem 1rem', 
-          background: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '180px', justifyContent: 'center', minHeight: '50px'
+          background: 'var(--lesson-surface)', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '180px', justifyContent: 'center', minHeight: '50px'
         }}>
           {observedItem ? (
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -306,10 +306,10 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
             </motion.div>
           ) : (
             <>
-              <div style={{ background: 'white', padding: '0.4rem', borderRadius: '50%', color: '#A64B27', display: 'flex' }}>
+              <div style={{ background: 'white', padding: '0.4rem', borderRadius: '50%', color: 'var(--lesson-accent)', display: 'flex' }}>
                 <MousePointer2 size={16} />
               </div>
-              <span style={{ color: '#A64B27', fontSize: '0.8rem' }}>Drag an item here<br/>to observe</span>
+              <span style={{ color: 'var(--lesson-accent)', fontSize: '0.8rem' }}>Drag an item here<br/>to observe</span>
             </>
           )}
         </div>

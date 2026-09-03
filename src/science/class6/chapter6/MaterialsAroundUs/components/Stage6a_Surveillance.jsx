@@ -42,7 +42,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Clear Glass Window',
       type: 'Transparent',
       view: 'Clear View',
-      icon: <Eye size={24} color="#A64B27" />,
+      icon: <Eye size={24} color="var(--lesson-success)" />,
       desc: 'You have a perfect view of the suspect through the window. Light passes through completely.',
       conclusion: 'Materials through which things can be seen clearly are Transparent.',
       image: '/images/surveillance_window.png'
@@ -70,7 +70,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: 'var(--lesson-text)' }}>
       
       {/* Header */}
-      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Search size={24} color="var(--accent)" /> Phase 1: Surveillance Simulator
@@ -80,12 +80,6 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '10px 15px', position: 'relative' }}>
-            <div style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: '500' }}>Observe carefully, detective!</div>
-            <div style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: '500' }}>Not all materials reveal the truth.</div>
-            {/* Speech bubble arrow */}
-            <div style={{ position: 'absolute', right: '-8px', top: '20px', width: '16px', height: '16px', background: 'var(--surface)', borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', transform: 'rotate(-45deg)' }} />
-          </div>
           <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '70px', height: '70px', objectFit: 'contain' }} />
         </div>
       </div>
@@ -105,7 +99,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                 style={{
                   position: 'relative',
                   borderRadius: '16px',
-                  border: isSelected ? '4px solid #A64B27' : '2px solid var(--lesson-border)',
+                  border: isSelected ? '4px solid var(--lesson-accent)' : '2px solid var(--lesson-border)',
                   cursor: 'pointer',
                   overflow: 'hidden',
                   background: 'white',
@@ -209,7 +203,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                 </motion.div>
               ) : (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: 'var(--lesson-muted)', textAlign: 'center', border: '2px dashed var(--lesson-border)', borderRadius: '12px', padding: '2rem' }}>
-                  <div style={{ background: '#FFFFFF', padding: '15px', borderRadius: '50%' }}>
+                  <div style={{ background: 'var(--lesson-surface)', padding: '15px', borderRadius: '50%' }}>
                     <Camera size={40} color="var(--lesson-border)" />
                   </div>
                   <span style={{ fontSize: '1.15rem' }}>Select a location on the left to begin observation.</span>

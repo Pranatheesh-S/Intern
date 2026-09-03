@@ -9,9 +9,9 @@ export default function EvidenceSummary({ data, onComplete, addXp }) {
 
   return (
     <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '700px', display: 'flex', flexDirection: 'column', gap: '1.5rem', borderLeft: '4px solid #A64B27' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '700px', display: 'flex', flexDirection: 'column', gap: '1.5rem', borderLeft: '4px solid var(--lesson-success)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem' }}>
-          <BookMarked size={32} color="#A64B27" />
+          <BookMarked size={32} color="var(--lesson-success)" />
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--lesson-primary)' }}>{data.title || "Evidence Logged"}</h2>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--lesson-secondary)' }}>{data.dialogue}</p>
@@ -28,11 +28,11 @@ export default function EvidenceSummary({ data, onComplete, addXp }) {
               transition={{ delay: idx * 0.2 }}
               style={{
                 display: 'flex', gap: '1rem', alignItems: 'flex-start',
-                background: '#FFFFFF', padding: '1rem', borderRadius: '8px',
-                borderLeft: '4px solid #A64B27'
+                background: 'var(--lesson-surface)', padding: '1rem', borderRadius: '8px',
+                borderLeft: '4px solid var(--lesson-success)'
               }}
             >
-              <CheckCircle size={20} color="#A64B27" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <CheckCircle size={20} color="var(--lesson-success)" style={{ flexShrink: 0, marginTop: '2px' }} />
               <span style={{ fontSize: '1rem', color: 'var(--lesson-text)', lineHeight: '1.5' }}>{discovery}</span>
             </motion.div>
           ))}

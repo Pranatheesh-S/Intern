@@ -1,15 +1,18 @@
-import React, { useRef, useState, Suspense } from 'react';
+import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment, PerspectiveCamera, OrbitControls, Sphere, Cylinder, Box } from '@react-three/drei';
 import ErrorBoundary from '../../../../../components/ErrorBoundary';
 
 function BalloonExperiment({ inflating }) {
    const balloonRef = useRef();
+   const [scale, setScale] = useState(1);
 
    useFrame((state, delta) => {
-      if (inflating && balloonRef.current && balloonRef.current.scale.x < 2.5) {
-         const newScale = Math.min(balloonRef.current.scale.x + delta * 1.5, 2.5);
-         balloonRef.current.scale.set(newScale, newScale, newScale);
+      if (inflating && scale < 2.5) {
+         setScale(prev => Math.min(prev + delta * 1.5, 2.5));
+      }
+      if (balloonRef.current) {
+         balloonRef.current.scale.set(scale, scale, scale);
       }
    });
 
@@ -44,10 +47,14 @@ function BalloonExperiment({ inflating }) {
 
 function ScaleExperiment({ weighing }) {
    const scaleRef = useRef();
+   const [angle, setAngle] = useState(0);
 
    useFrame((state, delta) => {
-      if (weighing && scaleRef.current && scaleRef.current.rotation.z > -0.25) {
-         scaleRef.current.rotation.z = Math.max(scaleRef.current.rotation.z - delta * 0.5, -0.25);
+      if (weighing && angle > -0.25) {
+         setAngle(prev => Math.max(prev - delta * 0.5, -0.25));
+      }
+      if (scaleRef.current) {
+         scaleRef.current.rotation.z = angle;
       }
    });
 
@@ -103,15 +110,13 @@ export default function AirExperiments3D() {
       <div style={{ display: 'flex', gap: '12px', width: '100%', height: '180px' }}>
          {/* Experiment 1 */}
          <div style={{ flex: 1, background: 'var(--lesson-background)', borderRadius: '12px', border: '1px solid var(--lesson-border)', overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ padding: '6px 8px', background: '#FFFFFF', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
+            <div style={{ padding: '6px 8px', background: 'var(--lesson-surface)', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
                1. Air occupies space
             </div>
             <div style={{ flex: 1, position: 'relative' }}>
                <ErrorBoundary fallback={<div style={{padding: '10px'}}>3D render failed</div>}>
                   <Canvas>
-                     <Suspense fallback={null}>
-                        <BalloonExperiment inflating={inflate} />
-                     </Suspense>
+                     <BalloonExperiment inflating={inflate} />
                   </Canvas>
                </ErrorBoundary>
                <button 
@@ -121,7 +126,7 @@ export default function AirExperiments3D() {
                   Pump Air
                </button>
                {inflate && (
-                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: '#A64B27', pointerEvents: 'none' }}>
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--lesson-success)', pointerEvents: 'none' }}>
                      Volume increases!
                   </div>
                )}
@@ -130,15 +135,13 @@ export default function AirExperiments3D() {
 
          {/* Experiment 2 */}
          <div style={{ flex: 1, background: 'var(--lesson-background)', borderRadius: '12px', border: '1px solid var(--lesson-border)', overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ padding: '6px 8px', background: '#FFFFFF', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
+            <div style={{ padding: '6px 8px', background: 'var(--lesson-surface)', borderBottom: '1px solid var(--lesson-border)', fontSize: '0.75rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>
                2. Air has mass
             </div>
             <div style={{ flex: 1, position: 'relative' }}>
                <ErrorBoundary fallback={<div style={{padding: '10px'}}>3D render failed</div>}>
                   <Canvas>
-                     <Suspense fallback={null}>
-                        <ScaleExperiment weighing={weigh} />
-                     </Suspense>
+                     <ScaleExperiment weighing={weigh} />
                   </Canvas>
                </ErrorBoundary>
                <button 
@@ -148,7 +151,7 @@ export default function AirExperiments3D() {
                   Weigh
                </button>
                {weigh && (
-                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: '#A64B27', pointerEvents: 'none' }}>
+                  <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,255,255,0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--lesson-success)', pointerEvents: 'none' }}>
                      Inflated balloon is heavier!
                   </div>
                )}

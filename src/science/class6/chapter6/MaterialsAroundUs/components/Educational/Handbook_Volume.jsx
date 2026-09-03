@@ -5,7 +5,7 @@ export default function Handbook_Volume({ stageCompleted }) {
   return (
     <div style={{
         height: '100%',
-        background: '#FFFFFF', 
+        background: 'var(--lesson-surface)', 
         borderRadius: '16px',
         border: 'clamp(6px, 1.5vw, 18px) solid var(--lesson-primary)',
         display: 'flex', flexDirection: 'column', 
@@ -32,17 +32,17 @@ export default function Handbook_Volume({ stageCompleted }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* 6.3.6 Volume */}
           <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', borderRadius: '12px', overflow: 'hidden' }}>
-            <div style={{ background: 'var(--lesson-success-bg)', padding: '10px 15px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', color: '#A64B27' }}>
-              <Box size={18} color="#A64B27" /> Space and Volume
+            <div style={{ background: 'var(--lesson-success-bg)', padding: '10px 15px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', color: 'var(--lesson-success)' }}>
+              <Box size={18} color="var(--lesson-success)" /> Space and Volume
             </div>
             <div style={{ padding: '15px' }}>
-              <p style={{ margin: '0 0 10px 0', color: '#A64B27', lineHeight: '1.5' }}>
+              <p style={{ margin: '0 0 10px 0', color: 'var(--lesson-success)', lineHeight: '1.5' }}>
                 Have you noticed how your bag takes up a seat? Or how water fills a tumbler? This is because everything occupies space.
               </p>
-              <div style={{ background: 'white', padding: '12px', borderRadius: '8px', border: '1px solid var(--lesson-success-border)', color: '#A64B27', fontWeight: '500' }}>
+              <div style={{ background: 'white', padding: '12px', borderRadius: '8px', border: '1px solid var(--lesson-success-border)', color: 'var(--lesson-success)', fontWeight: '500' }}>
                 The amount of space occupied by an object or substance is called its <strong>volume</strong>.
               </div>
-              <p style={{ margin: '10px 0 0 0', color: '#A64B27', lineHeight: '1.5', fontSize: '0.9rem' }}>
+              <p style={{ margin: '10px 0 0 0', color: 'var(--lesson-success)', lineHeight: '1.5', fontSize: '0.9rem' }}>
                 We often see labels like "500 mL" on drinking water or milk bottles. These indicate the volume of the liquid inside.
               </p>
             </div>
@@ -54,7 +54,7 @@ export default function Handbook_Volume({ stageCompleted }) {
               <Microscope size={20} color="white" />
             </div>
             <div>
-              <h4 style={{ margin: '0 0 5px 0', color: '#A64B27', fontSize: '1.05rem' }}>What is Matter?</h4>
+              <h4 style={{ margin: '0 0 5px 0', color: 'var(--lesson-accent)', fontSize: '1.05rem' }}>What is Matter?</h4>
               <p style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
                 If something has <strong>mass</strong> and occupies <strong>space</strong> (volume), we call it <strong>Matter</strong>! All materials are matter.
               </p>
@@ -64,17 +64,17 @@ export default function Handbook_Volume({ stageCompleted }) {
       </div>
 
       {/* Page navigation */}
-      <div style={{ padding: '16px 24px', borderTop: '1px solid var(--lesson-surface)', background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ padding: '16px 24px', borderTop: '1px solid var(--lesson-surface)', background: 'var(--lesson-surface)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button 
           disabled
-          style={{ background: '#A64B27', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#FFFFFF', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           <span>←</span> Previous
         </button>
         <div style={{ color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>Page 1</div>
         <button 
           disabled
-          style={{ background: '#A64B27', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#FFFFFF', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           Next <span>→</span>
         </button>

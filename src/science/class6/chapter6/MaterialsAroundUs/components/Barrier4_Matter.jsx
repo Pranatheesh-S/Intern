@@ -34,9 +34,9 @@ export default function Barrier4_Matter({ onComplete, addXp }) {
               background: 'var(--lesson-success-bg)'
             }}
           >
-            <CheckCircle size={48} style={{ color: '#A64B27' }} />
+            <CheckCircle size={48} style={{ color: 'var(--lesson-success)' }} />
             <div>
-              <h2 style={{ margin: '0 0 0.5rem 0', color: '#A64B27', fontSize: '1.5rem' }}>Barrier 4 Complete!</h2>
+              <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--lesson-success)', fontSize: '1.5rem' }}>Barrier 4 Complete!</h2>
               <p style={{ margin: 0, color: 'var(--lesson-secondary)', lineHeight: '1.6' }}>
                 You have successfully identified what matter is! All objects we observed in the classroom have mass and occupy space, which means everything is made of matter.
                 Your core investigations are complete. Let's summarize the case!

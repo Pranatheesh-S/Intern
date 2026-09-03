@@ -48,9 +48,9 @@ export default function Barrier2_Grouping({ onComplete, addXp }) {
               background: 'var(--lesson-success-bg)'
             }}
           >
-            <CheckCircle size={48} style={{ color: '#A64B27' }} />
+            <CheckCircle size={48} style={{ color: 'var(--lesson-success)' }} />
             <div>
-              <h2 style={{ margin: '0 0 0.5rem 0', color: '#A64B27', fontSize: '1.5rem' }}>Barrier 2 Complete!</h2>
+              <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--lesson-success)', fontSize: '1.5rem' }}>Barrier 2 Complete!</h2>
               <p style={{ margin: 0, color: 'var(--lesson-secondary)', lineHeight: '1.6' }}>
                 Classification is not fixed! Scientists choose different properties depending on what they want to study. 
                 Next, let's investigate the specific properties of materials like lustre, hardness, and transparency.

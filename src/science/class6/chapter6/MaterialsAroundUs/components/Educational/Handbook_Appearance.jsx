@@ -32,28 +32,28 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
               <h2 style={{ margin: '0 0 8px 0', fontSize: 'var(--text-xl)', color: 'var(--lesson-primary)', fontWeight: 'bold', lineHeight: '1.3' }}>
                 Observe and Identify<br/>Appearance of Materials
               </h2>
-              <div style={{ width: 'clamp(28px, 4vw, 60px)', height: '4px', background: '#A64B27', borderRadius: '2px' }} />
+              <div style={{ width: 'clamp(28px, 4vw, 60px)', height: '4px', background: 'var(--lesson-accent)', borderRadius: '2px' }} />
             </div>
             <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Annie&backgroundColor=transparent" alt="Student" style={{ width: 'clamp(56px, 8vw, 120px)', height: 'clamp(56px, 8vw, 120px)', marginTop: '-10px' }} />
           </div>
 
           {/* Box 1: Blue dashed */}
-          <div style={{ background: '#FFFFFF', border: '1px dashed var(--lesson-border)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: 'var(--lesson-surface)', border: '1px dashed var(--lesson-border)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: 'var(--text-2xl)', marginTop: '4px' }}>💡</div>
             <div style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-text)', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div>Materials can look different from each other.</div>
               <div>Some have shiny surfaces, while others look dull.</div>
-              <div>They may also differ in <strong style={{ color: '#A64B27' }}>colour</strong> and <strong style={{ color: '#A64B27' }}>texture</strong>, such as smooth or rough.</div>
+              <div>They may also differ in <strong style={{ color: 'var(--lesson-accent)' }}>colour</strong> and <strong style={{ color: 'var(--lesson-accent)' }}>texture</strong>, such as smooth or rough.</div>
             </div>
           </div>
 
           {/* Box 2: Purple */}
-          <div style={{ background: 'var(--lesson-accent-bg)', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: 'var(--lesson-accent-bg)', border: '1px solid var(--lesson-accent)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: 'var(--text-2xl)', marginTop: '4px' }}>✨</div>
             <div style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-text)', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <strong style={{ color: '#A64B27', fontSize: 'var(--text-base)' }}>Lustrous vs Non-lustrous</strong>
-              <div>Materials with shiny surfaces are called <strong style={{ color: '#A64B27' }}>lustrous</strong>. Metals like iron, copper and aluminium are usually lustrous.</div>
-              <div>Paper, wood and rubber are examples of <strong style={{ color: '#A64B27' }}>non-lustrous</strong> materials.</div>
+              <strong style={{ color: 'var(--lesson-accent)', fontSize: 'var(--text-base)' }}>Lustrous vs Non-lustrous</strong>
+              <div>Materials with shiny surfaces are called <strong style={{ color: 'var(--lesson-accent)' }}>lustrous</strong>. Metals like iron, copper and aluminium are usually lustrous.</div>
+              <div>Paper, wood and rubber are examples of <strong style={{ color: 'var(--lesson-accent)' }}>non-lustrous</strong> materials.</div>
             </div>
           </div>
 
@@ -61,7 +61,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-bg)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: 'var(--text-xl)', marginTop: '2px', transform: 'rotate(-45deg)' }}>📌</div>
             <div style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-text)', lineHeight: '1.5' }}>
-              <strong style={{ color: '#A64B27', display: 'block', marginBottom: '4px' }}>Remember!</strong>
+              <strong style={{ color: 'var(--lesson-accent)', display: 'block', marginBottom: '4px' }}>Remember!</strong>
               Not everything that shines is a metal!
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
         <div style={{ flex: 1, minHeight: 0, padding: '24px 20px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           {/* ================= RIGHT PAGE ================= */}
           <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-xl)', color: 'var(--lesson-primary)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Layers size={24} style={{ color: '#A64B27' }} /> Investigation: Group by Appearance
+            <Layers size={24} style={{ color: 'var(--lesson-accent)' }} /> Investigation: Group by Appearance
           </h2>
 
           <div style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-secondary)', lineHeight: '1.5', marginBottom: '16px' }}>
@@ -89,7 +89,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           </div>
 
           {/* Yellow Tip Box */}
-          <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '16px' }}>
+          <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid #fef08a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '16px' }}>
             <Lightbulb size={20} color="var(--lesson-warning)" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--lesson-secondary)', lineHeight: '1.4' }}>
               Look carefully under the lamp.<br/>
@@ -98,38 +98,38 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           </div>
 
           {/* Mission Checklist */}
-          <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', marginBottom: '16px' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: '#A64B27', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ border: '2px solid var(--lesson-success)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', marginBottom: '16px' }}>
+            <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-success)', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Target size={18} /> MISSION CHECKLIST
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
-                {isHandbookRead ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="#A64B27" />} Read the Handbook
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
+                {isHandbookRead ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-success)" />} Read the Handbook
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
-                {isPhase1Done ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="var(--lesson-muted)" />} Observe the materials
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
+                {isPhase1Done ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-muted)" />} Observe the materials
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
-                {isPhase2Done ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="var(--lesson-muted)" />} Group by appearance
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
+                {isPhase2Done ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-muted)" />} Group by appearance
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
-                {isPhase3Done ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="var(--lesson-muted)" />} Test with the lamp
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
+                {isPhase3Done ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-muted)" />} Test with the lamp
               </div>
             </div>
           </div>
 
           {/* How to do */}
-          <div style={{ border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '16px', background: '#FFFFFF', marginBottom: '16px' }}>
+          <div style={{ border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-surface)', marginBottom: '16px' }}>
             <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-primary)', fontSize: 'var(--text-sm)' }}>How to do:</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><MousePointer2 size={16} /></div> Drag an item from the tray
+                <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><MousePointer2 size={16} /></div> Drag an item from the tray
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><Move size={16} /></div> Drop it in the right group
+                <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><Move size={16} /></div> Drop it in the right group
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><Eye size={16} /></div> Click the lamp to observe again
+                <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><Eye size={16} /></div> Click the lamp to observe again
               </div>
             </div>
           </div>
@@ -137,8 +137,8 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           {/* Detective Tip */}
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: 'auto', paddingTop: '10px', marginBottom: '16px' }}>
             <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: 'clamp(42px, 6vw, 90px)', height: 'clamp(42px, 6vw, 90px)' }} />
-            <div style={{ background: '#FFFFFF', padding: '12px', borderRadius: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)', position: 'relative', flex: 1, border: '1px solid var(--lesson-border)' }}>
-              <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: '#FFFFFF', borderLeft: '1px solid var(--lesson-border)', borderBottom: '1px solid var(--lesson-border)', transform: 'rotate(45deg)' }} />
+            <div style={{ background: 'var(--lesson-surface)', padding: '12px', borderRadius: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)', position: 'relative', flex: 1, border: '1px solid var(--lesson-border)' }}>
+              <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: 'var(--lesson-surface)', borderLeft: '1px solid var(--lesson-border)', borderBottom: '1px solid var(--lesson-border)', transform: 'rotate(45deg)' }} />
               Remember, shiny surfaces reflect more light!
             </div>
           </div>

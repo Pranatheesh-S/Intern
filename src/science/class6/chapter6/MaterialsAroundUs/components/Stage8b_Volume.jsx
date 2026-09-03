@@ -78,10 +78,10 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
     cardBorder:    'var(--lesson-border)',
     textDark:      'var(--lesson-primary)',
     textMedium:    'var(--lesson-secondary)',
-    accent:        '#A64B27',
+    accent:        'var(--lesson-accent)',
     successBg:     'var(--lesson-success-bg)',
     successBorder: 'var(--lesson-success-border)',
-    successText:   '#A64B27',
+    successText:   'var(--lesson-success)',
     thinkBg:       'white7ed',
     thinkBorder:   'var(--lesson-warning-bg)',
     thinkText:     'var(--lesson-primary)',
@@ -564,7 +564,7 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
               <button
                 onClick={resetActivity}
                 style={{
-                  background: '#A64B27', border: `1px solid ${colors.accent}`,
+                  background: 'white', border: `1px solid ${colors.accent}`,
                   color: colors.accent, padding: '6px 12px', borderRadius: '8px',
                   fontSize: '1rem', fontWeight: 'bold',
                   display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer',
@@ -635,10 +635,10 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       <stop offset="100%" stopColor="rgba(255,255,255,0.85)" />
                     </linearGradient>
                     <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#A64B27" />
-                      <stop offset="15%" stopColor="#A64B27" />
-                      <stop offset="50%" stopColor="#A64B27" />
-                      <stop offset="85%" stopColor="#3B2A1F" />
+                      <stop offset="0%" stopColor="var(--lesson-accent)" />
+                      <stop offset="15%" stopColor="var(--lesson-accent)" />
+                      <stop offset="50%" stopColor="var(--lesson-accent)" />
+                      <stop offset="85%" stopColor="#0369a1" />
                       <stop offset="100%" stopColor="#075985" />
                     </linearGradient>
                   </defs>
@@ -902,13 +902,13 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       }}
                     >
                       {/* Collar (neck ring stays attached to cap) */}
-                      <rect x="44" y="22" width="32" height="5" rx="2" fill="#A64B27" stroke="#3B2A1F" strokeWidth="1" />
+                      <rect x="44" y="22" width="32" height="5" rx="2" fill="var(--lesson-accent)" stroke="#0369a1" strokeWidth="1" />
                       <rect x="46" y="23" width="28" height="2" rx="1" fill="rgba(255,255,255,0.4)" />
 
                       {/* Cap body */}
-                      <rect x="43" y="5" width="34" height="22" rx="3" fill="#A64B27" stroke="#A64B27" strokeWidth="1.5" />
+                      <rect x="43" y="5" width="34" height="22" rx="3" fill="var(--lesson-accent)" stroke="var(--lesson-accent)" strokeWidth="1.5" />
                       {/* Top rim of cap */}
-                      <ellipse cx="60" cy="5" rx="17" ry="4" fill="#A64B27" stroke="#A64B27" strokeWidth="1" />
+                      <ellipse cx="60" cy="5" rx="17" ry="4" fill="var(--lesson-accent)" stroke="var(--lesson-accent)" strokeWidth="1" />
                       {/* Cap highlight */}
                       <rect x="46" y="9" width="28" height="3" rx="1" fill="rgba(255,255,255,0.5)" />
                       {/* Ridges */}
@@ -998,7 +998,7 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                 </div>
                 <div style={{ fontSize: '15px', color: colors.successText, lineHeight: '1.2', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '3px' }}>
                   <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> The bottle has a limited amount of space.</div>
-                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> <span>The space occupied by an object or substance is called its <strong style={{ color: 'var(--lesson-text)', background: '#FFFFFF', padding: '0 4px', fontWeight: '900' }}>VOLUME</strong>.</span></div>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> <span>The space occupied by an object or substance is called its <strong style={{ color: 'var(--lesson-text)', background: '#fef08a', padding: '0 4px', fontWeight: '900' }}>VOLUME</strong>.</span></div>
                   <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> Different containers can have different volumes.</div>
                   <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}><CheckCircle2 size={15} color={colors.successText} style={{ flexShrink: 0 }} /> We can observe and compare volume by pouring water!</div>
                 </div>
@@ -1036,9 +1036,9 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                         style={{
                           padding: '6px 10px',
                           borderRadius: '6px',
-                          border: `2px solid ${isCorrectSelection ? '#A64B27' : (selectedOption === i ? colors.accent : colors.cardBorder)}`,
+                          border: `2px solid ${isCorrectSelection ? 'var(--lesson-success)' : (selectedOption === i ? colors.accent : colors.cardBorder)}`,
                           background: isCorrectSelection ? 'var(--lesson-success-bg)' : (selectedOption === i ? 'white7ed' : 'white'),
-                          color: isCorrectSelection ? '#A64B27' : (selectedOption === i ? colors.accent : colors.textDark),
+                          color: isCorrectSelection ? 'var(--lesson-success)' : (selectedOption === i ? colors.accent : colors.textDark),
                           fontSize: '15px',
                           lineHeight: '1.2',
                           cursor: 'pointer',
@@ -1054,12 +1054,12 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       >
                         <div style={{ 
                           width: '16px', height: '16px', borderRadius: '50%', 
-                          border: `2px solid ${isCorrectSelection ? '#A64B27' : (selectedOption === i ? colors.accent : 'var(--lesson-border)')}`,
+                          border: `2px solid ${isCorrectSelection ? 'var(--lesson-success)' : (selectedOption === i ? colors.accent : 'var(--lesson-border)')}`,
                           display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0,
                           background: 'white'
                         }}>
                           {isCorrectSelection ? (
-                             <CheckCircle2 size={12} color="#A64B27" />
+                             <CheckCircle2 size={12} color="var(--lesson-success)" />
                           ) : (
                              selectedOption === i && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: colors.accent }} />
                           )}

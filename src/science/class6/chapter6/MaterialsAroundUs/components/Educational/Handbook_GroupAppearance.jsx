@@ -24,7 +24,7 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
     }}>
       {/* Title */}
       <h2 style={{ margin: '0', fontSize: 'var(--text-xl)', color: 'var(--lesson-primary)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <Layers size={24} style={{ color: '#A64B27' }} /> Investigation: Group by Appearance
+        <Layers size={24} style={{ color: 'var(--lesson-accent)' }} /> Investigation: Group by Appearance
       </h2>
 
       {/* Intro Text */}
@@ -33,7 +33,7 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       </div>
 
       {/* Yellow Tip Box */}
-      <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+      <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid #fef08a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
         <Lightbulb size={20} color="var(--lesson-warning)" style={{ flexShrink: 0, marginTop: '2px' }} />
         <div style={{ fontSize: 'var(--text-sm)', color: 'var(--lesson-secondary)', lineHeight: '1.4' }}>
           Look carefully under the lamp.<br/>
@@ -42,38 +42,38 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       </div>
 
       {/* Mission Checklist */}
-      <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)' }}>
-        <h4 style={{ margin: '0 0 12px 0', color: '#A64B27', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ border: '2px solid var(--lesson-success)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)' }}>
+        <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-success)', fontSize: 'var(--text-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Target size={18} /> MISSION CHECKLIST
         </h4>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
-            {isPhase1Done ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="#A64B27" />} Read the Handbook
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
+            {isPhase1Done ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-success)" />} Read the Handbook
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
-            {isPhase2Done ? <CheckSquare size={18} color="#A64B27" /> : <Square size={18} color="#A64B27" />} Observe the materials
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
+            {isPhase2Done ? <CheckSquare size={18} color="var(--lesson-success)" /> : <Square size={18} color="var(--lesson-success)" />} Observe the materials
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
             {isPhase3Done ? <CheckSquare size={18} color="var(--lesson-muted)" /> : <Square size={18} color="var(--lesson-muted)" />} Group by appearance
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#A64B27' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: 'var(--lesson-success)' }}>
             {isPhase4Done ? <CheckSquare size={18} color="var(--lesson-muted)" /> : <Square size={18} color="var(--lesson-muted)" />} Test with the lamp
           </div>
         </div>
       </div>
 
       {/* How to do */}
-      <div style={{ border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '16px', background: '#FFFFFF' }}>
+      <div style={{ border: '1px solid var(--lesson-border)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-surface)' }}>
         <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-primary)', fontSize: 'var(--text-sm)' }}>How to do:</h4>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-            <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><MousePointer2 size={16} /></div> Drag an item from the tray
+            <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><MousePointer2 size={16} /></div> Drag an item from the tray
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-            <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><Move size={16} /></div> Drop it in the right group
+            <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><Move size={16} /></div> Drop it in the right group
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)' }}>
-            <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#A64B27' }}><Eye size={16} /></div> Click the lamp to observe again
+            <div style={{ background: 'var(--lesson-surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--lesson-accent)' }}><Eye size={16} /></div> Click the lamp to observe again
           </div>
         </div>
       </div>
@@ -81,8 +81,8 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       {/* Detective Tip */}
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: 'auto', paddingTop: '10px' }}>
         <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: 'clamp(42px, 6vw, 90px)', height: 'clamp(42px, 6vw, 90px)' }} />
-        <div style={{ background: '#FFFFFF', padding: '12px', borderRadius: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)', position: 'relative', flex: 1, border: '1px solid var(--lesson-border)' }}>
-          <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: '#FFFFFF', borderLeft: '1px solid var(--lesson-border)', borderBottom: '1px solid var(--lesson-border)', transform: 'rotate(45deg)' }} />
+        <div style={{ background: 'var(--lesson-surface)', padding: '12px', borderRadius: '12px', fontSize: 'var(--text-sm)', color: 'var(--lesson-text)', position: 'relative', flex: 1, border: '1px solid var(--lesson-border)' }}>
+          <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: 'var(--lesson-surface)', borderLeft: '1px solid var(--lesson-border)', borderBottom: '1px solid var(--lesson-border)', transform: 'rotate(45deg)' }} />
           Remember, shiny surfaces reflect more light!
         </div>
       </div>

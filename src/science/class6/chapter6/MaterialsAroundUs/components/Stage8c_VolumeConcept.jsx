@@ -36,7 +36,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
   ];
 
   return (
-    <div style={{ padding: '16px 24px', background: '#FFFFFF', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', height: 'calc(100vh - 120px)', minHeight: '650px', overflow: 'hidden' }}>
+    <div style={{ padding: '16px 24px', background: 'var(--lesson-surface)', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '16px', height: 'calc(100vh - 120px)', minHeight: '650px', overflow: 'hidden' }}>
       
       {/* TOP HEADER & HORIZONTAL STEPPER */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexShrink: 0 }}>
@@ -69,15 +69,15 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                   cursor: 'pointer',
                   position: 'relative',
                   zIndex: 1,
-                  background: '#FFFFFF',
+                  background: 'var(--lesson-surface)',
                   padding: '0 16px'
                 }}
               >
                 {/* Step Indicator */}
                 <div style={{ 
                   width: '32px', height: '32px', borderRadius: '50%',
-                  background: isActive ? '#A64B27' : isCompleted ? '#A64B27' : 'white',
-                  border: `2px solid ${isActive || isCompleted ? '#A64B27' : 'var(--lesson-border)'}`, 
+                  background: isActive ? 'var(--lesson-success)' : isCompleted ? 'var(--lesson-success)' : 'white',
+                  border: `2px solid ${isActive || isCompleted ? 'var(--lesson-success)' : 'var(--lesson-border)'}`, 
                   display: 'flex',
                   alignItems: 'center', 
                   justifyContent: 'center',
@@ -95,7 +95,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div style={{ 
                     fontSize: '12px', fontWeight: 'bold',
-                    color: isActive ? '#A64B27' : isCompleted ? '#A64B27' : 'var(--lesson-muted)',
+                    color: isActive ? 'var(--lesson-success)' : isCompleted ? 'var(--lesson-success)' : 'var(--lesson-muted)',
                     whiteSpace: 'nowrap',
                     textTransform: 'uppercase', letterSpacing: '0.5px'
                   }}>
@@ -134,7 +134,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
               >
                 <div style={{ flex: 1, display: 'flex', gap: '32px', alignItems: 'stretch', minHeight: 0 }}>
                   {/* Left: Illustration */}
-                  <div style={{ flex: '1', borderRadius: '20px', overflow: 'hidden', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', minHeight: 0 }}>
+                  <div style={{ flex: '1', borderRadius: '20px', overflow: 'hidden', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--lesson-surface)', minHeight: 0 }}>
                     <img src="/images/volume_overflow.png" alt="Overflowing Bottle" style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply', transform: 'scale(1.15)', transformOrigin: 'center center' }} />
                   </div>
                   
@@ -153,7 +153,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     
                     <div style={{ marginTop: '40px', background: 'var(--lesson-warning-bg)', padding: '32px', borderRadius: '20px', border: '3px dashed var(--lesson-warning-border)' }}>
                       <p style={{ margin: '0 0 12px 0', color: 'var(--lesson-text)', fontSize: '1.4rem', fontWeight: 'bold' }}>That amount of space is called</p>
-                      <div style={{ color: 'var(--lesson-text)', background: '#FFFFFF', display: 'inline-block', padding: '0 12px', fontSize: '3rem', fontWeight: '900', letterSpacing: '2px' }}>VOLUME</div>
+                      <div style={{ color: 'var(--lesson-text)', background: '#fef08a', display: 'inline-block', padding: '0 12px', fontSize: '3rem', fontWeight: '900', letterSpacing: '2px' }}>VOLUME</div>
                     </div>
                   </div>
                 </div>
@@ -194,7 +194,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                       Different containers can hold different amounts of liquid.
                     </p>
                     <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: '18px', lineHeight: '1.45' }}>
-                      The amount a container can hold is described using <strong style={{ color: 'var(--lesson-text)', background: '#FFFFFF', padding: '0 4px', fontWeight: '900' }}>volume</strong>.
+                      The amount a container can hold is described using <strong style={{ color: 'var(--lesson-text)', background: '#fef08a', padding: '0 4px', fontWeight: '900' }}>volume</strong>.
                     </p>
                   </div>
                   
@@ -257,7 +257,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                       1 L = 1000 mL
                     </div>
 
-                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center', background: '#FFFFFF', border: '1px solid var(--lesson-border)', padding: '16px', borderRadius: '12px', width: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center', background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '16px', borderRadius: '12px', width: '100%', boxSizing: 'border-box' }}>
                       <Info size={26} color="var(--lesson-text)" style={{ flexShrink: 0 }} />
                       <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: '16px', lineHeight: '1.4' }}>
                         <strong>Look at the label</strong> on a container. It tells us how much it can hold.
@@ -297,7 +297,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', flex: 1, minHeight: 0 }}>
                 
                 {/* Tea Cup */}
-                <div onClick={() => handleReveal('teaCup')} style={{ cursor: volumesRevealed.teaCup ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: '#FFFFFF', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.teaCup ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.teaCup ? 'none' : 'scale(1.02)' } }}>
+                <div onClick={() => handleReveal('teaCup')} style={{ cursor: volumesRevealed.teaCup ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: 'var(--lesson-surface)', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.teaCup ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.teaCup ? 'none' : 'scale(1.02)' } }}>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 0, width: '100%' }}>
                     <img src="/images/3d_tea_cup_1788167295553.jpg" alt="Tea Cup" style={{ maxWidth: '90%', maxHeight: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                   </div>
@@ -306,13 +306,13 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.teaCup ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>150 mL</div>
                     ) : (
-                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: 'white', border: '2px solid var(--lesson-border)', color: 'var(--lesson-text)', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>
 
                 {/* Soup Bowl */}
-                <div onClick={() => handleReveal('soupBowl')} style={{ cursor: volumesRevealed.soupBowl ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: '#FFFFFF', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.soupBowl ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.soupBowl ? 'none' : 'scale(1.02)' } }}>
+                <div onClick={() => handleReveal('soupBowl')} style={{ cursor: volumesRevealed.soupBowl ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: 'var(--lesson-surface)', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.soupBowl ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.soupBowl ? 'none' : 'scale(1.02)' } }}>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 0, width: '100%' }}>
                     <img src="/images/3d_soup_bowl_1788167306592.jpg" alt="Soup Bowl" style={{ maxWidth: '90%', maxHeight: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                   </div>
@@ -321,13 +321,13 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.soupBowl ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>300 mL</div>
                     ) : (
-                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: 'white', border: '2px solid var(--lesson-border)', color: 'var(--lesson-text)', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>
 
                 {/* Water Glass */}
-                <div onClick={() => handleReveal('waterGlass')} style={{ cursor: volumesRevealed.waterGlass ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: '#FFFFFF', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.waterGlass ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.waterGlass ? 'none' : 'scale(1.02)' } }}>
+                <div onClick={() => handleReveal('waterGlass')} style={{ cursor: volumesRevealed.waterGlass ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: 'var(--lesson-surface)', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.waterGlass ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.waterGlass ? 'none' : 'scale(1.02)' } }}>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 0, width: '100%' }}>
                     <img src="/images/3d_water_glass_1788167318191.jpg" alt="Water Glass" style={{ maxWidth: '90%', maxHeight: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                   </div>
@@ -336,13 +336,13 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.waterGlass ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>250 mL</div>
                     ) : (
-                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: 'white', border: '2px solid var(--lesson-border)', color: 'var(--lesson-text)', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>
 
                 {/* Bucket */}
-                <div onClick={() => handleReveal('bucket')} style={{ cursor: volumesRevealed.bucket ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: '#FFFFFF', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.bucket ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.bucket ? 'none' : 'scale(1.02)' } }}>
+                <div onClick={() => handleReveal('bucket')} style={{ cursor: volumesRevealed.bucket ? 'default' : 'pointer', border: '2px solid var(--lesson-border)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: 'var(--lesson-surface)', minHeight: 0, overflow: 'hidden', transition: 'transform 0.2s', transform: volumesRevealed.bucket ? 'none' : 'scale(1)', ':hover': { transform: volumesRevealed.bucket ? 'none' : 'scale(1.02)' } }}>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 0, width: '100%' }}>
                     <img src="/images/3d_realistic_10l_bucket_1788169915490.jpg" alt="Bucket" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                   </div>
@@ -351,7 +351,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.bucket ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>10 L</div>
                     ) : (
-                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: 'white', border: '2px solid var(--lesson-border)', color: 'var(--lesson-text)', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>
@@ -359,12 +359,12 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
               </div>
 
               {/* Key Takeaway Integrated Below Grid */}
-              <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid #D9C9A3', borderRadius: '16px', padding: '16px 20px', display: 'flex', gap: '16px', alignItems: 'center', flexShrink: 0 }}>
+              <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success)', borderRadius: '16px', padding: '16px 20px', display: 'flex', gap: '16px', alignItems: 'center', flexShrink: 0 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'white', width: '50px', height: '50px', borderRadius: '50%', flexShrink: 0, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                  <Star size={24} color="#A64B27" />
+                  <Star size={24} color="var(--lesson-success)" />
                 </div>
                 <div>
-                  <h4 style={{ color: '#A64B27', margin: '0 0 4px 0', fontSize: '1.2rem', fontWeight: 'bold' }}>Key Takeaway</h4>
+                  <h4 style={{ color: 'var(--lesson-success)', margin: '0 0 4px 0', fontSize: '1.2rem', fontWeight: 'bold' }}>Key Takeaway</h4>
                   <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: '1.1rem' }}>Volume is the amount of space occupied by an object or substance. Different containers can hold different amounts.</p>
                 </div>
               </div>
@@ -375,7 +375,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
         </div>
 
         {/* BOTTOM NAVIGATION FOR MAIN AREA */}
-        <div style={{ padding: '20px 32px', background: '#FFFFFF', borderTop: '1px solid var(--lesson-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ padding: '20px 32px', background: 'var(--lesson-surface)', borderTop: '1px solid var(--lesson-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
           <button 
             onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
             disabled={activeStep === 0}
@@ -411,7 +411,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
               padding: '10px 20px', 
               borderRadius: '24px', 
               border: 'none', 
-              background: activeStep === 2 ? 'transparent' : '#A64B27',
+              background: activeStep === 2 ? 'transparent' : 'var(--lesson-success)',
               color: activeStep === 2 ? 'transparent' : 'white',
               cursor: activeStep === 2 ? 'default' : 'pointer',
               fontWeight: 'bold',

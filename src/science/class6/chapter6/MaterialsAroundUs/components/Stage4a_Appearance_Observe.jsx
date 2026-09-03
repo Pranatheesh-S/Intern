@@ -64,7 +64,7 @@ const TorchObservation = ({ mat, onDone }) => {
       width: "100%", height: "100%",
       display: "flex", flexDirection: "column",
       borderRadius: 16, overflow: "hidden",
-      background: '#FFFFFF',
+      background: "#181512",
       border: "1px solid rgba(255,255,255,0.05)",
       boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
     }}>
@@ -95,7 +95,7 @@ const TorchObservation = ({ mat, onDone }) => {
             position: "relative", flex: 1, width: "100%", minHeight: 0,
             borderRadius: 12, overflow: "hidden",
             boxShadow: "0 4px 24px rgba(0,0,0,0.6)",
-            background: '#FFFFFF', display: "flex", justifyContent: "center", alignItems: "center"
+            background: "#000000", display: "flex", justifyContent: "center", alignItems: "center"
           }}>
             <img src={mat.img} alt={mat.name} draggable="false" style={{
               width: "100%", height: "100%", objectFit: "contain",
@@ -308,7 +308,7 @@ const TorchObservation = ({ mat, onDone }) => {
                   <div style={{
                     display: "flex", alignItems: "center", gap: 10,
                     background: correct ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)",
-                    border: "1px solid " + (correct ? "#A64B27" : "var(--lesson-danger)"),
+                    border: "1px solid " + (correct ? "var(--lesson-success)" : "var(--lesson-danger)"),
                     borderRadius: 8, padding: "12px 16px",
                   }}>
                     {correct ? <Check size={24} color="var(--lesson-success-border)"/> : <X size={24} color="var(--lesson-danger-border)"/>}
@@ -359,7 +359,7 @@ const TorchObservation = ({ mat, onDone }) => {
                 onClick={() => handleToggle(true)}
                 style={{
                   padding: "0.85rem", borderRadius: 10,
-                  background: torchOn ? "linear-gradient(135deg, var(--lesson-warning), #A64B27)" : "rgba(245,158,11,0.15)",
+                  background: torchOn ? "linear-gradient(135deg, var(--lesson-warning), var(--lesson-accent))" : "rgba(245,158,11,0.15)",
                   color: torchOn ? "white" : "var(--lesson-warning)", border: torchOn ? "2px solid var(--lesson-warning)" : "2px solid rgba(245,158,11,0.3)",
                   fontSize: "1.3rem", fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
                 }}
@@ -414,7 +414,7 @@ const MaterialCard = ({ mat, state, onClick }) => {
         border: isActive ? "3px solid var(--lesson-warning)"
                : isDone ? "3px solid " + (mat.isShiny ? "var(--lesson-warning)" : "var(--lesson-muted)")
                : "3px solid transparent",
-        transition: "border 0.25s", background: '#FFFFFF',
+        transition: "border 0.25s", background: "#1e1a14",
         boxShadow: isActive
           ? "0 0 0 4px rgba(245,158,11,0.25), 0 8px 24px rgba(0,0,0,0.5)"
           : "0 4px 16px rgba(0,0,0,0.45)",
@@ -602,8 +602,8 @@ const WhichSideActivity = ({ onSolve }) => {
           }}
         >
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#A64B27", letterSpacing: "1px" }}>✨ SHINY</div>
-            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#A64B27", marginTop: 4 }}>Lustrous materials</div>
+            <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "var(--lesson-accent)", letterSpacing: "1px" }}>✨ SHINY</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--lesson-accent)", marginTop: 4 }}>Lustrous materials</div>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.75rem", width: "100%" }}>
             {shinyGroup.map(renderCard)}
@@ -633,7 +633,7 @@ const WhichSideActivity = ({ onSolve }) => {
       {isSuccess && (
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          style={{ textAlign: "center", color: "#A64B27", fontWeight: 900, fontSize: "1.2rem" }}
+          style={{ textAlign: "center", color: "var(--lesson-success)", fontWeight: 900, fontSize: "1.2rem" }}
         >
           🎉 Excellent! You classified them perfectly.
         </motion.div>
@@ -698,7 +698,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
           <h3 style={{ margin: 0, fontSize: "1.6rem", color: "var(--lesson-primary)", fontWeight: 900 }}>
             🔦 Shine Hunt – Torch Observation Lab
           </h3>
-          <p style={{ margin: "4px 0 0", fontSize: "1.1rem", color: "#A64B27", fontWeight: 700 }}>
+          <p style={{ margin: "4px 0 0", fontSize: "1.1rem", color: "var(--lesson-accent)", fontWeight: 700 }}>
             Shine the torch on each object and observe what happens to the light.
           </p>
         </div>
@@ -715,7 +715,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                 background: "linear-gradient(135deg, rgba(161,98,7,0.2), rgba(120,53,15,0.15))",
                 border: "1px solid rgba(161,98,7,0.4)", borderRadius: 10,
                 padding: "0.65rem 1rem", fontSize: "1.1rem",
-                color: "#A64B27", fontWeight: 800, flexShrink: 0,
+                color: "var(--lesson-accent)", fontWeight: 800, flexShrink: 0,
               }}>
                 🔦 Click any material to open the torch observation.{doneCount > 0 ? "  (" + doneCount + "/6 done)" : ""}
               </div>
@@ -758,7 +758,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
           padding: "1rem", overflow: "hidden",
         }}>
           <div style={{
-            fontWeight: 900, fontSize: "1.6rem", color: "#A64B27",
+            fontWeight: 900, fontSize: "1.6rem", color: "var(--lesson-accent)",
             borderBottom: "1px solid rgba(255,255,255,0.1)",
             paddingBottom: "0.5rem", marginBottom: "0.5rem",
           }}>

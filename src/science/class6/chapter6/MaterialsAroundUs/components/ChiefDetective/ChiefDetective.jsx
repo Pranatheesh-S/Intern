@@ -36,7 +36,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
       left: 0,
       right: 0,
       bottom: 0,
-      background: '#FFFFFF',
+      background: 'var(--lesson-surface)',
       fontFamily: '"Times New Roman", serif',
       display: 'flex',
       justifyContent: 'center',
@@ -171,7 +171,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 2px;
-            color: #A64B27;
+            color: var(--lesson-success);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
@@ -187,7 +187,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
           .debrief-box {
             background: var(--lesson-surface);
             border: 1px solid var(--lesson-border);
-            border-left: 4px solid #A64B27;
+            border-left: 4px solid var(--lesson-success);
             border-radius: 12px;
             padding: 28px;
             margin-bottom: 40px;
@@ -218,7 +218,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
             font-weight: 700;
-            color: #A64B27;
+            color: var(--lesson-success);
             text-transform: uppercase;
             letter-spacing: 1px;
           }
@@ -226,11 +226,11 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 20px;
             font-weight: 600;
-            color: #A64B27;
+            color: var(--lesson-success);
           }
 
           .start-btn {
-            background: #A64B27;
+            background: var(--lesson-success);
             color: white;
             border: none;
             padding: 20px 40px;
@@ -249,7 +249,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
           }
           .start-btn:hover {
             transform: translateY(-2px);
-            background: #A64B27;
+            background: var(--lesson-success);
           }
 
           /* STAMP ANIMATION */
@@ -261,8 +261,8 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             font-family: 'Courier New', Courier, monospace;
             font-size: 4rem;
             font-weight: 900;
-            color: #A64B27;
-            border: 8px solid #A64B27;
+            color: var(--lesson-success);
+            border: 8px solid var(--lesson-success);
             padding: 1rem 2rem;
             border-radius: 12px;
             opacity: 0;
@@ -340,11 +340,11 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
             <h1 className="debrief-title">{data.title || 'Investigation Officially Closed'}</h1>
             
             <div className="debrief-box">
-              <h3><BookMarked size={20} color="#A64B27" /> FINAL OBSERVATIONS</h3>
+              <h3><BookMarked size={20} color="var(--lesson-success)" /> FINAL OBSERVATIONS</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
                 {data.observations && data.observations.map((obs, idx) => (
                   <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <CheckCircle size={20} color="#A64B27" />
+                    <CheckCircle size={20} color="var(--lesson-success)" />
                     <span style={{ fontSize: '20px', color: 'var(--lesson-text)' }}>
                       <strong>{obs.object}:</strong> {obs.finding}
                     </span>
@@ -358,7 +358,7 @@ export default function ChiefDetective({ data, onContinue, onBack }) {
                 <span className="reward-label">Evidence Submitted</span>
                 <span className="reward-value">{data.rewardReason || "Case Completed"}</span>
               </div>
-              <Award size={40} color="#A64B27" />
+              <Award size={40} color="var(--lesson-success)" />
             </div>
             
             <div style={{ marginTop: '24px' }}>

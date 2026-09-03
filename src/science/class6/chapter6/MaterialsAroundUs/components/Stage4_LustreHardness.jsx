@@ -126,7 +126,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
       {/* Header */}
       <div className="glass-panel" style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '0.25rem', border: '1px solid var(--lesson-accent-border)', padding: '1rem' }}>
         <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Sparkles size={22} style={{ color: '#A64B27' }} /> 
+          <Sparkles size={22} style={{ color: 'var(--lesson-accent)' }} /> 
           Lustre Restoration Lab
         </h3>
         <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)' }}>
@@ -160,7 +160,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
                     textAlign: 'left',
                     gap: '0.5rem',
                     flex: 1,
-                    border: isActive ? '2px solid #A64B27' : '1px solid var(--lesson-border)',
+                    border: isActive ? '2px solid var(--lesson-accent)' : '1px solid var(--lesson-border)',
                     background: isActive ? 'var(--lesson-accent-bg)' : 'var(--lesson-surface)'
                   }}
                 >
@@ -186,7 +186,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           <div 
             style={{ 
               flex: 1, minHeight: 100,
-              background: '#FFFFFF', 
+              background: 'var(--lesson-surface)', 
               borderRadius: '12px', 
               display: 'flex', 
               alignItems: 'center', 
@@ -238,8 +238,8 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
                 top: mousePos.y - 25, 
                 width: '60px', 
                 height: '50px', 
-                background: 'linear-gradient(135deg, var(--lesson-warning) 0%, #A64B27 25%, #333 27%, #222 100%)', 
-                border: '1px solid #D9C9A3',
+                background: 'linear-gradient(135deg, var(--lesson-warning) 0%, var(--lesson-accent) 25%, #333 27%, #222 100%)', 
+                border: '1px solid #111',
                 borderRadius: '4px',
                 pointerEvents: 'none',
                 boxShadow: '2px 8px 12px rgba(0,0,0,0.5)',
@@ -259,8 +259,8 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
               <span>Surface Restored: {Math.floor(progress)}%</span>
               {isScrubbed && <span style={{ fontWeight: 'bold' }}>✨ Complete</span>}
             </div>
-            <div style={{ width: '100%', height: '16px', background: '#FFFFFF', borderRadius: '8px', overflow: 'hidden' }}>
-              <div style={{ width: `${progress}%`, height: '100%', background: isScrubbed ? '#A64B27' : '#A64B27', transition: 'width 0.2s, background 0.3s' }} />
+            <div style={{ width: '100%', height: '16px', background: 'var(--lesson-surface)', borderRadius: '8px', overflow: 'hidden' }}>
+              <div style={{ width: `${progress}%`, height: '100%', background: isScrubbed ? 'var(--lesson-success)' : 'var(--lesson-accent)', transition: 'width 0.2s, background 0.3s' }} />
             </div>
           </div>
 
@@ -282,7 +282,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           </h4>
 
           {/* Before/After Visual */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#FFFFFF', padding: '0.5rem 1rem', borderRadius: '8px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--lesson-surface)', padding: '0.5rem 1rem', borderRadius: '8px', flexShrink: 0 }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
               <span style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>BEFORE</span>
               <div style={{ width: '50px', height: '50px', borderRadius: '4px', background: activeMat.baseBg }}>
@@ -309,7 +309,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
               </ul>
             </div>
             
-            <div style={{ background: '#FFFFFF', padding: '0.75rem 1.25rem', borderRadius: '8px', opacity: isScrubbed ? 1 : 0.5, transition: 'opacity 0.3s', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ background: 'var(--lesson-surface)', padding: '0.75rem 1.25rem', borderRadius: '8px', opacity: isScrubbed ? 1 : 0.5, transition: 'opacity 0.3s', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <strong style={{ color: isScrubbed ? 'var(--lesson-text)' : 'var(--lesson-muted)' }}>After Scrubbing:</strong>
               <ul style={{ margin: '0.25rem 0 0 1.5rem', padding: 0, color: 'var(--lesson-secondary)' }}>
                 <li>Appearance: {isScrubbed ? (activeMat.shouldShine ? 'Brighter' : 'Cleaner, but still dull') : '?'}</li>
@@ -325,7 +325,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
               animate={{ opacity: 1, y: 0 }}
               style={{ marginTop: 'auto', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '1rem 1.25rem', borderRadius: '8px', flexShrink: 0 }}
             >
-              <h5 style={{ margin: '0 0 0.5rem 0', color: '#A64B27', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '1.4rem' }}>
+              <h5 style={{ margin: '0 0 0.5rem 0', color: 'var(--lesson-accent)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '1.4rem' }}>
                 🕵️ Detective Observation
               </h5>
               <p style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', color: 'var(--lesson-text)', fontWeight: 'bold' }}>

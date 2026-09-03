@@ -112,7 +112,7 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
           background: 'linear-gradient(145deg, #f2f3f5 0%, #e6e8ea 45%, #d1d5d8 100%)',
           borderRadius: '40px 40px 50px 50px',
           boxShadow: 'inset 0 4px 8px rgba(255,255,255,1), inset 0 -15px 30px rgba(0,0,0,0.08), 0 12px 0 #9ea4aa, 0 20px 25px rgba(0,0,0,0.5)',
-          border: '1px solid #D9C9A3',
+          border: '1px solid #c2c7cc',
           overflow: 'hidden'
         }}>
           {/* Subtle micro-surface texture for molded plastic */}
@@ -152,7 +152,7 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
                 width: '210px', height: '65px',
                 background: 'linear-gradient(135deg, #7c8f82 0%, #9baea1 100%)',
                 borderRadius: '6px',
-                border: '3px solid #D9C9A3',
+                border: '3px solid #1a1a1a',
                 boxShadow: 'inset 4px 6px 12px rgba(0,0,0,0.6), 0 2px 2px rgba(255,255,255,0.7)',
                 display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
                 padding: '10px 15px',
@@ -172,7 +172,7 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
                      left: '14px', top: '14px',
                      width: '6px', height: '6px',
                      borderRadius: '50%',
-                     background: '#FFFFFF',
+                     background: '#2d3830',
                      opacity: 0.7
                    }} />
                  )}
@@ -196,18 +196,18 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <button style={{
                   width: '85px', height: '28px',
-                  background: '#A64B27',
-                  border: '1px solid #D9C9A3', borderRadius: '4px',
-                  color: '#FFFFFF', fontSize: '11px', fontWeight: 'bold',
+                  background: 'linear-gradient(180deg, #e53935 0%, #b71c1c 100%)',
+                  border: '1px solid #4a0000', borderRadius: '4px',
+                  color: 'white', fontSize: '11px', fontWeight: 'bold',
                   boxShadow: '0 4px 0 #5c0000, 0 6px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3)',
                   cursor: 'default', fontFamily: 'Arial, sans-serif',
                   textShadow: '0 1px 2px rgba(0,0,0,0.6)'
                 }}>ON/TARE</button>
                 <button style={{
                   width: '85px', height: '28px',
-                  background: '#A64B27',
-                  border: '1px solid #D9C9A3', borderRadius: '4px',
-                  color: '#FFFFFF', fontSize: '11px', fontWeight: 'bold',
+                  background: 'linear-gradient(180deg, #f5f5f5 0%, #d4d4d4 100%)',
+                  border: '1px solid #7a7a7a', borderRadius: '4px',
+                  color: '#222', fontSize: '11px', fontWeight: 'bold',
                   boxShadow: '0 4px 0 #8f8f8f, 0 6px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.8)',
                   cursor: 'default', fontFamily: 'Arial, sans-serif',
                   textShadow: '0 1px 0 rgba(255,255,255,0.8)'
@@ -242,7 +242,7 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
             width: '260px', height: '110px', 
             background: 'linear-gradient(135deg, #d3d8db 0%, #aab5bc 40%, #e6eaec 60%, #8b99a3 100%)',
             borderRadius: '50%',
-            border: isHovered ? '2px solid #A64B27' : '1.5px solid whitefff',
+            border: isHovered ? '2px solid var(--lesson-success)' : '1.5px solid whitefff',
             borderBottom: '3px solid #89959e',
             boxShadow: isHovered 
               ? 'inset 0 0 25px rgba(0,0,0,0.15), 0 12px 15px rgba(0,0,0,0.5), 0 0 16px rgba(217, 119, 6, 0.35)' 

@@ -238,19 +238,6 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
             Drag each object into the correct tray. Transparent lets you see clearly. Translucent blurs. Opaque hides completely.
           </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
-          <div style={{ background: '#fefce8', border: '1px solid #fef08a', borderRadius: '12px', padding: '10px 15px', position: 'relative', width: '200px' }}>
-            <div style={{ fontSize: '0.85rem', color: '#a16207', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-              <Lightbulb size={16} /> Detective Tip
-            </div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '500' }}>Think carefully! Where would each object belong?</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Classification Area */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{
           background: isComplete ? '#dcfce7' : 'var(--surface)',
           border: `1px solid ${isComplete ? '#bbf7d0' : 'var(--border)'}`,
@@ -362,7 +349,6 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
       <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '12px', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '10px', padding: '0.75rem 1.25rem', fontSize: '1.21rem', color: '#92400e', fontWeight: '600' }}>
         <Lightbulb size={24} color="#d97706" style={{ flexShrink: 0 }} />
         <span><strong style={{ fontSize: '1.27rem' }}>Tip:</strong> Classify all 6 objects to complete this activity. Watch how each tray visually responds to the object placed inside!</span>
-      </div>
       </div>
 
     </div>
