@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Info, HelpCircle, Check, Award } from 'lucide-react';
+import scannerResultNotebook from '../images/scanner_result_notebook.png';
+import scannerResultRuler from '../images/scanner_result_ruler.png';
+import scannerResultGeometry from '../images/scanner_result_geometry.png';
+import scannerResultGlass from '../images/scanner_result_glass.png';
+import scannerResultSpoon from '../images/scanner_result_spoon.png';
+import scannerResultCandle from '../images/scanner_result_candle.png';
+import isolatedTextbook from '../images/isolated_textbook.jpg';
+import isolatedRuler from '../images/isolated_ruler.jpg';
+import isolatedLunchbox from '../images/isolated_lunchbox.jpg';
+import isolatedTumbler from '../images/isolated_tumbler.jpg';
+import isolatedSpoon from '../images/isolated_spoon.jpg';
+import isolatedCandle from '../images/isolated_candle.jpg';
+
 
 // Custom Item SVGs
 const TextbookIcon = ({ size = 45 }) => (
@@ -96,7 +109,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         'Metal': 'Metal is heavy and hard.',
         'Glass': 'Glass is fragile and transparent.'
       },
-      icon: TextbookIcon 
+      icon: TextbookIcon,
+      image: scannerResultNotebook,
+      boardImage: isolatedTextbook 
     },
     { 
       id: 'ruler', 
@@ -109,7 +124,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         'Metal': 'Metal is very hard, heavy, and rigid.',
         'Glass': 'Glass is too fragile and dangerous for a school bag.'
       },
-      icon: RulerIcon 
+      icon: RulerIcon,
+      image: scannerResultRuler,
+      boardImage: isolatedRuler 
     },
     { 
       id: 'geometry', 
@@ -122,7 +139,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         'Plastic': 'Some are plastic, but this heavy-duty box is made of metal.',
         'Glass': 'Glass would shatter instantly in a school bag.'
       },
-      icon: GeometryBoxIcon 
+      icon: GeometryBoxIcon,
+      image: scannerResultGeometry,
+      boardImage: isolatedLunchbox 
     },
     { 
       id: 'glass', 
@@ -135,7 +154,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         'Metal': 'Metal is opaque, so you cannot see the liquid inside.',
         'Fabric': 'Fabric is porous and liquids leak right through it.'
       },
-      icon: TumblerIcon 
+      icon: TumblerIcon,
+      image: scannerResultGlass,
+      boardImage: isolatedTumbler 
     },
     { 
       id: 'spoon', 
@@ -148,7 +169,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         'Ceramic': 'Ceramic spoons exist but are very fragile.',
         'Plastic': 'Plastic can melt in hot soups.'
       },
-      icon: SpoonIcon 
+      icon: SpoonIcon,
+      image: scannerResultSpoon,
+      boardImage: isolatedSpoon 
     },
     { 
       id: 'candle', 
@@ -161,7 +184,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         'Wood': 'Wood burns away completely as fuel, catching fire entirely.',
         'Plastic': 'Plastic releases toxic fumes when burned and melts dangerously.'
       },
-      icon: CandleIcon 
+      icon: CandleIcon,
+      image: scannerResultCandle,
+      boardImage: isolatedCandle 
     }
   ];
 
@@ -245,86 +270,161 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem' }}>
-        {/* Left: Tray of items */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '580px' }}>
-          <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
-            {objectsToScan.map((obj) => {
-              const isScanned = scannedObjects[obj.id];
-              const isSelected = selectedObj?.id === obj.id;
-              const IconComponent = obj.icon;
-              return (
-                <div
-                  key={obj.id}
-                  draggable={!isScanned}
-                  onDragStart={(e) => {
-                    e.dataTransfer.setData('text/plain', obj.id);
-                  }}
-                  onClick={() => handleScanObject(obj)}
-                  className="interactive-tray-item"
-                  style={{
-                    width: '100%',
-                    padding: '1rem 0.5rem',
-                    borderRadius: '12px',
-                    border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
-                    background: isScanned ? 'var(--success-bg)' : isSelected ? 'var(--accent-bg)' : 'var(--card-bg)',
-                    color: isScanned ? 'var(--success)' : 'var(--text-primary)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.75rem',
-                    cursor: isScanned ? 'default' : 'grab',
-                    textAlign: 'center',
-                    transition: 'all 0.2s',
-                    userSelect: 'none',
-                    position: 'relative',
-                    boxShadow: isSelected ? '0 4px 12px rgba(99, 102, 241, 0.15)' : 'none'
-                  }}
-                >
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    width: '56px', 
-                    height: '56px', 
-                    borderRadius: '12px', 
-                    background: isScanned ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                    color: isScanned ? 'var(--success)' : 'var(--accent)',
-                    flexShrink: 0,
-                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
-                    border: '1px solid var(--border)'
-                  }}>
-                    <IconComponent size={32} />
-                  </div>
-                  <span style={{ fontWeight: isSelected ? 'bold' : '600', fontSize: '1rem', lineHeight: '1.2' }}>{obj.name}</span>
-                  
-                  {isScanned && (
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                {/* Left: Tray of items */}
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', height: '100%', width: '100%' }}>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '12px', 
+            padding: '20px', 
+            background: '#FAF8F5',
+            border: '2px solid var(--lesson-border)',
+            borderRadius: '12px',
+            boxShadow: 'inset 0 0 40px rgba(226, 211, 185, 0.3), 0 4px 12px rgba(0,0,0,0.05)',
+            height: '100%',
+            minHeight: '100%',
+            position: 'relative'
+          }}>
+            {/* Subtle corner markings */}
+            <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderLeft: '2px solid var(--lesson-border)' }} />
+            <div style={{ position: 'absolute', top: '10px', right: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderRight: '2px solid var(--lesson-border)' }} />
+
+            <div style={{ borderBottom: '2px dashed var(--lesson-border)', paddingBottom: '12px', marginBottom: '8px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Search size={28} color="#3B2A1F" />
+                <h4 style={{ margin: 0, fontSize: '1.75rem', letterSpacing: '1px', color: '#3B2A1F', fontWeight: '900' }}>EVIDENCE BOARD</h4>
+              </div>
+              <h3 style={{ margin: 0, fontSize: '1rem', color: '#7A6A52', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: '#A64B27', color: 'white', padding: '4px 12px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'white' }} />
+                {objectsToScan.length} ITEMS • READY TO SCAN
+              </div>
+            </div>
+            
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr 1fr', 
+              gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
+              gap: '12px', 
+              alignItems: 'stretch',
+              flex: 1,
+              minHeight: 0
+            }}>
+              {objectsToScan.map((obj, index) => {
+                const isScanned = scannedObjects[obj.id];
+                const isSelected = selectedObj?.id === obj.id;
+                const isScanning = isSelected && scanState === 'scanning';
+                
+                let borderColor = 'rgba(0,0,0,0.08)';
+                let shadow = '0 4px 12px rgba(0,0,0,0.05)';
+                let labelText = 'READY TO SCAN';
+                let labelColor = '#7A6A52';
+                let bgColor = '#FFFFFF';
+                let nameColor = '#3B2A1F';
+                
+                if (isScanned) {
+                  borderColor = '#A64B27';
+                  bgColor = '#FAF8F5';
+                  labelText = 'SCANNED';
+                  labelColor = '#A64B27';
+                } else if (isScanning) {
+                  borderColor = '#A64B27';
+                  shadow = '0 0 20px rgba(166, 75, 39, 0.2)';
+                  labelText = 'SCANNING...';
+                  labelColor = '#A64B27';
+                } else if (isSelected) {
+                  borderColor = '#A64B27';
+                  shadow = '0 6px 16px rgba(166, 75, 39, 0.15)';
+                  labelText = 'SELECTED';
+                  labelColor = '#A64B27';
+                }
+
+                return (
+                  <div
+                    key={obj.id}
+                    draggable={!isScanned}
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData('text/plain', obj.id);
+                    }}
+                    onClick={() => handleScanObject(obj)}
+                    className={`interactive-tray-item ${isScanned ? 'scanned-item' : ''}`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: `1px solid ${borderColor}`,
+                      background: bgColor,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      cursor: isScanned ? 'default' : 'pointer',
+                      boxShadow: shadow,
+                      userSelect: 'none',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {/* Header: Label */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: '#7A6A52', fontWeight: '800', letterSpacing: '0.5px', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ width: '4px', height: '12px', background: '#A64B27', borderRadius: '2px' }} />
+                        <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
+                      </div>
+                    </div>
+
+                    {/* Image Area */}
                     <div style={{ 
-                      position: 'absolute', 
-                      top: '6px', 
-                      right: '6px', 
-                      background: 'var(--success)', 
-                      borderRadius: '50%', 
-                      width: '20px', 
-                      height: '20px', 
+                      flex: 1,
                       display: 'flex', 
                       alignItems: 'center', 
-                      justifyContent: 'center',
-                      color: 'white',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      justifyContent: 'center', 
+                      position: 'relative', 
+                      minHeight: 0,
+                      background: '#F9F9F9',
+                      borderRadius: '4px',
+                      marginBottom: '8px',
+                      overflow: 'hidden'
                     }}>
-                      <Check size={12} strokeWidth={3} />
+                      {obj.boardImage || obj.image ? (
+                        <img 
+                          src={obj.boardImage || obj.image} 
+                          alt={obj.name} 
+                          style={{ 
+                            display: 'block', 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'contain',
+                            objectPosition: 'center',
+                            mixBlendMode: 'multiply'
+                          }} 
+                        />
+                      ) : null}
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
-        {/* Middle: Holographic Scanner */}
+                    {/* Footer: Name & Status */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '1.1rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          {isScanning && (
+                             <motion.span
+                               animate={{ opacity: [1, 0.4, 1] }}
+                               transition={{ duration: 1, repeat: Infinity }}
+                               style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#A64B27', display: 'inline-block' }}
+                             />
+                          )}
+                          {labelText}
+                        </span>
+                        {isScanned && <Check size={16} strokeWidth={3} style={{ color: '#A64B27' }} />}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>\n        {/* Middle: Holographic Scanner */}
         <div 
           className="glass-panel" 
           onDragOver={(e) => e.preventDefault()}
@@ -344,7 +444,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             flexDirection: 'column', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            height: '580px', 
+            height: '100%', minHeight: 0, 
             position: 'relative', 
             background: isDraggingOver ? 'var(--accent-bg)' : 'var(--scanner-bg)', 
             border: isDraggingOver ? '3px dashed var(--accent)' : 'var(--scanner-border)',

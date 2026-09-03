@@ -235,20 +235,18 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         }
       `}</style>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '1.25rem', flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', paddingLeft: '1rem', alignItems: 'stretch' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', paddingLeft: '1rem', alignItems: 'stretch' }}>
         {/* Left: Tray of items */}
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', height: '100%', width: '100%' }}>
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
-            gap: '1rem', 
-            padding: '24px', 
-            background: 'var(--lesson-background)',
-            backgroundImage: 'radial-gradient(var(--lesson-border) 1px, transparent 1px)',
-            backgroundSize: '20px 20px',
+            gap: '12px', 
+            padding: '20px', 
+            background: '#FAF8F5',
             border: '2px solid var(--lesson-border)',
-            borderRadius: '16px',
-            boxShadow: 'inset 0 0 40px rgba(226, 211, 185, 0.2), 0 4px 12px rgba(0,0,0,0.05)',
+            borderRadius: '12px',
+            boxShadow: 'inset 0 0 40px rgba(226, 211, 185, 0.3), 0 4px 12px rgba(0,0,0,0.05)',
             height: '100%',
             minHeight: '100%',
             position: 'relative'
@@ -257,22 +255,22 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderLeft: '2px solid var(--lesson-border)' }} />
             <div style={{ position: 'absolute', top: '10px', right: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderRight: '2px solid var(--lesson-border)' }} />
 
-            <div style={{ borderBottom: '2px dashed var(--lesson-border)', paddingBottom: '20px', marginBottom: '12px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ borderBottom: '2px dashed var(--lesson-border)', paddingBottom: '12px', marginBottom: '8px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Search size={32} color="var(--lesson-primary)" />
-                <h4 style={{ margin: 0, fontSize: '2rem', letterSpacing: '1px', color: 'var(--lesson-primary)', fontWeight: '900' }}>EVIDENCE BOARD</h4>
+                <Search size={28} color="#3B2A1F" />
+                <h4 style={{ margin: 0, fontSize: '1.75rem', letterSpacing: '1px', color: '#3B2A1F', fontWeight: '900' }}>EVIDENCE BOARD</h4>
               </div>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: '#A64B27', color: 'white', padding: '6px 14px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'white' }} />
+              <h3 style={{ margin: 0, fontSize: '1rem', color: '#7A6A52', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: '#A64B27', color: 'white', padding: '4px 12px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'white' }} />
                 {objectsToScan.length} ITEMS • READY TO SCAN
               </div>
             </div>
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
+              gridTemplateColumns: '1fr 1fr 1fr', 
+              gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
               gap: '12px', 
               alignItems: 'stretch',
               flex: 1,
@@ -283,27 +281,27 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 const isSelected = selectedObj?.id === obj.id;
                 const isScanning = isSelected && scanState === 'scanning';
                 
-                let borderColor = 'var(--lesson-border)';
-                let shadow = '0 4px 12px rgba(0,0,0,0.04)';
+                let borderColor = 'rgba(0,0,0,0.08)';
+                let shadow = '0 4px 12px rgba(0,0,0,0.05)';
                 let labelText = 'READY TO SCAN';
-                let labelColor = 'var(--lesson-secondary)';
-                let bgColor = 'whitefff';
-                let nameColor = '#A64B27'; // BURNT ORANGE / TERRACOTTA
+                let labelColor = '#7A6A52';
+                let bgColor = '#FFFFFF';
+                let nameColor = '#3B2A1F';
                 
                 if (isScanned) {
                   borderColor = '#A64B27';
-                  bgColor = '#f4fcf6';
+                  bgColor = '#FAF8F5';
                   labelText = 'SCANNED';
                   labelColor = '#A64B27';
                 } else if (isScanning) {
                   borderColor = '#A64B27';
-                  shadow = '0 0 20px rgba(188, 74, 26, 0.2)';
+                  shadow = '0 0 20px rgba(166, 75, 39, 0.2)';
                   labelText = 'SCANNING...';
                   labelColor = '#A64B27';
                 } else if (isSelected) {
                   borderColor = '#A64B27';
-                  shadow = '0 6px 16px rgba(188, 74, 26, 0.15)';
-                  labelText = 'SELECTED FOR SCAN';
+                  shadow = '0 6px 16px rgba(166, 75, 39, 0.15)';
+                  labelText = 'SELECTED';
                   labelColor = '#A64B27';
                 }
 
@@ -318,52 +316,40 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     className={`interactive-tray-item ${isScanned ? 'scanned-item' : ''}`}
                     style={{
                       width: '100%',
-                      padding: '16px',
-                      borderRadius: '16px',
-                      border: `2px solid ${borderColor}`,
+                      height: '100%',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: `1px solid ${borderColor}`,
                       background: bgColor,
                       display: 'flex',
-                      flexDirection: 'row',
-                      gap: '12px',
+                      flexDirection: 'column',
                       cursor: isScanned ? 'default' : 'pointer',
                       boxShadow: shadow,
                       userSelect: 'none',
-                      position: 'relative'
+                      position: 'relative',
+                      overflow: 'hidden'
                     }}
                   >
-                    {/* Left: Text Content */}
-                    <div style={{ flex: '1 1 65%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px', minWidth: 0 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: 'var(--lesson-secondary)', fontWeight: '800', letterSpacing: '0.5px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <div style={{ width: '4px', height: '12px', background: '#A64B27', borderRadius: '2px' }} />
-                          <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
-                        </div>
-                        {isScanned && <Check size={16} strokeWidth={3} style={{ color: '#A64B27' }} />}
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span style={{ fontSize: '1.3rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
-                        <span style={{ fontSize: '0.95rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '6px', minHeight: '18px' }}>
-                          {isScanning && (
-                             <motion.span
-                               animate={{ opacity: [1, 0.4, 1] }}
-                               transition={{ duration: 1, repeat: Infinity }}
-                               style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#A64B27', display: 'inline-block' }}
-                             />
-                          )}
-                          {labelText}
-                        </span>
+                    {/* Header: Label */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: '#7A6A52', fontWeight: '800', letterSpacing: '0.5px', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ width: '4px', height: '12px', background: '#A64B27', borderRadius: '2px' }} />
+                        <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
                       </div>
                     </div>
 
-                    {/* Right: Image Content */}
+                    {/* Image Area */}
                     <div style={{ 
-                      flex: '0 0 35%',
+                      flex: 1,
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       position: 'relative', 
-                      minHeight: '80px'
+                      minHeight: 0,
+                      background: '#F9F9F9',
+                      borderRadius: '4px',
+                      marginBottom: '8px',
+                      overflow: 'hidden'
                     }}>
                       {obj.boardImage || obj.image ? (
                         <img 
@@ -375,11 +361,28 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                             height: '100%', 
                             objectFit: 'contain',
                             objectPosition: 'center',
-                            mixBlendMode: 'multiply',
-                            transform: 'scale(1.25)'
+                            mixBlendMode: 'multiply'
                           }} 
                         />
                       ) : null}
+                    </div>
+
+                    {/* Footer: Name & Status */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '1.1rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          {isScanning && (
+                             <motion.span
+                               animate={{ opacity: [1, 0.4, 1] }}
+                               transition={{ duration: 1, repeat: Infinity }}
+                               style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#A64B27', display: 'inline-block' }}
+                             />
+                          )}
+                          {labelText}
+                        </span>
+                        {isScanned && <Check size={16} strokeWidth={3} style={{ color: '#A64B27' }} />}
+                      </div>
                     </div>
                   </div>
                 );
@@ -387,7 +390,6 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             </div>
           </div>
         </div>
-        
         {/* Middle: Holographic Scanner Area */}
         <div style={{ 
           display: 'flex', 
