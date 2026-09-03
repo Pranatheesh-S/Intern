@@ -1,9 +1,9 @@
-import React, { useState, useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, ContactShadows, Environment, Sky, Text } from '@react-three/drei';
+import React, { useState, useRef, useMemo, Suspense, useEffect } from 'react';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { OrbitControls, Html, ContactShadows, Environment, Sky, Text, Billboard, useGLTF, Sparkles as DreiSparkles } from '@react-three/drei';
 import * as THREE from 'three';
+import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {
-  Sparkles,
   Layers,
   CheckCircle2,
   RotateCcw,
@@ -114,102 +114,102 @@ export const POLYGONS_DATA = [
 export const COMPLETE_GRAPHS_MODULAR_DATA = [
   {
     n: 2,
-    name: '2 Cities (1 Route)',
+    name: '2 Nails (1 String)',
     total: 1,
     formula: '\\frac{2 \\times 1}{2} = 1',
     triangularNumber: 'T₁ = 1',
     color: '#0284c7',
-    icon: '✈️',
-    realLifeTitle: '2-City Direct Flight Corridor (Delhi ↔ Mumbai)',
-    realLife: 'Connecting 2 airports requires exactly 1 direct two-way non-stop flight corridor.',
+    icon: '📍',
+    realLifeTitle: '2 Nails on a Geoboard',
+    realLife: 'If you have 2 nails, you only need 1 string to connect them together.',
     breakdown: [
-      { step: 'Delhi Airport schedules route to Mumbai', count: 1 }
+      { step: 'Nail 1 connects to Nail 2', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k2-flight', name: 'Delhi ↔ Mumbai Non-Stop Corridor', icon: '✈️', color: '#0284c7', edges: [{ u: 0, v: 1 }] }
+      { id: 'k2-flight', name: 'Connect 2 Nails', icon: '📍', color: '#0284c7', edges: [{ u: 0, v: 1 }] }
     ]
   },
   {
     n: 3,
-    name: '3 Cities (3 Routes)',
+    name: '3 Nails (3 Strings)',
     total: 3,
     formula: '\\frac{3 \\times 2}{2} = 3',
     triangularNumber: 'T₂ = 2 + 1 = 3',
     color: '#059669',
     icon: '🔺',
-    realLifeTitle: '3-City Golden Triangle Aviation Network',
-    realLife: 'Delhi connects to 2 cities, and Mumbai connects to 1 remaining city (2 + 1 = 3 non-stop routes forming an airway triangle).',
+    realLifeTitle: '3 Nails make a Triangle',
+    realLife: 'With 3 nails, you need 3 strings. This creates a simple triangle shape!',
     breakdown: [
-      { step: 'Delhi connects to Mumbai, Bengaluru', count: 2 },
-      { step: 'Mumbai connects to Bengaluru', count: 1 }
+      { step: 'Nail 1 connects to 2 other nails', count: 2 },
+      { step: 'Nail 2 connects to the last nail', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k3-tri', name: 'All 3 Flight Corridors (3 routes)', icon: '🔺', color: '#059669', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 0 }] }
+      { id: 'k3-tri', name: 'All 3 Strings', icon: '🔺', color: '#059669', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 0 }] }
     ]
   },
   {
     n: 4,
-    name: '4 Cities (6 Routes)',
+    name: '4 Nails (6 Strings)',
     total: 6,
     formula: '\\frac{4 \\times 3}{2} = 6',
     triangularNumber: 'T₃ = 3 + 2 + 1 = 6',
     color: '#d97706',
-    icon: '🛫',
-    realLifeTitle: '4-City Metro Flight Grid (Delhi, Mumbai, Bengaluru, Chennai)',
-    realLife: 'Connecting 4 major metro hubs non-stop requires 3 + 2 + 1 = 6 direct flight corridors.',
+    icon: '🧵',
+    realLifeTitle: '4 Nails with Cross Strings',
+    realLife: 'Connecting 4 nails takes 6 strings. You get a square on the outside and an X on the inside.',
     breakdown: [
-      { step: 'Delhi connects to Mumbai, Bengaluru, Chennai', count: 3 },
-      { step: 'Mumbai connects to Bengaluru, Chennai', count: 2 },
-      { step: 'Bengaluru connects to Chennai', count: 1 }
+      { step: 'Nail 1 connects to 3 other nails', count: 3 },
+      { step: 'Nail 2 connects to 2 other nails', count: 2 },
+      { step: 'Nail 3 connects to the last nail', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k4-perimeter', name: 'Perimeter Coastal Corridors (4 routes)', icon: '🟦', color: '#0284c7', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 0 }] },
-      { id: 'k4-diagonal', name: 'Cross-Country Diagonal Corridors (2 routes)', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 1, v: 3 }] }
+      { id: 'k4-perimeter', name: 'Outside Square Strings', icon: '🟦', color: '#0284c7', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 0 }] },
+      { id: 'k4-diagonal', name: 'Inside Cross Strings', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 1, v: 3 }] }
     ]
   },
   {
     n: 5,
-    name: '5 Cities (10 Routes)',
+    name: '5 Nails (10 Strings)',
     total: 10,
     formula: '\\frac{5 \\times 4}{2} = 10',
     triangularNumber: 'T₄ = 4 + 3 + 2 + 1 = 10',
     color: '#db2777',
     icon: '⭐',
-    realLifeTitle: '5-City National Hub Airway Network',
-    realLife: '5 national airport hubs need 4 + 3 + 2 + 1 = 10 non-stop routes, forming a pentagon perimeter plus a 5-pointed star flight pattern.',
+    realLifeTitle: '5 Nails make a Star',
+    realLife: 'With 5 nails, you need 10 strings. This makes a pentagon shape with a perfect star inside!',
     breakdown: [
-      { step: 'Delhi connects to 4 remaining hubs', count: 4 },
-      { step: 'Mumbai connects to 3 remaining hubs', count: 3 },
-      { step: 'Bengaluru connects to 2 remaining hubs', count: 2 },
-      { step: 'Chennai connects to Kolkata', count: 1 }
+      { step: 'Nail 1 connects to 4 other nails', count: 4 },
+      { step: 'Nail 2 connects to 3 other nails', count: 3 },
+      { step: 'Nail 3 connects to 2 other nails', count: 2 },
+      { step: 'Nail 4 connects to the last nail', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k5-pentagon', name: 'Outer Perimeter Airway Ring (5 routes)', icon: '⬟', color: '#db2777', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 0 }] },
-      { id: 'k5-star', name: 'Inscribed Star Express Corridors (5 routes)', icon: '⭐', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 2, v: 4 }, { u: 4, v: 1 }, { u: 1, v: 3 }, { u: 3, v: 0 }] }
+      { id: 'k5-pentagon', name: 'Outside Pentagon Strings', icon: '⬟', color: '#db2777', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 0 }] },
+      { id: 'k5-star', name: 'Inside Star Strings', icon: '⭐', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 2, v: 4 }, { u: 4, v: 1 }, { u: 1, v: 3 }, { u: 3, v: 0 }] }
     ]
   },
   {
     n: 6,
-    name: '6 Cities (15 Routes)',
+    name: '6 Nails (15 Strings)',
     total: 15,
     formula: '\\frac{6 \\times 5}{2} = 15',
     triangularNumber: 'T₅ = 5 + 4 + 3 + 2 + 1 = 15',
     color: '#7c3aed',
-    icon: '🌐',
-    realLifeTitle: '6-City Complete Metro Airway Grid',
-    realLife: '6 major aviation hubs require 5 + 4 + 3 + 2 + 1 = 15 direct routes, perfectly matching the 5th Triangular Number (T₅).',
+    icon: '🎨',
+    realLifeTitle: '6 Nails String Art Pattern',
+    realLife: '6 nails need 15 strings! This creates a beautiful and complex string art design.',
     breakdown: [
-      { step: 'Delhi connects to 5 hubs', count: 5 },
-      { step: 'Mumbai connects to 4 remaining', count: 4 },
-      { step: 'Bengaluru connects to 3 remaining', count: 3 },
-      { step: 'Chennai connects to 2 remaining', count: 2 },
-      { step: 'Kolkata connects to Hyderabad', count: 1 }
+      { step: 'Nail 1 connects to 5 other nails', count: 5 },
+      { step: 'Nail 2 connects to 4 other nails', count: 4 },
+      { step: 'Nail 3 connects to 3 other nails', count: 3 },
+      { step: 'Nail 4 connects to 2 other nails', count: 2 },
+      { step: 'Nail 5 connects to the last nail', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k6-hexagon', name: 'Outer Hexagon Airway Ring (6 routes)', icon: '⬢', color: '#7c3aed', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 5 }, { u: 5, v: 0 }] },
-      { id: 'k6-star1', name: 'Express Star Corridors Δ₁ (3 routes)', icon: '🔺', color: '#ea580c', edges: [{ u: 0, v: 2 }, { u: 2, v: 4 }, { u: 4, v: 0 }] },
-      { id: 'k6-star2', name: 'Express Star Corridors Δ₂ (3 routes)', icon: '🔻', color: '#059669', edges: [{ u: 1, v: 3 }, { u: 3, v: 5 }, { u: 5, v: 1 }] },
-      { id: 'k6-diameters', name: 'Direct Trans-Continental Corridors (3 routes)', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 3 }, { u: 1, v: 4 }, { u: 2, v: 5 }] }
+      { id: 'k6-hexagon', name: 'Outside Hexagon Strings', icon: '⬢', color: '#7c3aed', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 5 }, { u: 5, v: 0 }] },
+      { id: 'k6-star1', name: 'First Triangle Star', icon: '🔺', color: '#ea580c', edges: [{ u: 0, v: 2 }, { u: 2, v: 4 }, { u: 4, v: 0 }] },
+      { id: 'k6-star2', name: 'Second Triangle Star', icon: '🔻', color: '#059669', edges: [{ u: 1, v: 3 }, { u: 3, v: 5 }, { u: 5, v: 1 }] },
+      { id: 'k6-diameters', name: 'Middle Cross Strings', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 3 }, { u: 1, v: 4 }, { u: 2, v: 5 }] }
     ]
   }
 ];
@@ -237,129 +237,318 @@ function generateKoch2D(p1, p2, depth) {
 // 1. PHOTOREALISTIC INDIAN 3D MODELS
 // -----------------------------------------------------------------------
 
-// 3 SIDES: Photorealistic Ancient Egyptian Stepped Limestone Pyramid (Triangle Face Geometry)
+// 3 SIDES: Photorealistic Ancient Egyptian Pyramid Complex & Realistic Moving 3D Camel
 export function PhotorealisticPyramid3D() {
-  // Stepped Limestone Block Strata (22 discrete stone masonry courses)
-  const pyramidLayers = useMemo(() => {
-    const layers = [];
-    const totalTiers = 20;
-    const baseWidth = 2.4;
-    const totalHeight = 1.8;
-    const tierHeight = totalHeight / totalTiers;
-
-    for (let i = 0; i < totalTiers; i++) {
-      const progress = i / totalTiers;
-      const width = baseWidth * (1 - progress);
-      const y = i * tierHeight + tierHeight / 2;
-      // Slight ancient stone weathering color variation
-      const colorShades = ['#d4a373', '#cca070', '#c68b59', '#dfb88b', '#e2be96', '#be8956'];
-      const color = colorShades[i % colorShades.length];
-
-      layers.push({
-        y,
-        width,
-        height: tierHeight * 1.02,
-        color
-      });
-    }
-    return layers;
-  }, []);
-
-  // Desert Dunes & Landscape Details
-  const dunes = useMemo(() => [
-    { pos: [-2.8, -0.15, -1.5], scale: [2.5, 0.4, 2.0], rot: [0.1, 0.4, -0.05] },
-    { pos: [2.6, -0.2, -1.2], scale: [2.2, 0.35, 1.8], rot: [-0.1, -0.3, 0.08] },
-    { pos: [0.5, -0.22, 2.2], scale: [3.0, 0.3, 1.6], rot: [0.05, 0.8, -0.02] },
-    { pos: [-2.2, -0.25, 1.8], scale: [2.4, 0.28, 1.5], rot: [-0.08, -0.5, 0.04] }
-  ], []);
-
   return (
-    <group position={[0, -0.55, 0]} rotation={[0.08, 0.35, 0]}>
-      {/* Warm Golden Hour Desert Sunlight */}
-      <ambientLight intensity={1.4} color="#fef3c7" />
-      <directionalLight position={[6, 7, 5]} intensity={2.8} color="#fff1d6" castShadow />
-      <directionalLight position={[-6, 3, -4]} intensity={1.2} color="#fcd34d" />
-      <pointLight position={[0, 3, 2]} intensity={1.0} color="#f59e0b" distance={6} />
+    <group position={[0, -0.52, 0]} rotation={[0.06, 0.32, 0]}>
+      {/* 1. Golden Hour Desert Sunlight & Warm Ambient Fill */}
+      <ambientLight intensity={0.92} color="#fef3c7" />
+      <directionalLight position={[10, 8, 8]} intensity={1.75} color="#fff3da" castShadow />
+      <directionalLight position={[-8, 3, -6]} intensity={0.5} color="#fed7aa" />
+      <directionalLight position={[0, -3, 0]} intensity={0.4} color="#e09f53" />
 
-      {/* 1. Expansive Saharan Desert Sand Horizon Base */}
-      <mesh position={[0, -0.05, 0]} receiveShadow>
-        <cylinderGeometry args={[5.5, 5.5, 0.1, 48]} />
-        <meshStandardMaterial color="#d4a373" roughness={0.95} metalness={0.02} />
-      </mesh>
-
-      {/* 2. Rolling Desert Sand Dunes */}
-      {dunes.map((d, idx) => (
-        <mesh key={`dune-${idx}`} position={d.pos} rotation={d.rot} scale={d.scale} receiveShadow>
-          <sphereGeometry args={[1, 24, 16]} />
-          <meshStandardMaterial color="#c68b59" roughness={0.98} />
-        </mesh>
-      ))}
-
-      {/* 3. Stepped Limestone Masonry Tier Blocks (Zero Overlap, Clean Strata) */}
-      <group position={[0, 0, 0]}>
-        {pyramidLayers.map((layer, idx) => (
-          <mesh
-            key={`tier-${idx}`}
-            position={[0, layer.y, 0]}
-            rotation={[0, 0, 0]}
-            castShadow
-            receiveShadow
-          >
-            <boxGeometry args={[layer.width, layer.height, layer.width]} />
-            <meshPhysicalMaterial
-              color={layer.color}
-              roughness={0.92}
-              metalness={0.04}
-              clearcoat={0.05}
-            />
-          </mesh>
-        ))}
-
-        {/* 4. Radiant Golden Electrum Capstone (Pyramidion) on Top */}
-        <mesh position={[0, 1.88, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
-          <coneGeometry args={[0.18, 0.22, 4]} />
-          <meshPhysicalMaterial
-            color="#fbbf24"
-            emissive="#d97706"
-            emissiveIntensity={0.35}
-            metalness={0.95}
-            roughness={0.15}
-            clearcoat={1.0}
-            clearcoatRoughness={0.05}
-          />
-        </mesh>
-        <pointLight position={[0, 1.95, 0]} intensity={1.5} color="#fef08a" distance={2} />
-      </group>
-
-      {/* 5. Ancient Entrance Portal on Northern Face */}
-      <mesh position={[0, 0.22, 1.08]} rotation={[-0.48, 0, 0]} castShadow>
-        <boxGeometry args={[0.22, 0.32, 0.08]} />
-        <meshStandardMaterial color="#451a03" roughness={0.9} />
-      </mesh>
-
-      {/* 6. Distant Desert Oasis Palm Trees & Atmosphere */}
-      <group position={[-2.4, 0, -1.2]}>
-        {/* Palm Trunk */}
-        <mesh position={[0, 0.45, 0]} rotation={[0, 0, -0.1]} castShadow>
-          <cylinderGeometry args={[0.035, 0.055, 0.9, 12]} />
-          <meshStandardMaterial color="#5c3818" roughness={0.9} />
-        </mesh>
-        {/* Palm Fronds */}
-        {[0, 1, 2, 3, 4, 5].map((p) => (
-          <mesh
-            key={`frond-${p}`}
-            position={[0, 0.88, 0]}
-            rotation={[0.3, (p * Math.PI) / 3, 0.5]}
-            scale={[0.08, 0.32, 0.02]}
-          >
-            <sphereGeometry args={[1, 12, 12]} />
-            <meshStandardMaterial color="#15803d" roughness={0.7} />
-          </mesh>
-        ))}
-      </group>
+      {/* 2. Photorealistic Sky Dome, Desert Floor, Ancient Pyramid & Animated Walking Camel */}
+      <Suspense fallback={<RealisticPyramidFallback />}>
+        <PhotorealisticDesertSky />
+        <RealisticDesertFloor3D />
+        <RealisticPyramidMesh3D />
+        <RealisticCamelWalk3D />
+      </Suspense>
     </group>
   );
 }
+
+// -------------------------------------------------------------
+// 360-Degree Photorealistic Saharan Desert Panoramic Sky Dome
+// -------------------------------------------------------------
+function PhotorealisticDesertSky() {
+  const skyTexture = useLoader(THREE.TextureLoader, '/desert_sky.jpg');
+
+  useMemo(() => {
+    skyTexture.colorSpace = THREE.SRGBColorSpace;
+    skyTexture.mapping = THREE.EquirectangularReflectionMapping;
+  }, [skyTexture]);
+
+  return (
+    <group>
+      {/* 1. 360-Degree Panoramic Desert Sky Dome Sphere */}
+      <mesh position={[0, 2, 0]}>
+        <sphereGeometry args={[52, 64, 32]} />
+        <meshBasicMaterial map={skyTexture} side={THREE.BackSide} depthWrite={false} />
+      </mesh>
+
+      {/* 2. Soft Saharan Atmospheric Horizon Sand Haze */}
+      <fog attach="fog" args={['#edd4b8', 16, 52]} />
+    </group>
+  );
+}
+
+// -------------------------------------------------------------
+// Photorealistic 3D Desert Sand Surface with Wind Ripples & Natural Terrain
+// -------------------------------------------------------------
+function RealisticDesertFloor3D() {
+  const sandTexture = useLoader(THREE.TextureLoader, '/desert_sand.jpg');
+
+  // Desert Dunes in the Outer Perimeter (Distance > 4.0, completely clear of the caravan trail at radius 2.65)
+  const dunes = useMemo(() => [
+    { pos: [-4.8, -0.4, -3.2], scale: [2.5, 0.5, 2.2], rot: [0.1, 0.4, -0.05], color: '#d9a973' },
+    { pos: [4.6, -0.4, -3.0], scale: [2.4, 0.45, 2.0], rot: [-0.1, -0.3, 0.08], color: '#cfa068' },
+    { pos: [1.0, -0.4, 4.8], scale: [2.8, 0.45, 2.0], rot: [0.05, 0.8, -0.02], color: '#e0ae78' },
+    { pos: [-4.5, -0.4, 3.2], scale: [2.6, 0.42, 1.8], rot: [-0.08, -0.5, 0.04], color: '#c7975e' },
+    { pos: [4.8, -0.4, 2.5], scale: [2.6, 0.42, 2.0], rot: [0.12, 0.2, -0.06], color: '#deb079' },
+    { pos: [-0.8, -0.45, -5.2], scale: [3.5, 0.55, 2.5], rot: [-0.05, 0.1, 0.03], color: '#c2925b' }
+  ], []);
+
+  // Scattered Desert Limestone Rocks (safely positioned away from the walking trail)
+  const rocks = useMemo(() => [
+    { pos: [-1.4, 0.02, 1.2], scale: [0.14, 0.09, 0.12], rot: [0.3, 0.5, 0.1] },
+    { pos: [1.3, 0.01, 1.3], scale: [0.18, 0.12, 0.15], rot: [-0.2, 0.8, 0.4] },
+    { pos: [-1.2, 0.02, -1.3], scale: [0.16, 0.1, 0.13], rot: [0.4, -0.3, 0.2] },
+    { pos: [4.2, 0.01, -2.2], scale: [0.22, 0.14, 0.18], rot: [0.1, 0.2, -0.4] },
+    { pos: [-3.8, 0.02, 2.0], scale: [0.18, 0.11, 0.14], rot: [-0.5, 0.4, 0.3] }
+  ], []);
+
+  // Configure high-frequency ripple texture repeat & sculpted desert topography
+  const [sandMaterial, desertGeometry] = useMemo(() => {
+    sandTexture.wrapS = THREE.RepeatWrapping;
+    sandTexture.wrapT = THREE.RepeatWrapping;
+    sandTexture.repeat.set(5.5, 5.5);
+    sandTexture.colorSpace = THREE.SRGBColorSpace;
+
+    // Sculpted desert sand bed with level caravan trail at radius 2.65
+    const geom = new THREE.CylinderGeometry(7.2, 7.2, 0.1, 96, 32);
+    const pos = geom.attributes.position;
+    
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
+      const z = pos.getZ(i);
+      
+      // Sculpt top sand surface only
+      if (y > 0) {
+        const r = Math.hypot(x, z);
+        let heightOffset = 0;
+        if (r > 3.2) {
+          // Natural rolling desert ripples and dunes in outer perimeter
+          const fade = Math.min(1.0, (r - 3.2) / 1.5);
+          const wave1 = Math.sin(x * 0.7 + z * 0.5) * 0.12;
+          const wave2 = Math.cos(x * 1.2 - z * 0.9) * 0.06;
+          const wave3 = Math.sin(x * 2.0 + z * 1.8) * 0.02;
+          heightOffset = (wave1 + wave2 + wave3) * fade;
+        } else if (r < 1.6) {
+          // Subtle foundation sand slope near pyramid base
+          const fade = (1.6 - r) / 1.6;
+          heightOffset = fade * 0.035;
+        }
+        pos.setY(i, 0.05 + heightOffset);
+      }
+    }
+    geom.computeVertexNormals();
+
+    const mat = new THREE.MeshStandardMaterial({
+      map: sandTexture,
+      bumpMap: sandTexture,
+      bumpScale: 0.035,
+      roughness: 0.94,
+      metalness: 0.01,
+      color: '#dfb27c',
+    });
+
+    return [mat, geom];
+  }, [sandTexture]);
+
+  return (
+    <group>
+      {/* 1. Photorealistic Textured Desert Sand Bed */}
+      <mesh position={[0, -0.05, 0]} geometry={desertGeometry} material={sandMaterial} receiveShadow />
+
+      {/* 2. Textured Perimeter Sand Dunes with wind-blown ridges */}
+      {dunes.map((d, idx) => (
+        <mesh key={`dune-${idx}`} position={d.pos} rotation={d.rot} scale={d.scale} receiveShadow>
+          <sphereGeometry args={[1, 32, 20]} />
+          <meshStandardMaterial
+            map={sandTexture}
+            bumpMap={sandTexture}
+            bumpScale={0.03}
+            color={d.color}
+            roughness={0.96}
+          />
+        </mesh>
+      ))}
+
+      {/* 3. Desert Limestone Boulders */}
+      {rocks.map((r, idx) => (
+        <mesh key={`rock-${idx}`} position={r.pos} rotation={r.rot} scale={r.scale} castShadow receiveShadow>
+          <dodecahedronGeometry args={[1, 1]} />
+          <meshStandardMaterial color="#b8956e" roughness={0.92} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// -------------------------------------------------------------
+// 3D Ultra-Realistic Camel with Physical 4-Leg Animated Walking Gait
+// -------------------------------------------------------------
+function RealisticCamelWalk3D() {
+  const camelGroupRef = useRef();
+  const mixerRef = useRef();
+  const { scene, animations } = useGLTF('/camel_animated_walk.glb');
+  const texture = useLoader(THREE.TextureLoader, '/camel_texture.jpeg');
+
+  // Safely clone skinned mesh using SkeletonUtils to prevent bone desync / WebGL vertex glitch
+  const clonedCamel = useMemo(() => {
+    if (!scene) return null;
+    const s = SkeletonUtils.clone(scene);
+
+    if (texture) {
+      texture.flipY = false;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+    }
+
+    s.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+        child.material = new THREE.MeshStandardMaterial({
+          map: texture,
+          color: '#dfaf77',
+          roughness: 0.88,
+          metalness: 0.02,
+        });
+      }
+    });
+
+    return s;
+  }, [scene, texture]);
+
+  // Set up and run the 4-leg walk animation cycle
+  useEffect(() => {
+    if (!clonedCamel || !animations || animations.length === 0) return;
+    const mixer = new THREE.AnimationMixer(clonedCamel);
+    const action = mixer.clipAction(animations[0]);
+    action.reset();
+    action.timeScale = 1.25; // Natural walking cadence
+    action.play();
+    mixerRef.current = mixer;
+
+    return () => {
+      if (mixerRef.current) {
+        mixerRef.current.stopAllAction();
+      }
+    };
+  }, [clonedCamel, animations]);
+
+  useFrame((state, delta) => {
+    // 1. Advance the 4-leg skeletal walking animation
+    if (mixerRef.current) {
+      mixerRef.current.update(delta);
+    }
+
+    // 2. Trajectory & Orbit around the pyramid
+    const t = state.clock.elapsedTime;
+    const speed = 0.25; // Natural desert caravan trekking speed
+    const radius = 2.65;
+    const angle = -t * speed; // Clockwise orbit around pyramid
+
+    if (camelGroupRef.current) {
+      const x = Math.sin(angle) * radius;
+      const z = Math.cos(angle) * radius;
+
+      // Realistic quadruped locomotion dynamics
+      const walkRoll = Math.sin(t * 1.6) * 0.02;   // Subtle lateral sway
+      const walkPitch = Math.sin(t * 3.2) * 0.015; // Gentle fore/aft nod
+
+      // Planted cleanly on the sand surface without clipping or overlap
+      camelGroupRef.current.position.set(x, 0.015, z);
+      // Tangent heading facing forward along walking circle
+      camelGroupRef.current.rotation.y = angle - Math.PI / 2;
+      camelGroupRef.current.rotation.z = walkRoll;
+      camelGroupRef.current.rotation.x = walkPitch;
+    }
+  });
+
+  if (!clonedCamel) return null;
+
+  return (
+    <group ref={camelGroupRef} scale={0.44}>
+      <primitive object={clonedCamel} />
+    </group>
+  );
+}
+
+// -------------------------------------------------------------
+// 3D Photorealistic Ancient Giza Pyramid Complex
+// -------------------------------------------------------------
+function RealisticPyramidMesh3D() {
+  const { scene } = useGLTF('/pyramids_realistic.glb');
+  const stoneTexture = useLoader(THREE.TextureLoader, '/pyramid_stone.jpg');
+
+  const clonedPyramids = useMemo(() => {
+    stoneTexture.wrapS = THREE.RepeatWrapping;
+    stoneTexture.wrapT = THREE.RepeatWrapping;
+    stoneTexture.repeat.set(3.5, 3.5);
+    stoneTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const s = scene.clone(true);
+    s.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+        child.material = new THREE.MeshStandardMaterial({
+          map: stoneTexture,
+          bumpMap: stoneTexture,
+          bumpScale: 0.045,
+          color: '#e2ba86',
+          roughness: 0.90,
+          metalness: 0.02,
+        });
+      }
+    });
+    return s;
+  }, [scene, stoneTexture]);
+
+  return (
+    <group position={[0, 0, 0]} scale={0.21}>
+      <primitive object={clonedPyramids} />
+      {/* Electrum Golden Pyramidion Capstone on the summit of the Great Pyramid */}
+      <mesh position={[0, 6.26, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <coneGeometry args={[0.55, 0.72, 4]} />
+        <meshPhysicalMaterial
+          color="#f59e0b"
+          emissive="#b45309"
+          emissiveIntensity={0.35}
+          metalness={0.96}
+          roughness={0.12}
+          clearcoat={1.0}
+        />
+      </mesh>
+      <pointLight position={[0, 6.4, 0]} intensity={1.8} color="#fef08a" distance={3} />
+    </group>
+  );
+}
+
+// Graceful fallback for suspense while GLB models initialize
+function RealisticPyramidFallback() {
+  return (
+    <group position={[0, 0.75, 0]}>
+      <mesh rotation={[0, Math.PI / 4, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.02, 1.7, 1.5, 4]} />
+        <meshStandardMaterial color="#dfbe95" roughness={0.94} metalness={0.02} />
+      </mesh>
+      <mesh position={[0, 0.78, 0]} rotation={[0, Math.PI / 4, 0]}>
+        <coneGeometry args={[0.18, 0.22, 4]} />
+        <meshPhysicalMaterial color="#fbbf24" metalness={0.95} roughness={0.15} />
+      </mesh>
+    </group>
+  );
+}
+
+// Preload assets for instantaneous rendering
+useGLTF.preload('/pyramids_realistic.glb');
+useGLTF.preload('/camel_animated_walk.glb');
 
 // 4 SIDES: Photorealistic Human Hand Rolling Ivory Dice onto Teakwood Ludo Board
 export function PhotorealisticLudoBoard3D() {
@@ -1098,41 +1287,46 @@ function RealisticAirliner({ sequence, hubs, speed = 0.5, flightNo = 'AI-204' })
   );
 }
 
-export const NETWORK_HUBS_DATA = [
-  { id: 0, name: 'Delhi', code: 'DEL', icon: '🛫', color: '#0284c7', light: '#38bdf8' },
-  { id: 1, name: 'Mumbai', code: 'BOM', icon: '🛫', color: '#d97706', light: '#f59e0b' },
-  { id: 2, name: 'Bengaluru', code: 'BLR', icon: '🛫', color: '#16a34a', light: '#4ade80' },
-  { id: 3, name: 'Chennai', code: 'MAA', icon: '🛫', color: '#9333ea', light: '#c084fc' },
-  { id: 4, name: 'Kolkata', code: 'CCU', icon: '🛫', color: '#e11d48', light: '#fb7185' },
-  { id: 5, name: 'Hyderabad', code: 'HYD', icon: '🛫', color: '#0891b2', light: '#22d3ee' }
+export const GEOBOARD_NAILS_DATA = [
+  { id: 0, label: '1', color: '#0284c7', stringColor: '#38bdf8' },
+  { id: 1, label: '2', color: '#d97706', stringColor: '#fcd34d' },
+  { id: 2, label: '3', color: '#16a34a', stringColor: '#86efac' },
+  { id: 3, label: '4', color: '#9333ea', stringColor: '#d8b4fe' },
+  { id: 4, label: '5', color: '#e11d48', stringColor: '#fda4af' },
+  { id: 5, label: '6', color: '#0891b2', stringColor: '#67e8f9' }
 ];
 
-// Holographic Glowing Flight Arc using QuadraticBezierCurve3
-function FlightArc({ from, to, color }) {
-  const arcGeo = useMemo(() => {
-    const dx = to.x - from.x;
-    const dz = to.z - from.z;
-    const dist = Math.sqrt(dx * dx + dz * dz);
-    const maxHeight = dist * 0.35;
+// Straight String Edge connecting two nails
+function StringEdge({ from, to, color }) {
+  const edgeGeo = useMemo(() => {
+    const vFrom = new THREE.Vector3(from.x, from.y + 0.15, from.z);
+    const vTo = new THREE.Vector3(to.x, to.y + 0.15, to.z);
+    const dist = vFrom.distanceTo(vTo);
     
-    // Create a sweeping parabolic curve in 3D space
-    const curve = new THREE.QuadraticBezierCurve3(
-      new THREE.Vector3(from.x, 0.05, from.z),
-      new THREE.Vector3(from.x + dx / 2, maxHeight, from.z + dz / 2),
-      new THREE.Vector3(to.x, 0.05, to.z)
-    );
-    return new THREE.TubeGeometry(curve, 48, 0.008, 8, false);
+    // Create a thin cylinder for the string
+    return new THREE.CylinderGeometry(0.015, 0.015, dist, 16);
+  }, [from, to]);
+
+  const { position, quaternion } = useMemo(() => {
+    const vFrom = new THREE.Vector3(from.x, from.y + 0.15, from.z);
+    const vTo = new THREE.Vector3(to.x, to.y + 0.15, to.z);
+    const pos = vFrom.clone().lerp(vTo, 0.5);
+    
+    // Calculate rotation to point from A to B
+    const direction = vTo.clone().sub(vFrom).normalize();
+    const up = new THREE.Vector3(0, 1, 0);
+    const quat = new THREE.Quaternion().setFromUnitVectors(up, direction);
+    return { position: pos, quaternion: quat };
   }, [from, to]);
 
   return (
-    <mesh geometry={arcGeo}>
+    <mesh geometry={edgeGeo} position={position} quaternion={quaternion} castShadow>
       <meshStandardMaterial 
         color={color} 
         emissive={color} 
-        emissiveIntensity={3.5} 
-        transparent 
-        opacity={0.8} 
-        roughness={0.1}
+        emissiveIntensity={0.8} 
+        roughness={0.6}
+        metalness={0.1}
       />
     </mesh>
   );
@@ -1220,14 +1414,14 @@ export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
     return sequence;
   }, [connectedEdgesList, n]);
 
-  // Positions of Hub Vertices in an exact Regular Polygon (Start Angle 0 for horizontal alignment!)
+  // Positions of Nails in an exact Regular Polygon (Start Angle 0 for horizontal alignment!)
   const hubNodes = useMemo(() => {
     const nodes = [];
-    const startAngle = 0; // Starts precisely on the X-axis so n=2 is perfectly straight horizontally!
+    const startAngle = 0;
 
     for (let i = 0; i < n; i++) {
       const angle = startAngle + (i * 2 * Math.PI) / n;
-      const hub = NETWORK_HUBS_DATA[i % NETWORK_HUBS_DATA.length];
+      const hub = GEOBOARD_NAILS_DATA[i % GEOBOARD_NAILS_DATA.length];
       const x = radius * Math.cos(angle);
       const z = radius * Math.sin(angle);
 
@@ -1235,14 +1429,14 @@ export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
         ...hub,
         angle,
         x,
-        y: 0.025,
+        y: 0,
         z
       });
     }
     return nodes;
   }, [n, radius]);
 
-  // All Potential Edge Pairs for Background Blueprint Guides
+  // All Potential Edge Pairs
   const allPotentialEdges = useMemo(() => {
     const edges = [];
     for (let i = 0; i < n; i++) {
@@ -1254,147 +1448,69 @@ export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
   }, [n]);
 
   return (
-    <group position={[0, -0.12, 0]} rotation={[0.42, 0, 0]}>
-      {/* Premium Sci-Fi Hologram Studio Lighting */}
-      <ambientLight intensity={1.5} color="#cffafe" />
-      <directionalLight position={[5, 10, 4]} intensity={2.5} color="#0f172a" castShadow />
-      <pointLight position={[0, 3, 0]} intensity={3.0} color="#0ea5e9" distance={8} />
-      <pointLight position={[0, -2, 0]} intensity={1.5} color="#3b82f6" distance={6} />
+    <group position={[0, -0.2, 0]} rotation={[0.42, 0, 0]}>
+      {/* Photorealistic Studio Lighting */}
+      <ambientLight intensity={1.8} color="#fffbeb" />
+      <directionalLight position={[6, 12, 5]} intensity={2.2} color="#ffffff" castShadow />
+      <directionalLight position={[-6, 8, -4]} intensity={1.2} color="#f8fafc" />
 
-      {/* ================= 1. HOLOGRAPHIC RADAR DISC BASE ================= */}
+      {/* ================= 1. WOODEN GEOBOARD BASE ================= */}
       <group position={[0, 0, 0]}>
-        {/* Glowing Frosted Glass Disc */}
-        <mesh receiveShadow castShadow position={[0, -0.04, 0]}>
-          <cylinderGeometry args={[2.0, 2.0, 0.04, 64]} />
-          <meshPhysicalMaterial
-            color="#082f49" 
-            emissive="#0c4a6e"
-            emissiveIntensity={0.5}
-            roughness={0.15}
-            metalness={0.2}
-            transmission={0.8}
-            ior={1.5}
-            clearcoat={1.0}
-            clearcoatRoughness={0.1}
+        {/* Solid Wooden Board */}
+        <mesh receiveShadow castShadow position={[0, -0.05, 0]}>
+          <cylinderGeometry args={[1.9, 1.9, 0.1, 64]} />
+          <meshStandardMaterial
+            color="#78350f" 
+            roughness={0.6}
+            metalness={0.05}
           />
         </mesh>
-
-        {/* Inner Cyan Holographic Grid Lines */}
-        <mesh position={[0, -0.015, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[radius * 0.99, radius * 1.01, 64]} />
-          <meshBasicMaterial color="#38bdf8" transparent opacity={0.6} />
-        </mesh>
-        <mesh position={[0, -0.015, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.3, 0.31, 32]} />
-          <meshBasicMaterial color="#38bdf8" transparent opacity={0.4} />
-        </mesh>
-        
-        {/* Outer Glowing Neon Rim */}
-        <mesh position={[0, -0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[1.98, 2.02, 64]} />
-          <meshStandardMaterial color="#0ea5e9" emissive="#38bdf8" emissiveIntensity={2.0} />
+        {/* Lighter Wood Rim */}
+        <mesh receiveShadow castShadow position={[0, -0.05, 0]}>
+          <cylinderGeometry args={[1.95, 1.95, 0.08, 64]} />
+          <meshStandardMaterial color="#92400e" roughness={0.7} metalness={0.0} />
         </mesh>
       </group>
 
-      {/* ================= 2. BACKGROUND INACTIVE FLIGHT ARCS (FAINT GHOST LINES) ================= */}
-      {allPotentialEdges.map((edge) => {
-        const isConnected = connectedEdgesList.some(ce => ce.id === edge.id);
-        if (isConnected) return null;
-
-        const from = hubNodes[edge.u];
-        const to = hubNodes[edge.v];
-        if (!from || !to) return null;
-
-        return <FlightArc key={`guide-${edge.id}`} from={from} to={to} color="#f8fafc" />;
-      })}
-
-      {/* ================= 3. ACTIVE GLOWING FLIGHT ARCS & REALISTIC AIRLINERS ================= */}
+      {/* ================= 2. ACTIVE STRINGS ================= */}
       {connectedEdgesList.map((edge, idx) => {
         const from = hubNodes[edge.u];
         const to = hubNodes[edge.v];
         if (!from || !to) return null;
 
-        const isPerimeter = (Math.abs(edge.u - edge.v) === 1) || (Math.min(edge.u, edge.v) === 0 && Math.max(edge.u, edge.v) === n - 1);
-        const edgeColor = isPerimeter ? '#06b6d4' : '#f59e0b';
+        // Give the string the color of the starting nail for a nice multi-color effect
+        const edgeColor = from.stringColor;
 
         return (
           <group key={`edge-${edge.id || idx}`}>
-            {/* Spectacular Sweeping Neon Flight Arc */}
-            <FlightArc from={from} to={to} color={edgeColor} />
+            <StringEdge from={from} to={to} color={edgeColor} />
           </group>
         );
       })}
 
-      {/* SINGLE CONTINUOUS AIRLINER TRACING ALL ACTIVE FLIGHTS */}
-      {flightPathSequence.length > 1 && (
-        <RealisticAirliner sequence={flightPathSequence} hubs={hubNodes} speed={0.4} />
-      )}
-
-      {/* ================= 4. CRYSTALLINE AIRPORT HUBS ================= */}
+      {/* ================= 3. BRASS NAILS ================= */}
       {hubNodes.map((hub) => {
-        const count = connectedEdgesList.filter(e => e.u === hub.id || e.v === hub.id).length;
-        const isFully = count === (n - 1);
-        const indicatorColor = isFully ? '#10b981' : hub.color;
-
         return (
           <group key={`hub-${hub.id}`} position={[hub.x, 0, hub.z]}>
-            {/* Glowing Crystal Obelisk Base */}
-            <mesh position={[0, 0.04, 0]} castShadow>
-              <cylinderGeometry args={[0.06, 0.1, 0.08, 6]} />
-              <meshPhysicalMaterial 
-                color={indicatorColor} 
-                emissive={indicatorColor}
-                emissiveIntensity={0.5}
-                roughness={0.1} 
-                transmission={0.9} 
-                ior={1.6} 
-              />
-            </mesh>
-
-            {/* Highly Emissive Core Beacon */}
-            <mesh position={[0, 0.09, 0]}>
-              <sphereGeometry args={[0.035, 16, 16]} />
+            {/* Nail Body (Brass) */}
+            <mesh position={[0, 0.08, 0]} castShadow receiveShadow>
+              <cylinderGeometry args={[0.025, 0.025, 0.16, 16]} />
               <meshStandardMaterial 
-                color={indicatorColor} 
-                emissive={indicatorColor} 
-                emissiveIntensity={4.0} 
+                color="#fbbf24" 
+                roughness={0.3} 
+                metalness={0.9} 
               />
             </mesh>
 
-            {/* Floating Label (Placed high to avoid 3D overlap) */}
-            <Html position={[0, 0.28, 0]} center pointerEvents="none">
-              <div
-                style={{
-                  background: isFully
-                    ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
-                    : 'rgba(15, 23, 42, 0.94)',
-                  color: '#ffffff',
-                  border: `1.5px solid ${isFully ? '#6ee7b7' : hub.light}`,
-                  padding: '3px 8px',
-                  borderRadius: '12px',
-                  fontSize: '0.7rem',
-                  fontWeight: '900',
-                  whiteSpace: 'nowrap',
-                  boxShadow: '0 4px 14px rgba(0,0,0,0.4)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                <span>{hub.code}</span>
-                <span
-                  style={{
-                    background: 'rgba(255,255,255,0.2)',
-                    color: '#ffffff',
-                    padding: '1px 5px',
-                    borderRadius: '6px',
-                    fontSize: '0.65rem'
-                  }}
-                >
-                  {count}/{n - 1}
-                </span>
-              </div>
-            </Html>
+            {/* Nail Head */}
+            <mesh position={[0, 0.16, 0]} castShadow receiveShadow>
+              <cylinderGeometry args={[0.05, 0.05, 0.015, 16]} />
+              <meshStandardMaterial 
+                color="#f59e0b" 
+                roughness={0.2} 
+                metalness={1.0} 
+              />
+            </mesh>
           </group>
         );
       })}
@@ -1651,125 +1767,230 @@ function PrismaticTriangleTile({ x, z, size = 0.44, isInverted = false, tier = 0
   );
 }
 
+// -----------------------------------------------------------------------
+// BRIDGE 3: REALISTIC MONTESSORI HARDWOOD MATH BLOCKS ON DESK
+// Concept: Sum of Consecutive Odd Numbers equals Perfect Squares (1+3+5... = N²)
+// -----------------------------------------------------------------------
 export function PhotorealisticStackedTrianglesBridge3D({ rows = 3 }) {
   const currentRows = Math.min(6, Math.max(1, rows || 3));
-  
-  // Base geometry for a single triangle (pointing UP)
-  const side = 0.55;
-  const h = side * (Math.sqrt(3) / 2);
-  const triangleShape = useMemo(() => {
-    const shape = new THREE.Shape();
-    shape.moveTo(0, h * (2 / 3)); // Top Apex
-    shape.lineTo(side / 2, -h * (1 / 3)); // Bottom Right
-    shape.lineTo(-side / 2, -h * (1 / 3)); // Bottom Left
-    shape.closePath();
-    return shape;
-  }, [side, h]);
-  
-  const extrudeSettings = useMemo(() => ({
-    depth: 0.08,
-    bevelEnabled: true,
-    bevelSegments: 4,
-    steps: 1,
-    bevelSize: 0.015,
-    bevelThickness: 0.015
-  }), []);
 
-  // Distinct vibrant colors for each tier corresponding to consecutive odd numbers
-  const tierColors = ['#f43f5e', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
-  
-  // Center vertically on the screen
-  const totalHeight = currentRows * h;
-  const startY = totalHeight / 2 - h / 2; 
-  
   return (
-    <group position={[0, -0.1, 0]}>
-      {/* Bright Studio Presentation Lighting */}
-      <ambientLight intensity={1.5} color="#0f172a" />
-      <directionalLight position={[5, 8, 6]} intensity={2.8} castShadow />
-      <spotLight position={[-5, 5, 4]} intensity={2.0} color="#475569" penumbra={1} />
-      
-      {/* Sleek Floating Pedestal Base */}
-      <mesh position={[0, -totalHeight / 2 - 0.15, -0.1]} receiveShadow>
-        <cylinderGeometry args={[2.8, 3.2, 0.15, 64]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.1} metalness={0.9} />
+    <Suspense fallback={null}>
+      <RealisticWoodenBlocksScene rows={currentRows} />
+    </Suspense>
+  );
+}
+
+function RealisticWoodenBlocksScene({ rows }) {
+  const woodTexture = useLoader(THREE.TextureLoader, '/hardwood_texture.jpg');
+  const [hoveredLayer, setHoveredLayer] = useState(null);
+
+  // Configure high-detail wood grain repeat
+  useMemo(() => {
+    if (woodTexture) {
+      woodTexture.wrapS = THREE.RepeatWrapping;
+      woodTexture.wrapT = THREE.RepeatWrapping;
+      woodTexture.repeat.set(2.5, 2.5);
+      woodTexture.colorSpace = THREE.SRGBColorSpace;
+    }
+  }, [woodTexture]);
+
+  // Distinct real timber species finishes for each L-shaped layer
+  const timberLayers = useMemo(() => [
+    { name: 'Golden Oak', color: '#f59e0b', stain: '#b45309', odd: 1 },
+    { name: 'Nordic Blue Maple', color: '#38bdf8', stain: '#0369a1', odd: 3 },
+    { name: 'Forest Emerald Teak', color: '#34d399', stain: '#047857', odd: 5 },
+    { name: 'Warm Amber Cherry', color: '#fb923c', stain: '#c2410c', odd: 7 },
+    { name: 'Purpleheart Timber', color: '#c084fc', stain: '#7e22ce', odd: 9 },
+    { name: 'Rosewood Crimson', color: '#f472b6', stain: '#be185d', odd: 11 },
+  ], []);
+
+  // Block geometry with smooth rounded chamfers (tactile wooden toy cubes)
+  const blockGeom = useMemo(() => {
+    const size = 0.82;
+    const b = 0.04;
+    const shape = new THREE.Shape();
+    const s = size / 2;
+    shape.moveTo(-s + b, -s);
+    shape.lineTo(s - b, -s);
+    shape.quadraticCurveTo(s, -s, s, -s + b);
+    shape.lineTo(s, s - b);
+    shape.quadraticCurveTo(s, s, s - b, s);
+    shape.lineTo(-s + b, s);
+    shape.quadraticCurveTo(-s, s, -s, s - b);
+    shape.lineTo(-s, -s + b);
+    shape.quadraticCurveTo(-s, -s, -s + b, -s);
+
+    const g = new THREE.ExtrudeGeometry(shape, {
+      depth: size - b * 2,
+      bevelEnabled: true,
+      bevelThickness: b,
+      bevelSize: b,
+      bevelSegments: 3,
+      steps: 1,
+    });
+    g.center();
+    g.computeVertexNormals();
+    return g;
+  }, []);
+
+  const blockSize = 0.82;
+  const spacing = 0.88; // gentle natural gap between blocks
+  const totalGridSize = rows * spacing;
+  const deskSize = Math.max(6.5, totalGridSize + 2.4);
+
+  // Center alignment
+  const offsetX = -totalGridSize / 2 + spacing / 2;
+  const offsetZ = -totalGridSize / 2 + spacing / 2;
+
+  const totalBlocks = rows * rows;
+  const oddSumFormula = Array.from({ length: rows }).map((_, i) => 2 * i + 1).join(' + ');
+
+  return (
+    <group position={[0, -0.35, 0]} rotation={[0.12, -0.28, 0]}>
+      {/* 1. Warm Classroom Studio Lighting */}
+      <ambientLight intensity={1.1} color="#fffbeb" />
+      <directionalLight
+        position={[6, 10, 8]}
+        intensity={2.2}
+        color="#fff7ed"
+        castShadow
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.0001}
+      />
+      <directionalLight position={[-6, 4, -4]} intensity={0.8} color="#fed7aa" />
+      <directionalLight position={[0, -2, 0]} intensity={0.4} color="#d97706" />
+
+      {/* 2. Handcrafted Oak Study Desk Top */}
+      <mesh position={[0, -0.22, 0]} receiveShadow>
+        <boxGeometry args={[deskSize, 0.4, deskSize]} />
+        <meshStandardMaterial
+          map={woodTexture}
+          color="#92400e"
+          roughness={0.78}
+          metalness={0.02}
+        />
       </mesh>
-      {/* Inner glowing ring on pedestal */}
-      <mesh position={[0, -totalHeight / 2 - 0.07, -0.1]} rotation={[-Math.PI/2, 0, 0]}>
-        <ringGeometry args={[2.4, 2.45, 64]} />
-        <meshBasicMaterial color="#0d9488" />
+
+      {/* 3. Inlaid Brass Coordinate Measurement Ruler & Tray Border */}
+      <mesh position={[0, -0.015, 0]} receiveShadow>
+        <boxGeometry args={[totalGridSize + 0.35, 0.03, totalGridSize + 0.35]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.85} metalness={0.15} />
       </mesh>
-      
-      {/* The Stacked Triangle Pyramid */}
-      {Array.from({ length: currentRows }).map((_, r) => {
-        const countInRow = 2 * r + 1; // 1, 3, 5, 7, 9, 11 (Odd sequence)
-        const tierY = startY - r * h;
-        const color = tierColors[r % tierColors.length];
-        
-        return (
-          <group key={`tier-${r}`}>
-            {/* Left-side Tier Label (+odd number) mapping back to sequence on right */}
-            <Text 
-              position={[-2.2, tierY, 0.1]} 
-              fontSize={0.26} 
-              color={color} 
-              fontWeight="900" 
-              anchorX="right"
-              anchorY="middle"
+      <mesh position={[0, -0.01, 0]} receiveShadow>
+        <boxGeometry args={[totalGridSize + 0.2, 0.035, totalGridSize + 0.2]} />
+        <meshStandardMaterial color="#fef3c7" roughness={0.9} metalness={0.0} />
+      </mesh>
+
+      {/* 4. Montessori Hardwood Math Cubes */}
+      <group position={[offsetX, 0, offsetZ]}>
+        {Array.from({ length: rows }).map((_, r) => {
+          const timber = timberLayers[r % timberLayers.length];
+          const countInLayer = 2 * r + 1; // 1, 3, 5, 7, 9, 11
+          const isHovered = hoveredLayer === r;
+
+          // Generate the L-shape (gnomon) coordinates for layer r
+          const blocks = [];
+          for (let i = 0; i <= r; i++) {
+            blocks.push({ x: i, z: r, isCorner: i === r });
+          }
+          for (let j = 0; j < r; j++) {
+            blocks.push({ x: r, z: j, isCorner: false });
+          }
+
+          // Elevation when hovered for tactile physical inspection
+          const yElev = isHovered ? 0.14 : 0;
+
+          return (
+            <group
+              key={`layer-${r}`}
+              onPointerOver={(e) => { e.stopPropagation(); setHoveredLayer(r); }}
+              onPointerOut={(e) => { e.stopPropagation(); setHoveredLayer(null); }}
             >
-              + {countInRow}
-            </Text>
-            
-            {Array.from({ length: countInRow }).map((_, c) => {
-              const isInverted = c % 2 === 1;
-              const x = -(r * side) / 2 + (c * side) / 2;
-              const rotZ = isInverted ? Math.PI : 0;
-              
-              // Scale down slightly to create a beautiful clean gap without any geometric overlap
-              const gapScale = 0.92; 
-              
-              return (
-                <group key={`t-${r}-${c}`} position={[x, tierY, 0]}>
-                  <mesh castShadow receiveShadow rotation={[0, 0, rotZ]} scale={[gapScale, gapScale, gapScale]}>
-                    <extrudeGeometry args={[triangleShape, extrudeSettings]} />
-                    <meshPhysicalMaterial 
-                      color={color} 
-                      roughness={0.15} 
-                      metalness={0.2}
-                      clearcoat={1.0}
-                      clearcoatRoughness={0.1}
-                      emissive={color}
-                      emissiveIntensity={0.25}
+              {/* Individual Beveled Hardwood Cubes */}
+              {blocks.map((b, bIdx) => (
+                <group
+                  key={`b-${r}-${bIdx}`}
+                  position={[b.x * spacing, blockSize / 2 + yElev, b.z * spacing]}
+                >
+                  <mesh
+                    geometry={blockGeom}
+                    castShadow
+                    receiveShadow
+                  >
+                    <meshStandardMaterial
+                      map={woodTexture}
+                      bumpMap={woodTexture}
+                      bumpScale={0.02}
+                      color={timber.color}
+                      roughness={0.65}
+                      metalness={0.04}
                     />
                   </mesh>
+
+                  {/* Laser-etched unit pip dot on block top */}
+                  <mesh position={[0, blockSize / 2 + 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[0.07, 16]} />
+                    <meshBasicMaterial color={timber.stain} />
+                  </mesh>
                 </group>
-              );
-            })}
-          </group>
-        );
-      })}
-      
-      {/* Right-side Floating Total Summary Text */}
-      <group position={[2.2, 0, 0.1]}>
-        <Text 
-          position={[0, 0.2, 0]} 
-          fontSize={0.22} 
-          color="#64748b" 
-          fontWeight="800" 
-          anchorX="left"
+              ))}
+
+              {/* Floating L-Shape Layer Badge (+1, +3, +5...) */}
+              <group position={[r * spacing, blockSize + 0.38 + yElev, r * spacing]}>
+                <mesh position={[0, 0, -0.01]}>
+                  <planeGeometry args={[0.72, 0.42]} />
+                  <meshBasicMaterial color="#ffffff" transparent opacity={0.92} />
+                </mesh>
+                <Text
+                  fontSize={0.28}
+                  color={timber.stain}
+                  fontWeight="900"
+                  anchorX="center"
+                  anchorY="middle"
+                >
+                  +{countInLayer}
+                </Text>
+              </group>
+            </group>
+          );
+        })}
+      </group>
+
+      {/* 5. Centered Floating Educational Concept Plaque (Never clipped!) */}
+      <group position={[0, 2.55, 0]}>
+        {/* Plaque Background */}
+        <mesh position={[0, 0, -0.02]}>
+          <planeGeometry args={[4.4, 0.85]} />
+          <meshBasicMaterial color="#0f172a" transparent opacity={0.88} />
+        </mesh>
+        <mesh position={[0, 0, -0.015]}>
+          <planeGeometry args={[4.34, 0.79]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.12} />
+        </mesh>
+        
+        {/* Title */}
+        <Text
+          position={[0, 0.18, 0]}
+          fontSize={0.28}
+          color="#38bdf8"
+          fontWeight="900"
+          anchorX="center"
           anchorY="middle"
         >
-          Total Triangles:
+          {oddSumFormula} = {totalBlocks} Blocks
         </Text>
-        <Text 
-          position={[0, -0.15, 0]} 
-          fontSize={0.5} 
-          color="#0d9488" 
-          fontWeight="900" 
-          anchorX="left"
+        {/* Equation */}
+        <Text
+          position={[0, -0.16, 0]}
+          fontSize={0.25}
+          color="#fef08a"
+          fontWeight="800"
+          anchorX="center"
           anchorY="middle"
         >
-          {currentRows}² = {currentRows * currentRows}
+          Square Size: {rows} × {rows} = {rows}²
         </Text>
       </group>
     </group>
@@ -2017,105 +2238,191 @@ export function Table3StackedTriangles3D({ rows = 3, placedRows = 3 }) {
 }
 
 // -----------------------------------------------------------------------
-// 6. TABLE 3 MASTER 3D VIEWER: KOCH SNOWFLAKE RANGOLI MANDALA
+// 6. TABLE 3 MASTER 3D VIEWER: KOCH SNOWFLAKE RAN// -----------------------------------------------------------------------
+// 6. TABLE 3 MASTER 3D VIEWER: PHOTOREALISTIC NATURAL ICE KOCH SNOWFLAKE
+// Concept: Crystalline Fractal Branching (3 × 4^k Segments)
 // -----------------------------------------------------------------------
 export function Table3KochSnowflake3D({ depth }) {
-  const clampedDepth = Math.min(depth, 4);
-  
-  const segmentsData = useMemo(() => {
-    const r = 2.0; 
-    const v1 = [r * Math.cos(-Math.PI / 2), r * Math.sin(-Math.PI / 2)];
-    const v2 = [r * Math.cos(Math.PI / 6), r * Math.sin(Math.PI / 6)];
-    const v3 = [r * Math.cos((5 * Math.PI) / 6), r * Math.sin((5 * Math.PI) / 6)];
-
-    const edge1 = generateKoch2D(v1, v2, clampedDepth);
-    const edge2 = generateKoch2D(v2, v3, clampedDepth);
-    const edge3 = generateKoch2D(v3, v1, clampedDepth);
-    
-    // Combine all points (closed loop)
-    const allPts = [...edge1.slice(0, -1), ...edge2.slice(0, -1), ...edge3];
-    
-    // Convert to distinct segment objects
-    const segs = [];
-    for(let i = 0; i < allPts.length - 1; i++) {
-       const p1 = allPts[i];
-       const p2 = allPts[i+1];
-       const dx = p2[0] - p1[0];
-       const dy = p2[1] - p1[1];
-       const length = Math.sqrt(dx*dx + dy*dy);
-       const angle = Math.atan2(dy, dx);
-       const midX = p1[0] + dx/2;
-       const midY = p1[1] + dy/2;
-       segs.push({ length, angle, midX, midY });
-    }
-    return segs;
-  }, [clampedDepth]);
-
-  const totalSegments = 3 * Math.pow(4, clampedDepth);
-
-  // Math to create perfect glass links and golden joints without overlap
-  const segLength = segmentsData[0]?.length || 1;
-  const thickness = Math.max(0.012, segLength * 0.05); 
-  const renderLen = Math.max(0.01, segLength - (thickness * 2.2));
-  
-  const capsuleGeo = useMemo(() => new THREE.CapsuleGeometry(thickness, renderLen, 4, 12), [thickness, renderLen]);
+  const clampedDepth = Math.min(Math.max(0, depth || 0), 4);
 
   return (
-    <group position={[0, -0.2, 0]}>
-      {/* The Straight 3D Model Group */}
-      <group rotation={[-Math.PI / 2, 0, 0]}>
-      {/* High-Key Premium Studio Lighting */}
-      <ambientLight intensity={2.0} color="#0f172a" />
-      <directionalLight position={[4, 10, 5]} intensity={2.5} color="#0f172a" castShadow />
-      <directionalLight position={[-4, 8, -5]} intensity={1.5} color="#fef3c7" />
-      <pointLight position={[0, 0, 2]} intensity={2.0} color="#38bdf8" distance={6} />
-      
-      {/* Elegant Deep Teal / Slate Pedestal for Strong Contrast */}
-      <mesh position={[0, 0, -0.2]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
-        <cylinderGeometry args={[3.8, 4.0, 0.2, 64]} />
-        <meshPhysicalMaterial 
-          color="#134e4a" 
-          roughness={0.2} 
-          metalness={0.3} 
-          clearcoat={0.8}
-          clearcoatRoughness={0.2}
-        />
-      </mesh>
-      
-      {/* Polished Gold Trim */}
-      <mesh position={[0, 0, -0.1]} receiveShadow>
-        <torusGeometry args={[3.8, 0.04, 16, 64]} />
-        <meshStandardMaterial color="#fbbf24" metalness={0.9} roughness={0.15} />
-      </mesh>
+    <Suspense fallback={null}>
+      <RealisticKochSnowflakeScene depth={clampedDepth} />
+    </Suspense>
+  );
+}
 
-      {/* Artisan Glass & Gold Koch Snowflake */}
-      {segmentsData.map((seg, i) => {
-        return (
-          <group key={`seg-${i}`} position={[seg.midX, seg.midY, 0.15]} rotation={[0, 0, seg.angle - Math.PI/2]}>
-            {/* Cyan Crystal Glass Segment */}
-            <mesh castShadow receiveShadow geometry={capsuleGeo}>
-              <meshPhysicalMaterial 
-                color="#cffafe"
-                emissive="#06b6d4"
-                emissiveIntensity={0.3}
-                roughness={0.1}
-                metalness={0.1}
-                transmission={0.9}
-                thickness={0.2}
-                ior={1.5}
-                clearcoat={1.0}
-              />
-            </mesh>
-            {/* Golden Spherical Joint at the end (connects flawlessly to the next segment) */}
-            <mesh position={[0, segLength / 2, 0]} castShadow>
-               <sphereGeometry args={[thickness * 1.35, 16, 16]} />
-               <meshStandardMaterial color="#fbbf24" metalness={0.95} roughness={0.1} />
-            </mesh>
-          </group>
-        );
-      })}
-      
+function RealisticKochSnowflakeScene({ depth }) {
+  const frostTexture = useLoader(THREE.TextureLoader, '/ice_frost.jpg');
+
+  useMemo(() => {
+    if (frostTexture) {
+      frostTexture.wrapS = THREE.RepeatWrapping;
+      frostTexture.wrapT = THREE.RepeatWrapping;
+      frostTexture.repeat.set(2, 2);
+      frostTexture.colorSpace = THREE.SRGBColorSpace;
+    }
+  }, [frostTexture]);
+
+  // Compute 2D fractal perimeter points (textbook orientation: apex pointing LEFT, medium level size)
+  const allPts = useMemo(() => {
+    const r = 0.88;
+    // Textbook orientation: apex points LEFT at angle = Math.PI (-r, 0)
+    const v1 = [-r, 0];
+    const v2 = [r * Math.cos(-Math.PI / 3), r * Math.sin(-Math.PI / 3)];
+    const v3 = [r * Math.cos(Math.PI / 3), r * Math.sin(Math.PI / 3)];
+
+    const edge1 = generateKoch2D(v1, v2, depth);
+    const edge2 = generateKoch2D(v2, v3, depth);
+    const edge3 = generateKoch2D(v3, v1, depth);
+
+    return [...edge1.slice(0, -1), ...edge2.slice(0, -1), ...edge3];
+  }, [depth]);
+
+  // Create 3D Faceted Crystalline Ice Snowflake Mesh (medium thickness)
+  const snowflakeGeom = useMemo(() => {
+    if (!allPts || allPts.length < 3) return null;
+    const shape = new THREE.Shape();
+    shape.moveTo(allPts[0][0], allPts[0][1]);
+    for (let i = 1; i < allPts.length; i++) {
+      shape.lineTo(allPts[i][0], allPts[i][1]);
+    }
+    shape.closePath();
+
+    const g = new THREE.ExtrudeGeometry(shape, {
+      depth: 0.11,
+      bevelEnabled: true,
+      bevelThickness: 0.014,
+      bevelSize: 0.014,
+      bevelSegments: 2,
+    });
+    g.translate(0, 0, -0.055);
+    g.computeVertexNormals();
+    return g;
+  }, [allPts]);
+
+  // Sparkling diamond facet edge lines (tuned for medium scale)
+  const linePositions = useMemo(() => {
+    const pos = [];
+    for (let i = 0; i < allPts.length - 1; i++) {
+      pos.push(allPts[i][0], allPts[i][1], 0.062);
+      pos.push(allPts[i + 1][0], allPts[i + 1][1], 0.062);
+      pos.push(allPts[i][0], allPts[i][1], -0.062);
+      pos.push(allPts[i + 1][0], allPts[i + 1][1], -0.062);
+    }
+    return new Float32Array(pos);
+  }, [allPts]);
+
+  // Inner foundational mother triangle outline
+  const motherTrianglePositions = useMemo(() => {
+    const r = 0.88;
+    const v1 = [-r, 0, 0.064];
+    const v2 = [r * Math.cos(-Math.PI / 3), r * Math.sin(-Math.PI / 3), 0.064];
+    const v3 = [r * Math.cos(Math.PI / 3), r * Math.sin(Math.PI / 3), 0.064];
+    return new Float32Array([
+      v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
+      v2[0], v2[1], v2[2], v3[0], v3[1], v3[2],
+      v3[0], v3[1], v3[2], v1[0], v1[1], v1[2]
+    ]);
+  }, []);
+
+  const totalSegments = 3 * Math.pow(4, depth);
+
+  return (
+    <group position={[0, -0.1, 0]}>
+      {/* 1. Deep Space Cryogenic Lighting for Dark Theme */}
+      <ambientLight intensity={1.2} color="#94a3b8" />
+      <directionalLight position={[5, 8, 6]} intensity={2.8} color="#ffffff" castShadow />
+      <directionalLight position={[-6, 3, -3]} intensity={2.2} color="#38bdf8" />
+      <pointLight position={[0, -0.2, 2.8]} intensity={2.2} color="#0ea5e9" distance={7} />
+
+      {/* 2. Floating Sub-Zero Cyan Ice Sparkles */}
+      <DreiSparkles count={42} scale={3.8} size={2.2} speed={0.35} color="#7dd3fc" />
+
+      {/* 3. Medium-Sized Horizontal Cryogenic Stage Platform */}
+      <group position={[0, -0.84, 0]} rotation={[0.26, 0, 0]}>
+        {/* Obsidian Cryogenic Stage Plinth */}
+        <mesh position={[0, -0.08, 0]} receiveShadow>
+          <cylinderGeometry args={[1.5, 1.65, 0.16, 64]} />
+          <meshStandardMaterial
+            map={frostTexture}
+            bumpMap={frostTexture}
+            bumpScale={0.03}
+            color="#082f49"
+            roughness={0.35}
+            metalness={0.3}
+          />
+        </mesh>
+
+        {/* Polished Brass Cryo-Bezel Rim */}
+        <mesh position={[0, 0.008, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[1.5, 0.028, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.14} />
+        </mesh>
+
+        {/* Inlaid Inner Brass Concentric Rings on Stage Floor */}
+        <mesh position={[0, 0.01, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[1.15, 0.012, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* Central Hexagonal Brass Pedestal Riser (Lifts crystal off the floor) */}
+        <mesh position={[0, 0.11, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.22, 0.32, 0.22, 6]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.18} />
+        </mesh>
       </group>
+
+      {/* 4. Solid Photorealistic Faceted Crystalline Ice Snowflake (Medium level size at y = 0.18) */}
+      {snowflakeGeom && (
+        <group position={[0, 0.18, 0]} rotation={[0.16, 0, 0]}>
+          {/* Volumetric Ice Crystal Body with Real Physical Refraction */}
+          <mesh geometry={snowflakeGeom} castShadow receiveShadow>
+            <meshPhysicalMaterial
+              color="#f0f9ff"
+              emissive="#0284c7"
+              emissiveIntensity={0.26}
+              roughness={0.04}
+              metalness={0.04}
+              transmission={0.92}
+              thickness={0.48}
+              ior={1.31} // Physical refractive index of pure water ice
+              clearcoat={1.0}
+              clearcoatRoughness={0.03}
+              transparent={true}
+              opacity={0.96}
+            />
+          </mesh>
+
+          {/* Glowing Crystalline Perimeter Facet Lines */}
+          <lineSegments>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={linePositions.length / 3}
+                array={linePositions}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#7dd3fc" transparent opacity={0.95} linewidth={2} />
+          </lineSegments>
+
+          {/* Foundational Mother Triangle (k=0) Etched inside the Crystal */}
+          {depth > 0 && (
+            <lineSegments>
+              <bufferGeometry>
+                <bufferAttribute
+                  attach="attributes-position"
+                  count={motherTrianglePositions.length / 3}
+                  array={motherTrianglePositions}
+                  itemSize={3}
+                />
+              </bufferGeometry>
+              <lineBasicMaterial color="#38bdf8" transparent opacity={0.5} linewidth={1.5} />
+            </lineSegments>
+          )}
+        </group>
+      )}
     </group>
   );
 }
@@ -2352,8 +2659,8 @@ export default function PatternsInShapes({
               id: `${i}-${j}`,
               u: i,
               v: j,
-              from: NETWORK_HUBS_DATA[i]?.name || `Node ${i + 1}`,
-              to: NETWORK_HUBS_DATA[j]?.name || `Node ${j + 1}`
+              from: GEOBOARD_NAILS_DATA[i]?.label ? `Nail ${GEOBOARD_NAILS_DATA[i].label}` : `Nail ${i + 1}`,
+              to: GEOBOARD_NAILS_DATA[j]?.label ? `Nail ${GEOBOARD_NAILS_DATA[j].label}` : `Nail ${j + 1}`
             });
           }
         }
@@ -2372,15 +2679,15 @@ export default function PatternsInShapes({
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-                  {'Complete Graphs (Kn) — Direct City Flight Routes'}
+                  {'Complete Graphs (Kn) — String Art on a Geoboard'}
                 </h4>
                 <span style={{ fontSize: '0.72rem', background: '#ccfbf1', color: '#0f766e', padding: '2px 8px', borderRadius: '10px', fontWeight: '900', border: '1px solid #99f6e4' }}>
                   {'Triangular Series: T(n-1)'}
                 </span>
               </div>
               <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.85rem', color: '#334155', lineHeight: 1.5, textAlign: 'justify' }}>
-                If an airline connects <strong>{currentGraph.n} major city hubs</strong> with direct non-stop flights in both directions without layovers, how many flight routes must be scheduled? 
-                The total number of routes forms a <strong>Triangular Number Sequence</strong>. To find the routes for <em>n</em> cities, we sum the first <em>(n-1)</em> integers. For example, adding a 6th city hub requires connecting it to the 5 existing hubs, adding exactly 5 new routes. The total can be computed quickly using the formula <strong>n×(n-1)/2</strong>.
+                If you have a wooden board with <strong>{currentGraph.n} brass nails</strong>, and you want to connect every single nail to every other nail using a string, how many strings do you need?
+                This forms a beautiful pattern! To find the total strings for <em>n</em> nails, we add up the numbers up to <em>(n-1)</em>. For example, adding a 6th nail means connecting it to the 5 existing nails, which adds exactly 5 new strings. You can quickly calculate the total strings using the formula <strong>n × (n-1) / 2</strong>.
               </p>
             </div>
 
@@ -2418,7 +2725,7 @@ export default function PatternsInShapes({
                     }}
                   >
                     <span>{g.icon}</span>
-                    <span>{`${g.n} Cities (K${g.n})`}</span>
+                    <span>{`${g.n} Nails (K${g.n})`}</span>
                   </button>
                 );
               })}
@@ -2427,7 +2734,7 @@ export default function PatternsInShapes({
             {/* Granular Step-by-Step Flight Route Controls */}
             <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
               <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
-                Active Flight Corridors: <span style={{ color: '#0284c7', fontWeight: '900' }}>{activeRouteCount} of {currentGraph.total}</span>
+                Strings Connected: <span style={{ color: '#0284c7', fontWeight: '900' }}>{activeRouteCount} of {currentGraph.total}</span>
               </div>
               <div style={{ display: 'flex', gap: '0.35rem' }}>
                 <button
@@ -2448,7 +2755,7 @@ export default function PatternsInShapes({
                     boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                   }}
                 >
-                  - Route
+                  - String
                 </button>
                 <button
                   onClick={() => {
@@ -2469,7 +2776,7 @@ export default function PatternsInShapes({
                     boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
                   }}
                 >
-                  + Route
+                  + String
                 </button>
                 <button
                   onClick={() => setActiveComponentIds(allPairwiseEdges.map(e => e.id))}
@@ -2485,7 +2792,7 @@ export default function PatternsInShapes({
                     boxShadow: '0 2px 6px rgba(2, 132, 199, 0.3)'
                   }}
                 >
-                  Connect All Routes ✈️
+                  Connect All Strings 🧵
                 </button>
                 <button
                   onClick={() => setActiveComponentIds([])}
@@ -2510,7 +2817,7 @@ export default function PatternsInShapes({
               {/* Step Breakdown Sequence */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 <span style={{ fontSize: '0.72rem', fontWeight: '900', color: '#0369a1', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  ✈️ How Direct Routes Add Up (Hub by Hub):
+                  🧵 How Strings Add Up (Nail by Nail):
                 </span>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                   {currentGraph.breakdown?.map((b, bIdx) => (
@@ -2541,11 +2848,11 @@ export default function PatternsInShapes({
               {/* Mathematical Metrics Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #cbd5e1' }}>
                 <div style={{ background: '#eff6ff', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #dbeafe', textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>TOTAL CITY HUBS (n)</div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{currentGraph.n} Cities</div>
+                  <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>TOTAL NAILS (n)</div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{currentGraph.n} Nails</div>
                 </div>
                 <div style={{ background: '#fef3c7', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #fde68a', textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.62rem', color: '#92400e', fontWeight: '800' }}>DIRECT ROUTES FORMULA</div>
+                  <div style={{ fontSize: '0.62rem', color: '#92400e', fontWeight: '800' }}>STRINGS FORMULA</div>
                   <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#d97706' }}>{currentGraph.n}×{currentGraph.n - 1} / 2 = {currentGraph.total}</div>
                 </div>
                 <div style={{ background: '#fdf2f8', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #fbcfe8', textAlign: 'center' }}>
@@ -2556,7 +2863,7 @@ export default function PatternsInShapes({
 
               {/* Educational Rationale Insight */}
               <div style={{ fontSize: '0.76rem', color: '#334155', lineHeight: 1.45, background: '#f8fafc', padding: '0.45rem 0.65rem', borderRadius: '8px', textAlign: 'justify' }}>
-                💡 <strong>Why divide by 2?</strong> Each non-stop flight corridor connects <strong>2 cities</strong> simultaneously (e.g. Delhi ↔ Mumbai is a single bidirectional route). Dividing by 2 prevents scheduling the exact same route twice!
+                💡 <strong>Why divide by 2?</strong> Each string connects <strong>2 nails</strong> at the same time. If we didn't divide by 2, we would be counting the exact same string twice (once for each nail)!
               </div>
             </div>
           </div>

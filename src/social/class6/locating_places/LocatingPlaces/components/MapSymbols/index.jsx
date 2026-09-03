@@ -162,28 +162,52 @@ export default function MapSymbols({ onComplete, onBack }) {
                     <div style={{ width: '32px', textAlign: 'center' }}>→</div>
                     <div style={{ flex: 1 }}>Standard Map Symbol</div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
                     <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Curved river line</div>
                     <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'river')?.Icon} width={46} height={26} />
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'river')?.Icon} width={64} height={36} />
                       <span style={{ fontSize: '14px', color: '#1E40AF', fontWeight: 900 }}>River</span>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
                     <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Hospital building</div>
                     <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'hospital')?.Icon} width={46} height={26} />
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'hospital')?.Icon} width={64} height={36} />
                       <span style={{ fontSize: '14px', color: '#991B1B', fontWeight: 900 }}>Hospital</span>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 14px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
                     <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Thick forest trees</div>
                     <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'forest')?.Icon} width={46} height={26} />
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'forest')?.Icon} width={64} height={36} />
                       <span style={{ fontSize: '14px', color: '#166534', fontWeight: 900 }}>Forest</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Metal tracks with sleepers</div>
+                    <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'railway')?.Icon} width={64} height={36} />
+                      <span style={{ fontSize: '14px', color: '#3D2E24', fontWeight: 900 }}>Railway Line</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Paved path for vehicles</div>
+                    <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'road')?.Icon} width={64} height={36} />
+                      <span style={{ fontSize: '14px', color: '#52525B', fontWeight: 900 }}>Road</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', padding: '6px 14px', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Body of still water</div>
+                    <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'lake')?.Icon} width={64} height={36} />
+                      <span style={{ fontSize: '14px', color: '#2563EB', fontWeight: 900 }}>Lake</span>
                     </div>
                   </div>
                 </div>
@@ -427,7 +451,7 @@ export default function MapSymbols({ onComplete, onBack }) {
         onBack={onBack}
         nextLabel="Next Activity"
         onNext={onComplete}
-        nextDisabled={!isComplete}
+        nextDisabled={false}
         nextVariant="green"
       />
     </div>

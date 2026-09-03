@@ -103,11 +103,11 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
     }
   };
 
-  // Completion requires checking all observations with the correct scientific result
+  // Completion requires checking all scrubbing progress
   const isComplete = 
-    detectiveObservations.iron === 'brighter' && 
-    detectiveObservations.copper === 'brighter' && 
-    detectiveObservations.wood === 'dull';
+    lustreProgress.iron >= 100 && 
+    lustreProgress.copper >= 100 && 
+    lustreProgress.wood >= 100;
 
   useEffect(() => {
     if (isComplete) {
@@ -129,7 +129,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           <Sparkles size={22} style={{ color: 'var(--lesson-accent)' }} /> 
           Lustre Restoration Lab
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)' }}>
           Can you bring back the shine? Choose a material, then scrub its surface to remove the dull outer layer and reveal what is underneath.
         </p>
       </div>
@@ -138,8 +138,8 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
       <div style={{ display: 'flex', flex: 1, gap: '1rem', minHeight: 0 }}>
         
         {/* Left Panel: Material Selector */}
-        <div className="glass-panel" style={{ flex: '0 0 280px', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--lesson-border)', overflowY: 'auto', padding: '1rem' }}>
-          <h4 style={{ margin: 0, borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', fontSize: '1.2rem' }}>Materials to Investigate</h4>
+        <div className="glass-panel" style={{ flex: '0 0 280px', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', overflowY: 'auto', padding: '1rem' }}>
+          <h4 style={{ margin: 0, borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', fontSize: '1.4rem' }}>Materials to Investigate</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: 1 }}>
             {Object.keys(lustreMaterials).map(key => {
               const m = lustreMaterials[key];
@@ -164,8 +164,8 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
                     background: isActive ? 'var(--lesson-accent-bg)' : 'var(--lesson-surface)'
                   }}
                 >
-                  <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: 'var(--lesson-text)' }}>{m.name}</span>
-                  <span style={{ fontSize: '1.05rem', color: p === 100 ? 'var(--lesson-success)' : 'var(--lesson-muted)' }}>
+                  <span style={{ fontWeight: 'bold', fontSize: '1.5rem', color: 'var(--text-primary)' }}>{m.name}</span>
+                  <span style={{ fontSize: '1.25rem', color: p === 100 ? 'var(--success)' : 'var(--text-muted)' }}>
                     {obs !== null ? 'Investigation Complete ✨' : p === 100 ? 'Surface Restored' : 'Dull outer surface'}
                   </span>
                 </button>
@@ -175,11 +175,11 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
         </div>
 
         {/* Center Panel: Scrubbing Station */}
-        <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--lesson-border)', padding: '1rem', minHeight: 0 }}>
-          <h4 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem' }}>
-            <Activity size={18} /> 🔬 Scrubbing Station
+        <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', padding: '1rem', minHeight: 0 }}>
+          <h4 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem' }}>
+            🔬 Scrubbing Station
           </h4>
-          <p style={{ fontSize: '0.95rem', color: 'var(--lesson-secondary)', margin: 0 }}>
+          <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', margin: 0 }}>
             Move the sandpaper back and forth across the surface.
           </p>
 
@@ -255,7 +255,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
 
           {/* Progress Bar */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.4rem', color: isScrubbed ? 'var(--lesson-success)' : 'var(--lesson-muted)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.6rem', color: isScrubbed ? 'var(--success)' : 'var(--text-muted)' }}>
               <span>Surface Restored: {Math.floor(progress)}%</span>
               {isScrubbed && <span style={{ fontWeight: 'bold' }}>✨ Complete</span>}
             </div>
@@ -265,11 +265,11 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           </div>
 
           {/* Think Like a Scientist Box */}
-          <div style={{ background: 'rgba(251, 191, 36, 0.1)', borderLeft: '6px solid var(--lesson-warning)', padding: '0.75rem 1.25rem', borderRadius: '6px', marginTop: '1rem' }}>
-            <h5 style={{ margin: '0 0 0.5rem 0', color: 'var(--lesson-accent)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem' }}>
+          <div style={{ background: 'rgba(251, 191, 36, 0.1)', borderLeft: '6px solid #fbbf24', padding: '0.75rem 1.25rem', borderRadius: '6px', marginTop: '1rem' }}>
+            <h5 style={{ margin: '0 0 0.5rem 0', color: '#b45309', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.6rem' }}>
               💡 Think Like a Scientist
             </h5>
-            <p style={{ margin: 0, fontSize: '1.25rem', color: 'var(--lesson-secondary)', lineHeight: 1.4 }}>
+            <p style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
               Scrubbing removes the dull outer layer and reveals the brighter surface underneath.
             </p>
           </div>
@@ -284,14 +284,14 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           {/* Before/After Visual */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--lesson-surface)', padding: '0.5rem 1rem', borderRadius: '8px', flexShrink: 0 }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ fontSize: '0.9rem', color: 'var(--lesson-muted)', fontWeight: 'bold' }}>BEFORE</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>BEFORE</span>
               <div style={{ width: '50px', height: '50px', borderRadius: '4px', background: activeMat.baseBg }}>
                 <div style={{ width: '100%', height: '100%', opacity: 0.5, background: activeMat.overlayBg }} />
               </div>
             </div>
             <ArrowRight size={24} style={{ color: 'var(--lesson-muted)' }} />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ fontSize: '0.9rem', color: 'var(--lesson-muted)', fontWeight: 'bold' }}>AFTER</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>AFTER</span>
               <div style={{ width: '50px', height: '50px', borderRadius: '4px', background: activeMat.shinyBg, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: activeMat.baseBg, opacity: 1 - (progress/100) }}>
                   <div style={{ width: '100%', height: '100%', opacity: 0.5, background: activeMat.overlayBg }} />
@@ -300,10 +300,10 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '1.1rem', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-            <div style={{ background: 'var(--lesson-surface)', padding: '0.75rem 1.25rem', borderRadius: '8px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <strong style={{ color: 'var(--lesson-muted)' }}>Before Scrubbing:</strong>
-              <ul style={{ margin: '0.25rem 0 0 1.5rem', padding: 0, color: 'var(--lesson-secondary)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '1.3rem', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+            <div style={{ background: 'var(--surface)', padding: '0.75rem 1.25rem', borderRadius: '8px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <strong style={{ color: 'var(--text-muted)' }}>Before Scrubbing:</strong>
+              <ul style={{ margin: '0.25rem 0 0 1.5rem', padding: 0, color: 'var(--text-secondary)' }}>
                 <li>Appearance: Dull</li>
                 <li>Surface: {activeMat.isMetal ? 'Oxidized/Rusty' : 'Rough/Bark'}</li>
               </ul>
@@ -350,7 +350,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
               </div>
 
               {currentObservation && (
-                <div style={{ marginTop: '1rem', fontSize: '1.1rem', color: currentObservation === (activeMat.shouldShine ? 'brighter' : 'dull') ? 'var(--lesson-success)' : 'var(--lesson-danger)' }}>
+                <div style={{ marginTop: '1rem', fontSize: '1.3rem', color: currentObservation === (activeMat.shouldShine ? 'brighter' : 'dull') ? 'var(--success)' : 'var(--danger)' }}>
                   {currentObservation === (activeMat.shouldShine ? 'brighter' : 'dull') 
                     ? <><strong>✨ Surface Revealed!</strong><br />You removed the dull outer layer. {activeMat.shouldShine ? 'The surface is now brighter and more lustrous.' : 'As expected, wood does not become shiny.'}</>
                     : <><strong>Hmm, look closely.</strong><br />{activeMat.shouldShine ? 'Did the metal become shiny underneath?' : 'Did the wood actually become shiny like a metal?'}</>

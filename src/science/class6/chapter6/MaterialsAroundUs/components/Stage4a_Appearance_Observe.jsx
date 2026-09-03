@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, RotateCcw } from "lucide-react";
+import { Check, X, RotateCcw, FlashlightOff } from "lucide-react";
 
 import paperImg      from "../../../../../assets/paper image.webp";
 import cardboardImg  from "../../../../../assets/cardboard image.jpg";
@@ -99,7 +99,7 @@ const TorchObservation = ({ mat, onDone }) => {
           }}>
             <img src={mat.img} alt={mat.name} draggable="false" style={{
               width: "100%", height: "100%", objectFit: "contain",
-              filter: torchOn ? "brightness(0.95)" : "brightness(0.5)",
+              filter: (torchOn && mat.isShiny) ? "brightness(0.95)" : "brightness(0.5)",
               transition: "filter 0.2s",
             }} />
 
@@ -110,7 +110,7 @@ const TorchObservation = ({ mat, onDone }) => {
               display: "flex", flexDirection: "column", alignItems: "center",
               zIndex: 20,
               filter: torchOn
-                ? "drop-shadow(0 4px 12px rgba(255,244,100,0.5))"
+                ? (mat.isShiny ? "drop-shadow(0 4px 12px rgba(255,244,100,0.5))" : "drop-shadow(0 4px 8px rgba(255,255,255,0.4))")
                 : "drop-shadow(0 2px 6px rgba(0,0,0,0.7))",
               transition: "filter 0.2s",
             }}>
@@ -125,12 +125,12 @@ const TorchObservation = ({ mat, onDone }) => {
                 width: 44, height: 22,
                 background: "linear-gradient(to right, var(--lesson-secondary), var(--lesson-muted), var(--lesson-secondary))",
                 clipPath: "polygon(25% 0, 75% 0, 100% 100%, 0 100%)",
-                borderBottom: torchOn ? "3px solid #fef08a" : "3px solid var(--lesson-text)",
+                borderBottom: torchOn ? (mat.isShiny ? "3px solid #fef08a" : "3px solid #ffffff") : "3px solid #334155",
               }} />
             </div>
 
             {/* Light beam from top-center */}
-            {torchOn && (
+            {(torchOn && mat.isShiny) && (
               <div style={{
                 position: "absolute", top: 57, left: "50%",
                 width: "100%", height: "calc(100% - 57px)", transform: "translateX(-50%)",
@@ -167,18 +167,7 @@ const TorchObservation = ({ mat, onDone }) => {
                       }} 
                     />
                   </>
-                ) : (
-                  <>
-                    {/* Soft, spread-out diffuse light for dull objects */}
-                    <div style={{
-                      position: "absolute", top: "55%", left: "50%",
-                      width: "45%", paddingBottom: "45%", borderRadius: "50%",
-                      background: "radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 50%, transparent 85%)",
-                      transform: "translate(-50%,-50%)",
-                      filter: "blur(12px)", pointerEvents: "none", zIndex: 15,
-                    }} />
-                  </>
-                )}
+                ) : null}
 
                 {mat.isShiny && (
                   <>
@@ -238,12 +227,12 @@ const TorchObservation = ({ mat, onDone }) => {
           {/* Classification & Feedback moved below image */}
           <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
             {/* Classification buttons */}
-            <AnimatePresence mode="wait">
+            
               {hasObserved && !submitted && (
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  
                   style={{
                     flex: 1, display: "flex", flexDirection: "column", gap: "0.65rem",
                     padding: "1.25rem", background: "rgba(0,0,0,0.4)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)"
@@ -301,7 +290,7 @@ const TorchObservation = ({ mat, onDone }) => {
                   )}
                 </motion.div>
               )}
-            </AnimatePresence>
+            
 
             {/* Feedback */}
             <AnimatePresence>
@@ -386,7 +375,7 @@ const TorchObservation = ({ mat, onDone }) => {
                   fontSize: "1.3rem", fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
                 }}
               >
-                🔕 TORCH OFF
+                <FlashlightOff size={24} /> TORCH OFF
               </button>
             </div>
           </div>
@@ -450,7 +439,7 @@ const MaterialCard = ({ mat, state, onClick }) => {
             display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(4px)",
             boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
           }}>
-            {mat.isShiny ? "✨ Shiny" : "🌑 Dull"}
+            {mat.isShiny ? "✨ Shiny" : "🪨 Dull"}
           </div>
         )}
         {isActive && (
@@ -632,8 +621,8 @@ const WhichSideActivity = ({ onSolve }) => {
           }}
         >
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "var(--lesson-secondary)", letterSpacing: "1px" }}>○ DULL</div>
-            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--lesson-muted)", marginTop: 4 }}>Non-lustrous materials</div>
+            <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#4b5563", letterSpacing: "1px" }}>🪨 DULL</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#6b7280", marginTop: 4 }}>Non-lustrous materials</div>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.75rem", width: "100%" }}>
             {dullGroup.map(renderCard)}
@@ -794,8 +783,8 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                     </div>
                     <div style={{ fontSize: "1.1rem", marginTop: 4 }}>
                       {obs ? (
-                        <span style={{ color: mat.isShiny ? "var(--lesson-warning)" : "var(--lesson-muted)", fontWeight: 800 }}>
-                          {mat.isShiny ? "✨ Shiny" : "🌑 Dull"}
+                        <span style={{ color: mat.isShiny ? "#fcd34d" : "#94a3b8", fontWeight: 800 }}>
+                          {mat.isShiny ? "✨ Shiny" : "🪨 Dull"}
                         </span>
                       ) : (
                         <span style={{ color: "var(--lesson-muted)", fontWeight: 700 }}>? Not observed</span>
@@ -822,8 +811,8 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                 <span>✨ Shiny Objects</span>
                 <span>{Object.values(observations).filter(o => o.result === "shiny").length} / 6</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.25rem", color: "var(--lesson-border)", fontWeight: 800 }}>
-                <span>🌑 Dull Objects</span>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.25rem", color: "#cbd5e1", fontWeight: 800 }}>
+                <span>🪨 Dull Objects</span>
                 <span>{Object.values(observations).filter(o => o.result === "dull").length} / 6</span>
               </div>
             </div>
