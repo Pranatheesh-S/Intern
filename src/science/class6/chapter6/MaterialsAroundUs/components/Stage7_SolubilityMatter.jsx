@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Beaker, HelpCircle, Check, Award, Weight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
+import { Beaker, Weight } from 'lucide-react';
 
 export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'both' }) {
   // Solubility state
@@ -243,11 +244,17 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
       {/* Footer */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
         {isCompleted && (
-          <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--lesson-success)', fontWeight: 'bold', fontSize: '1rem' }}>
-            Lab Complete! Click "Proceed to next" in the bottom right corner.
+          <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--lesson-accent)', fontWeight: 'bold', fontSize: '1rem' }}>
+            Lab Complete! Click &quot;Proceed to next&quot; in the bottom right corner.
           </div>
         )}
       </div>
     </div>
   );
 }
+
+Stage7_SolubilityMatter.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func,
+  mode: PropTypes.string
+};

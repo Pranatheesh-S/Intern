@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useMotionValue, useVelocity, useSpring, useTransform, animate } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { RealisticCup } from './RealisticCup';
 
@@ -7,7 +8,6 @@ export const DraggableCup = ({ cup, isWeighed, onDragStart, onDrop, onDragPositi
   const [isDragging, setIsDragging] = useState(false);
   const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
   const grabOffsetRef = useRef({ x: 40, y: 50 }); // Center of 80x100 cup
-  const dragVelocityX = useRef(0);
   const lastPointerRef = useRef({ x: 0, time: Date.now() });
 
   // Spring velocity smoothing for liquid/material tilt in portal
@@ -190,4 +190,18 @@ export const DraggableCup = ({ cup, isWeighed, onDragStart, onDrop, onDragPositi
       )}
     </div>
   );
+};
+
+DraggableCup.propTypes = {
+  cup: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    material: PropTypes.string,
+    mass: PropTypes.number
+  }).isRequired,
+  isWeighed: PropTypes.bool.isRequired,
+  onDragStart: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  onDragPosition: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired
 };

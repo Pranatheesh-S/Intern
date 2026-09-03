@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Target, Search, ArrowRight, CheckCircle } from 'lucide-react';
+import { Target, Search, CheckCircle } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 import imgBallTennis from '../images/b2_ball_tennis.png';
 import imgBallCricket from '../images/b2_ball_cricket.png';
@@ -70,7 +71,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
           Investigation: Sports Equipment Properties
         </h3>
         <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)' }}>
-          Why aren't all balls made of the same material? Click each ball to analyze its properties and discover how its material matches its purpose.
+          Why aren&apos;t all balls made of the same material? Click each ball to analyze its properties and discover how its material matches its purpose.
         </p>
       </div>
 
@@ -152,7 +153,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
                           style={{ padding: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px dashed var(--lesson-accent)', borderRadius: '8px', color: 'var(--lesson-accent)', fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem', lineHeight: '1.4' }}
                         >
                           <span style={{ fontSize: '1.5rem' }}>👉</span> 
-                          <span><strong>Detective Task:</strong> Observe the <strong>Drop Test</strong> on the right to see how this material's hardness affects its bounce!</span>
+                          <span><strong>Detective Task:</strong> Observe the <strong>Drop Test</strong> on the right to see how this material&apos;s hardness affects its bounce!</span>
                         </motion.div>
                       </>
                     );
@@ -171,7 +172,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
         {/* RIGHT: Drop Test Panel */}
         <div className="glass-panel" style={{ background: 'var(--neutral-bg)', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '0.5rem', flex: 1, minHeight: 0, justifyContent: 'center' }}>
           <h4 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: '2rem' }}>Drop Test: Bounce Comparison</h4>
-          <p style={{ margin: 0, fontSize: '1.6rem', color: 'var(--lesson-secondary)', textAlign: 'center', lineHeight: '1.3' }}>Observe how the material's hardness affects its bounce height when dropped from the same level.</p>
+          <p style={{ margin: 0, fontSize: '1.6rem', color: 'var(--lesson-secondary)', textAlign: 'center', lineHeight: '1.3' }}>Observe how the material&apos;s hardness affects its bounce height when dropped from the same level.</p>
           
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem', marginBottom: '1rem' }}>
             <button 
@@ -249,10 +250,15 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
             </p>
           </div>
           <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--lesson-text)', margin: 0, paddingLeft: '1rem' }}>
-            Click "Proceed to next"!
+            Click &quot;Proceed to next&quot;!
           </p>
         </motion.div>
       )}
     </div>
   );
 }
+
+Stage_SportsBall.propTypes = {
+  onComplete: PropTypes.func.isRequired,
+  addXp: PropTypes.func.isRequired
+};

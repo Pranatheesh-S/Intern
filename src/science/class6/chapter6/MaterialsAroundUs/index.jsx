@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, RefreshCw, ArrowRight } from 'lucide-react';
 import './theme.css';
 import useSound from 'use-sound';
-import { useTheme } from '../../../../ThemeContext.jsx';
 import { chapterFlow } from './storyEngine';
 import ChiefDetective from './components/ChiefDetective/ChiefDetective';
 import InvestigationHandbook from './components/Educational/InvestigationHandbook';
@@ -12,6 +11,7 @@ import ChapterCover from './components/Educational/ChapterCover';
 import ChapterIntroSpread from './components/Educational/ChapterIntroSpread';
 import MissionBriefingSpread from './components/Educational/MissionBriefingSpread';
 import FullscreenButton from './components/Common/FullscreenButton';
+import PropTypes from 'prop-types';
 
 const timelineTree = (() => {
   const tree = [];
@@ -58,7 +58,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [highestUnlockedIndex, setHighestUnlockedIndex] = useState(0);
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [stageCompleted, setStageCompleted] = useState(false);
-  const [xp, setXp] = useState(0);
+  const [, setXp] = useState(0);
   const [resetKey, setResetKey] = useState(0);
   const [showCover, setShowCover] = useState(true);
   const [showIntroSpread, setShowIntroSpread] = useState(false);
@@ -78,7 +78,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const addXp = (amount) => {
     setXp(prev => prev + amount);
     if (!isSilentStage()) {
-      try { playSuccess(); } catch (e) {}
+      try { playSuccess(); } catch (err) { console.warn('Audio playback failed', err); }
     }
   };
 
@@ -105,7 +105,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       const nextIndex = currentFlowIndex + 1;
       const nextNode = chapterFlow[nextIndex];
       
-      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage3_use' || nextNode.id === 'stage4_1' || nextNode.id === 'stage4_4' || nextNode.id === 'stage6_a' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
+      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage3_use' || nextNode.id === 'stage4_1' || nextNode.id === 'stage4_2' || nextNode.id === 'stage4_4' || nextNode.id === 'stage4_5' || nextNode.id === 'stage6_a' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
         setShowHandbook(false);
       } else {
         setShowHandbook(true);
@@ -130,11 +130,9 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   };
 
   const handleStageComplete = () => {
+    console.log('[Parent] Activity completion state updating to TRUE');
     setStageCompleted(true);
   };
-
-  // Global Theme Hook
-  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
@@ -213,7 +211,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       disabled={isLocked}
                       onClick={() => {
                         if (!isLocked) {
-                          if (!isSilentStage()) { try { playSuccess(); } catch (e) {} }
+                          if (!isSilentStage()) { try { playSuccess(); } catch (err) { console.warn('Audio playback failed', err); } }
                           if (item.type === 'mission') {
                             setShowHandbook(true);
                           } else {
@@ -506,7 +504,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 }
               }
 
-              if (!showHandbook && currentNode.type === 'activity' && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) {
+              if (!showHandbook && currentNode.type === 'activity' && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_2', 'stage4_4', 'stage4_5', 'stage6_a'].includes(currentNode.id)) {
                 setShowHandbook(true);
               } else if (currentFlowIndex > 0) {
                 const prevIndex = currentFlowIndex - 1;
@@ -546,17 +544,17 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
             <button 
-              onClick={showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id) ? () => setShowHandbook(false) : handleNext}
-              disabled={(showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) ? false : !(stageCompleted || currentNode.id === 'stage2')}
-              className={((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted || currentNode.id === 'stage2') ? 'primary' : 'outline'}
+              onClick={showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_2', 'stage4_4', 'stage4_5', 'stage6_a'].includes(currentNode.id) ? () => setShowHandbook(false) : handleNext}
+              disabled={(showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_2', 'stage4_4', 'stage4_5', 'stage6_a'].includes(currentNode.id)) ? false : !(stageCompleted || currentNode.id === 'stage2')}
+              className={((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_2', 'stage4_4', 'stage4_5', 'stage6_a'].includes(currentNode.id)) || stageCompleted || currentNode.id === 'stage2') ? 'primary' : 'outline'}
               style={{ 
                 padding: '0.85rem 1.8rem', 
                 fontSize: '1.5rem', 
                 fontWeight: 'bold',
                 gap: '0.75rem', 
                 borderRadius: '10px',
-                opacity: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted || currentNode.id === 'stage2') ? 1 : 0.5,
-                cursor: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted || currentNode.id === 'stage2') ? 'pointer' : 'not-allowed',
+                opacity: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_2', 'stage4_4', 'stage4_5', 'stage6_a'].includes(currentNode.id)) || stageCompleted || currentNode.id === 'stage2') ? 1 : 0.5,
+                cursor: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_2', 'stage4_4', 'stage4_5', 'stage6_a'].includes(currentNode.id)) || stageCompleted || currentNode.id === 'stage2') ? 'pointer' : 'not-allowed',
                 transition: 'all 0.3s',
                 display: 'flex',
                 alignItems: 'center'
@@ -572,3 +570,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   </>
   );
 }
+
+MaterialsAroundUsActivity.propTypes = {
+  onBackToDashboard: PropTypes.func.isRequired
+};

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Lightbulb, CheckCircle2, Target } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Search, CheckCircle2, Target } from 'lucide-react';
 
 export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
   const [classifications, setClassifications] = useState({});
@@ -57,7 +58,7 @@ export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
             <Search size={32} color="var(--lesson-accent)" /> Phase 2: Table 6.5
           </h3>
           <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
-            Now that you've tested the materials, let's classify them based on whether they disappear in water.
+            Now that you&apos;ve tested the materials, let&apos;s classify them based on whether they disappear in water.
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
@@ -240,3 +241,8 @@ export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage7b_SolubilityClassify.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, RotateCcw, FlashlightOff } from "lucide-react";
+import { Check, X, FlashlightOff } from "lucide-react";
 
 import paperImg      from "../../../../../assets/paper image.webp";
 import cardboardImg  from "../../../../../assets/cardboard image.jpg";
@@ -32,7 +33,7 @@ const MATERIALS = [
     shineFact: "Stainless steel has a very smooth metallic surface that reflects light clearly — it is lustrous." },
 ];
 
-const SHINY_IDS = new Set(MATERIALS.filter(m => m.isShiny).map(m => m.id));
+// const SHINY_IDS = new Set(MATERIALS.filter(m => m.isShiny).map(m => m.id));
 
 const WHICH_SIDE_MATERIALS = [
   { id: "goldcoin", name: "Gold Coin", img: goldCoinImg, isShiny: true },
@@ -217,7 +218,7 @@ const TorchObservation = ({ mat, onDone }) => {
               position: "absolute", bottom: 0, left: 0, right: 0,
               padding: "16px 20px",
               background: "linear-gradient(transparent, rgba(0,0,0,0.85))",
-              fontSize: "1.8rem", fontWeight: 900, color: "whitefff", letterSpacing: "1px",
+              fontSize: "1.8rem", fontWeight: 900, color: "#FFFFFF", letterSpacing: "1px",
               zIndex: 20,
             }}>
               {mat.name}
@@ -526,7 +527,7 @@ const WhichSideActivity = ({ onSolve }) => {
         setErrorIds(errors);
       }
     }
-  }, [unplaced.length, shinyGroup.length, dullGroup.length]);
+  }, [unplaced.length, shinyGroup.length, dullGroup.length, onSolve, dullGroup, shinyGroup]);
 
   const renderCard = (id) => {
     const mat = WHICH_SIDE_MATERIALS.find(m => m.id === id);
@@ -671,11 +672,11 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
     setTimeout(onComplete, 1200);
   };
 
-  const handleReset = () => {
-    setObservations({});
-    setActiveMat(null);
-    setChallengeSolved(false);
-  };
+  // const handleReset = () => {
+  //   setObservations({});
+  //   setActiveMat(null);
+  //   setChallengeSolved(false);
+  // };
 
   const mats = MATERIALS.map(m => ({ ...m }));
   const activeMaterial = mats.find(m => m.id === activeMat);
@@ -862,3 +863,23 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
     </div>
   );
 }
+
+TorchObservation.propTypes = {
+  mat: PropTypes.object.isRequired,
+  onDone: PropTypes.func.isRequired
+};
+
+MaterialCard.propTypes = {
+  mat: PropTypes.object.isRequired,
+  state: PropTypes.string,
+  onClick: PropTypes.func
+};
+
+WhichSideActivity.propTypes = {
+  onSolve: PropTypes.func.isRequired
+};
+
+Stage4a_Appearance_Observe.propTypes = {
+  onComplete: PropTypes.func.isRequired,
+  addXp: PropTypes.func
+};
