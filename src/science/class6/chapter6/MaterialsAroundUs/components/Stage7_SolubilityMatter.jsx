@@ -24,7 +24,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
     { id: 'salt', name: 'Salt', correct: 'Soluble', desc: 'Disappears completely. Dissolves in water.', effectColor: 'rgba(255,255,255,0.1)' },
     { id: 'chalk', name: 'Chalk Powder', correct: 'Insoluble', desc: 'Water turns turbid/cloudy. Chalk powder does not disappear.', effectColor: 'var(--lesson-border)' },
     { id: 'sand', name: 'Sand', correct: 'Insoluble', desc: 'Settles down at the bottom of the beaker.', effectColor: 'var(--lesson-warning)' },
-    { id: 'sawdust', name: 'Sawdust', correct: 'Insoluble', desc: 'Floats on the surface of the water, does not dissolve.', effectColor: 'var(--lesson-accent)' }
+    { id: 'sawdust', name: 'Sawdust', correct: 'Insoluble', desc: 'Floats on the surface of the water, does not dissolve.', effectColor: '#A64B27' }
   ];
 
   const cups = [
@@ -159,7 +159,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
 
             {/* ORS Mini challenge */}
             <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <strong style={{ fontSize: '1rem', color: 'var(--lesson-success)' }}>Make ORS (Oral Rehydration Solution)</strong>
+              <strong style={{ fontSize: '1rem', color: '#A64B27' }}>Make ORS (Oral Rehydration Solution)</strong>
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                 <div style={{ fontSize: '0.95rem', color: 'var(--lesson-secondary)' }}>
                   Sugar: <strong>{orsIngredients.sugar} tsp</strong> (Needs 6) <br/>
@@ -172,7 +172,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                 </div>
               </div>
               <button onClick={handleMixOrs} className="success" style={{ padding: '0.5rem', fontSize: '0.95rem' }}>Prepare & Stir ORS</button>
-              {orsResult === 'perfect' && <span style={{ fontSize: '0.95rem', color: 'var(--lesson-success)', fontWeight: 'bold' }}>✓ Perfect! 6 sugar + 1 salt in water forms life-saving ORS!</span>}
+              {orsResult === 'perfect' && <span style={{ fontSize: '0.95rem', color: '#A64B27', fontWeight: 'bold' }}>✓ Perfect! 6 sugar + 1 salt in water forms life-saving ORS!</span>}
               {orsResult === 'incorrect' && <span style={{ fontSize: '0.95rem', color: 'var(--lesson-danger)' }}>Incorrect proportions, read the book instructions: 6 sugar, 1 salt!</span>}
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
             </div>
 
             {/* Weighing scale */}
-            <div style={{ background: 'var(--lesson-surface)', padding: '0.75rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ background: '#FFFFFF', padding: '0.75rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <span style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <Weight size={18} /> Weighing Cup (Measure Mass)
               </span>
@@ -203,14 +203,14 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                 ))}
               </div>
               {weighedCup && (
-                <div style={{ background: '#0b1329', padding: '0.75rem', borderRadius: '4px', textAlign: 'center', color: 'var(--lesson-success)', fontWeight: 'bold', fontSize: '1rem' }}>
+                <div style={{ background: '#FFFFFF', padding: '0.75rem', borderRadius: '4px', textAlign: 'center', color: '#A64B27', fontWeight: 'bold', fontSize: '1rem' }}>
                   Digital Balance: {weighedCup.mass} (Mass = quantity of matter)
                 </div>
               )}
             </div>
 
             {/* Volume selection */}
-            <div style={{ background: 'var(--lesson-surface)', padding: '0.75rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ background: '#FFFFFF', padding: '0.75rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <span style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>
                 Occupied Space (Volume)
               </span>
@@ -244,7 +244,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
       {/* Footer */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
         {isCompleted && (
-          <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--lesson-accent)', fontWeight: 'bold', fontSize: '1rem' }}>
+          <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: '#A64B27', fontWeight: 'bold', fontSize: '1rem' }}>
             Lab Complete! Click &quot;Proceed to next&quot; in the bottom right corner.
           </div>
         )}

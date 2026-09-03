@@ -51,75 +51,9 @@ const clues = [
   }
 ];
 
-const HighlightedText = ({ phrases, activeCharIndex }) => {
-  const fullText = phrases.join('');
-  return (
-    <span>
-      {fullText.split('').map((char, index) => (
-        <span key={index} style={{
-          backgroundColor: index < activeCharIndex ? '#fef08a' : 'transparent',
-          color: index < activeCharIndex ? 'var(--lesson-text)' : 'inherit',
-          transition: 'background-color 0.1s',
-          borderRadius: '2px'
-        }}>
-          {char}
-        </span>
-      ))}
-    </span>
-  );
-};
-
 const PotterySpotlight = ({ page1Layout }) => {
   const [currentClue, setCurrentClue] = useState(1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [activeCharIndex, setActiveCharIndex] = useState(-1);
-  const [hasPlayed, setHasPlayed] = useState(false);
-
   const currentData = clues[currentClue - 1];
-
-  const stopAudio = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
-    setIsPlaying(false);
-    setActiveCharIndex(-1);
-  };
-
-  useEffect(() => {
-    stopAudio();
-    setHasPlayed(false);
-  }, [currentClue]);
-
-  useEffect(() => {
-    return stopAudio;
-  }, []);
-
-  const playAudio = () => {
-    if (!('speechSynthesis' in window)) return;
-    stopAudio();
-    setIsPlaying(true);
-    setHasPlayed(true);
-
-    const fullText = currentData.text;
-    const utterance = new SpeechSynthesisUtterance(fullText);
-    utterance.lang = 'en-IN';
-    const voices = window.speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v => v.lang === 'en-IN' && (v.name.includes('Female') || v.name.includes('Ravi') === false));
-    if (femaleVoice) utterance.voice = femaleVoice;
-    
-    utterance.rate = 0.9;
-    
-    utterance.onboundary = (e) => {
-      setActiveCharIndex(e.charIndex);
-    };
-    
-    utterance.onend = () => {
-      setIsPlaying(false);
-      setActiveCharIndex(fullText.length);
-    };
-
-    window.speechSynthesis.speak(utterance);
-  };
 
   const timelineNode = (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 'auto', paddingTop: '16px', flexWrap: 'nowrap', overflow: 'hidden' }}>
@@ -179,7 +113,7 @@ const PotterySpotlight = ({ page1Layout }) => {
 
       <div style={{ 
         flex: '1 1 auto', 
-        backgroundColor: 'var(--lesson-surface)', 
+        backgroundColor: 'var(--lesson-background)', 
         borderRadius: '12px', 
         border: '1px solid var(--lesson-border)', 
         padding: 'clamp(12px, 2vmin, 16px)',
@@ -201,31 +135,12 @@ const PotterySpotlight = ({ page1Layout }) => {
         </div>
         
         <div style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: 'var(--lesson-text)', lineHeight: '1.5', maxWidth: '100%', overflow: 'visible' }}>
-          {isPlaying ? (
-            <HighlightedText phrases={[currentData.text]} activeCharIndex={activeCharIndex} />
-          ) : (
-             <span style={{ backgroundColor: hasPlayed ? '#fef08a' : 'transparent' }}>{currentData.text}</span>
-          )}
+             <span style={{ backgroundColor: '#fef08a' }}>{currentData.text}</span>
         </div>
       </div>
 
       <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button 
-            onClick={isPlaying ? stopAudio : playAudio}
-            style={{
-              background: isPlaying ? 'var(--lesson-danger)' : 'var(--lesson-accent)',
-              color: 'white', border: 'none', borderRadius: '24px',
-              padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)',
-              display: 'flex', alignItems: 'center', gap: '8px',
-              fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
-              cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-            }}
-          >
-            {isPlaying ? <SvgIcons.Pause /> : <SvgIcons.Play />}
-            {isPlaying ? 'PLAYING...' : (hasPlayed ? 'PLAY AGAIN' : 'PLAY EXPLANATION')}
-          </button>
-          
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', alignItems: 'center' }}>
           {currentClue < clues.length ? (
              <button 
                onClick={() => setCurrentClue(currentClue + 1)}
@@ -333,7 +248,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: 'var(--lesson-primary)', fontWeight: '800', fontSize: '22px' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
-              <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-border)', borderRadius: '8px', padding: '12px 16px' }}>
+              <div style={{ background: 'var(--lesson-background)', border: '1px solid var(--lesson-warning-border)', borderRadius: '8px', padding: '12px 16px' }}>
                 <h4 style={{ margin: '0 0 8px 0', color: 'var(--lesson-accent)', fontSize: '24px', fontWeight: '800' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '21px', fontWeight: '600', color: 'var(--lesson-text)' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
@@ -493,26 +408,26 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
               </h2>
 
               <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--lesson-text)', lineHeight: '1.6', marginBottom: '24px', fontWeight: '500' }}>
-                <p style={{ margin: '0 0 16px 0' }}>As a Science Detective, your next challenge is to decide which material is the <strong style={{ color: 'var(--lesson-success)', fontWeight: '800' }}>best choice</strong> for making an object.</p>
-                <p style={{ margin: '0' }}>Sometimes an object can be made from different materials, but only some materials are <strong style={{ color: 'var(--lesson-accent)', fontWeight: '800' }}>suitable</strong> for its purpose.</p>
+                <p style={{ margin: '0 0 16px 0' }}>As a Science Detective, your next challenge is to decide which material is the <strong style={{ color: '#A64B27', fontWeight: '800' }}>best choice</strong> for making an object.</p>
+                <p style={{ margin: '0' }}>Sometimes an object can be made from different materials, but only some materials are <strong style={{ color: '#A64B27', fontWeight: '800' }}>suitable</strong> for its purpose.</p>
               </div>
 
               <div style={{ border: '2px dashed var(--lesson-accent-border)', borderRadius: '12px', padding: '16px', marginBottom: '16px', background: 'var(--lesson-accent-bg)', position: 'relative' }}>
-                <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-accent)', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ margin: '0 0 12px 0', color: '#A64B27', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   🧠 Think Like a Scientist
                 </h4>
                 <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-xl)', color: 'var(--lesson-text)' }}>Before making a choice, ask yourself:</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: 'var(--lesson-text)' }}>
-                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: 'var(--lesson-accent)', fontWeight: 'bold' }}>✔</span> Is this material strong enough?</div>
-                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: 'var(--lesson-accent)', fontWeight: 'bold' }}>✔</span> Is it safe to use?</div>
-                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: 'var(--lesson-accent)', fontWeight: 'bold' }}>✔</span> Will it work well for this purpose?</div>
+                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#A64B27', fontWeight: 'bold' }}>✔</span> Is this material strong enough?</div>
+                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#A64B27', fontWeight: 'bold' }}>✔</span> Is it safe to use?</div>
+                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#A64B27', fontWeight: 'bold' }}>✔</span> Will it work well for this purpose?</div>
                 </div>
                 <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ position: 'absolute', bottom: '10px', right: '10px', width: 'clamp(56px, 8vw, 120px)', height: 'clamp(56px, 8vw, 120px)' }} />
               </div>
 
               <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-border)', borderRadius: '12px', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{ margin: '0 0 6px 0', color: 'var(--lesson-accent)', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <h4 style={{ margin: '0 0 6px 0', color: '#A64B27', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     ⭐ Example
                   </h4>
                   <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--lesson-text)' }}>
@@ -522,30 +437,30 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 <div style={{ fontSize: 'var(--text-3xl)', display: 'flex', gap: '8px' }}>🛍️ 🛍️</div>
               </div>
 
-              <div style={{ border: '2px solid var(--lesson-success)', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', display: 'flex', position: 'relative' }}>
+              <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: 'var(--lesson-success-bg)', display: 'flex', position: 'relative' }}>
                 <div style={{ flex: 1, paddingRight: '80px' }}>
-                  <h4 style={{ margin: '0 0 12px 0', color: 'var(--lesson-success)', fontSize: 'var(--text-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h4 style={{ margin: '0 0 12px 0', color: '#A64B27', fontSize: 'var(--text-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     🎯 MISSION
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--lesson-text)' }}>
-                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
+                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
                       Read the Handbook
                     </label>
                     <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--lesson-text)' }}>
-                      <input type="checkbox" checked={isB3Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
+                      <input type="checkbox" checked={isB3Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
                       Observe carefully.
                     </label>
                     <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--lesson-text)' }}>
-                      <input type="checkbox" checked={isB3Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
+                      <input type="checkbox" checked={isB3Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
                       Compare different materials.
                     </label>
                     <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--lesson-text)' }}>
-                      <input type="checkbox" checked={isB3Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
+                      <input type="checkbox" checked={isB3Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
                       Think about their properties.
                     </label>
                     <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--lesson-text)' }}>
-                      <input type="checkbox" checked={isB3Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--lesson-success)', marginTop: '4px' }} />
+                      <input type="checkbox" checked={isB3Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#A64B27', marginTop: '4px' }} />
                       Find the most suitable material for each object.
                     </label>
                   </div>

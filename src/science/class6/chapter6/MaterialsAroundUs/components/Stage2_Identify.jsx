@@ -459,8 +459,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       width: '80%', 
                       height: '80%', 
                       objectFit: 'contain',
-                      WebkitMaskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
-                      maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)',
+                      WebkitMaskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 42%, rgba(0,0,0,0) 80%)',
+                      maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 42%, rgba(0,0,0,0) 80%)',
                       mixBlendMode: 'lighten',
                       filter: 'drop-shadow(0 0 25px rgba(56, 189, 248, 0.4))' 
                     }} 

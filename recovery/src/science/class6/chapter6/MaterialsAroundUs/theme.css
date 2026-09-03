@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+/* src/science/class6/chapter6/MaterialsAroundUs/theme.css */
+
+.materials-around-us-theme {
+    /* ── Typography ── */
+  --font-heading: 'Merriweather', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* ── Page ── */
+  --lesson-background: #F8F4EC; /* warm parchment */
+  --lesson-background-gradient: #F8F4EC;
+
+  /* ── Card / Panel ── */
+  /* ── Card / Panel ── */
+  --lesson-card: #FFFFFF;
+  --lesson-border: #D9C9A3;
+  --card-shadow: 0 4px 20px rgba(59, 42, 31, 0.05), 0 8px 32px rgba(59, 42, 31, 0.03);
+  --card-hover-border: #D9C9A3;
+  --card-hover-shadow: 0 8px 32px rgba(59, 42, 31, 0.08);
+
+  /* ── Text ── */
+  --lesson-primary: #3B2A1F; /* Deep Warm Brown */
+  --lesson-text: #3B2A1F;
+  --lesson-secondary: #7A6A52; /* Warm Taupe */
+  --lesson-muted: #7A6A52;
+  --text-faint: #7A6A52;
+  --map-popup-desc: var(--lesson-secondary);
+
+  /* ── Buttons / Progress (Terracotta) ── */
+  --lesson-accent: #A64B27; 
+  --lesson-accent-bg: #FFFFFF; 
+  --lesson-accent-border: #D9C9A3; 
+  --lesson-accent-text: #FFFFFF; 
+  --lesson-highlight: #FFFFFF; 
+
+  /* ── Success ── */
+  --lesson-success: #A64B27; 
+  --lesson-success-bg: #FFFFFF;
+  --lesson-success-border: #D9C9A3;
+
+  /* ── Danger ── */
+  --lesson-danger: #A64B27;
+  --lesson-danger-bg: #FFFFFF;
+  --lesson-danger-border: #D9C9A3;
+
+  /* ── Warning ── */
+  --lesson-warning: #A64B27;
+  --lesson-warning-bg: #FFFFFF;
+  --lesson-warning-border: #D9C9A3;
+
+  /* ── Neutral / Beige ── */
+  --neutral-bg: #FFFFFF;
+  --neutral-text: #3B2A1F;
+  --neutral-border: #D9C9A3;
+
+  /* ── Surface ── */
+  --lesson-surface: #FFFFFF;
+  --surface-hover: #FFFFFF;
+
+  /* ── Canvas ── */
+  --canvas-bg: #FFFFFF;
+  --canvas-border: #D9C9A3;
+  --canvas-grid: rgba(59, 42, 31, 0.05);
+
+  /* ── Scrollbar ── */
+  --scrollbar-track: #FFFFFF;
+  --scrollbar-thumb: #D9C9A3;
+
+  /* ── Tabs ── */
+  --tab-bg: #FFFFFF;
+  --tab-text: #7A6A52;
+  --tab-hover-bg: #FFFFFF;
+  --tab-hover-text: #3B2A1F;
+  --tab-active-bg: #A64B27;
+  --tab-active-text: #FFFFFF;
+  --tab-active-shadow: none;
+}
+
+/* Ensure background color overrides tailwind bg classes */
+.materials-around-us-theme.bg-\[\#eaf6fb\] {
+  background-color: var(--lesson-background) !important;
+}
+
+/* Apply body font */
+.materials-around-us-theme {
+  color: var(--lesson-text);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* Ensure bold text stands out */
+.materials-around-us-theme strong,
+.materials-around-us-theme b {
+  font-weight: 700;
+}
+
+/* Apply heading font */
+.materials-around-us-theme h1,
+.materials-around-us-theme h2,
+.materials-around-us-theme h3,
+.materials-around-us-theme h4,
+.materials-around-us-theme h5,
+.materials-around-us-theme h6,
+.materials-around-us-theme .heading-font {
+  font-family: var(--font-heading);
+  color: var(--lesson-primary);
+  font-weight: 700;
+}
+
+/* Ensure buttons use body font and are bold */
+.materials-around-us-theme button,
+.materials-around-us-theme input {
+  font-family: var(--font-body);
+  font-weight: 600;
+}

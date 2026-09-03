@@ -26,7 +26,19 @@ export default function Stage1_Intro({ onComplete, addXp }) {
   const [viewState, setViewState] = useState('explore'); // explore, zoom, completed
   const [activeObject, setActiveObject] = useState(null);
   const [hintActive, setHintActive] = useState(false);
+  const [inspectionComplete, setInspectionComplete] = useState(false);
+  const [isPopActive, setIsPopActive] = useState(false);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    setIsPopActive(inspectionComplete);
+  }, [inspectionComplete]);
+
+  useEffect(() => {
+    if (viewState !== 'zoom') {
+      setInspectionComplete(false);
+    }
+  }, [viewState]);
 
   // Refs
   const containerRef = useRef(null);
@@ -288,12 +300,30 @@ export default function Stage1_Intro({ onComplete, addXp }) {
       display: 'flex',
       flexDirection: 'column'
     }}>
+      <style>{`
+        @keyframes gentlePulse {
+          0% { transform: scale(1); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+          25% { transform: scale(1.08); box-shadow: 0 0 0 6px rgba(166,75,39,0.4), 0 8px 24px rgba(166,75,39,0.5); }
+          50% { transform: scale(1); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+          100% { transform: scale(1); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+        }
+        .attention-btn-pulse {
+          animation: gentlePulse 1.2s infinite ease-in-out;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .attention-btn-pulse {
+            animation: none !important;
+            transform: scale(1.03) !important;
+            box-shadow: 0 0 0 4px rgba(166,75,39,0.3), 0 8px 24px rgba(166,75,39,0.4) !important;
+          }
+        }
+      `}</style>
       
       {/* MAIN CONTENT AREA */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '7fr 3fr', gap: '12px', flex: 1, minHeight: 0 }}>
         
         {/* LEFT PANEL: CLASSROOM */}
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minWidth: 0 }}>
           
           {/* IMMERSIVE VIEWPORT */}
           <div 
@@ -312,7 +342,13 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             onPointerLeave={handlePointerUp}
           >
             {/* ZOOMABLE CONTAINER */}
-            <div style={{
+            <div 
+              onTransitionEnd={(e) => {
+                if (e.propertyName === 'transform' && viewState === 'zoom') {
+                  setInspectionComplete(true);
+                }
+              }}
+              style={{
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
               transform: transformStyle,
               transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -627,7 +663,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         </div>
 
         {/* RIGHT PANEL: CASE FILE */}
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, minWidth: 0 }}>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--lesson-card)', border: '2px solid var(--lesson-border)', borderRadius: '0px', overflow: 'hidden', boxShadow: '0 8px 25px rgba(0,0,0,0.04)' }}>
             
             {/* Header */}
@@ -648,22 +684,22 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                 </div>
               ) : (
                 // --- MATERIAL EXPLANATION (Visible only during zoom) ---
-                <div style={{ background: 'var(--lesson-surface)', padding: '20px', borderRadius: '16px', border: '2px solid var(--lesson-border)', animation: 'fadeIn 0.3s ease-out' }}>
+                <div style={{ background: '#FFFFFF', padding: '20px', borderRadius: '16px', border: '2px solid var(--lesson-border)', animation: 'fadeIn 0.3s ease-out' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
                      <div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: '900', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>OBJECT</div>
-                        <div style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--lesson-primary)' }}>{activeObject?.name}</div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>OBJECT</div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#3B2A1F' }}>{activeObject?.name}</div>
                      </div>
                      <div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: '900', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>MATERIAL</div>
-                        <div style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--lesson-success)' }}>{activeObject?.material}</div>
+                        <div style={{ fontSize: '1rem', fontWeight: '600', color: '#7A6A52', textTransform: 'uppercase', letterSpacing: '0.5px' }}>MATERIAL</div>
+                        <div style={{ fontSize: '1.35rem', fontWeight: '700', color: '#A64B27' }}>{activeObject?.material}</div>
                     </div>
                 </div>
                 <div style={{ marginTop: '16px' }}>
-                  <div style={{ display: 'inline-block', background: 'var(--lesson-success)', color: 'white', padding: '4px 12px', borderRadius: '8px', fontSize: '1rem', fontWeight: '900', textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.5px' }}>
+                  <div style={{ display: 'inline-block', background: '#A64B27', color: 'white', padding: '4px 12px', borderRadius: '8px', fontSize: '1rem', fontWeight: '900', textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.5px' }}>
                     IDENTIFIED
                   </div>                </div>
-                  <ul style={{ margin: 0, paddingLeft: '24px', color: 'var(--lesson-primary)', fontSize: '1.1rem', lineHeight: '1.5', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <ul style={{ margin: 0, paddingLeft: '24px', color: '#3B2A1F', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                      {activeObject?.desc.split('. ').filter(Boolean).map((pt, idx) => (
                        <li key={idx} style={{ paddingLeft: '4px' }}>{pt.trim()}{pt.endsWith('.') ? '' : '.'}</li>
                      ))}
@@ -673,8 +709,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
 
               {/* PROGRESS LIST (Always visible) */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-                <h4 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: '900', color: 'var(--heading-section)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Folder size={20} /> Case File Progress
+                <h4 style={{ margin: '0 0 8px 0', fontSize: '1.45rem', fontWeight: '900', color: 'var(--heading-section)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Folder size={24} /> Case File Progress
                 </h4>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -684,44 +720,46 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                     const isCompleted = isFound && !isCurrentActive;
                     
                     return (
-                      <div 
-                        key={obj.id} 
+                      <div
+                        key={i}
                         onClick={() => {
                           if (isFound) {
                             setActiveObject(obj);
                           }
                         }}
                         style={{
-                          display: 'flex', alignItems: 'center', padding: '6px 12px',
-                          background: isCompleted ? 'var(--lesson-surface)' : 'transparent',
-                          borderBottom: !isFound ? '2px dashed var(--lesson-border)' : '2px solid transparent',
-                          borderRadius: isCompleted || isCurrentActive ? '12px' : '0', gap: '12px',
-                          cursor: isFound ? 'pointer' : 'default',
-                          transition: 'transform 0.2s',
-                          opacity: !isFound ? 0.6 : 1
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: '12px',
+                          background: isCurrentActive ? 'var(--lesson-surface)' : 'transparent',
+                          border: isCurrentActive ? '2px solid var(--lesson-border)' : '2px solid transparent',
+                          borderRadius: '12px',
+                          transition: 'all 0.3s ease',
+                          opacity: !isFound ? 0.6 : 1,
+                          cursor: isFound ? 'pointer' : 'default'
                         }}
                       >
-                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.1rem', fontWeight: '800', color: isFound ? 'var(--lesson-primary)' : 'var(--lesson-muted)' }}>
+                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.2rem', fontWeight: '700', color: isFound ? '#3B2A1F' : 'var(--lesson-muted)' }}>
                           <span>{i + 1}.</span>
                           {isCompleted ? (
                             <>
                               <span>{obj.name}</span>
-                              <span style={{ color: 'var(--lesson-success)' }}>&rarr;</span>
-                              <span style={{ color: 'var(--lesson-success)' }}>{obj.material}</span>
+                              <span style={{ color: '#A64B27' }}>&rarr;</span>
+                              <span style={{ color: '#A64B27' }}>{obj.material}</span>
                             </>
                           ) : isCurrentActive ? (
                             <>
                               <span>{obj.name}</span>
                               <span style={{ color: 'var(--lesson-border)' }}>&rarr;</span>
-                              <span style={{ color: 'var(--lesson-muted)' }}>?</span>
+                              <span style={{ color: 'var(--lesson-muted)', fontSize: '1.15rem', fontWeight: '600' }}>???</span>
                             </>
                           ) : (
-                            <span>???</span>
+                            <span style={{ fontSize: '1.15rem', fontWeight: '600' }}>???</span>
                           )}
                         </div>
 
                         {isCompleted && (
-                          <div style={{ background: 'var(--lesson-success)', color: 'white', borderRadius: '50%', padding: '4px', display: 'flex' }}>
+                          <div style={{ background: '#A64B27', color: 'white', borderRadius: '50%', padding: '4px', display: 'flex' }}>
                             <Check size={16} strokeWidth={4} />
                           </div>
                         )}
@@ -735,9 +773,13 @@ export default function Stage1_Intro({ onComplete, addXp }) {
 
             {/* Bottom Actions */}
             {viewState === 'zoom' && (
-              <div style={{ padding: '16px 24px', background: 'var(--lesson-surface)', borderTop: '2px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                 <button onClick={returnToClassroom} style={{ width: '100%', padding: '16px', background: 'white', color: 'var(--lesson-primary)', border: '2px solid var(--lesson-primary)', fontSize: '1.2rem', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '16px', cursor: 'pointer', boxShadow: '0 6px 16px rgba(0,0,0,0.05)' }}>
-                   RETURN TO CLASSROOM
+              <div style={{ padding: '16px 24px', background: '#FFFFFF', borderTop: '2px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                 <button onClick={returnToClassroom} className={isPopActive ? "attention-btn-pulse" : ""} style={{ 
+                   width: '100%', padding: '16px', background: '#A64B27', color: '#FFFFFF', border: '2px solid var(--lesson-primary)', fontSize: '1.2rem', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '16px', cursor: 'pointer', 
+                   boxShadow: '0 6px 16px rgba(0,0,0,0.05)',
+                   transition: 'all 0.3s ease-in-out'
+                 }}>
+                   {isPopActive ? '✨ RETURN TO CLASSROOM' : 'RETURN TO CLASSROOM'}
                  <ChevronRight size={24} />
                  </button>
               </div>
