@@ -9,11 +9,18 @@ import * as THREE from 'three';
  * - Stage 4: 20 Litre Commercial Dispenser Jug / Canister -> /assets/bottle_20l.png
  */
 
-// ─── Offscreen Canvas Texture Processor with Transparent Margin Padding ───
+// ─── Offscreen Canvas Texture Cache & Processor with Transparent Margin Padding ───
+const bottleTextureCache = new Map();
+
 function useBottleTexture(url) {
-  const [texture, setTexture] = useState(null);
+  const [texture, setTexture] = useState(() => bottleTextureCache.get(url) || null);
 
   useEffect(() => {
+    if (bottleTextureCache.has(url)) {
+      setTexture(bottleTextureCache.get(url));
+      return;
+    }
+
     let isMounted = true;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -71,12 +78,12 @@ function useBottleTexture(url) {
       tex.magFilter = THREE.LinearFilter;
       tex.needsUpdate = true;
 
+      bottleTextureCache.set(url, tex);
       setTexture(tex);
     };
 
     return () => {
       isMounted = false;
-      if (texture) texture.dispose();
     };
   }, [url]);
 
@@ -86,6 +93,8 @@ function useBottleTexture(url) {
 // ─── Stage 1: 200 mL Pocket Bottle (Shorter height, medium-wide stout base) ───
 function Bottle200ml({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_200ml.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   // Natural realistic stout bottle proportions (expanded width)
   const height = 3.0 * scale;
@@ -93,7 +102,7 @@ function Bottle200ml({ thickness = 1 }) {
 
   return (
     <group position={[0, -2.7, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -112,6 +121,8 @@ function Bottle200ml({ thickness = 1 }) {
 // ─── Stage 2: 500 mL Spring Water Bottle (Balanced mid-size height & standard cylindrical width) ───
 function Bottle500ml({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_500ml.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   // Balanced standard cylindrical water bottle proportions (expanded width)
   const height = 3.7 * scale;
@@ -119,7 +130,7 @@ function Bottle500ml({ thickness = 1 }) {
 
   return (
     <group position={[0, -3.0, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -138,6 +149,8 @@ function Bottle500ml({ thickness = 1 }) {
 // ─── Stage 3: 1 Litre Sports Bottle (Tallest height with appropriately wide cylindrical diameter) ───
 function Bottle1Litre({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_1l.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   // Tallest height with wide sturdy diameter
   const height = 4.25 * scale;
@@ -145,7 +158,7 @@ function Bottle1Litre({ thickness = 1 }) {
 
   return (
     <group position={[0, -3.2, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -164,13 +177,15 @@ function Bottle1Litre({ thickness = 1 }) {
 // ─── Stage 4: 20 Litre Commercial Dispenser Jug / Can ───
 function WaterCan20Litre({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_20l.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 4.5 * scale;
   const width = 3.85 * scale;
 
   return (
     <group position={[0, -3.3, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}

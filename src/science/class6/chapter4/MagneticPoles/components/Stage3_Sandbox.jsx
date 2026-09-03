@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -126,6 +126,14 @@ function RotatableMagnetGroup({ children }) {
 
 // A. Bar Magnet (Proportionate: 12.0 x 1.3 x 1.9)
 function BarMagnet3D() {
+  const landscapeTexture = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+    const tex = loader.load('/MagneticPoles/magnet_landscape_texture.png');
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 8;
+    return tex;
+  }, []);
+
   return (
     <group position={[0, 2.5, 0]}>
       {/* North Half */}
@@ -162,6 +170,26 @@ function BarMagnet3D() {
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[0.06, 1.31, 1.91]} />
         <meshStandardMaterial color="#111827" roughness={0.7} />
+      </mesh>
+
+      {/* Front Face Scenic Landscape Artwork */}
+      <mesh position={[0, 0, 0.955]} castShadow receiveShadow>
+        <planeGeometry args={[12.0, 1.3]} />
+        <meshStandardMaterial
+          map={landscapeTexture}
+          roughness={0.35}
+          metalness={0.15}
+        />
+      </mesh>
+
+      {/* Back Face Scenic Landscape Artwork */}
+      <mesh position={[0, 0, -0.955]} rotation={[0, Math.PI, 0]} scale={[-1, 1, 1]} castShadow receiveShadow>
+        <planeGeometry args={[12.0, 1.3]} />
+        <meshStandardMaterial
+          map={landscapeTexture}
+          roughness={0.35}
+          metalness={0.15}
+        />
       </mesh>
     </group>
   );
@@ -336,14 +364,15 @@ function ChosenMagnet3D({ shape }) {
 // ---------------------------------------------------------
 // Smooth Intro Animation Group (Bottom-Left to Center Growth)
 // ---------------------------------------------------------
-function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
+function AnimatedLabGroup({ children, zoomScale = 1.0, onArrival }) {
   const groupRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
+  const arrivedRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasStarted(true);
-    }, 800);
+    }, 250);
     return () => clearTimeout(timer);
   }, []);
 
@@ -365,6 +394,23 @@ function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
     const currentScale = groupRef.current.scale.x;
     const nextScale = THREE.MathUtils.lerp(currentScale, targetScale, dt * speed);
     groupRef.current.scale.set(nextScale, nextScale, nextScale);
+
+    // Notify once tray and magnet have smoothly arrived at the center
+    if (hasStarted && !arrivedRef.current) {
+      const dist = Math.hypot(
+        groupRef.current.position.x - 0,
+        groupRef.current.position.y - (-0.4),
+        groupRef.current.position.z - 0
+      );
+      const scaleDiff = Math.abs(currentScale - targetScale);
+
+      if (dist < 0.08 && scaleDiff < 0.015) {
+        arrivedRef.current = true;
+        groupRef.current.position.set(0, -0.4, 0);
+        groupRef.current.scale.set(targetScale, targetScale, targetScale);
+        if (onArrival) onArrival();
+      }
+    }
   });
 
   return (
@@ -480,7 +526,7 @@ function FilingsSystem({ step, isSprinkling, isVibrating, shape, cycleKey, isPau
 
     particles.forEach((p, i) => {
       // 1. Sprinkling down
-      if (isSprinkling || step === 'initial') {
+      if (isSprinkling) {
         p.delay -= dt;
         if (p.delay <= 0) {
           p.visible = true;
@@ -571,12 +617,13 @@ function FilingsSystem({ step, isSprinkling, isVibrating, shape, cycleKey, isPau
 // 3. MAIN COMPONENT
 // ----------------------------------------------------
 export default function Stage3_Sandbox({ onComplete }) {
-  const [step, setStep] = useState('initial');
+  const [step, setStep] = useState('waiting');
   const [cycleKey, setCycleKey] = useState(0);
   const [tapCount, setTapCount] = useState(0);
   const [shape, setShape] = useState('horseshoe'); // 'horseshoe', 'ring', 'bar'
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
+  const hasArrivedRef = useRef(false);
 
   const [isPaused, setIsPaused] = useState(false);
   const isPausedRef = useRef(false);
@@ -638,11 +685,25 @@ export default function Stage3_Sandbox({ onComplete }) {
     }, duration);
   };
 
-  // Start continuous loop on initial mount
-  useEffect(() => {
+  // Only start pouring iron filings once the tray and magnet arrive at the center
+  const handleArrival = useCallback(() => {
+    if (hasArrivedRef.current) return;
+    hasArrivedRef.current = true;
     executePhase('sprinkle', 1800);
-    return () => clearLoopTimers();
   }, []);
+
+  // Safety fallback in case of background tab throttling
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      if (!hasArrivedRef.current) {
+        handleArrival();
+      }
+    }, 2200);
+    return () => {
+      clearTimeout(fallbackTimer);
+      clearLoopTimers();
+    };
+  }, [handleArrival]);
 
   const handleShapeChange = (newShape) => {
     setShape(newShape);
@@ -740,7 +801,7 @@ export default function Stage3_Sandbox({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <AnimatedLabGroup zoomScale={1.0}>
+              <AnimatedLabGroup zoomScale={1.0} onArrival={handleArrival}>
                 <RotatableMagnetGroup>
                   <ChosenMagnet3D shape={shape} />
                   <FilingsSystem step={step} isSprinkling={isSprinkling} isVibrating={isVibrating} shape={shape} cycleKey={cycleKey} isPaused={isPaused} />

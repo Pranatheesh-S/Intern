@@ -9,11 +9,18 @@ import * as THREE from 'three';
  * - Stage 4: Large Moving Box (Noticeably larger & taller shipping carton) -> /assets/cardboard_box.png
  */
 
-// ─── Offscreen Canvas Texture Processor with 15% Transparent Padding Buffer ───
+// ─── Offscreen Canvas Texture Cache & Processor with 15% Transparent Padding Buffer ───
+const cardboardTextureCache = new Map();
+
 function useCardboardTexture(url) {
-  const [texture, setTexture] = useState(null);
+  const [texture, setTexture] = useState(() => cardboardTextureCache.get(url) || null);
 
   useEffect(() => {
+    if (cardboardTextureCache.has(url)) {
+      setTexture(cardboardTextureCache.get(url));
+      return;
+    }
+
     let isMounted = true;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -74,12 +81,12 @@ function useCardboardTexture(url) {
       tex.magFilter = THREE.LinearFilter;
       tex.needsUpdate = true;
 
+      cardboardTextureCache.set(url, tex);
       setTexture(tex);
     };
 
     return () => {
       isMounted = false;
-      if (texture) texture.dispose();
     };
   }, [url]);
 
@@ -89,14 +96,16 @@ function useCardboardTexture(url) {
 // ─── Stage 1: Single Flat Mailer Box (Individual flat carton sitting alone) ───
 function SingleFlatBoxMesh({ thickness = 1 }) {
   const texture = useCardboardTexture('/assets/cardboard_small.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   // Expanded width & height to accommodate full padded texture without clipping
   const height = 3.6 * scale;
   const width = 3.6 * scale;
 
   return (
-    <group position={[0, -2.6, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+    <group position={[0, -2.85, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -115,13 +124,15 @@ function SingleFlatBoxMesh({ thickness = 1 }) {
 // ─── Stage 2: Cardboard Sheet (3/4 Isometric Perspective showing Flutes) ───
 function CardboardSheetMesh({ thickness = 1 }) {
   const texture = useCardboardTexture('/assets/cardboard_sheet.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 3.8 * scale;
   const width = 3.6 * scale;
 
   return (
-    <group position={[0, -2.8, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+    <group position={[0, -3.05, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -140,13 +151,15 @@ function CardboardSheetMesh({ thickness = 1 }) {
 // ─── Stage 3: Compact Stack of Corrugated Sheets ───
 function CompactStackMesh({ thickness = 1 }) {
   const texture = useCardboardTexture('/assets/cardboard_3layers.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 3.9 * scale;
   const width = 3.7 * scale;
 
   return (
-    <group position={[0, -2.9, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+    <group position={[0, -3.15, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -165,14 +178,16 @@ function CompactStackMesh({ thickness = 1 }) {
 // ─── Stage 4: Large Moving Box (Noticeably Larger & Taller) ───
 function LargeMovingBoxMesh({ thickness = 1 }) {
   const texture = useCardboardTexture('/assets/cardboard_box.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   // Expanded width & height to accommodate full padded texture without clipping
   const height = 4.8 * scale;
   const width = 4.8 * scale;
 
   return (
-    <group position={[0, -3.3, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+    <group position={[0, -3.5, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}

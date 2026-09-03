@@ -9,11 +9,18 @@ import * as THREE from 'three';
  * - Stage 4: Living Oak Tree (Preserved original high-resolution living oak tree billboard) -> /assets/mature_oak_tree.png
  */
 
-// ─── 1. Paper Sheet Texture Processor (Extracts floating curved white paper from light blue backdrop) ───
+// ─── 1. Paper Sheet Texture Cache & Processor (Extracts floating curved white paper from light blue backdrop) ───
+const paperTextureCache = new Map();
+
 function usePaperTexture(url) {
-  const [texture, setTexture] = useState(null);
+  const [texture, setTexture] = useState(() => paperTextureCache.get(url) || null);
 
   useEffect(() => {
+    if (paperTextureCache.has(url)) {
+      setTexture(paperTextureCache.get(url));
+      return;
+    }
+
     let isMounted = true;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -67,23 +74,30 @@ function usePaperTexture(url) {
       tex.magFilter = THREE.LinearFilter;
       tex.needsUpdate = true;
 
+      paperTextureCache.set(url, tex);
       setTexture(tex);
     };
 
     return () => {
       isMounted = false;
-      if (texture) texture.dispose();
     };
   }, [url]);
 
   return texture;
 }
 
-// ─── 2. Wood Log Texture Processor (Extracts standing timber stump from plain background) ───
+// ─── 2. Wood Log Texture Cache & Processor (Extracts standing timber stump from plain background) ───
+const woodLogTextureCache = new Map();
+
 function useWoodLogTexture(url) {
-  const [texture, setTexture] = useState(null);
+  const [texture, setTexture] = useState(() => woodLogTextureCache.get(url) || null);
 
   useEffect(() => {
+    if (woodLogTextureCache.has(url)) {
+      setTexture(woodLogTextureCache.get(url));
+      return;
+    }
+
     let isMounted = true;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -139,23 +153,30 @@ function useWoodLogTexture(url) {
       tex.magFilter = THREE.LinearFilter;
       tex.needsUpdate = true;
 
+      woodLogTextureCache.set(url, tex);
       setTexture(tex);
     };
 
     return () => {
       isMounted = false;
-      if (texture) texture.dispose();
     };
   }, [url]);
 
   return texture;
 }
 
-// ─── 3. Plant Cactus Texture Processor (Extracts tall green fairy castle cactus in pot from dark background) ───
+// ─── 3. Plant Cactus Texture Cache & Processor (Extracts tall green fairy castle cactus in pot from dark background) ───
+const cactusTextureCache = new Map();
+
 function useCactusTexture(url) {
-  const [texture, setTexture] = useState(null);
+  const [texture, setTexture] = useState(() => cactusTextureCache.get(url) || null);
 
   useEffect(() => {
+    if (cactusTextureCache.has(url)) {
+      setTexture(cactusTextureCache.get(url));
+      return;
+    }
+
     let isMounted = true;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -207,12 +228,12 @@ function useCactusTexture(url) {
       tex.magFilter = THREE.LinearFilter;
       tex.needsUpdate = true;
 
+      cactusTextureCache.set(url, tex);
       setTexture(tex);
     };
 
     return () => {
       isMounted = false;
-      if (texture) texture.dispose();
     };
   }, [url]);
 
@@ -222,13 +243,15 @@ function useCactusTexture(url) {
 // ─── Stage 1: Paper Sheet 2D Billboard ───
 function PaperModel({ thickness = 1 }) {
   const texture = usePaperTexture('/assets/paper_sheet.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 3.6 * scale;
   const width = 3.2 * scale;
 
   return (
     <group position={[0, -2.7, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -247,13 +270,15 @@ function PaperModel({ thickness = 1 }) {
 // ─── Stage 2: Rustic Wood Log 2D Billboard ───
 function WoodPieceModel({ thickness = 1 }) {
   const texture = useWoodLogTexture('/assets/wood_log.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 4.2 * scale;
   const width = 2.4 * scale;
 
   return (
     <group position={[0, -3.1, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -272,13 +297,15 @@ function WoodPieceModel({ thickness = 1 }) {
 // ─── Stage 3: Potted Plant (Fairy Castle Cactus) 2D Billboard ───
 function PlantModel({ thickness = 1 }) {
   const texture = useCactusTexture('/assets/plant_cactus.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 4.3 * scale;
   const width = 2.6 * scale;
 
   return (
     <group position={[0, -3.2, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}

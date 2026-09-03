@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, ContactShadows, OrbitControls } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,6 +12,60 @@ function SuspendedMagnet3D({ targetRotation, isSpinning }) {
   const magnetGroupRef = useRef();
   const currentAngle = useRef(0.25);
   const velocity = useRef(0);
+
+  const { frontTexture, topTexture, redEndTexture, blueEndTexture } = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+
+    // 1. Front and Back Faces Texture (featuring "NORTH" and "SOUTH" labels)
+    const front = loader.load('/SuspendedMagnet/bar_magnet_front.png');
+    front.colorSpace = THREE.SRGBColorSpace;
+    front.anisotropy = 8;
+
+    // 2. Top Face Texture (featuring the magnetic field line pattern)
+    const top = loader.load('/SuspendedMagnet/bar_magnet_top.png');
+    top.colorSpace = THREE.SRGBColorSpace;
+    top.anisotropy = 8;
+
+    // 3. North End Cap (cropped solid red section from the first image)
+    const redCap = loader.load('/SuspendedMagnet/bar_magnet_front.png', (tex) => {
+      try {
+        const img = tex.image;
+        if (!img) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        // Sample from the solid red North half
+        ctx.drawImage(img, 80, 25, 120, 65, 0, 0, 128, 128);
+        redCap.image = canvas;
+        redCap.needsUpdate = true;
+      } catch (e) {
+        console.error('Error cropping red end cap:', e);
+      }
+    });
+    redCap.colorSpace = THREE.SRGBColorSpace;
+
+    // 4. South End Cap (cropped solid blue section from the first image)
+    const blueCap = loader.load('/SuspendedMagnet/bar_magnet_front.png', (tex) => {
+      try {
+        const img = tex.image;
+        if (!img) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        // Sample from the solid blue South half
+        ctx.drawImage(img, 820, 25, 120, 65, 0, 0, 128, 128);
+        blueCap.image = canvas;
+        blueCap.needsUpdate = true;
+      } catch (e) {
+        console.error('Error cropping blue end cap:', e);
+      }
+    });
+    blueCap.colorSpace = THREE.SRGBColorSpace;
+
+    return { frontTexture: front, topTexture: top, redEndTexture: redCap, blueEndTexture: blueCap };
+  }, []);
 
   useFrame((state, delta) => {
     if (!magnetGroupRef.current) return;
@@ -47,114 +101,37 @@ function SuspendedMagnet3D({ targetRotation, isSpinning }) {
 
       {/* Rotating 3D Magnet Assembly */}
       <group ref={magnetGroupRef}>
-        {/* Dedicated Point Lights Parented Directly to Magnet for Maximum Brilliance */}
-        <pointLight position={[0, 2, 3]} intensity={3.2} color="#FFFFFF" distance={16} />
-        <pointLight position={[0, -1.5, 3]} intensity={2.2} color="#FFFFFF" distance={14} />
-        <pointLight position={[-3.2, 0, 2.5]} intensity={2.8} color="#FF8888" distance={12} />
-        <pointLight position={[3.2, 0, 2.5]} intensity={2.8} color="#88AAFF" distance={12} />
-        <pointLight position={[0, 0, -3]} intensity={1.8} color="#FFFFFF" distance={12} />
+        {/* Dedicated Cinematic Local Lighting with Enhanced Shimmer */}
+        <pointLight position={[-3.1, 0.5, 3.2]} intensity={5.2} color="#FF6B6B" distance={18} />
+        <pointLight position={[3.1, 0.5, 3.2]} intensity={5.2} color="#60A5FA" distance={18} />
+        <pointLight position={[0, 2.5, 3.5]} intensity={4.5} color="#FFFFFF" distance={20} />
+        <pointLight position={[0, -2.0, 2.8]} intensity={2.8} color="#FFFBEB" distance={16} />
+        <pointLight position={[-3.1, 0.5, -3.2]} intensity={4.0} color="#FF4444" distance={16} />
+        <pointLight position={[3.1, 0.5, -3.2]} intensity={4.0} color="#3B82F6" distance={16} />
 
-        {/* North Half - Vivid Bright Crimson Red with Luminous Emissive Sheen */}
+        {/* North Half Core - High-Saturation Crimson Red with Emissive Luster */}
         <mesh position={[-3.1, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[6.2, 1.35, 1.9]} />
           <meshStandardMaterial
-            color="#EF4444"
-            emissive="#DC2626"
-            emissiveIntensity={0.42}
-            roughness={0.22}
-            metalness={0.12}
+            color="#DC2626"
+            emissive="#EF4444"
+            emissiveIntensity={0.36}
+            roughness={0.18}
+            metalness={0.35}
           />
         </mesh>
 
-        {/* North Pole Front Face Label */}
-        <Text
-          position={[-3.1, 0, 0.97]}
-          rotation={[0, 0, 0]}
-          fontSize={0.88}
-          color="#FFFFFF"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          North
-        </Text>
-
-        {/* North Pole Back Face Label */}
-        <Text
-          position={[-3.1, 0, -0.97]}
-          rotation={[0, Math.PI, 0]}
-          fontSize={0.88}
-          color="#FFFFFF"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          North
-        </Text>
-
-        {/* North Pole Top Face Label */}
-        <Text
-          position={[-3.1, 0.69, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.82}
-          color="#FFFFFF"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          North
-        </Text>
-
-        {/* South Half - Vivid Electric Sapphire Blue with Luminous Emissive Sheen */}
+        {/* South Half Core - High-Saturation Cobalt Blue with Emissive Luster */}
         <mesh position={[3.1, 0, 0]} castShadow receiveShadow>
           <boxGeometry args={[6.2, 1.35, 1.9]} />
           <meshStandardMaterial
-            color="#3B82F6"
-            emissive="#2563EB"
-            emissiveIntensity={0.42}
-            roughness={0.22}
-            metalness={0.12}
+            color="#2563EB"
+            emissive="#3B82F6"
+            emissiveIntensity={0.36}
+            roughness={0.18}
+            metalness={0.35}
           />
         </mesh>
-
-        {/* South Pole Front Face Label */}
-        <Text
-          position={[3.1, 0, 0.97]}
-          rotation={[0, 0, 0]}
-          fontSize={0.88}
-          color="#FFFFFF"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          South
-        </Text>
-
-        {/* South Pole Back Face Label */}
-        <Text
-          position={[3.1, 0, -0.97]}
-          rotation={[0, Math.PI, 0]}
-          fontSize={0.88}
-          color="#FFFFFF"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          South
-        </Text>
-
-        {/* South Pole Top Face Label */}
-        <Text
-          position={[3.1, 0.69, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.82}
-          color="#FFFFFF"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          South
-        </Text>
 
         {/* Dark Dividing Seam */}
         <mesh position={[0, 0, 0]}>
@@ -162,15 +139,115 @@ function SuspendedMagnet3D({ targetRotation, isSpinning }) {
           <meshStandardMaterial color="#0F172A" roughness={0.7} />
         </mesh>
 
-        {/* Polished Gold Center Clamp Collar */}
+        {/* Front Face: First Image (NORTH and SOUTH labels) with Emissive Brilliance and Metallic Sheen */}
+        <mesh position={[0, 0, 0.958]} castShadow receiveShadow>
+          <planeGeometry args={[12.4, 1.35]} />
+          <meshStandardMaterial
+            map={frontTexture}
+            emissiveMap={frontTexture}
+            emissive="#FFFFFF"
+            emissiveIntensity={0.32}
+            roughness={0.15}
+            metalness={0.42}
+          />
+        </mesh>
+
+        {/* Back Face: First Image with Emissive Brilliance and Metallic Sheen */}
+        <mesh position={[0, 0, -0.958]} rotation={[0, Math.PI, 0]} scale={[-1, 1, 1]} castShadow receiveShadow>
+          <planeGeometry args={[12.4, 1.35]} />
+          <meshStandardMaterial
+            map={frontTexture}
+            emissiveMap={frontTexture}
+            emissive="#FFFFFF"
+            emissiveIntensity={0.32}
+            roughness={0.15}
+            metalness={0.42}
+          />
+        </mesh>
+
+        {/* Top Face: Second Image (Magnetic Field Lines) with Vibrant Emissive Glow */}
+        <mesh position={[0, 0.68, 0]} rotation={[-Math.PI / 2, 0, 0]} castShadow receiveShadow>
+          <planeGeometry args={[12.4, 1.9]} />
+          <meshStandardMaterial
+            map={topTexture}
+            emissiveMap={topTexture}
+            emissive="#FFFFFF"
+            emissiveIntensity={0.35}
+            roughness={0.16}
+            metalness={0.42}
+          />
+        </mesh>
+
+        {/* Bottom Face: Clean Base Finish with Matching Glow */}
+        <mesh position={[0, -0.68, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow receiveShadow>
+          <planeGeometry args={[12.4, 1.9]} />
+          <meshStandardMaterial
+            map={topTexture}
+            emissiveMap={topTexture}
+            emissive="#FFFFFF"
+            emissiveIntensity={0.25}
+            roughness={0.18}
+            metalness={0.4}
+          />
+        </mesh>
+
+        {/* North End Cap: Cropped Solid Red Section with Vibrant Emissive Glow */}
+        <mesh position={[-6.205, 0, 0]} rotation={[0, -Math.PI / 2, 0]} castShadow receiveShadow>
+          <planeGeometry args={[1.9, 1.35]} />
+          <meshStandardMaterial
+            map={redEndTexture}
+            color="#DC2626"
+            emissive="#EF4444"
+            emissiveIntensity={0.38}
+            roughness={0.18}
+            metalness={0.35}
+          />
+        </mesh>
+
+        {/* South End Cap: Cropped Solid Blue Section with Vibrant Emissive Glow */}
+        <mesh position={[6.205, 0, 0]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+          <planeGeometry args={[1.9, 1.35]} />
+          <meshStandardMaterial
+            map={blueEndTexture}
+            color="#2563EB"
+            emissive="#3B82F6"
+            emissiveIntensity={0.38}
+            roughness={0.18}
+            metalness={0.35}
+          />
+        </mesh>
+
+        {/* Subtle Cinematic Pole Aura Sheen */}
+        <mesh position={[-3.1, 0, 0]}>
+          <boxGeometry args={[6.28, 1.42, 1.98]} />
+          <meshBasicMaterial
+            color="#EF4444"
+            transparent={true}
+            opacity={0.09}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+        <mesh position={[3.1, 0, 0]}>
+          <boxGeometry args={[6.28, 1.42, 1.98]} />
+          <meshBasicMaterial
+            color="#3B82F6"
+            transparent={true}
+            opacity={0.09}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+
+        {/* Polished Gold Center Clamp Collar with Mirror Shimmer */}
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[0.45, 1.38, 1.94]} />
           <meshStandardMaterial
             color="#FBBF24"
             emissive="#D97706"
-            emissiveIntensity={0.35}
-            roughness={0.15}
-            metalness={0.9}
+            emissiveIntensity={0.45}
+            roughness={0.08}
+            metalness={0.96}
           />
         </mesh>
       </group>
@@ -238,7 +315,8 @@ export default function Stage1_Experiment({ onComplete }) {
     setShowFeedbackModal(false);
   };
 
-  const isCompleted = spinCount >= 1 && quizAnswer === 'yes';
+  // Enable next button once question is answered without waiting for experiment to complete
+  const isCompleted = quizAnswer !== null;
 
   return (
     <div style={{
@@ -414,30 +492,42 @@ export default function Stage1_Experiment({ onComplete }) {
             <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
           </button>
 
-          {/* 3D WebGL Canvas */}
+          {/* 3D WebGL Canvas - Touch/Click Interactions Disabled on Magnet */}
           <Canvas
             shadows
-            gl={{ alpha: true, antialias: true }}
+            gl={{ 
+              alpha: true, 
+              antialias: true,
+              toneMapping: THREE.ACESFilmicToneMapping,
+              toneMappingExposure: 1.32
+            }}
             camera={{ position: [0, 2.0, 19.5], fov: 45 }}
-            style={{ width: '100%', height: '100%' }}
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              pointerEvents: 'none', 
+              touchAction: 'none', 
+              userSelect: 'none' 
+            }}
           >
             <Suspense fallback={null}>
-              <ambientLight intensity={0.9} />
+              <ambientLight intensity={1.15} color="#FFFFFF" />
               <directionalLight
-                position={[8, 18, 10]}
-                intensity={1.8}
+                position={[8, 18, 12]}
+                intensity={2.6}
+                color="#FFFDF5"
                 castShadow
                 shadow-mapSize={[1024, 1024]}
                 shadow-bias={-0.0001}
               />
-              <directionalLight position={[-8, 6, -8]} intensity={0.4} color="#FDE68A" />
+              <directionalLight position={[-8, 8, -8]} intensity={1.3} color="#E0F2FE" />
+              <directionalLight position={[0, -6, 8]} intensity={0.9} color="#FEF3C7" />
 
-              {/* Realistic 3D Suspended Bar Magnet */}
+              {/* Realistic 3D Suspended Bar Magnet (Static to Touch/Click) */}
               <SuspendedMagnet3D targetRotation={targetRotation} isSpinning={isSpinning} />
 
               {/* Drop Shadow beneath Magnet on Table */}
               <ContactShadows position={[0, -4.6, 0]} opacity={0.55} scale={16} blur={2.4} far={8} color="#000000" />
-              <OrbitControls makeDefault enablePan={false} maxPolarAngle={Math.PI / 2.1} minPolarAngle={0.2} minDistance={5} maxDistance={32} />
             </Suspense>
           </Canvas>
         </div>

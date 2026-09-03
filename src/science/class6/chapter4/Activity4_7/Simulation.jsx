@@ -959,18 +959,18 @@ export default function Simulation({ onComplete, onNext }) {
           {/* Draggable / Fixed Objects Stage */}
           <div style={{ position: 'absolute', inset: 0 }}>
 
-            {/* Center Material Barrier Visual - Automatically Slides in from Left Container */}
+            {/* Center Material Barrier Visual - Natural Tabletop Placement Animation */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeMaterial}-${currentStage}`}
-                initial={{ x: -280, opacity: 0, scale: 0.85 }}
-                animate={{ x: 0, opacity: 1, scale: 1 }}
-                exit={{ x: 280, opacity: 0, scale: 0.85 }}
-                transition={{ type: 'spring', damping: 22, stiffness: 200 }}
+                initial={{ opacity: 0, y: -65, scale: 0.88 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -45, scale: 0.92 }}
+                transition={{ type: 'spring', damping: 24, stiffness: 280, mass: 0.8 }}
                 style={{
                   position: 'absolute',
                   left: isTreeStage ? 0 : centerX - (matWidth / 2),
-                  top: isTreeStage ? 0 : centerY - (matHeight / 2),
+                  top: isTreeStage ? 0 : centerY - (matHeight / 2) + (activeMaterial === 'cardboard' ? 12 : 0),
                   width: isTreeStage ? '100%' : undefined,
                   height: isTreeStage ? '100%' : undefined,
                   zIndex: 15,

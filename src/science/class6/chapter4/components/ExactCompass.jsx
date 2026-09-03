@@ -7,7 +7,9 @@ export default function ExactCompass({
   scale = 1,
   style = {},
   onClick,
-  onCenterClick
+  onCenterClick,
+  transition,
+  showThumbLoop = true
 }) {
   return (
     <div 
@@ -74,10 +76,55 @@ export default function ExactCompass({
             <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor="#000000" floodOpacity="0.4" />
           </filter>
 
+          {/* Thumb Loop Linear Antique Brass Gradient (Matching Compass Casing) */}
+          <linearGradient id="exactCompassThumbLoopGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+            <stop offset="0%" stopColor="#FFF2A3" />
+            <stop offset="18%" stopColor="#E6B743" />
+            <stop offset="45%" stopColor="#A87319" />
+            <stop offset="75%" stopColor="#6E440C" />
+            <stop offset="90%" stopColor="#452705" />
+            <stop offset="100%" stopColor="#2A1602" />
+          </linearGradient>
+
+          {/* Hinge Mounting Bracket Gradient */}
+          <linearGradient id="exactCompassHingeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#452705" />
+            <stop offset="25%" stopColor="#E6B743" />
+            <stop offset="50%" stopColor="#FFF8C4" />
+            <stop offset="75%" stopColor="#A87319" />
+            <stop offset="100%" stopColor="#2A1602" />
+          </linearGradient>
+
+          {/* Thumb Loop Drop Shadow */}
+          <filter id="exactCompassThumbLoopShadow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#000000" floodOpacity="0.45" />
+            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000000" floodOpacity="0.3" />
+          </filter>
+
           <filter id="exactCompassNeedleShadow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow dx="0" dy="8" stdDeviation="8" floodColor="#000000" floodOpacity="0.4" />
           </filter>
         </defs>
+
+        {/* 0. Top Brass Thumb Loop / Carry Ring (Behind Main Casing) */}
+        {showThumbLoop && (
+          <g filter="url(#exactCompassThumbLoopShadow)">
+            {/* Outer Rim Contour */}
+            <ellipse cx="150" cy="-26" rx="35" ry="33" fill="none" stroke="#1F1002" strokeWidth="1.5" />
+            {/* Main Volumetric Brass Loop */}
+            <ellipse cx="150" cy="-26" rx="29.5" ry="27.5" fill="none" stroke="url(#exactCompassThumbLoopGrad)" strokeWidth="11" />
+            {/* Top-Left Specular Highlight Sheen */}
+            <path
+              d="M 124 -36 A 29.5 27.5 0 0 1 176 -36"
+              fill="none"
+              stroke="#FFFAD2"
+              strokeWidth="2.2"
+              opacity="0.8"
+            />
+            {/* Inner Dark Contour */}
+            <ellipse cx="150" cy="-26" rx="24" ry="22" fill="none" stroke="#2A1602" strokeWidth="1.5" />
+          </g>
+        )}
 
         {/* 1. Heavy Polished Antique Brass Outer Casing */}
         <circle 
@@ -89,6 +136,41 @@ export default function ExactCompass({
           strokeWidth="3" 
           filter="url(#exactCompassCasingShadow)" 
         />
+
+        {/* Top Brass Hinge / Mounting Bracket (Locking Thumb Loop to Casing) */}
+        {showThumbLoop && (
+          <g>
+            {/* Bracket Base Block */}
+            <rect 
+              x="133" 
+              y="-4" 
+              width="34" 
+              height="16" 
+              rx="4" 
+              ry="4" 
+              fill="url(#exactCompassHingeGrad)" 
+              stroke="#1F1002" 
+              strokeWidth="2" 
+            />
+            {/* Stepped Inner Inset */}
+            <rect 
+              x="136" 
+              y="-2" 
+              width="28" 
+              height="12" 
+              rx="2.5" 
+              ry="2.5" 
+              fill="none" 
+              stroke="#FFF8C4" 
+              strokeWidth="1.2" 
+              opacity="0.6" 
+            />
+            {/* Center Pivot Brass Rivet Pin */}
+            <circle cx="150" cy="4" r="4.2" fill="url(#exactCompassPivotSphere)" stroke="#1F1002" strokeWidth="1.2" />
+            {/* Pivot Specular Dot */}
+            <circle cx="148.5" cy="2.5" r="1.3" fill="#FFFFFF" opacity="0.9" />
+          </g>
+        )}
 
         {/* 2. Stepped Bezel Rings */}
         <circle 
@@ -304,7 +386,7 @@ export default function ExactCompass({
       {/* 8. Rotating 3D Chiseled Magnetic Needle & Center Orb Pivot */}
       <motion.div
         animate={{ rotate: rotation }}
-        transition={{ type: 'spring', stiffness: 75, damping: 14 }}
+        transition={transition || { type: 'spring', stiffness: 75, damping: 14 }}
         style={{
           position: 'absolute',
           inset: 0,

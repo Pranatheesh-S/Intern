@@ -36,10 +36,10 @@ function CinematicCameraController({ stage, type }) {
       else if (stage === 3) { targetY = -0.80; targetZ = 4.5; targetFov = 40; }
       else if (stage === 4) { targetY = -0.65; targetZ = 5.2; targetFov = 43; }
     } else if (type === 'cardboard') {
-      if (stage === 1) { targetY = -0.75; targetZ = 4.4; targetFov = 40; }
-      else if (stage === 2) { targetY = -0.70; targetZ = 4.6; targetFov = 41; }
-      else if (stage === 3) { targetY = -0.70; targetZ = 4.6; targetFov = 41; }
-      else if (stage === 4) { targetY = -0.70; targetZ = 5.3; targetFov = 43; }
+      if (stage === 1) { targetY = -0.58; targetZ = 4.4; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.55; targetZ = 4.6; targetFov = 41; }
+      else if (stage === 3) { targetY = -0.55; targetZ = 4.6; targetFov = 41; }
+      else if (stage === 4) { targetY = -0.55; targetZ = 5.3; targetFov = 43; }
     }
 
     // Smooth cinematic damping
@@ -57,6 +57,7 @@ function CinematicCameraController({ stage, type }) {
 
 // Stable stage wrapper for clear, stationary 3D presentation
 function BarrierModelWrapper({ type, stage = 1, thickness = 1 }) {
+  if (!type) return null;
   return (
     <group rotation={[0, 0, 0]}>
       {type === 'wood' && <TreeBarrier stage={stage} thickness={thickness} />}
@@ -67,14 +68,9 @@ function BarrierModelWrapper({ type, stage = 1, thickness = 1 }) {
   );
 }
 
-// 3D Loading Fallback
+// 3D Loading Fallback: invisible during texture transition to avoid flashing boxes
 function BarrierLoader() {
-  return (
-    <mesh position={[0, 0, 0]}>
-      <boxGeometry args={[0.8, 1.4, 0.8]} />
-      <meshStandardMaterial color="#38bdf8" wireframe />
-    </mesh>
-  );
+  return null;
 }
 
 const BADGE_CONFIG = {
@@ -104,7 +100,7 @@ const BADGE_CONFIG = {
   }
 };
 
-export default function Barrier3DCanvas({ type = 'wood', treeStage = 1, stage = null, thickness = 1, width = 360, height = 420 }) {
+export default function Barrier3DCanvas({ type = null, treeStage = 1, stage = null, thickness = 1, width = 360, height = 420 }) {
   const currentStage = stage !== null ? stage : (treeStage || 1);
 
   return (
@@ -177,11 +173,13 @@ export default function Barrier3DCanvas({ type = 'wood', treeStage = 1, stage = 
                     ? -1.68
                     : type === 'plastic'
                       ? (currentStage === 1 ? -2.8 : currentStage === 2 ? -3.1 : currentStage === 3 ? -3.3 : -3.4)
-                      : -1.08,
+                      : type === 'cardboard'
+                        ? (currentStage === 1 ? -2.85 : currentStage === 2 ? -3.05 : currentStage === 3 ? -3.15 : -3.5)
+                        : -1.08,
                   0
                 ]}
                 opacity={0.45}
-                scale={type === 'plastic' ? 5.2 : 4.5}
+                scale={type === 'plastic' || type === 'cardboard' ? 5.2 : 4.5}
                 blur={2.2}
                 far={3.8}
                 color="#0f172a"

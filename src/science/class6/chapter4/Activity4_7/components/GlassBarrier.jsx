@@ -9,11 +9,18 @@ import * as THREE from 'three';
  * - Stage 4: Glass Jar (Storage Canister with Wire Clip Lock) -> /assets/glass_jar.png
  */
 
-// ─── Offscreen Canvas Texture Processor for pristine studio-grade alpha transparency ───
+// ─── Offscreen Canvas Texture Cache & Processor for pristine studio-grade alpha transparency ───
+const glassTextureCache = new Map();
+
 function useGlassTexture(url) {
-  const [texture, setTexture] = useState(null);
+  const [texture, setTexture] = useState(() => glassTextureCache.get(url) || null);
 
   useEffect(() => {
+    if (glassTextureCache.has(url)) {
+      setTexture(glassTextureCache.get(url));
+      return;
+    }
+
     let isMounted = true;
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -59,12 +66,12 @@ function useGlassTexture(url) {
       tex.magFilter = THREE.LinearFilter;
       tex.needsUpdate = true;
 
+      glassTextureCache.set(url, tex);
       setTexture(tex);
     };
 
     return () => {
       isMounted = false;
-      if (texture) texture.dispose();
     };
   }, [url]);
 
@@ -74,13 +81,15 @@ function useGlassTexture(url) {
 // ─── Stage 1: Small Glass (Compact Thick-Base Faceted Tumbler) ───
 function SmallGlassMesh({ thickness = 1 }) {
   const texture = useGlassTexture('/assets/glass_small.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 3.0 * scale;
   const width = 3.0 * scale;
 
   return (
     <group position={[0, -2.7, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -99,13 +108,15 @@ function SmallGlassMesh({ thickness = 1 }) {
 // ─── Stage 2: Big Glass (Tall Crystal Cut-Glass Tumbler) ───
 function BigGlassMesh({ thickness = 1 }) {
   const texture = useGlassTexture('/assets/glass_tall.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 4.2 * scale;
   const width = 2.36 * scale;
 
   return (
     <group position={[0, -3.2, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -124,13 +135,15 @@ function BigGlassMesh({ thickness = 1 }) {
 // ─── Stage 3: Glass Bowl (Clear Pyrex Crystal Glass Bowl) ───
 function GlassBowlMesh({ thickness = 1 }) {
   const texture = useGlassTexture('/assets/glass_bowl.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 2.8 * scale;
   const width = 3.3 * scale;
 
   return (
     <group position={[0, -2.6, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
@@ -149,13 +162,15 @@ function GlassBowlMesh({ thickness = 1 }) {
 // ─── Stage 4: Glass Jar (Storage Canister with Wire Clamp Lid) ───
 function GlassJarMesh({ thickness = 1 }) {
   const texture = useGlassTexture('/assets/glass_jar.png');
+  if (!texture) return null;
+
   const scale = 1 + (thickness - 1) * 0.14;
   const height = 3.8 * scale;
   const width = 3.8 * scale;
 
   return (
     <group position={[0, -3.1, 0]}>
-      <mesh position={[0, height / 2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
