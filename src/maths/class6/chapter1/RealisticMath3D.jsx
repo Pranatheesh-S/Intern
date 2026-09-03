@@ -1,7 +1,8 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Html, Text, ContactShadows } from '@react-three/drei';
+import { Html, Text, ContactShadows, Sparkles as DreiSparkles } from '@react-three/drei';
 import * as THREE from 'three';
+import { CALENDAR_MAGIC_DATASET, getMonthCalendarGrid, getValidCentersForMonth, GROCERY_MARKET_DATASET } from './data';
 
 
 // =======================================================================
@@ -261,14 +262,384 @@ export function BotanicalFlower3D({ flowerKey = 'lily' }) {
 // 2. ULTRA-REALISTIC FRONT-FACING SUPERMARKET POS BILLING & PRODUCE SCALE
 // Zero-overlap, photorealistic front view with live digital POS and thermal receipt
 // =======================================================================
-export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep = 0, onCheckoutComplete }) {
-  const costPotatoes = kgPotatoes * 30;
-  const costTomatoes = kgTomatoes * 50;
-  const totalCost = costPotatoes + costTomatoes;
-  const totalWeight = kgPotatoes + kgTomatoes;
+// Helper component to render ultra-realistic 3D produce types in the shopping basket
+function ProduceItem3D({ type, index, isLeft }) {
+  const row = index % 3;
+  const col = Math.floor(index / 3) % 2;
+  const layer = Math.floor(index / 6);
+  const pz = (row - 1) * 0.22;
+  const px = (col - 0.5) * 0.18;
+  const py = layer * 0.10;
+  const rotY = index * 1.35;
+  const rotX = (index % 2 === 0 ? 0.08 : -0.06);
+
+  switch (type) {
+    case 'apple':
+      // Shimla Royal Apple (Tapered crown, deep calyx indent, curved woody stalk & orchard leaf)
+      return (
+        <group position={[px, 0.08 + py, pz]} rotation={[rotX, rotY, 0.06]}>
+          {/* Main Tapered Apple Body */}
+          <mesh castShadow receiveShadow scale={[1.08, 1.02, 1.08]}>
+            <sphereGeometry args={[0.088, 22, 22]} />
+            <meshPhysicalMaterial
+              color="#b91c1c"
+              roughness={0.16}
+              clearcoat={0.85}
+              clearcoatRoughness={0.08}
+              metalness={0.02}
+            />
+          </mesh>
+          {/* Warm Sun-Blush Underside */}
+          <mesh position={[0.02, -0.02, 0]} scale={[0.85, 0.85, 0.85]}>
+            <sphereGeometry args={[0.075, 14, 14]} />
+            <meshBasicMaterial color="#f59e0b" transparent opacity={0.35} />
+          </mesh>
+          {/* Top Stem Cavity Indent */}
+          <mesh position={[0, 0.085, 0]} scale={[1, 0.35, 1]}>
+            <sphereGeometry args={[0.03, 12, 12]} />
+            <meshStandardMaterial color="#451a03" roughness={0.9} />
+          </mesh>
+          {/* Curved Woody Stem */}
+          <mesh position={[0.006, 0.105, 0]} rotation={[0.15, 0, 0.2]}>
+            <cylinderGeometry args={[0.004, 0.005, 0.045, 8]} />
+            <meshStandardMaterial color="#3e1f07" roughness={0.85} />
+          </mesh>
+          {/* Fresh Orchard Green Leaf */}
+          <mesh position={[0.022, 0.112, 0.012]} rotation={[0.4, 0.2, -0.5]} scale={[1.4, 0.4, 0.8]}>
+            <sphereGeometry args={[0.018, 10, 10]} />
+            <meshStandardMaterial color="#15803d" roughness={0.4} />
+          </mesh>
+        </group>
+      );
+
+    case 'orange':
+      // Nagpur Sweet Orange (Pebbled citrus rind, equatorial swell, star button stem)
+      return (
+        <group position={[px, 0.08 + py, pz]} rotation={[rotX, rotY, 0]}>
+          {/* Main Citrus Sphere with Micro-Rind Texture */}
+          <mesh castShadow receiveShadow scale={[1.05, 0.98, 1.05]}>
+            <sphereGeometry args={[0.09, 20, 20]} />
+            <meshPhysicalMaterial
+              color="#f97316"
+              roughness={0.68}
+              metalness={0.02}
+              clearcoat={0.35}
+              clearcoatRoughness={0.25}
+            />
+          </mesh>
+          {/* Stem Button Depressed Calyx */}
+          <mesh position={[0, 0.086, 0]}>
+            <cylinderGeometry args={[0.016, 0.022, 0.008, 10]} />
+            <meshStandardMaterial color="#c2410c" roughness={0.8} />
+          </mesh>
+          {/* 5-Lobe Green Star Button */}
+          {Array.from({ length: 5 }).map((_, si) => (
+            <mesh
+              key={si}
+              position={[0, 0.09, 0]}
+              rotation={[0, (si * 2 * Math.PI) / 5, 0]}
+            >
+              <coneGeometry args={[0.006, 0.018, 4]} />
+              <meshStandardMaterial color="#14532d" roughness={0.6} />
+            </mesh>
+          ))}
+        </group>
+      );
+
+    case 'onion':
+      // Nashik Red Onion (Tear-drop bulb, papery purple tunic, fibrous root beard, dry stem)
+      return (
+        <group position={[px, 0.08 + py, pz]} rotation={[0.1, rotY, 0.12]}>
+          {/* Swollen Tear-Drop Lower Bulb */}
+          <mesh castShadow receiveShadow scale={[1.08, 1.08, 1.08]}>
+            <sphereGeometry args={[0.085, 20, 20]} />
+            <meshPhysicalMaterial
+              color="#701a75"
+              roughness={0.26}
+              clearcoat={0.7}
+              clearcoatRoughness={0.12}
+              metalness={0.12}
+            />
+          </mesh>
+          {/* Vertical Papery Skin Striations */}
+          {Array.from({ length: 8 }).map((_, ri) => (
+            <mesh
+              key={ri}
+              rotation={[0, (ri * Math.PI) / 4, 0]}
+              scale={[1.09, 1.09, 1.09]}
+            >
+              <torusGeometry args={[0.084, 0.002, 6, 20]} />
+              <meshBasicMaterial color="#86198f" transparent opacity={0.4} />
+            </mesh>
+          ))}
+          {/* Pinched Papery Neck & Dry Stem Tip */}
+          <mesh position={[0, 0.09, 0]} rotation={[0.05, 0, 0.1]}>
+            <coneGeometry args={[0.024, 0.065, 10]} />
+            <meshStandardMaterial color="#a21caf" roughness={0.5} />
+          </mesh>
+          <mesh position={[0.006, 0.125, 0]}>
+            <cylinderGeometry args={[0.005, 0.008, 0.025, 6]} />
+            <meshStandardMaterial color="#f5d0fe" roughness={0.8} />
+          </mesh>
+          {/* Dry Basal Root Beard Plate */}
+          <mesh position={[0, -0.084, 0]}>
+            <cylinderGeometry args={[0.026, 0.028, 0.012, 10]} />
+            <meshStandardMaterial color="#78350f" roughness={0.9} />
+          </mesh>
+          {Array.from({ length: 7 }).map((_, rti) => (
+            <mesh
+              key={`root-${rti}`}
+              position={[(rti % 3 - 1) * 0.012, -0.096, (Math.floor(rti / 3) - 1) * 0.012]}
+              rotation={[0.2, rti * 0.9, 0]}
+            >
+              <cylinderGeometry args={[0.002, 0.002, 0.02, 4]} />
+              <meshStandardMaterial color="#d97706" roughness={0.95} />
+            </mesh>
+          ))}
+        </group>
+      );
+
+    case 'carrot':
+      // Ooty Crunchy Carrot (Natural tapered taproot, ringed growth rings, feathery leafy greens)
+      return (
+        <group position={[px, 0.06 + py, pz]} rotation={[0.42, rotY, 0.22]}>
+          {/* Tapered Conical Taproot */}
+          <mesh castShadow receiveShadow position={[0, -0.05, 0]} rotation={[Math.PI, 0, 0]}>
+            <coneGeometry args={[0.042, 0.26, 16]} />
+            <meshStandardMaterial color="#ea580c" roughness={0.42} metalness={0.04} />
+          </mesh>
+          {/* Rounded Tip */}
+          <mesh position={[0, -0.18, 0]}>
+            <sphereGeometry args={[0.008, 8, 8]} />
+            <meshStandardMaterial color="#c2410c" roughness={0.5} />
+          </mesh>
+          {/* Horizontal Growth Ridge Rings */}
+          {[-0.01, -0.05, -0.09, -0.13].map((gy, gi) => (
+            <mesh key={gi} position={[0, gy, 0]} scale={[1.03, 1, 1.03]}>
+              <torusGeometry args={[0.038 + gy * 0.12, 0.003, 6, 16]} />
+              <meshStandardMaterial color="#c2410c" roughness={0.5} />
+            </mesh>
+          ))}
+          {/* Flat Crown Shoulder */}
+          <mesh position={[0, 0.08, 0]}>
+            <cylinderGeometry args={[0.038, 0.042, 0.015, 14]} />
+            <meshStandardMaterial color="#9a3412" roughness={0.6} />
+          </mesh>
+          {/* Feathery Leafy Carrot Greens */}
+          <group position={[0, 0.095, 0]}>
+            {[-0.2, 0, 0.25].map((ang, li) => (
+              <mesh key={li} position={[ang * 0.06, 0.03, 0]} rotation={[0.1, 0, ang]}>
+                <cylinderGeometry args={[0.004, 0.007, 0.07, 6]} />
+                <meshStandardMaterial color="#15803d" roughness={0.45} />
+              </mesh>
+            ))}
+            <mesh position={[0, 0.065, 0]} scale={[1.5, 0.6, 0.6]}>
+              <sphereGeometry args={[0.022, 10, 10]} />
+              <meshStandardMaterial color="#22c55e" roughness={0.4} />
+            </mesh>
+          </group>
+        </group>
+      );
+
+    case 'corn':
+      // Golden Sweet Corn (Kernels cob, wrapping pale green husk leaves peeling open, silk strands)
+      return (
+        <group position={[px, 0.06 + py, pz]} rotation={[0.18, rotY, 0.28]}>
+          {/* Golden Kernel Cob */}
+          <mesh castShadow receiveShadow>
+            <cylinderGeometry args={[0.042, 0.046, 0.24, 16]} />
+            <meshStandardMaterial color="#facc15" roughness={0.4} metalness={0.06} />
+          </mesh>
+          {/* Kernel Beaded Rows Pattern */}
+          {Array.from({ length: 6 }).map((_, ki) => (
+            <mesh key={ki} position={[0, -0.08 + ki * 0.032, 0]}>
+              <torusGeometry args={[0.044, 0.004, 6, 16]} />
+              <meshStandardMaterial color="#eab308" roughness={0.35} />
+            </mesh>
+          ))}
+          {/* Base Cut Stalk Shank */}
+          <mesh position={[0, -0.13, 0]}>
+            <cylinderGeometry args={[0.016, 0.02, 0.035, 10]} />
+            <meshStandardMaterial color="#bbf7d0" roughness={0.7} />
+          </mesh>
+          {/* Outer Wrapping Jade Husk Leaves Peeling Open */}
+          <mesh position={[-0.018, -0.02, 0.01]} rotation={[0.1, 0.2, 0.15]}>
+            <coneGeometry args={[0.056, 0.22, 8, 1, true]} />
+            <meshStandardMaterial color="#86efac" roughness={0.55} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0.02, -0.03, -0.01]} rotation={[-0.1, -0.3, -0.15]}>
+            <coneGeometry args={[0.054, 0.20, 8, 1, true]} />
+            <meshStandardMaterial color="#4ade80" roughness={0.55} side={THREE.DoubleSide} />
+          </mesh>
+          {/* Corn Silk Tufts at Tip */}
+          <mesh position={[0, 0.125, 0]}>
+            <coneGeometry args={[0.015, 0.035, 6]} />
+            <meshStandardMaterial color="#92400e" roughness={0.9} />
+          </mesh>
+        </group>
+      );
+
+    case 'peas':
+      // Tender Green Peas (Crescent curved pod with 4 distinctly bulging peas, dorsal seam & stem)
+      return (
+        <group position={[px, 0.06 + py, pz]} rotation={[0.22, rotY, 0.12]}>
+          {/* Curved Pea Pod Shell */}
+          <mesh castShadow receiveShadow scale={[0.42, 1.25, 0.32]}>
+            <capsuleGeometry args={[0.042, 0.16, 10, 16]} />
+            <meshStandardMaterial color="#16a34a" roughness={0.3} metalness={0.03} />
+          </mesh>
+          {/* Dorsal Seam Line */}
+          <mesh position={[0.018, 0, 0]} scale={[0.05, 1.28, 0.34]}>
+            <capsuleGeometry args={[0.040, 0.16, 6, 10]} />
+            <meshStandardMaterial color="#22c55e" roughness={0.4} />
+          </mesh>
+          {/* 4 Bulging Peas Visible Along the Pod */}
+          {[-0.075, -0.025, 0.025, 0.075].map((pyBump, pbi) => (
+            <mesh key={pbi} position={[0, pyBump, 0]} scale={[1.18, 0.95, 1.18]}>
+              <sphereGeometry args={[0.016, 10, 10]} />
+              <meshStandardMaterial color="#22c55e" roughness={0.35} />
+            </mesh>
+          ))}
+          {/* Stem Cap Attachment */}
+          <mesh position={[0, -0.115, 0]}>
+            <coneGeometry args={[0.014, 0.022, 6]} />
+            <meshStandardMaterial color="#15803d" roughness={0.6} />
+          </mesh>
+        </group>
+      );
+
+    case 'tomato':
+      // Heirloom Tomato (Lobed ribs, radiant clearcoat sheen, 5-star green calyx & organic stem)
+      return (
+        <group position={[px, 0.075 + py, pz]} rotation={[rotX, rotY, 0]}>
+          {/* Central Tomato Core */}
+          <mesh castShadow receiveShadow scale={[1.15, 0.88, 1.15]}>
+            <sphereGeometry args={[0.092, 22, 22]} />
+            <meshPhysicalMaterial
+              color="#dc2626"
+              roughness={0.11}
+              clearcoat={0.94}
+              clearcoatRoughness={0.04}
+              metalness={0.02}
+            />
+          </mesh>
+          {/* Subtle Heirloom Lobes for Organic Texture */}
+          {Array.from({ length: 4 }).map((_, li) => (
+            <mesh
+              key={li}
+              position={[Math.cos((li * Math.PI) / 2) * 0.025, 0, Math.sin((li * Math.PI) / 2) * 0.025]}
+              scale={[0.88, 0.84, 0.88]}
+            >
+              <sphereGeometry args={[0.082, 14, 14]} />
+              <meshPhysicalMaterial
+                color="#ea580c"
+                transparent
+                opacity={0.3}
+                roughness={0.15}
+                clearcoat={0.8}
+              />
+            </mesh>
+          ))}
+          {/* Concave Stem Indent */}
+          <mesh position={[0, 0.080, 0]} scale={[1, 0.25, 1]}>
+            <sphereGeometry args={[0.028, 10, 10]} />
+            <meshStandardMaterial color="#15803d" roughness={0.7} />
+          </mesh>
+          {/* 5-Pointed Star Calyx & Stem */}
+          <group position={[0, 0.082, 0]}>
+            {Array.from({ length: 5 }).map((_, sIdx) => (
+              <group key={sIdx} rotation={[0, (sIdx * 2 * Math.PI) / 5, 0]}>
+                <mesh position={[0.028, 0.008, 0]} rotation={[0, 0, -0.32]}>
+                  <coneGeometry args={[0.008, 0.045, 4]} />
+                  <meshStandardMaterial color="#16a34a" roughness={0.4} />
+                </mesh>
+              </group>
+            ))}
+            <mesh position={[0.004, 0.024, 0]} rotation={[0.12, 0, 0.22]}>
+              <cylinderGeometry args={[0.005, 0.006, 0.045, 6]} />
+              <meshStandardMaterial color="#15803d" roughness={0.5} />
+            </mesh>
+          </group>
+        </group>
+      );
+
+    case 'potato':
+    default:
+      // Russet Burbank Potato (Organic irregular tuber, earthy matte skin, 5 dormant sprout eyes)
+      return (
+        <group position={[px, 0.075 + py, pz]} rotation={[0.12, rotY, 0.16]}>
+          {/* Main Organic Elongated Tuber */}
+          <mesh castShadow receiveShadow scale={[1.40, 0.94, 1.06]}>
+            <sphereGeometry args={[0.088, 20, 20]} />
+            <meshStandardMaterial
+              color="#8c5a24"
+              roughness={0.92}
+              metalness={0.02}
+            />
+          </mesh>
+          {/* Secondary Organic Asymmetry Lump */}
+          <mesh position={[0.03, 0.015, -0.015]} scale={[0.85, 0.78, 0.88]}>
+            <sphereGeometry args={[0.072, 14, 14]} />
+            <meshStandardMaterial color="#78481a" roughness={0.95} />
+          </mesh>
+          {/* Natural Soil Dust Patch */}
+          <mesh position={[-0.04, -0.02, 0.02]} scale={[0.7, 0.6, 0.7]}>
+            <sphereGeometry args={[0.06, 10, 10]} />
+            <meshStandardMaterial color="#5c3a1e" roughness={0.98} />
+          </mesh>
+          {/* Dormant Sprout Eyes / Dimples */}
+          {[
+            [-0.07, 0.04, 0.03],
+            [0.05, 0.05, -0.02],
+            [-0.01, 0.065, 0.04],
+            [0.06, -0.03, 0.04],
+            [-0.04, -0.04, -0.03]
+          ].map(([dx, dy, dz], dIdx) => (
+            <group key={dIdx} position={[dx, dy, dz]}>
+              <mesh>
+                <sphereGeometry args={[0.007, 6, 6]} />
+                <meshStandardMaterial color="#381e05" roughness={0.98} />
+              </mesh>
+              <mesh position={[0.002, 0.002, 0]}>
+                <sphereGeometry args={[0.003, 4, 4]} />
+                <meshStandardMaterial color="#d4d4d8" roughness={0.5} />
+              </mesh>
+            </group>
+          ))}
+        </group>
+      );
+  }
+}
+
+export function MarketProduce3D({
+  cartIdx = 0,
+  kgPotatoes = 3,
+  kgTomatoes = 2,
+  kgItem1,
+  kgItem2,
+  checkoutStep = 0,
+  onCheckoutComplete
+}) {
+  const activeCart = GROCERY_MARKET_DATASET[cartIdx] || GROCERY_MARKET_DATASET[0];
+  const item1 = activeCart.item1;
+  const item2 = activeCart.item2;
+  const qty1 = kgItem1 !== undefined ? kgItem1 : (kgPotatoes !== undefined ? kgPotatoes : item1.defaultKg);
+  const qty2 = kgItem2 !== undefined ? kgItem2 : (kgTomatoes !== undefined ? kgTomatoes : item2.defaultKg);
+  const cost1 = qty1 * item1.rate;
+  const cost2 = qty2 * item2.rate;
+  const totalCost = cost1 + cost2;
+  const totalWeight = qty1 + qty2;
 
   const receiptPaperRef = useRef();
   const printProgress = useRef(checkoutStep > 0 ? 1 : 0);
+
+  const counterTexture = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+    const tex = loader.load('/hardwood_texture.jpg');
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(3, 1.5);
+    return tex;
+  }, []);
 
   useFrame((state, delta) => {
     const target = checkoutStep > 0 ? 1.0 : 0.0;
@@ -279,10 +650,6 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
         receiptPaperRef.current.visible = false;
       } else {
         receiptPaperRef.current.visible = true;
-        // Printer slot is at y = 0.215. Paper total height is 0.68.
-        // As p goes from 0 -> 1:
-        // Position y rises from 0.215 to 0.215 + 0.34 * p = 0.555
-        // Scale y goes from 0.01 to p
         receiptPaperRef.current.position.y = 0.215 + 0.34 * p;
         receiptPaperRef.current.scale.set(1, Math.max(0.01, p), 1);
       }
@@ -291,65 +658,90 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
 
   return (
     <group position={[0, -0.34, 0]}>
-      {/* Studio Lighting */}
-      <ambientLight intensity={1.8} color="#f8fafc" />
-      <directionalLight position={[4, 8, 6]} intensity={2.6} color="#ffffff" castShadow />
-      <directionalLight position={[-4, 6, 2]} intensity={1.5} color="#e0f2fe" />
-      <pointLight position={[0, 1.2, 1.0]} intensity={1.8} color="#fef08a" distance={3.5} />
+      {/* Studio Lighting with Warm Ambiance */}
+      <ambientLight intensity={1.6} color="#ffffff" />
+      <directionalLight position={[4, 8, 6]} intensity={2.2} color="#ffffff" castShadow />
+      <directionalLight position={[-4, 6, 2]} intensity={1.4} color="#e0f2fe" />
+      <pointLight position={[0, 1.4, 1.2]} intensity={2.2} color="#fef3c7" distance={5} />
+      <pointLight position={[0, 2.0, -1.0]} intensity={2.4} color="#38bdf8" distance={6} />
+
+      {/* ================= 0. SUPERMARKET STORE INTERIOR BACKDROP WALL ================= */}
+      <group position={[0, 0.6, -0.9]}>
+        {/* Soft Retail Light Wall - Covers Full Background */}
+        <mesh receiveShadow>
+          <boxGeometry args={[9.2, 4.5, 0.08]} />
+          <meshStandardMaterial color="#f8fafc" roughness={0.75} />
+        </mesh>
+        {/* Warm Architectural Wood Slats */}
+        {[-3.6, -2.4, -1.2, 1.2, 2.4, 3.6].map((wx, idx) => (
+          <mesh key={`slat-${idx}`} position={[wx, 0, 0.045]}>
+            <boxGeometry args={[0.08, 4.5, 0.02]} />
+            <meshStandardMaterial color="#b45309" roughness={0.4} metalness={0.2} />
+          </mesh>
+        ))}
+        {/* Subtle Horizontal Retail Accent Trim */}
+        <mesh position={[0, 0.95, 0.045]}>
+          <boxGeometry args={[9.2, 0.04, 0.015]} />
+          <meshStandardMaterial color="#0284c7" metalness={0.7} roughness={0.3} />
+        </mesh>
+      </group>
 
       {/* ================= 1. FRONT-FACING SUPERMARKET CHECKOUT COUNTER ================= */}
       <group position={[0, -0.22, 0]}>
-        {/* Sanitary White Solid Marble Countertop */}
+        {/* Warm Natural Oak Countertop */}
         <mesh position={[0, 0, 0]} receiveShadow castShadow>
-          <boxGeometry args={[4.6, 0.12, 2.3]} />
+          <boxGeometry args={[4.8, 0.12, 2.4]} />
           <meshPhysicalMaterial
-            color="#f8fafc"
-            roughness={0.15}
-            metalness={0.05}
-            clearcoat={0.7}
-            clearcoatRoughness={0.1}
+            map={counterTexture}
+            bumpMap={counterTexture}
+            bumpScale={0.03}
+            color="#d97706"
+            roughness={0.35}
+            metalness={0.1}
+            clearcoat={0.5}
+            clearcoatRoughness={0.15}
           />
         </mesh>
         {/* Brushed Stainless Steel Front Edge Bezel */}
-        <mesh position={[0, 0, 1.155]}>
-          <boxGeometry args={[4.62, 0.13, 0.03]} />
+        <mesh position={[0, 0, 1.205]}>
+          <boxGeometry args={[4.82, 0.13, 0.03]} />
           <meshStandardMaterial color="#94a3b8" metalness={0.92} roughness={0.18} />
         </mesh>
         {/* Dark Slate Counter Base Wall */}
         <mesh position={[0, -0.7, 0]} receiveShadow>
-          <boxGeometry args={[4.4, 1.28, 2.1]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.6} />
+          <boxGeometry args={[4.6, 1.28, 2.2]} />
+          <meshStandardMaterial color="#1e293b" roughness={0.6} />
         </mesh>
       </group>
 
-      {/* ================= 2. LEFT: DIGITAL WEIGHING SCALE & PRODUCE BASKET (X = -1.48) ================= */}
-      <group position={[-1.48, -0.06, 0.1]}>
+      {/* ================= 2. LEFT: DIGITAL WEIGHING SCALE & PRODUCE BASKET (X = -1.42) ================= */}
+      <group position={[-1.42, -0.06, 0.08]}>
         {/* Scale Base Platform */}
         <mesh position={[0, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[1.26, 0.08, 1.26]} />
+          <boxGeometry args={[1.05, 0.08, 1.05]} />
           <meshPhysicalMaterial color="#334155" metalness={0.8} roughness={0.2} />
         </mesh>
         {/* Polished Stainless Steel Weighing Platter */}
         <mesh position={[0, 0.05, 0]} receiveShadow>
-          <boxGeometry args={[1.2, 0.025, 1.2]} />
+          <boxGeometry args={[1.00, 0.025, 1.00]} />
           <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.1} />
         </mesh>
 
         {/* Digital LED Weight Display Panel (Facing Front) */}
-        <group position={[0, 0.01, 0.64]}>
+        <group position={[0, 0.01, 0.54]}>
           {/* Bezel frame */}
           <mesh>
-            <boxGeometry args={[1.16, 0.1, 0.03]} />
+            <boxGeometry args={[0.96, 0.09, 0.03]} />
             <meshBasicMaterial color="#020617" />
           </mesh>
           {/* Active green LED glow border */}
           <mesh position={[0, 0, 0.016]}>
-            <planeGeometry args={[1.12, 0.08]} />
+            <planeGeometry args={[0.92, 0.07]} />
             <meshBasicMaterial color="#064e3b" />
           </mesh>
           {/* Main Net Weight readout */}
-          <Text position={[0, 0.008, 0.022]} fontSize={0.052} color="#4ade80" anchorX="center" anchorY="middle">
-            {`NET WT: ${totalWeight}.00 kg  |  ₹${totalCost}`}
+          <Text position={[0, 0.008, 0.022]} fontSize={0.046} color="#4ade80" fontWeight="900" anchorX="center" anchorY="middle">
+            {`NET WT: ${totalWeight}.00 kg  |  TOTAL: ₹${totalCost}`}
           </Text>
         </group>
 
@@ -357,30 +749,27 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
         <group position={[0, 0.06, 0]}>
           {/* Basket Bottom Frame */}
           <mesh position={[0, 0.01, 0]} receiveShadow>
-            <boxGeometry args={[1.14, 0.02, 0.98]} />
+            <boxGeometry args={[0.94, 0.02, 0.82]} />
             <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} />
           </mesh>
 
-          {/* Chrome Top Border Rim with Vibrant Teal Corner Bumpers */}
-          <group position={[0, 0.32, 0]}>
-            {/* Front/Back Top Rails */}
-            {[-0.49, 0.49].map((rz, rIdx) => (
+          {/* Chrome Top Border Rim with Corner Bumpers */}
+          <group position={[0, 0.28, 0]}>
+            {[-0.41, 0.41].map((rz, rIdx) => (
               <mesh key={`rail-fb-${rIdx}`} position={[0, 0, rz]} rotation={[0, 0, Math.PI / 2]} castShadow>
-                <cylinderGeometry args={[0.012, 0.012, 1.16, 16]} />
+                <cylinderGeometry args={[0.010, 0.010, 0.96, 16]} />
                 <meshStandardMaterial color="#e2e8f0" metalness={0.96} roughness={0.08} />
               </mesh>
             ))}
-            {/* Left/Right Top Rails */}
-            {[-0.57, 0.57].map((rx, rIdx) => (
+            {[-0.47, 0.47].map((rx, rIdx) => (
               <mesh key={`rail-lr-${rIdx}`} position={[rx, 0, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-                <cylinderGeometry args={[0.012, 0.012, 0.98, 16]} />
+                <cylinderGeometry args={[0.010, 0.010, 0.82, 16]} />
                 <meshStandardMaterial color="#e2e8f0" metalness={0.96} roughness={0.08} />
               </mesh>
             ))}
-            {/* 4 Molded Protective Corner Bumpers */}
-            {[[-0.57, -0.49], [0.57, -0.49], [-0.57, 0.49], [0.57, 0.49]].map(([cx, cz], cIdx) => (
+            {[[-0.47, -0.41], [0.47, -0.41], [-0.47, 0.41], [0.47, 0.41]].map(([cx, cz], cIdx) => (
               <mesh key={`bumper-${cIdx}`} position={[cx, 0, cz]}>
-                <sphereGeometry args={[0.022, 12, 12]} />
+                <sphereGeometry args={[0.018, 12, 12]} />
                 <meshPhysicalMaterial color="#0d9488" roughness={0.2} clearcoat={0.8} />
               </mesh>
             ))}
@@ -388,15 +777,15 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
 
           {/* Vertical Wire Ribs */}
           {Array.from({ length: 8 }).map((_, vi) => {
-            const vx = -0.48 + vi * 0.137;
+            const vx = -0.40 + vi * 0.114;
             return (
               <group key={`v-rib-${vi}`}>
-                <mesh position={[vx, 0.16, -0.49]} castShadow>
-                  <cylinderGeometry args={[0.006, 0.006, 0.32, 8]} />
+                <mesh position={[vx, 0.14, -0.41]} castShadow>
+                  <cylinderGeometry args={[0.005, 0.005, 0.28, 8]} />
                   <meshStandardMaterial color="#cbd5e1" metalness={0.94} roughness={0.15} />
                 </mesh>
-                <mesh position={[vx, 0.16, 0.49]} castShadow>
-                  <cylinderGeometry args={[0.006, 0.006, 0.32, 8]} />
+                <mesh position={[vx, 0.14, 0.41]} castShadow>
+                  <cylinderGeometry args={[0.005, 0.005, 0.28, 8]} />
                   <meshStandardMaterial color="#cbd5e1" metalness={0.94} roughness={0.15} />
                 </mesh>
               </group>
@@ -404,119 +793,47 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
           })}
 
           {/* Horizontal Perimeter Wire Rings */}
-          {[0.1, 0.21].map((hy, hi) => (
+          {[0.09, 0.18].map((hy, hi) => (
             <group key={`h-ring-${hi}`} position={[0, hy, 0]}>
-              {[-0.49, 0.49].map((hz, hzi) => (
+              {[-0.41, 0.41].map((hz, hzi) => (
                 <mesh key={`hfb-${hzi}`} position={[0, 0, hz]} rotation={[0, 0, Math.PI / 2]}>
-                  <cylinderGeometry args={[0.006, 0.006, 1.14, 8]} />
+                  <cylinderGeometry args={[0.005, 0.005, 0.94, 8]} />
                   <meshStandardMaterial color="#cbd5e1" metalness={0.94} roughness={0.15} />
                 </mesh>
               ))}
-              {[-0.57, 0.57].map((hx, hxi) => (
+              {[-0.47, 0.47].map((hx, hxi) => (
                 <mesh key={`hlr-${hxi}`} position={[hx, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-                  <cylinderGeometry args={[0.006, 0.006, 0.98, 8]} />
+                  <cylinderGeometry args={[0.005, 0.005, 0.82, 8]} />
                   <meshStandardMaterial color="#cbd5e1" metalness={0.94} roughness={0.15} />
                 </mesh>
               ))}
             </group>
           ))}
 
-          {/* Dual Folding Rubberized Basket Handles */}
-          <group position={[0, 0.34, 0]}>
-            {/* Front Folded Handle */}
-            <mesh position={[0, 0.02, 0.42]} rotation={[0.5, 0, 0]}>
-              <torusGeometry args={[0.26, 0.014, 12, 24, Math.PI]} />
-              <meshPhysicalMaterial color="#0d9488" roughness={0.3} clearcoat={0.6} />
-            </mesh>
-            {/* Back Folded Handle */}
-            <mesh position={[0, 0.02, -0.42]} rotation={[-0.5, 0, 0]}>
-              <torusGeometry args={[0.26, 0.014, 12, 24, Math.PI]} />
-              <meshPhysicalMaterial color="#0d9488" roughness={0.3} clearcoat={0.6} />
-            </mesh>
-          </group>
-
           {/* Central Produce Divider Wire Slat */}
-          <mesh position={[0, 0.15, 0]}>
-            <boxGeometry args={[0.018, 0.26, 0.96]} />
+          <mesh position={[0, 0.13, 0]}>
+            <boxGeometry args={[0.016, 0.24, 0.80]} />
             <meshStandardMaterial color="#78350f" roughness={0.7} />
           </mesh>
 
-          {/* Russet Potatoes (Inside Left Half of Basket — Scales up to 10kg) */}
-          <group position={[-0.28, 0.02, 0]}>
-            {Array.from({ length: Math.min(kgPotatoes, 10) }).map((_, i) => {
-              const row = i % 3;
-              const col = Math.floor(i / 3) % 2;
-              const layer = Math.floor(i / 6);
-              const pz = (row - 1) * 0.26;
-              const px = (col - 0.5) * 0.2;
-              const py = layer * 0.11;
-              const rotY = i * 1.3;
-
-              return (
-                <group key={`pot-${i}`} position={[px, 0.075 + py, pz]} rotation={[0.1, rotY, 0.15]}>
-                  <mesh castShadow receiveShadow scale={[1.35, 0.95, 1.05]}>
-                    <sphereGeometry args={[0.09, 16, 16]} />
-                    <meshStandardMaterial color="#92621a" roughness={0.88} metalness={0.04} />
-                  </mesh>
-                  {/* Natural Potato Eyes */}
-                  {[-0.05, 0.03].map((dx, dIdx) => (
-                    <mesh key={dIdx} position={[dx, 0.075, 0.02]}>
-                      <sphereGeometry args={[0.01, 6, 6]} />
-                      <meshStandardMaterial color="#572e0b" roughness={0.95} />
-                    </mesh>
-                  ))}
-                </group>
-              );
-            })}
+          {/* Dynamic Item 1: Inside Left Half of Basket (Scales up to 10kg) */}
+          <group position={[-0.24, 0.02, 0]}>
+            {Array.from({ length: Math.min(qty1, 10) }).map((_, i) => (
+              <ProduceItem3D key={`item1-${i}`} type={item1.type} index={i} isLeft={true} />
+            ))}
           </group>
 
-          {/* Glossy Heirloom Tomatoes (Inside Right Half of Basket — Scales up to 10kg) */}
-          <group position={[0.28, 0.02, 0]}>
-            {Array.from({ length: Math.min(kgTomatoes, 10) }).map((_, i) => {
-              const row = i % 3;
-              const col = Math.floor(i / 3) % 2;
-              const layer = Math.floor(i / 6);
-              const tz = (row - 1) * 0.26;
-              const tx = (col - 0.5) * 0.2;
-              const ty = layer * 0.11;
-              const rotY = i * 1.6;
-
-              return (
-                <group key={`tom-${i}`} position={[tx, 0.075 + ty, tz]} rotation={[0.05, rotY, 0]}>
-                  <mesh castShadow receiveShadow scale={[1.12, 0.92, 1.12]}>
-                    <sphereGeometry args={[0.095, 20, 20]} />
-                    <meshPhysicalMaterial
-                      color="#dc2626"
-                      roughness={0.1}
-                      clearcoat={0.85}
-                      clearcoatRoughness={0.06}
-                      metalness={0.05}
-                    />
-                  </mesh>
-                  {/* 5-Star Green Calyx & Stem */}
-                  <group position={[0, 0.085, 0]}>
-                    {Array.from({ length: 5 }).map((_, sIdx) => (
-                      <group key={sIdx} rotation={[0, (sIdx * 2 * Math.PI) / 5, 0]}>
-                        <mesh position={[0.028, 0.008, 0]} rotation={[0, 0, -0.3]}>
-                          <coneGeometry args={[0.009, 0.042, 4]} />
-                          <meshStandardMaterial color="#16a34a" roughness={0.4} />
-                        </mesh>
-                      </group>
-                    ))}
-                    <mesh position={[0, 0.022, 0]} rotation={[0.1, 0, 0.2]}>
-                      <cylinderGeometry args={[0.006, 0.006, 0.04, 6]} />
-                      <meshStandardMaterial color="#15803d" roughness={0.5} />
-                    </mesh>
-                  </group>
-                </group>
-              );
-            })}
+          {/* Dynamic Item 2: Inside Right Half of Basket (Scales up to 10kg) */}
+          <group position={[0.24, 0.02, 0]}>
+            {Array.from({ length: Math.min(qty2, 10) }).map((_, i) => (
+              <ProduceItem3D key={`item2-${i}`} type={item2.type} index={i} isLeft={false} />
+            ))}
           </group>
         </group>
       </group>
 
-      {/* ================= 3. CENTER: MODERN FRONT-FACING POS TOUCHSCREEN (X = 0.08) ================= */}
-      <group position={[0.08, 0.12, -0.15]}>
+      {/* ================= 3. CENTER: MODERN 16:9 WIDESCREEN POS TOUCHSCREEN (X = 0.18) ================= */}
+      <group position={[0.18, 0.12, -0.15]}>
         {/* Sleek Heavy Steel Stand */}
         <mesh position={[0, -0.1, 0]} castShadow>
           <cylinderGeometry args={[0.16, 0.22, 0.22, 24]} />
@@ -527,107 +844,165 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
           <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.15} />
         </mesh>
 
-        {/* 15-inch Touchscreen Monitor Bezel (Facing Front With Slight Upward Tilt) */}
-        <group position={[0, 0.36, 0]} rotation={[-0.14, 0, 0]}>
-          {/* Black Outer Bezel */}
-          <mesh castShadow>
-            <boxGeometry args={[1.48, 1.1, 0.06]} />
-            <meshPhysicalMaterial color="#090d16" roughness={0.15} metalness={0.6} />
-          </mesh>
-          {/* Screen Glass Surface */}
-          <mesh position={[0, 0, 0.032]}>
-            <planeGeometry args={[1.4, 1.02]} />
-            <meshBasicMaterial color="#0f172a" />
+        {/* 15.6-inch Widescreen Touchscreen Monitor (Facing Front With Slight Upward Tilt) */}
+        <group position={[0, 0.38, 0]} rotation={[-0.12, 0, 0]}>
+          {/* Glowing Silhouette Rim (Guarantees Sharp Contrast Against Dark Backgrounds) */}
+          <mesh position={[0, 0, -0.005]}>
+            <boxGeometry args={[1.60, 1.12, 0.01]} />
+            <meshBasicMaterial color="#0ea5e9" />
           </mesh>
 
-          {/* POS Terminal Screen UI (Crisp Typography) */}
-          <group position={[0, 0, 0.036]}>
+          {/* Dark Titanium Outer Bezel */}
+          <mesh castShadow>
+            <boxGeometry args={[1.56, 1.08, 0.06]} />
+            <meshPhysicalMaterial color="#1e293b" roughness={0.25} metalness={0.85} />
+          </mesh>
+
+          {/* Obsidian OLED Screen Glass Surface */}
+          <mesh position={[0, 0, 0.034]}>
+            <planeGeometry args={[1.50, 1.02]} />
+            <meshBasicMaterial color="#090d16" />
+          </mesh>
+
+          {/* POS Terminal Screen UI (Crisp Typography, Columnar Layout, Zero Overlaps) */}
+          <group position={[0, 0, 0.044]}>
             {/* Header Bar */}
-            <mesh position={[0, 0.42, 0]}>
-              <planeGeometry args={[1.38, 0.13]} />
-              <meshBasicMaterial color="#0d9488" />
+            <mesh position={[0, 0.41, 0]}>
+              <planeGeometry args={[1.46, 0.11]} />
+              <meshBasicMaterial color="#0f766e" />
             </mesh>
-            <Text position={[-0.62, 0.42, 0.001]} fontSize={0.052} color="#ffffff" anchorX="left" anchorY="middle">
-              🛒 FUTURA MART POS • #01
+            <Text position={[-0.66, 0.41, 0.001]} fontSize={0.044} color="#ffffff" fontWeight="900" anchorX="left" anchorY="middle">
+              🛒 FUTURA MART POS • AISLE #01
             </Text>
-            <Text position={[0.62, 0.42, 0.001]} fontSize={0.046} color="#ccfbf1" anchorX="right" anchorY="middle">
+            <Text position={[0.66, 0.41, 0.001]} fontSize={0.040} color="#ccfbf1" fontWeight="900" anchorX="right" anchorY="middle">
               {checkoutStep > 0 ? 'BILLED ✅' : 'LIVE CART'}
             </Text>
 
-            {/* Item 1: Potatoes */}
-            <Text position={[-0.62, 0.25, 0.001]} fontSize={0.056} color="#e2e8f0" anchorX="left" anchorY="middle">
-              🥔 Russet Potatoes
+            {/* Table Column Headers */}
+            <Text position={[-0.66, 0.31, 0.001]} fontSize={0.033} color="#94a3b8" fontWeight="800" anchorX="left" anchorY="middle">
+              PRODUCE ITEM
             </Text>
-            <Text position={[0.04, 0.25, 0.001]} fontSize={0.052} color="#94a3b8" anchorX="center" anchorY="middle">
-              {kgPotatoes} kg × ₹30
+            <Text position={[0.14, 0.31, 0.001]} fontSize={0.033} color="#94a3b8" fontWeight="800" anchorX="center" anchorY="middle">
+              WEIGHT × RATE (AP)
             </Text>
-            <Text position={[0.62, 0.25, 0.001]} fontSize={0.062} color="#38bdf8" anchorX="right" anchorY="middle">
-              ₹{costPotatoes}
-            </Text>
-
-            {/* Item 2: Tomatoes */}
-            <Text position={[-0.62, 0.11, 0.001]} fontSize={0.056} color="#e2e8f0" anchorX="left" anchorY="middle">
-              🍅 Heirloom Tomatoes
-            </Text>
-            <Text position={[0.04, 0.11, 0.001]} fontSize={0.052} color="#94a3b8" anchorX="center" anchorY="middle">
-              {kgTomatoes} kg × ₹50
-            </Text>
-            <Text position={[0.62, 0.11, 0.001]} fontSize={0.062} color="#38bdf8" anchorX="right" anchorY="middle">
-              ₹{costTomatoes}
+            <Text position={[0.66, 0.31, 0.001]} fontSize={0.033} color="#94a3b8" fontWeight="800" anchorX="right" anchorY="middle">
+              SUBTOTAL
             </Text>
 
-            {/* Total Weight Live Row */}
-            <Text position={[-0.62, -0.02, 0.001]} fontSize={0.048} color="#a7f3d0" anchorX="left" anchorY="middle">
-              ⚖️ Combined Weight:
-            </Text>
-            <Text position={[0.62, -0.02, 0.001]} fontSize={0.052} color="#a7f3d0" anchorX="right" anchorY="middle">
-              {totalWeight}.00 kg
-            </Text>
-
-            {/* Arithmetic Formula Divider */}
-            <mesh position={[0, -0.08, 0]}>
-              <planeGeometry args={[1.28, 0.006]} />
+            {/* Divider Line */}
+            <mesh position={[0, 0.26, 0]}>
+              <planeGeometry args={[1.44, 0.003]} />
               <meshBasicMaterial color="#334155" />
             </mesh>
 
-            <Text position={[-0.62, -0.16, 0.001]} fontSize={0.046} color="#facc15" anchorX="left" anchorY="middle">
-              📐 Total = (Qty₁ × ₹30) + (Qty₂ × ₹50)
+            {/* Item 1 Row */}
+            <mesh position={[0, 0.18, 0]}>
+              <planeGeometry args={[1.44, 0.10]} />
+              <meshBasicMaterial color="#1e293b" />
+            </mesh>
+            <Text 
+              position={[-0.66, 0.18, 0.001]} 
+              fontSize={0.038} 
+              maxWidth={0.60}
+              color="#f8fafc" 
+              fontWeight="900" 
+              anchorX="left" 
+              anchorY="middle"
+            >
+              {`${item1.emoji} ${item1.name}`}
+            </Text>
+            <Text position={[0.14, 0.18, 0.001]} fontSize={0.042} color="#38bdf8" fontWeight="800" anchorX="center" anchorY="middle">
+              {`${qty1} kg × ₹${item1.rate}/kg`}
+            </Text>
+            <Text position={[0.66, 0.18, 0.001]} fontSize={0.052} color="#38bdf8" fontWeight="900" anchorX="right" anchorY="middle">
+              {`₹${cost1}`}
             </Text>
 
-            {/* Total Highlight Box */}
-            <mesh position={[0, -0.34, 0]}>
-              <planeGeometry args={[1.32, 0.22]} />
-              <meshBasicMaterial color={checkoutStep > 0 ? '#0f766e' : '#134e4a'} />
+            {/* Item 2 Row */}
+            <mesh position={[0, 0.06, 0]}>
+              <planeGeometry args={[1.44, 0.10]} />
+              <meshBasicMaterial color="#131c2e" />
             </mesh>
-            <Text position={[-0.56, -0.34, 0.001]} fontSize={0.072} color="#ffffff" anchorX="left" anchorY="middle">
+            <Text 
+              position={[-0.66, 0.06, 0.001]} 
+              fontSize={0.038} 
+              maxWidth={0.60}
+              color="#f8fafc" 
+              fontWeight="900" 
+              anchorX="left" 
+              anchorY="middle"
+            >
+              {`${item2.emoji} ${item2.name}`}
+            </Text>
+            <Text position={[0.14, 0.06, 0.001]} fontSize={0.042} color="#f472b6" fontWeight="800" anchorX="center" anchorY="middle">
+              {`${qty2} kg × ₹${item2.rate}/kg`}
+            </Text>
+            <Text position={[0.66, 0.06, 0.001]} fontSize={0.052} color="#f472b6" fontWeight="900" anchorX="right" anchorY="middle">
+              {`₹${cost2}`}
+            </Text>
+
+            {/* Combined Weight Row */}
+            <Text position={[-0.66, -0.05, 0.001]} fontSize={0.036} color="#94a3b8" fontWeight="800" anchorX="left" anchorY="middle">
+              ⚖️ Total Produce Weight:
+            </Text>
+            <Text position={[0.66, -0.05, 0.001]} fontSize={0.040} color="#a7f3d0" fontWeight="900" anchorX="right" anchorY="middle">
+              {`${totalWeight}.00 kg`}
+            </Text>
+
+            {/* AP Step Formula Bar */}
+            <mesh position={[0, -0.18, 0]}>
+              <planeGeometry args={[1.44, 0.13]} />
+              <meshBasicMaterial color="#1e293b" />
+            </mesh>
+            <mesh position={[0, -0.18, -0.001]}>
+              <planeGeometry args={[1.46, 0.14]} />
+              <meshBasicMaterial color="#0284c7" />
+            </mesh>
+            <Text position={[0, -0.15, 0.001]} fontSize={0.032} color="#fef08a" fontWeight="900" anchorX="center" anchorY="middle">
+              {`📐 AP Pattern: Rate adds d1 = ₹${item1.rate} & d2 = ₹${item2.rate} per kg`}
+            </Text>
+            <Text position={[0, -0.21, 0.001]} fontSize={0.036} color="#67e8f9" fontWeight="800" anchorX="center" anchorY="middle">
+              {`Total Bill = (${qty1} × ₹${item1.rate}) + (${qty2} × ₹${item2.rate}) = ₹${totalCost}`}
+            </Text>
+
+            {/* Grand Total Banner */}
+            <mesh position={[0, -0.35, 0]}>
+              <planeGeometry args={[1.44, 0.16]} />
+              <meshBasicMaterial color={checkoutStep > 0 ? '#047857' : '#065f46'} />
+            </mesh>
+            <mesh position={[0, -0.35, -0.001]}>
+              <planeGeometry args={[1.46, 0.17]} />
+              <meshBasicMaterial color="#10b981" />
+            </mesh>
+            <Text position={[-0.62, -0.35, 0.001]} fontSize={0.060} color="#ffffff" fontWeight="900" anchorX="left" anchorY="middle">
               GRAND TOTAL:
             </Text>
-            <Text position={[0.56, -0.34, 0.001]} fontSize={0.098} color="#4ade80" anchorX="right" anchorY="middle">
-              ₹{totalCost}
+            <Text position={[0.62, -0.35, 0.001]} fontSize={0.082} color="#4ade80" fontWeight="900" anchorX="right" anchorY="middle">
+              {`₹${totalCost}`}
             </Text>
           </group>
         </group>
 
         {/* Flatbed Barcode Laser Scanner Glass on Counter */}
-        <group position={[0, -0.16, 0.55]}>
+        <group position={[0, -0.16, 0.50]}>
           <mesh castShadow receiveShadow>
-            <boxGeometry args={[0.64, 0.04, 0.4]} />
+            <boxGeometry args={[0.58, 0.04, 0.36]} />
             <meshStandardMaterial color="#1e293b" roughness={0.3} metalness={0.7} />
           </mesh>
           <mesh position={[0, 0.021, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[0.52, 0.3]} />
+            <planeGeometry args={[0.46, 0.26]} />
             <meshPhysicalMaterial color="#dc2626" transmission={0.7} transparent opacity={0.8} roughness={0.1} />
           </mesh>
           {/* Laser Glow Line */}
           <mesh position={[0, 0.023, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[0.48, 0.018]} />
+            <planeGeometry args={[0.42, 0.016]} />
             <meshBasicMaterial color="#ff0000" blending={THREE.AdditiveBlending} />
           </mesh>
         </group>
       </group>
 
-      {/* ================= 4. RIGHT: THERMAL RECEIPT PRINTER & PRINTED BILL (X = 1.48) ================= */}
-      <group position={[1.48, 0.04, 0.15]}>
+      {/* ================= 4. RIGHT: THERMAL RECEIPT PRINTER & PRINTED BILL (X = 1.24) ================= */}
+      <group position={[1.24, 0.04, 0.10]} rotation={[0, -0.22, 0]}>
         {/* Compact POS Thermal Printer Box */}
         <mesh castShadow receiveShadow position={[0, 0, 0]}>
           <boxGeometry args={[0.65, 0.42, 0.65]} />
@@ -638,13 +1013,13 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
           <boxGeometry args={[0.54, 0.02, 0.05]} />
           <meshBasicMaterial color="#020617" />
         </mesh>
-        {/* Green/Cyan Power Status LED (Blinks when printing) */}
+        {/* Power Status LED */}
         <mesh position={[-0.24, 0.14, 0.33]}>
           <sphereGeometry args={[0.015, 12, 12]} />
           <meshBasicMaterial color={checkoutStep > 0 ? '#38bdf8' : '#22c55e'} />
         </mesh>
 
-        {/* Paper Slot Standby Guide / Receipt Ribbon Ejection */}
+        {/* Paper Slot Standby Guide */}
         {checkoutStep === 0 && (
           <group position={[0, 0.23, 0.02]}>
             <Text position={[0, 0.04, 0]} fontSize={0.028} color="#94a3b8" anchorX="center" anchorY="bottom">
@@ -663,32 +1038,32 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
 
           {/* Receipt Printed Content */}
           <group position={[0, 0, 0.006]}>
-            <Text position={[0, 0.28, 0]} fontSize={0.036} color="#0f172a" anchorX="center" anchorY="top">
-              🧾 FRESH MARKET BILL
+            <Text position={[0, 0.28, 0]} fontSize={0.034} color="#0f172a" fontWeight="900" anchorX="center" anchorY="top">
+              🧾 FUTURA FRESH MART
             </Text>
             <Text position={[0, 0.22, 0]} fontSize={0.024} color="#64748b" anchorX="center" anchorY="top">
               ========================
             </Text>
-            <Text position={[-0.24, 0.15, 0]} fontSize={0.03} color="#0f172a" anchorX="left" anchorY="top">
-              Potatoes ({kgPotatoes} kg)
+            <Text position={[-0.24, 0.15, 0]} fontSize={0.03} color="#0f172a" fontWeight="800" anchorX="left" anchorY="top">
+              {`${item1.shortName} (${qty1} kg)`}
             </Text>
-            <Text position={[0.24, 0.15, 0]} fontSize={0.03} color="#0f172a" anchorX="right" anchorY="top">
-              ₹{costPotatoes}
+            <Text position={[0.24, 0.15, 0]} fontSize={0.03} color="#0f172a" fontWeight="900" anchorX="right" anchorY="top">
+              {`₹${cost1}`}
             </Text>
-            <Text position={[-0.24, 0.07, 0]} fontSize={0.03} color="#0f172a" anchorX="left" anchorY="top">
-              Tomatoes ({kgTomatoes} kg)
+            <Text position={[-0.24, 0.07, 0]} fontSize={0.03} color="#0f172a" fontWeight="800" anchorX="left" anchorY="top">
+              {`${item2.shortName} (${qty2} kg)`}
             </Text>
-            <Text position={[0.24, 0.07, 0]} fontSize={0.03} color="#0f172a" anchorX="right" anchorY="top">
-              ₹{costTomatoes}
+            <Text position={[0.24, 0.07, 0]} fontSize={0.03} color="#0f172a" fontWeight="900" anchorX="right" anchorY="top">
+              {`₹${cost2}`}
             </Text>
             <Text position={[0, 0.01, 0]} fontSize={0.024} color="#64748b" anchorX="center" anchorY="top">
               ------------------------
             </Text>
-            <Text position={[-0.24, -0.06, 0]} fontSize={0.038} color="#0f172a" anchorX="left" anchorY="top">
+            <Text position={[-0.24, -0.06, 0]} fontSize={0.036} color="#0f172a" fontWeight="900" anchorX="left" anchorY="top">
               TOTAL DUE:
             </Text>
-            <Text position={[0.24, -0.06, 0]} fontSize={0.044} color="#0d9488" anchorX="right" anchorY="top">
-              ₹{totalCost}
+            <Text position={[0.24, -0.06, 0]} fontSize={0.044} color="#0d9488" fontWeight="900" anchorX="right" anchorY="top">
+              {`₹${totalCost}`}
             </Text>
             <Text position={[0, -0.17, 0]} fontSize={0.024} color="#64748b" anchorX="center" anchorY="top">
               THANK YOU FOR SHOPPING!
@@ -706,116 +1081,425 @@ export function MarketProduce3D({ kgPotatoes = 3, kgTomatoes = 2, checkoutStep =
 }
 
 // =======================================================================
-// 3. PHOTOREALISTIC WALL CALENDAR ON CORKBOARD (3x3 MAGIC WINDOW)
 // =======================================================================
-export function CalendarDesk3D({ selectedCenter = 16 }) {
-  const isValidCenter = selectedCenter > 7 && selectedCenter < 29 && (selectedCenter % 7 !== 1) && (selectedCenter % 7 !== 0);
-  const safeCenter = isValidCenter ? selectedCenter : 16;
-  const sRow = Math.floor((safeCenter - 1) / 7);
-  const sCol = (safeCenter - 1) % 7;
-  
-  const boxIndices = [
-    (sRow - 1) * 7 + (sCol - 1), (sRow - 1) * 7 + sCol, (sRow - 1) * 7 + (sCol + 1),
-    sRow * 7 + (sCol - 1),       sRow * 7 + sCol,       sRow * 7 + (sCol + 1),
-    (sRow + 1) * 7 + (sCol - 1), (sRow + 1) * 7 + sCol, (sRow + 1) * 7 + (sCol + 1)
-  ];
-  
-  const calendarDays = Array.from({ length: 35 }, (_, i) => i + 1);
-  const headers = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+// 3. PHOTOREALISTIC DESKTOP CALENDAR EASEL (3x3 MAGIC WINDOW)
+// =======================================================================
+export function CalendarDesk3D({ selectedCenter = 16, monthIdx = 0, onSelectCenter }) {
+  const currentMonth = CALENDAR_MAGIC_DATASET[monthIdx] || CALENDAR_MAGIC_DATASET[0];
+  const grid = useMemo(() => getMonthCalendarGrid(currentMonth), [currentMonth]);
+  const validCenters = useMemo(() => getValidCentersForMonth(currentMonth), [currentMonth]);
 
-  const colW = 0.54;
-  const rowH = 0.48;
-  const startX = - (6 * colW) / 2;
-  const startY = (4 * rowH) / 2 - 0.15;
+  // Center calculation and validation
+  const centerInfo = useMemo(() => {
+    const found = validCenters.find(c => c.day === selectedCenter);
+    if (found) return found;
+    return validCenters.find(c => c.day === currentMonth.defaultCenter) || validCenters[0] || {
+      day: 16,
+      row: 2,
+      col: 3,
+      sum: 144,
+      boxValues: [],
+      pairs: []
+    };
+  }, [validCenters, selectedCenter, currentMonth]);
+
+  const safeCenter = centerInfo.day;
+  const sRow = centerInfo.row;
+  const sCol = centerInfo.col;
+
+  // Box values set for fast check
+  const inWindowDays = useMemo(() => new Set(centerInfo.boxValues || []), [centerInfo]);
+
+  // Dimensions
+  const colW = 0.50;
+  const rowH = 0.42;
+  const startX = - (6 * colW) / 2; // -1.50
+  const startY = 0.85;
+
+  const windowX = startX + sCol * colW;
+  const windowY = startY - sRow * rowH;
+
+  const woodTexture = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+    const tex = loader.load('/hardwood_texture.jpg');
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(2, 2);
+    return tex;
+  }, []);
+
+  // Symmetrical connecting laser lines
+  const symmetricBeams = [
+    { name: 'Diagonal ↘', p1: [-colW, rowH], p2: [colW, -rowH], color: '#ec4899', label: '-8 / +8' },
+    { name: 'Vertical ↕', p1: [0, rowH], p2: [0, -rowH], color: '#0284c7', label: '-7 / +7' },
+    { name: 'Diagonal ↗', p1: [colW, rowH], p2: [-colW, -rowH], color: '#f59e0b', label: '-6 / +6' },
+    { name: 'Horizontal ↔', p1: [-colW, 0], p2: [colW, 0], color: '#10b981', label: '-1 / +1' }
+  ];
 
   return (
-    <group position={[0, -0.25, 0]}>
-      {/* Studio Lighting */}
-      <ambientLight intensity={1.2} color="#f8fafc" />
-      <directionalLight position={[2, 6, 8]} intensity={2.5} castShadow color="#fdf8f6" />
-      <spotLight position={[-5, 2, 6]} intensity={1.5} angle={0.6} penumbra={1} castShadow />
+    <group position={[0, -0.2, 0]} rotation={[0.22, 0, 0]}>
+      {/* 1. Deep Studio Lighting */}
+      <ambientLight intensity={1.4} color="#f8fafc" />
+      <directionalLight position={[4, 8, 7]} intensity={2.6} castShadow color="#ffffff" />
+      <directionalLight position={[-5, 3, 4]} intensity={1.5} color="#38bdf8" />
+      <pointLight position={[0, 3, 2.5]} intensity={1.8} color="#fef3c7" distance={8} />
+      <pointLight position={[0, -1.5, 2.2]} intensity={3.2} color="#ffffff" distance={5} />
 
-      {/* Solid Oak Wood Corkboard Frame */}
-      <mesh position={[0, 0.2, -0.1]} receiveShadow>
-        <boxGeometry args={[5.2, 4.0, 0.1]} />
-        <meshPhysicalMaterial color="#5c3a21" roughness={0.7} />
-      </mesh>
-      {/* Granular Cork Surface */}
-      <mesh position={[0, 0.2, -0.05]} receiveShadow>
-        <boxGeometry args={[4.8, 3.6, 0.05]} />
-        <meshStandardMaterial color="#c19a6b" roughness={1.0} bumpScale={0.02} />
-      </mesh>
-
-      {/* 3D Interactive Calendar Tiles */}
-      <group position={[0, 0.1, 0]}>
-        {/* Header Row */}
-        {headers.map((h, i) => (
-          <group key={`h-${i}`} position={[startX + i * colW, startY + rowH + 0.1, 0]}>
-            <Text position={[0, 0, 0.05]} fontSize={0.16} color="#475569" fontWeight="bold" anchorX="center" anchorY="middle">
-              {h}
-            </Text>
-          </group>
-        ))}
-
-        {/* Floating Date Tiles */}
-        {calendarDays.map((day) => {
-          const r = Math.floor((day - 1) / 7);
-          const c = (day - 1) % 7;
-          const isCenter = day === safeCenter;
-          const inBox = boxIndices.includes(day - 1);
-          const x = startX + c * colW;
-          const y = startY - r * rowH;
-
-          // Z-depth popping effect
-          const zPos = isCenter ? 0.08 : inBox ? 0.04 : 0;
-          const bgColor = isCenter ? '#0d9488' : inBox ? '#ccfbf1' : '#ffffff';
-          const txtColor = isCenter ? '#ffffff' : inBox ? '#0f766e' : '#1e293b';
-
-          return (
-            <group key={`d-${day}`} position={[x, y, zPos]}>
-              <mesh castShadow receiveShadow>
-                <boxGeometry args={[colW * 0.88, rowH * 0.88, 0.04]} />
-                <meshStandardMaterial color={bgColor} roughness={0.3} metalness={0.1} />
-              </mesh>
-              <Text position={[0, 0, 0.021]} fontSize={0.18} color={txtColor} fontWeight="bold" anchorX="center" anchorY="middle">
-                {day}
-              </Text>
-            </group>
-          );
-        })}
+      {/* 2. Golden Math Sparkles hovering around the Magic Window */}
+      <group position={[windowX, windowY, 0.25]}>
+        <DreiSparkles count={24} scale={2.4} size={1.8} speed={0.35} color="#fef08a" />
       </group>
 
-      {/* Magic 3x3 Window Overlay & Symmetrical Connecting Lines */}
-      <group position={[startX + sCol * colW, startY - sRow * rowH + 0.1, 0.15]}>
-        {/* Acrylic Translucent Glow Frame */}
-        <mesh castShadow>
-          <boxGeometry args={[colW * 3.1, rowH * 3.1, 0.02]} />
-          <meshPhysicalMaterial 
-            color="#0d9488" 
-            transparent 
-            opacity={0.15} 
-            transmission={0.8} 
-            roughness={0.1} 
-            clearcoat={1.0} 
+      {/* 3. Executive Polished Tabletop Plinth */}
+      <mesh position={[0, -2.15, 0.35]} receiveShadow>
+        <boxGeometry args={[5.6, 0.22, 3.4]} />
+        <meshStandardMaterial
+          map={woodTexture}
+          bumpMap={woodTexture}
+          bumpScale={0.03}
+          color="#1c1917"
+          roughness={0.45}
+          metalness={0.15}
+        />
+      </mesh>
+      {/* Polished Brass Bevel Trim on Table Edge */}
+      <mesh position={[0, -2.04, 1.95]}>
+        <boxGeometry args={[5.6, 0.02, 0.04]} />
+        <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.15} />
+      </mesh>
+
+      {/* 4. Solid Oak Easel Stand Backboard */}
+      <group position={[0, 0, -0.08]}>
+        {/* Slanted Oak Backboard */}
+        <mesh position={[0, 0.08, 0]} receiveShadow castShadow>
+          <boxGeometry args={[4.1, 4.25, 0.12]} />
+          <meshStandardMaterial
+            map={woodTexture}
+            bumpMap={woodTexture}
+            bumpScale={0.02}
+            color="#b45309"
+            roughness={0.5}
+            metalness={0.08}
           />
         </mesh>
-        
-        {/* Symmetrical Intersection Lines connecting opposite pairs */}
-        {[
-          [[-colW, rowH], [colW, -rowH]], // Top-Left to Bottom-Right
-          [[colW, rowH], [-colW, -rowH]], // Top-Right to Bottom-Left
-          [[0, rowH], [0, -rowH]],        // Top to Bottom
-          [[-colW, 0], [colW, 0]],        // Left to Right
-        ].map((line, idx) => {
-          const distance = Math.hypot(line[0][0] - line[1][0], line[0][1] - line[1][1]);
-          const angle = Math.atan2(line[1][1] - line[0][1], line[1][0] - line[0][0]);
-          return (
-             <mesh key={`line-${idx}`} rotation={[0, 0, angle]} position={[0, 0, 0.015]}>
-                <boxGeometry args={[distance, 0.012, 0.012]} />
-                <meshBasicMaterial color="#0d9488" transparent opacity={0.5} />
-             </mesh>
-          );
-        })}
+        {/* Oak Easel Top Bevel Cap */}
+        <mesh position={[0, 2.22, 0.02]} receiveShadow>
+          <boxGeometry args={[4.2, 0.08, 0.16]} />
+          <meshStandardMaterial color="#78350f" roughness={0.4} />
+        </mesh>
+        {/* Front Ledge Retaining Shelf */}
+        <mesh position={[0, -1.98, 0.14]} receiveShadow castShadow>
+          <boxGeometry args={[4.2, 0.16, 0.32]} />
+          <meshStandardMaterial color="#78350f" roughness={0.4} />
+        </mesh>
+        {/* Front Brass Shelf Lip */}
+        <mesh position={[0, -1.9, 0.29]}>
+          <boxGeometry args={[4.1, 0.04, 0.03]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {/* Left & Right Brass Retaining Pegs */}
+        {[-1.6, 1.6].map((xPeg, i) => (
+          <mesh key={`peg-${i}`} position={[xPeg, -1.82, 0.28]}>
+            <cylinderGeometry args={[0.028, 0.035, 0.16, 16]} />
+            <meshStandardMaterial color="#f59e0b" metalness={0.95} roughness={0.15} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* 5. 14 Twin-Wire Metal Spiral Coils */}
+      {Array.from({ length: 14 }).map((_, i) => {
+        const coilX = -1.62 + i * (3.24 / 13);
+        return (
+          <group key={`coil-${i}`} position={[coilX, 1.96, 0.08]}>
+            <mesh rotation={[0, 0, Math.PI / 9]}>
+              <torusGeometry args={[0.075, 0.013, 16, 32]} />
+              <meshStandardMaterial color="#f59e0b" metalness={0.94} roughness={0.16} />
+            </mesh>
+          </group>
+        );
+      })}
+
+      {/* 6. Multi-Layer Cream Linen Parchment Calendar Pad */}
+      <group position={[0, 0.05, 0.01]}>
+        {/* Back page shadows (stacked sheets) */}
+        <mesh position={[0.02, -0.02, -0.01]} receiveShadow>
+          <boxGeometry args={[3.84, 3.82, 0.015]} />
+          <meshStandardMaterial color="#e2e8f0" roughness={0.8} />
+        </mesh>
+        {/* Main Calendar Front Sheet */}
+        <mesh position={[0, 0, 0.005]} receiveShadow>
+          <boxGeometry args={[3.82, 3.8, 0.015]} />
+          <meshStandardMaterial color="#fffef9" roughness={0.65} metalness={0.02} />
+        </mesh>
+
+        {/* 7. Printed Month Header Ribbon */}
+        <group position={[0, 1.58, 0.018]}>
+          <mesh>
+            <boxGeometry args={[3.72, 0.52, 0.01]} />
+            <meshStandardMaterial color={currentMonth.headerColor} roughness={0.3} metalness={0.1} />
+          </mesh>
+          {/* Gold Trim Line below Header */}
+          <mesh position={[0, -0.26, 0.006]}>
+            <boxGeometry args={[3.72, 0.015, 0.01]} />
+            <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.2} />
+          </mesh>
+          {/* Month & Year Title */}
+          <Text
+            position={[0, 0.08, 0.015]}
+            fontSize={0.21}
+            color="#ffffff"
+            fontWeight="900"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {`${currentMonth.name.toUpperCase()}`}
+          </Text>
+          {/* Season & Grade 6 Lab Subtitle */}
+          <Text
+            position={[0, -0.12, 0.015]}
+            fontSize={0.10}
+            color="#fef08a"
+            fontWeight="700"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {`${currentMonth.icon} ${currentMonth.season} · 3×3 Magic Window Lab`}
+          </Text>
+        </group>
+
+        {/* 8. Day of Week Ribbon */}
+        <group position={[0, 1.18, 0.018]}>
+          <mesh>
+            <boxGeometry args={[3.72, 0.22, 0.005]} />
+            <meshStandardMaterial color="#f1f5f9" roughness={0.5} />
+          </mesh>
+          {currentMonth.headers.map((hdr, hIdx) => (
+            <Text
+              key={`h-${hIdx}`}
+              position={[startX + hIdx * colW, 0, 0.01]}
+              fontSize={0.11}
+              color="#475569"
+              fontWeight="900"
+              anchorX="center"
+              anchorY="middle"
+            >
+              {hdr.toUpperCase()}
+            </Text>
+          ))}
+        </group>
+
+        {/* 9. 42 Calendar Cells Grid */}
+        <group position={[0, 0, 0.02]}>
+          {grid.map((row, r) =>
+            row.map((day, c) => {
+              const x = startX + c * colW;
+              const y = startY - r * rowH;
+              const isCenter = day === safeCenter;
+              const inBox = day !== null && inWindowDays.has(day);
+
+              if (day === null) {
+                return (
+                  <group key={`empty-${r}-${c}`} position={[x, y, 0]}>
+                    <mesh>
+                      <circleGeometry args={[0.03, 16]} />
+                      <meshBasicMaterial color="#cbd5e1" />
+                    </mesh>
+                  </group>
+                );
+              }
+
+              // Normal or Window Cell
+              const zElev = isCenter ? 0.06 : inBox ? 0.03 : 0.005;
+              const cellBg = isCenter
+                ? '#0d9488'
+                : inBox
+                ? '#ccfbf1'
+                : '#ffffff';
+              const numColor = isCenter
+                ? '#ffffff'
+                : inBox
+                ? '#0f766e'
+                : '#1e293b';
+
+              return (
+                <group
+                  key={`day-${day}`}
+                  position={[x, y, zElev]}
+                  onClick={() => onSelectCenter && onSelectCenter(day)}
+                >
+                  {/* Base Paper / Ceramic Tile Chip */}
+                  <mesh castShadow receiveShadow>
+                    <boxGeometry args={[colW * 0.88, rowH * 0.88, 0.015]} />
+                    <meshStandardMaterial
+                      color={cellBg}
+                      roughness={isCenter ? 0.2 : 0.4}
+                      metalness={isCenter ? 0.2 : 0.05}
+                    />
+                  </mesh>
+
+                  {/* If Center Date: Raised Brass Medallion Rim */}
+                  {isCenter && (
+                    <>
+                      <mesh position={[0, 0, 0.012]}>
+                        <circleGeometry args={[colW * 0.38, 32]} />
+                        <meshStandardMaterial color="#0d9488" metalness={0.2} roughness={0.3} />
+                      </mesh>
+                      <mesh position={[0, 0, 0.016]}>
+                        <torusGeometry args={[colW * 0.38, 0.02, 16, 32]} />
+                        <meshStandardMaterial color="#f59e0b" metalness={0.96} roughness={0.12} />
+                      </mesh>
+                    </>
+                  )}
+
+                  {/* Day Number */}
+                  <Text
+                    position={[0, isCenter ? 0.01 : 0, isCenter ? 0.035 : 0.02]}
+                    fontSize={isCenter ? 0.19 : 0.165}
+                    color={numColor}
+                    fontWeight="900"
+                    anchorX="center"
+                    anchorY="middle"
+                  >
+                    {day}
+                  </Text>
+
+                  {/* Center Label Tag */}
+                  {isCenter && (
+                    <Text
+                      position={[0, -0.12, 0.035]}
+                      fontSize={0.065}
+                      color="#fef08a"
+                      fontWeight="900"
+                      anchorX="center"
+                      anchorY="middle"
+                    >
+                      CENTER
+                    </Text>
+                  )}
+                </group>
+              );
+            })
+          )}
+        </group>
+
+        {/* 10. Artisan Burnished Brass "Magic Window" Loupe Frame */}
+        <group position={[windowX, windowY, 0.09]}>
+          {/* Main Brass Border Frame */}
+          <group position={[0, 0, 0]}>
+            {/* Top Bar */}
+            <mesh position={[0, rowH * 1.5, 0.01]}>
+              <boxGeometry args={[colW * 3.12, 0.032, 0.03]} />
+              <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.16} />
+            </mesh>
+            {/* Bottom Bar */}
+            <mesh position={[0, -rowH * 1.5, 0.01]}>
+              <boxGeometry args={[colW * 3.12, 0.032, 0.03]} />
+              <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.16} />
+            </mesh>
+            {/* Left Bar */}
+            <mesh position={[-colW * 1.5, 0, 0.01]}>
+              <boxGeometry args={[0.032, rowH * 3.03, 0.03]} />
+              <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.16} />
+            </mesh>
+            {/* Right Bar */}
+            <mesh position={[colW * 1.5, 0, 0.01]}>
+              <boxGeometry args={[0.032, rowH * 3.03, 0.03]} />
+              <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.16} />
+            </mesh>
+
+            {/* 4 Golden Corner Rivet Studs */}
+            {[
+              [-colW * 1.5, rowH * 1.5],
+              [colW * 1.5, rowH * 1.5],
+              [-colW * 1.5, -rowH * 1.5],
+              [colW * 1.5, -rowH * 1.5]
+            ].map(([rx, ry], idx) => (
+              <mesh key={`rivet-${idx}`} position={[rx, ry, 0.024]}>
+                <sphereGeometry args={[0.032, 16, 16]} />
+                <meshStandardMaterial color="#f59e0b" metalness={0.95} roughness={0.12} />
+              </mesh>
+            ))}
+
+            {/* Optical Glass Lens */}
+            <mesh position={[0, 0, 0.005]}>
+              <boxGeometry args={[colW * 2.95, rowH * 2.95, 0.01]} />
+              <meshPhysicalMaterial
+                color="#a7f3d0"
+                transparent
+                opacity={0.12}
+                transmission={0.88}
+                roughness={0.06}
+                clearcoat={1.0}
+              />
+            </mesh>
+          </group>
+
+          {/* 11. 4 Color-Coded Symmetrical Laser Cords connecting opposite pairs */}
+          {symmetricBeams.map((beam, idx) => {
+            const dx = beam.p2[0] - beam.p1[0];
+            const dy = beam.p2[1] - beam.p1[1];
+            const length = Math.hypot(dx, dy);
+            const angle = Math.atan2(dy, dx);
+            return (
+              <group key={`beam-${idx}`} position={[0, 0, 0.018]}>
+                {/* Connecting Laser Tube */}
+                <mesh rotation={[0, 0, angle]}>
+                  <boxGeometry args={[length, 0.014, 0.014]} />
+                  <meshStandardMaterial
+                    color={beam.color}
+                    emissive={beam.color}
+                    emissiveIntensity={0.6}
+                    roughness={0.2}
+                  />
+                </mesh>
+                {/* Endpoint beads */}
+                <mesh position={[beam.p1[0], beam.p1[1], 0]}>
+                  <sphereGeometry args={[0.024, 16, 16]} />
+                  <meshStandardMaterial color={beam.color} />
+                </mesh>
+                <mesh position={[beam.p2[0], beam.p2[1], 0]}>
+                  <sphereGeometry args={[0.024, 16, 16]} />
+                  <meshStandardMaterial color={beam.color} />
+                </mesh>
+              </group>
+            );
+          })}
+        </group>
+      </group>
+
+      {/* 12. Laser-Engraved Brass Plaque on Easel Front Shelf */}
+      <group position={[0, -1.82, 0.40]} rotation={[-0.22, 0, 0]}>
+        {/* Plaque Plate */}
+        <mesh receiveShadow castShadow>
+          <boxGeometry args={[3.8, 0.32, 0.025]} />
+          <meshStandardMaterial color="#fef08a" emissive="#fef08a" emissiveIntensity={0.25} metalness={0.7} roughness={0.15} />
+        </mesh>
+        {/* Plaque Outer Beveled Border */}
+        <mesh position={[0, 0, 0.008]}>
+          <boxGeometry args={[3.86, 0.36, 0.01]} />
+          <meshStandardMaterial color="#b45309" metalness={0.95} roughness={0.15} />
+        </mesh>
+        {/* Formula Line 1 */}
+        <Text
+          position={[0, 0.06, 0.018]}
+          fontSize={0.13}
+          color="#000000"
+          fontWeight="900"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {`3×3 Magic Window Sum = 9 × Center = 9 × ${safeCenter} = ${safeCenter * 9}`}
+        </Text>
+        {/* Formula Line 2 */}
+        <Text
+          position={[0, -0.065, 0.018]}
+          fontSize={0.105}
+          color="#065f46"
+          fontWeight="900"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {`Opposite Pairs Balance: 4 × (2×${safeCenter}) + ${safeCenter} = ${safeCenter * 8} + ${safeCenter} = ${safeCenter * 9}`}
+        </Text>
       </group>
     </group>
   );
@@ -1069,19 +1753,25 @@ export function QuizPhotorealisticLab3D({
   });
 
   return (
-    <group position={[0, -0.5, 0]}>
-      {/* Polished Showcase Platform */}
+    <group position={[0, -0.6, 0]}>
+      {/* Polished Showcase Platform (Light Theme Marble & Gold) */}
       <mesh position={[0, -0.08, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[2.0, 2.2, 0.12, 48]} />
-        <meshPhysicalMaterial color="#1e293b" roughness={0.25} metalness={0.4} clearcoat={0.6} />
+        <meshPhysicalMaterial color="#f8fafc" roughness={0.2} metalness={0.15} clearcoat={0.8} />
       </mesh>
+      {/* Brass Edge Bevel Rim */}
+      <mesh position={[0, -0.02, 0]}>
+        <cylinderGeometry args={[1.96, 2.01, 0.02, 48]} />
+        <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.14} />
+      </mesh>
+      {/* Emerald Top Inlay */}
       <mesh position={[0, -0.015, 0]} receiveShadow>
         <cylinderGeometry args={[1.85, 1.85, 0.02, 48]} />
-        <meshPhysicalMaterial color="#0f766e" roughness={0.6} metalness={0.1} />
+        <meshPhysicalMaterial color="#0d9488" roughness={0.4} metalness={0.1} clearcoat={0.6} />
       </mesh>
       <mesh position={[0, -0.15, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <circleGeometry args={[2.4, 48]} />
-        <meshBasicMaterial color="#0f172a" transparent opacity={0.08} />
+        <meshBasicMaterial color="#94a3b8" transparent opacity={0.15} />
       </mesh>
 
       {isSubmitted ? (
@@ -4794,7 +5484,7 @@ export function PhotorealisticViralHandshakeNetwork3D({ viralRounds = 1 }) {
   });
 
   return (
-    <group position={[0, -0.32, 0]}>
+    <group position={[0, -0.15, 0]} rotation={[0.42, -0.12, 0]}>
       {/* Studio Lighting */}
       <ambientLight intensity={1.6} color="#f8fafc" />
       <directionalLight position={[6, 10, 5]} intensity={2.8} color="#fffbeb" castShadow />

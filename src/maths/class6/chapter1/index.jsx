@@ -55,7 +55,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
   const [placedPolyEdges, setPlacedPolyEdges] = useState(3);
 
   const [graphIdx, setGraphIdx] = useState(2);
-  const [activeComponentIds, setActiveComponentIds] = useState(['k4-square', 'k4-cross']);
+  const [activeComponentIds, setActiveComponentIds] = useState(['0-1', '0-2', '0-3', '1-2', '1-3', '2-3', 'k4-perimeter', 'k4-diagonal']);
 
   const [squareSize, setSquareSize] = useState(3);
   const [placedSquareLayers, setPlacedSquareLayers] = useState(3);
@@ -72,6 +72,8 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
   const [s2nKochIter, setS2NKochIter] = useState(0);
 
   // Section 1.7 RealLifeMathLab State
+  const [labMonthIdx, setLabMonthIdx] = useState(0);
+  const [labCartIdx, setLabCartIdx] = useState(0);
   const [labSelectedCenter, setLabSelectedCenter] = useState(16);
   const [labKgPotatoes, setLabKgPotatoes] = useState(3);
   const [labKgTomatoes, setLabKgTomatoes] = useState(2);
@@ -126,14 +128,14 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary fallback={<div style={{ color: '#0f172a', padding: '1.2rem', fontWeight: '800' }}>3D Studio initializing...</div>}>
-            <Canvas camera={{ position: [0, 0.1, 4.8], fov: 45 }} shadows dpr={[1, 2]}>
-              <ambientLight intensity={1.9} />
+            <Canvas camera={{ position: [0, 0.2, 4.8], fov: 45 }} shadows dpr={[1, 2]}>
+              <ambientLight intensity={2.0} color="#ffffff" />
               <directionalLight position={[6, 12, 8]} intensity={2.5} castShadow />
               <directionalLight position={[-6, -4, -4]} intensity={1.3} color="#ffffff" />
               <pointLight position={[0, 6, 6]} intensity={1.5} color="#ffffff" />
 
               <Suspense fallback={null}>
-                <group scale={0.9}>
+                <group position={[0, -0.05, 0]} scale={0.92}>
                 {activeShapeActivity === 1 && (
                   <Table3Polygons3D
                     polygon={POLYGONS_DATA[polygonIdx || 0] || POLYGONS_DATA[0]}
@@ -175,18 +177,18 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
             position: 'absolute',
             top: '12px',
             left: '14px',
-            background: 'rgba(15, 23, 42, 0.88)',
+            background: 'rgba(255, 255, 255, 0.92)',
             backdropFilter: 'blur(8px)',
-            padding: '5px 12px',
+            padding: '5px 14px',
             borderRadius: '10px',
-            border: '1px solid rgba(56, 189, 248, 0.25)',
-            color: '#f1f5f9',
+            border: '1.5px solid #BAE6FD',
+            color: '#0f172a',
             fontSize: '0.82rem',
             fontWeight: '800',
             pointerEvents: 'none',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.35)'
+            boxShadow: '0 4px 14px rgba(15, 23, 42, 0.08)'
           }}>
-            {activeShapeActivity === 1 ? (viewMode === 'real' ? '🌍 Real-World 3D Object' : '📐 Geometric Regular Polygon 3D') : activeShapeActivity === 2 ? '✈️ 3D Direct City Flight Network (Airways)' : activeShapeActivity === 3 ? '🎨 3D Handcrafted Ceramic Heritage Tiles' : activeShapeActivity === 4 ? '🎱 3D Billiards 15-Ball Triangle Rack' : '🔲 3D Studio · Drag to Orbit'}
+            {activeShapeActivity === 1 ? (viewMode === 'real' ? '🌍 Real-World 3D Object' : '📐 Geometric Regular Polygon 3D') : activeShapeActivity === 2 ? '🕸️ 3D Complete Graph Kn · Geoboard String Art' : activeShapeActivity === 3 ? '🔲 3D Hardwood Gnomon Blocks (Square Numbers n²)' : activeShapeActivity === 4 ? '🔺 3D Stacked Triangles (Square Numbers n²)' : '🔲 3D Studio · Drag to Orbit'}
           </div>
         </div>
       );
@@ -196,11 +198,16 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
-            <Canvas camera={{ position: [0, 2.2, 5.5], fov: 44 }}>
-              <ambientLight intensity={1.8} />
-              <directionalLight position={[10, 12, 6]} intensity={2.4} castShadow />
-              {currentSlide === 1 && <PhotorealisticStackedTrianglesBridge3D rows={s2nTriRows} />}
-              {currentSlide === 2 && <Table3KochSnowflake3D depth={s2nKochIter} />}
+            <Canvas camera={{ position: currentSlide === 1 ? [0, 2.5, 5.2] : [0, 0.8, 5.2], fov: 44 }}>
+              <ambientLight intensity={1.9} color="#ffffff" />
+              <directionalLight position={[10, 12, 6]} intensity={2.4} color="#ffffff" castShadow />
+              <group 
+                position={currentSlide === 1 ? [0, -0.45, 0] : [0, 0.1, 0]} 
+                scale={currentSlide === 1 ? 0.76 : 0.9}
+              >
+                {currentSlide === 1 && <PhotorealisticStackedTrianglesBridge3D rows={s2nTriRows} />}
+                {currentSlide === 2 && <Table3KochSnowflake3D depth={s2nKochIter} />}
+              </group>
               <OrbitControls enablePan={false} maxDistance={7} minDistance={2} />
             </Canvas>
           </ErrorBoundary>
@@ -209,16 +216,25 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
     }
 
     if (currentStep === 7) {
+      const isSlide2 = currentSlide === 2;
+      const isSlide4 = currentSlide === 4;
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
-            <Canvas camera={{ position: [0, 0.8, 6.0], fov: 45 }}>
-              <ambientLight intensity={2.0} />
-              <group scale={0.9}>
-              {currentSlide === 1 && <CalendarDesk3D selectedCenter={labSelectedCenter} />}
-              {currentSlide === 2 && <MarketProduce3D kgPotatoes={labKgPotatoes} kgTomatoes={labKgTomatoes} checkoutStep={checkoutStep} onCheckoutComplete={() => setCheckoutStep(0)} />}
-              {currentSlide === 3 && <BotanicalFlower3D flowerKey={labSelectedFlower} />}
-              {currentSlide === 4 && <PhotorealisticViralHandshakeNetwork3D viralRounds={labViralRounds} />}
+            <Canvas 
+              camera={{ position: isSlide4 ? [0, 1.3, 5.2] : [0, 0.65, 5.8], fov: 45 }} 
+              dpr={[1.5, 2]} 
+              gl={{ antialias: true, powerPreference: "high-performance" }}
+            >
+              <ambientLight intensity={2.0} color="#ffffff" />
+              <group 
+                position={isSlide2 ? [0.04, 0.08, 1.45] : isSlide4 ? [-0.05, 0.05, 0] : [0, 0.12, 0]} 
+                scale={isSlide2 ? 1.15 : isSlide4 ? 0.84 : 0.92}
+              >
+                {currentSlide === 1 && <CalendarDesk3D selectedCenter={labSelectedCenter} monthIdx={labMonthIdx} onSelectCenter={setLabSelectedCenter} />}
+                {currentSlide === 2 && <MarketProduce3D cartIdx={labCartIdx} kgPotatoes={labKgPotatoes} kgTomatoes={labKgTomatoes} checkoutStep={checkoutStep} onCheckoutComplete={() => setCheckoutStep(0)} />}
+                {currentSlide === 3 && <BotanicalFlower3D flowerKey={labSelectedFlower} />}
+                {currentSlide === 4 && <PhotorealisticViralHandshakeNetwork3D viralRounds={labViralRounds} />}
               </group>
               <OrbitControls enablePan={true} enableZoom={true} maxDistance={8} minDistance={1.4} />
             </Canvas>
@@ -231,17 +247,18 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
-            <Canvas camera={{ position: [0, 1.2, 6.0], fov: 45 }}>
-              <ambientLight intensity={1.8} />
-              <group scale={0.9}>
-              <QuizPhotorealisticLab3D
-                activeQuestionId={activeQuizQuestionId}
-                isSubmitted={isQuizSubmitted}
-                score={quizScore}
-                totalClues={QUIZ_QUESTIONS.length}
-                currentSlide={currentSlide}
-                userAnswer={quizAnswers[activeQuizQuestionId]}
-              />
+            <Canvas camera={{ position: [0, 1.0, 5.2], fov: 45 }}>
+              <ambientLight intensity={2.0} color="#ffffff" />
+              <directionalLight position={[6, 10, 8]} intensity={2.4} color="#ffffff" castShadow />
+              <group position={[0, 0.05, 0]} scale={0.92}>
+                <QuizPhotorealisticLab3D
+                  activeQuestionId={activeQuizQuestionId}
+                  isSubmitted={isQuizSubmitted}
+                  score={quizScore}
+                  totalClues={QUIZ_QUESTIONS.length}
+                  currentSlide={currentSlide}
+                  userAnswer={quizAnswers[activeQuizQuestionId]}
+                />
               </group>
               <OrbitControls enablePan={true} enableZoom={true} minDistance={1.4} maxDistance={8} />
             </Canvas>
@@ -265,16 +282,16 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
         minHeight: 0,
         borderRadius: '20px',
         overflow: 'hidden',
-        background: 'radial-gradient(ellipse at 50% 30%, #0f172a 0%, #090d16 55%, #020617 100%)',
-        boxShadow: '0 12px 36px rgba(2, 6, 23, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
-        border: '1.5px solid rgba(56, 189, 248, 0.3)'
+        background: 'radial-gradient(ellipse at 50% 25%, #ffffff 0%, #f0fdf4 40%, #e0f2fe 100%)',
+        boxShadow: '0 10px 30px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95)',
+        border: '1.5px solid #BAE6FD'
       }}>
         <div style={{
           position: 'absolute',
           top: '16px',
           left: '16px',
-          background: 'linear-gradient(135deg, rgba(14, 116, 144, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
-          color: '#38bdf8',
+          background: 'rgba(255, 255, 255, 0.92)',
+          color: '#0284c7',
           padding: '6px 14px',
           borderRadius: '20px',
           fontSize: '0.75rem',
@@ -285,8 +302,8 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
           alignItems: 'center',
           gap: '6px',
           zIndex: 10,
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
-          border: '1px solid rgba(56, 189, 248, 0.35)',
+          boxShadow: '0 4px 12px rgba(14, 116, 144, 0.12)',
+          border: '1.5px solid #BAE6FD',
           backdropFilter: 'blur(8px)'
         }}>
           ✨ INTERACTIVE 3D
@@ -514,6 +531,8 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
               <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px 24px 24px', minHeight: 0 }} className="hide-scrollbar chapter-content-justified">
                 <RealLifeMathLab 
                   currentSlide={currentSlide}
+                  labMonthIdx={labMonthIdx} setLabMonthIdx={setLabMonthIdx}
+                  labCartIdx={labCartIdx} setLabCartIdx={setLabCartIdx}
                   labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
                   labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
                   labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
