@@ -632,7 +632,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             
             {/* Header */}
             <div style={{ padding: '24px 24px 16px 24px', borderBottom: '2px dashed var(--lesson-border)' }}>
-              <h3 style={{ margin: 0, fontSize: '1.6rem', fontWeight: '900', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <h3 style={{ margin: 0, fontSize: '1.6rem', fontWeight: '900', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Folder size={28} fill="var(--lesson-primary)" /> CASE FILE
               </h3>
             </div>
@@ -673,7 +673,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
 
               {/* PROGRESS LIST (Always visible) */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-                <h4 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: '900', color: 'var(--lesson-primary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: '900', color: 'var(--heading-section)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Folder size={20} /> Case File Progress
                 </h4>
                 

@@ -16,7 +16,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
         background: 'white', borderRadius: '8px',
         boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
         display: 'flex', flexDirection: 'column', 
-        border: '12px solid #1b2a4a',
+        border: '12px solid #D9C9A3',
         position: 'relative',
         fontFamily: 'Arial, Helvetica, sans-serif',
         overflow: 'hidden'
@@ -30,16 +30,16 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           {/* ================= LEFT PAGE ================= */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <h2 style={{ margin: '0 0 8px 0', fontSize: '24px', color: '#1e3a8a', fontWeight: 'bold', lineHeight: '1.3' }}>
+              <h2 style={{ margin: '0 0 8px 0', fontSize: '24px', color: '#3B2A1F', fontWeight: 'bold', lineHeight: '1.3' }}>
                 Observe and Identify<br/>Appearance of Materials
               </h2>
-              <div style={{ width: '40px', height: '4px', background: '#3b82f6', borderRadius: '2px' }} />
+              <div style={{ width: '40px', height: '4px', background: '#FFFFFF', borderRadius: '2px' }} />
             </div>
             <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Annie&backgroundColor=transparent" alt="Student" style={{ width: '80px', height: '80px', marginTop: '-10px' }} />
           </div>
 
           {/* Box 1: Blue dashed */}
-          <div style={{ background: '#f8fafc', border: '1px dashed #93c5fd', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px dashed #93c5fd', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: '28px', marginTop: '4px' }}>💡</div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div>Materials can look different from each other.</div>
@@ -49,7 +49,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           </div>
 
           {/* Box 2: Purple */}
-          <div style={{ background: '#faf5ff', border: '1px solid #d8b4fe', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: '28px', marginTop: '4px' }}>✨</div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <strong style={{ color: '#7e22ce', fontSize: '16px' }}>Lustrous vs Non-lustrous</strong>
@@ -59,7 +59,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           </div>
 
           {/* Box 3: Yellow */}
-          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: '24px', marginTop: '2px', transform: 'rotate(-45deg)' }}>📌</div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.5' }}>
               <strong style={{ color: '#d97706', display: 'block', marginBottom: '4px' }}>Remember!</strong>
@@ -72,7 +72,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
             <div style={{ color: '#94a3b8', fontSize: '14px' }}>Page 1</div>
             <button 
               onClick={() => { setBookPage(2); setIsHandbookRead(true); }}
-              style={{ background: '#1e3a8a', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(30, 58, 138, 0.3)' }}
+              style={{ background: '#FFFFFF', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(30, 58, 138, 0.3)' }}
             >
               Next Page ➔
             </button>
@@ -81,7 +81,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
       ) : (
         <div style={{ flex: 1, minHeight: 0, padding: '24px 20px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           {/* ================= RIGHT PAGE ================= */}
-          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', color: '#1e3a8a', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', color: '#3B2A1F', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Layers size={24} style={{ color: '#3b82f6' }} /> Investigation: Group by Appearance
           </h2>
 
@@ -90,7 +90,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           </div>
 
           {/* Yellow Tip Box */}
-          <div style={{ background: '#fefce8', border: '1px solid #fef08a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '16px' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '16px' }}>
             <Lightbulb size={20} color="#eab308" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div style={{ fontSize: '14px', color: '#854d0e', lineHeight: '1.4' }}>
               Look carefully under the lamp.<br/>
@@ -99,7 +99,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           </div>
 
           {/* Mission Checklist */}
-          <div style={{ border: '2px solid #22c55e', borderRadius: '12px', padding: '16px', background: '#f0fdf4', marginBottom: '16px' }}>
+          <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: '#FFFFFF', marginBottom: '16px' }}>
             <h4 style={{ margin: '0 0 12px 0', color: '#16a34a', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Target size={18} /> MISSION CHECKLIST
             </h4>
@@ -120,17 +120,17 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           </div>
 
           {/* How to do */}
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', background: '#f8fafc', marginBottom: '16px' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: '#1e3a8a', fontSize: '14px' }}>How to do:</h4>
+          <div style={{ border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: '#FFFFFF', marginBottom: '16px' }}>
+            <h4 style={{ margin: '0 0 12px 0', color: '#3B2A1F', fontSize: '14px' }}>How to do:</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-                <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><MousePointer2 size={16} /></div> Drag an item from the tray
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><MousePointer2 size={16} /></div> Drag an item from the tray
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-                <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Move size={16} /></div> Drop it in the right group
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Move size={16} /></div> Drop it in the right group
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-                <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Eye size={16} /></div> Click the lamp to observe again
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Eye size={16} /></div> Click the lamp to observe again
               </div>
             </div>
           </div>
@@ -138,8 +138,8 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           {/* Detective Tip */}
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: 'auto', paddingTop: '10px', marginBottom: '16px' }}>
             <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: '60px', height: '60px' }} />
-            <div style={{ background: '#f1f5f9', padding: '12px', borderRadius: '12px', fontSize: '13px', color: '#334155', position: 'relative', flex: 1, border: '1px solid #e2e8f0' }}>
-              <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: '#f1f5f9', borderLeft: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', transform: 'rotate(45deg)' }} />
+            <div style={{ background: '#FFFFFF', padding: '12px', borderRadius: '12px', fontSize: '13px', color: '#334155', position: 'relative', flex: 1, border: '1px solid #D9C9A3' }}>
+              <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: '#FFFFFF', borderLeft: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', transform: 'rotate(45deg)' }} />
               Remember, shiny surfaces reflect more light!
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function Handbook_Appearance({ highestUnlockedIndex = 0, currentF
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
             <button 
               onClick={() => setBookPage(1)}
-              style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}
+              style={{ background: 'white', border: '1px solid #D9C9A3', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}
             >
               <span style={{ fontSize: '16px' }}>←</span> Previous
             </button>

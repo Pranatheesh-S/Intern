@@ -103,7 +103,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
             <div 
               style={{ 
                 height: '140px', 
-                background: '#0f172a', 
+                background: '#FFFFFF', 
                 borderRadius: '12px', 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -202,7 +202,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                 ))}
               </div>
               {weighedCup && (
-                <div style={{ background: '#0b1329', padding: '0.75rem', borderRadius: '4px', textAlign: 'center', color: '#10b981', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '1rem' }}>
+                <div style={{ background: '#FFFFFF', padding: '0.75rem', borderRadius: '4px', textAlign: 'center', color: '#3B2A1F', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '1rem' }}>
                   Digital Balance: {weighedCup.mass} (Mass = quantity of matter)
                 </div>
               )}

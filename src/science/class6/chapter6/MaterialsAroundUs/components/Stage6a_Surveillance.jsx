@@ -75,7 +75,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
           <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Search size={24} color="var(--accent)" /> Phase 1: Surveillance Simulator
           </h3>
-          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)' }}>
+          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--heading-sub)' }}>
             Chief Blake is running a surveillance simulation! Click on each location to see if the suspect is visible through the material.
           </p>
         </div>
@@ -195,7 +195,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                   </div>
 
                   <div style={{ background: '#f0fdfa', borderRadius: '12px', padding: '1.25rem', border: '1px solid #ccfbf1', marginTop: 'auto' }}>
-                    <div style={{ color: '#0d9488', fontSize: '1.05rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
+                    <div style={{ color: 'var(--heading-section)', fontSize: '1.05rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
                     <div style={{ color: '#115e59', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: 'bold' }}>
                       {selectedSpot.conclusion}
                     </div>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Compass, Book, Box, Sparkles, Hammer, Eye, Droplets, Trophy, Brain, CheckCircle2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useState, cloneElement } from 'react';
+import PropTypes from 'prop-types';
+import { Compass, Book, Box, Sparkles, Hammer, Eye, Droplets, Trophy, Brain } from 'lucide-react';
 
 export default function Stage9c_ConceptMap({ onComplete, addXp }) {
   const [activeConcept, setActiveConcept] = useState('matter');
@@ -128,7 +128,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                   filter: explored.includes(c.id) ? 'none' : 'grayscale(100%) opacity(0.6)'
                 }}
               >
-                {React.cloneElement(c.icon, { color: activeConcept === c.id ? 'white' : c.color, size: 16 })}
+                {cloneElement(c.icon, { color: activeConcept === c.id ? 'white' : c.color, size: 16 })}
                 {c.title}
               </button>
             ))}
@@ -192,7 +192,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <div style={{ background: 'white', padding: '10px', borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                        {React.cloneElement(c.icon, { size: 28 })}
+                        {cloneElement(c.icon, { size: 28 })}
                       </div>
                       <div style={{ color: c.color, fontWeight: 'bold', fontSize: '20px' }}>{c.title}</div>
                     </div>
@@ -213,7 +213,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
           
           <div style={{ padding: '1.5rem 1.5rem 0.5rem 1.5rem', borderBottom: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
             <Brain size={24} color="var(--lesson-primary)" />
-            <h3 style={{ margin: 0, color: 'var(--lesson-primary)', fontSize: '1.3rem' }}>Quick Summary</h3>
+            <h3 style={{ margin: 0, color: 'var(--heading-main)', fontSize: '1.3rem' }}>Quick Summary</h3>
           </div>
           
           <div style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1, overflowY: 'auto' }}>
@@ -231,7 +231,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                 }}
               >
                 <div style={{ background: c.color, color: 'white', padding: '8px', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {React.cloneElement(c.icon, { color: 'white', size: 18 })}
+                  {cloneElement(c.icon, { color: 'white', size: 18 })}
                 </div>
                 <div style={{ color: 'var(--lesson-text)', fontSize: '0.95rem', lineHeight: '1.5' }}>
                   <strong style={{ color: c.color }}>{c.prefix}</strong> {c.summary}
@@ -242,8 +242,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
 
           <div style={{ padding: '1.5rem', background: 'var(--lesson-success-bg)', borderTop: '1px solid var(--lesson-success-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ color: 'var(--lesson-success)', fontWeight: 'bold', fontSize: '1.1rem' }}>Great job, Detective!</div>
-              <div style={{ color: 'var(--lesson-success)', fontSize: '0.9rem' }}>You've learned so much today!</div>
+              <div style={{ color: 'var(--lesson-accent)', fontWeight: 'bold', fontSize: '1.1rem' }}>Great job, Detective!</div>
+              <div style={{ color: 'var(--lesson-accent)', fontSize: '0.9rem' }}>You&apos;ve learned so much today!</div>
             </div>
             <Trophy size={40} color="var(--lesson-warning)" />
           </div>
@@ -255,3 +255,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage9c_ConceptMap.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

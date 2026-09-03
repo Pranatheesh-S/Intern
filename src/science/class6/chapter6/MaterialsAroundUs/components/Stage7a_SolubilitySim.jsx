@@ -1,6 +1,8 @@
+/* eslint-disable react/no-unknown-property */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Beaker, Search, Droplets, Target, Camera } from 'lucide-react';
+import { Search, Droplets, Target, Camera } from 'lucide-react';
 
 const StirringProgress = () => {
   const [percent, setPercent] = useState(0);
@@ -71,7 +73,7 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
       } else if (mat === 'sugar') {
         color = new THREE.Color('#FAFAFA'); // Slightly off-white crystalline
       } else {
-        color = new THREE.Color('whiteFFF'); // Bright white for salt
+        color = new THREE.Color('#FFFFFF'); // Bright white for salt
       }
 
       // Base scales - keep them small enough to look like hundreds of individual grains
@@ -264,12 +266,17 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
         opacity={selectedSubstance.id === 'chalk' ? 0.7 : 1.0}
         roughness={selectedSubstance.id === 'sand' ? 1.0 : (selectedSubstance.id === 'chalk' || selectedSubstance.id === 'sawdust' ? 1.0 : 0.2)}
         metalness={selectedSubstance.id === 'sugar' || selectedSubstance.id === 'salt' ? 0.3 : 0.0}
-        emissive="whitefff"
+        emissive="#FFFFFF"
         emissiveIntensity={selectedSubstance.id === 'sand' || selectedSubstance.id === 'sawdust' || selectedSubstance.id === 'chalk' ? 0.0 : 0.15}
         depthWrite={true}
       />
     </instancedMesh>
   );
+};
+
+ParticleSystem.propTypes = {
+  selectedSubstance: PropTypes.object,
+  stirState: PropTypes.string
 };
 
 const StirringRod = ({ stirState }) => {
@@ -306,16 +313,20 @@ const StirringRod = ({ stirState }) => {
         roughness={0.02} 
         metalness={0.1}
         ior={1.55}
-        color="whitefff" 
+        color="#FFFFFF" 
         attenuationColor="var(--lesson-surface)"
         attenuationDistance={2.0}
-        emissive="whitefff"
+        emissive="#FFFFFF"
         emissiveIntensity={0.02}
         clearcoat={1}
         depthWrite={false}
       />
     </mesh>
   );
+};
+
+StirringRod.propTypes = {
+  stirState: PropTypes.string
 };
 
 const Beaker3D = ({ stirState }) => {
@@ -382,7 +393,7 @@ const Beaker3D = ({ stirState }) => {
       <mesh renderOrder={4}>
         <latheGeometry args={[beakerPoints, 64]} />
         <meshPhysicalMaterial 
-          color="whitefff" 
+          color="#FFFFFF" 
           transparent={true}
           transmission={0.98} // High transmission for realism
           opacity={1.0} 
@@ -394,7 +405,7 @@ const Beaker3D = ({ stirState }) => {
           clearcoatRoughness={0.05}
           side={THREE.DoubleSide}
           depthWrite={false}
-          attenuationColor="whitefff"
+          attenuationColor="#FFFFFF"
           attenuationDistance={10}
         />
       </mesh>
@@ -435,10 +446,14 @@ const Beaker3D = ({ stirState }) => {
       {/* Meniscus / Surface Line */}
       <mesh position={[0, 1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
         <torusGeometry args={[1.39, 0.015, 16, 64]} />
-        <meshPhysicalMaterial transparent opacity={0.8} color="whitefff" roughness={0.0} clearcoat={1} depthWrite={false} />
+        <meshPhysicalMaterial transparent opacity={0.8} color="#FFFFFF" roughness={0.0} clearcoat={1} depthWrite={false} />
       </mesh>
     </group>
   );
+};
+
+Beaker3D.propTypes = {
+  stirState: PropTypes.string
 };
 
 const SceneRig = ({ stirState, selectedSubstance }) => {
@@ -488,10 +503,10 @@ const WebGLBeakerSimulation = ({ selectedSubstance, stirState }) => {
         {/* Camera shifted slightly down to y:0.2 to balance the extra visual weight of the bottom shadow */}
         <Canvas camera={{ position: [0, 0.2, 8.5], fov: 40 }} style={{ width: '100%', height: '100%' }}>
           {/* Photorealistic Studio Lighting */}
-          <ambientLight intensity={0.6} color="whitefff" />
-          <directionalLight position={[10, 15, 10]} intensity={1.5} color="whitefff" castShadow />
+          <ambientLight intensity={0.6} color="#FFFFFF" />
+          <directionalLight position={[10, 15, 10]} intensity={1.5} color="#FFFFFF" castShadow />
           <directionalLight position={[-10, 5, -5]} intensity={0.5} color="#e0e0e0" />
-          <spotLight position={[0, 10, 0]} intensity={1.5} penumbra={0.5} angle={0.5} color="whitefff" />
+          <spotLight position={[0, 10, 0]} intensity={1.5} penumbra={0.5} angle={0.5} color="#FFFFFF" />
           
           <SceneRig stirState={stirState} selectedSubstance={selectedSubstance} />
           
@@ -505,6 +520,17 @@ const WebGLBeakerSimulation = ({ selectedSubstance, stirState }) => {
     </div>
   );
 };
+
+WebGLBeakerSimulation.propTypes = {
+  selectedSubstance: PropTypes.object,
+  stirState: PropTypes.string
+};
+
+SceneRig.propTypes = {
+  stirState: PropTypes.string,
+  selectedSubstance: PropTypes.object
+};
+
 // -----------------------------------------------------
 
 export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
@@ -581,10 +607,10 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
       {/* Header */}
       <div style={{ background: 'var(--lesson-background)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
+          <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
             <Search size={32} color="var(--lesson-accent)" /> Phase 1: Solubility Simulator
           </h3>
-          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
+          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--heading-sub)', fontWeight: '500' }}>
             Activity 6.7: Let us explore how different materials behave when we mix them in water.
           </p>
         </div>
@@ -704,7 +730,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
         {/* Right Side: Observation Console */}
         <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-          <h4 style={{ margin: '0 0 1rem 0', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
+          <h4 style={{ margin: '0 0 1rem 0', color: 'var(--heading-section)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
             <Camera size={28} color="var(--lesson-accent)" /> Observation Console
           </h4>
           
@@ -724,12 +750,12 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
                 {stirState === 'idle' ? (
                   <div style={{ background: 'white', borderRadius: '8px', padding: '1.5rem', border: '1px dashed #d6d3d1' }}>
-                    <div style={{ color: 'var(--lesson-secondary)', fontSize: '1.1rem' }}>Added to water. Click 'Stir Well' to observe what happens.</div>
+                    <div style={{ color: 'var(--lesson-secondary)', fontSize: '1.1rem' }}>Added to water. Click &apos;Stir Well&apos; to observe what happens.</div>
                   </div>
                 ) : (
                   <>
                     <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #d6d3d1', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                      <div style={{ color: 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
+                      <div style={{ color: 'var(--heading-section)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', fontWeight: 'bold', color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)' }}>
                         {selectedSubstance.type === 'Soluble' ? 'Disappears in water' : 'Does not disappear'}
                       </div>
@@ -804,3 +830,8 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage7a_SolubilitySim.propTypes = {
+  onComplete: PropTypes.func.isRequired,
+  addXp: PropTypes.func
+};

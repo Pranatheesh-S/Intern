@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Beaker, HelpCircle, Check, Award, Weight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
+import { Beaker, Weight } from 'lucide-react';
 
 export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'both' }) {
   // Solubility state
@@ -69,11 +70,11 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Beaker size={22} style={{ color: 'var(--lesson-accent)' }} /> 
           {mode === 'solubility' ? 'Solubility in Water' : mode === 'matter' ? 'What is Matter?' : '6.3.4 - 6.4: Solubility, Mass, Volume & Matter'}
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--heading-sub)', lineHeight: '1.5' }}>
           {mode === 'solubility' ? 'Let\'s explore solubility by testing if different substances dissolve in water.' : mode === 'matter' ? 'Let\'s explore mass (how heavy it is) and volume (space occupied).' : 'Let\'s explore chemical and physical properties: solubility in water, mass, and volume.'}
         </p>
       </div>
@@ -243,11 +244,17 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
       {/* Footer */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
         {isCompleted && (
-          <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--lesson-success)', fontWeight: 'bold', fontSize: '1rem' }}>
-            Lab Complete! Click "Proceed to next" in the bottom right corner.
+          <div style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--lesson-accent)', fontWeight: 'bold', fontSize: '1rem' }}>
+            Lab Complete! Click &quot;Proceed to next&quot; in the bottom right corner.
           </div>
         )}
       </div>
     </div>
   );
 }
+
+Stage7_SolubilityMatter.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func,
+  mode: PropTypes.string
+};

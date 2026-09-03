@@ -515,7 +515,19 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
 
         .chapter-intro-wrapper * { font-weight: 700 !important; }
 
-        .requested-light-green { color: #D46A92 !important; }
+        .requested-light-green { color: #456C63 !important; }
+        .requested-green-label { color: #456C63 !important; }
+
+        /* Keep Page 2 timeline visible while preserving the requested larger typography */
+        #page2 { gap: 0.7vh; }
+        #page2 .material-card { flex: 0 0 auto; padding: 0.8vh 1.3vw; }
+        #page2 .material-card h3 { font-size: clamp(20px, 3.15vh, 28px); margin-bottom: 0.25vh; }
+        #page2 .material-card p { font-size: clamp(15px, 2.15vh, 20px); line-height: 1.35; }
+        #page2 .callout-box { flex: 0 0 auto; padding: 0.8vh 1.3vw; }
+        #page2 .callout-box ul { margin-top: 0.2vh; }
+        #page2 .callout-box li { margin-bottom: 0.15vh; line-height: 1.3; }
+        #page2 .timeline-card { flex: 1 1 0; min-height: 0; max-height: 18vh; padding: 0.65vh 1.3vw; }
+        #page2 .timeline-card h3 { margin: 0 0 0.25vh; }
       `}</style>
 
       <div className="stage">
@@ -557,19 +569,19 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
                   </div>
 
                   <div className="card">
-                    <div className="label-row"><span className="dot">📜</span> Ancient Source</div>
+                    <div className="label-row"><span className="dot">📜</span> <span className="requested-green-label">Ancient Source</span></div>
                     <h3 style={{ marginBottom: '2px' }}>Rasaratnasamuchchaya</h3>
                     <p>An important Sanskrit text on metallurgy, minerals, and traditional chemical practices.</p>
                   </div>
 
                   <div className="card">
-                    <div className="label-row"><span className="dot">🔬</span> Scientific Connection</div>
+                    <div className="label-row"><span className="dot">🔬</span> <span className="requested-green-label">Scientific Connection</span></div>
                     <h3 style={{ marginBottom: '2px' }}>Properties Matter</h3>
                     <p>Clay does not burn easily, and iron is very strong. Ancient people chose materials based on properties like these.</p>
                   </div>
 
                   <div className="card">
-                    <div className="label-row"><span className="dot">🔥</span> Used For</div>
+                    <div className="label-row"><span className="dot">🔥</span> <span className="requested-green-label">Used For</span></div>
                     <h3 style={{ marginBottom: '2px' }}>Crucible (Melting Vessel)</h3>
                     <p>A crucible is a special container used to heat or melt substances at very high temperatures.</p>
                   </div>
@@ -577,7 +589,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
 
                 {/* PAGE 2 */}
                 <div className={page2Classes} id="page2" style={{ zIndex: page2ZIndex }}>
-                  <div className="label-row"><span className="dot">🧪</span> Material Choice</div>
+                  <div className="label-row"><span className="dot">🧪</span> <span className="requested-green-label">Material Choice</span></div>
                   <h3 className="page-heading">The Crucible Was Made of Two Materials</h3>
 
                   <div className="card material-card">

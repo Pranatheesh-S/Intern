@@ -1,10 +1,12 @@
-import React from 'react';
-import { motion, useTransform } from 'framer-motion';
+import { motion, useTransform, useMotionValue } from 'framer-motion';
+import PropTypes from 'prop-types';
 
 const WaterMaterial = ({ velocityX }) => {
+  const fallbackMotion = useMotionValue(0);
+  const motionVal = typeof velocityX === 'number' || !velocityX ? fallbackMotion : velocityX;
   // Map horizontal drag velocity to a very subtle liquid surface tilt (max ~3deg)
-  const surfaceTilt = velocityX ? useTransform(velocityX, [-600, 600], [-3, 3]) : 0;
-  const meniscusShift = velocityX ? useTransform(velocityX, [-600, 600], [2, -2]) : 0;
+  const surfaceTilt = useTransform(motionVal, [-600, 600], [-3, 3]);
+  const meniscusShift = useTransform(motionVal, [-600, 600], [2, -2]);
 
   return (
     <div style={{ 
@@ -69,7 +71,9 @@ const WaterMaterial = ({ velocityX }) => {
 };
 
 const SandMaterial = ({ velocityX }) => {
-  const sandShift = velocityX ? useTransform(velocityX, [-600, 600], [-1.5, 1.5]) : 0;
+  const fallbackMotion = useMotionValue(0);
+  const motionVal = typeof velocityX === 'number' || !velocityX ? fallbackMotion : velocityX;
+  const sandShift = useTransform(motionVal, [-600, 600], [-1.5, 1.5]);
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', background: '#d3ba9b' }}>
@@ -118,7 +122,9 @@ const SandMaterial = ({ velocityX }) => {
 };
 
 const PebblesMaterial = ({ velocityX }) => {
-  const pebbleShift = velocityX ? useTransform(velocityX, [-600, 600], [-1, 1]) : 0;
+  const fallbackMotion = useMotionValue(0);
+  const motionVal = typeof velocityX === 'number' || !velocityX ? fallbackMotion : velocityX;
+  const pebbleShift = useTransform(motionVal, [-600, 600], [-1, 1]);
 
   const pathA = "M -10,-5 C -2,-12 8,-10 14,-2 C 18,6 12,12 4,14 C -6,16 -14,8 -10,-5 Z";
   const pathB = "M 0,-12 C 10,-9 14,-1 10,7 C 6,15 -7,13 -11,5 C -15,-3 -8,-14 0,-12 Z";
@@ -312,4 +318,21 @@ export const RealisticCup = ({ material, velocityX = 0 }) => {
       
     </div>
   );
+};
+
+WaterMaterial.propTypes = {
+  velocityX: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+};
+
+SandMaterial.propTypes = {
+  velocityX: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+};
+
+PebblesMaterial.propTypes = {
+  velocityX: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+};
+
+RealisticCup.propTypes = {
+  material: PropTypes.string.isRequired,
+  velocityX: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
 };

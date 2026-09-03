@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Compass, BookOpen } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
@@ -45,18 +46,18 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
             <span style={{ background: 'var(--lesson-primary)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: 'var(--text-sm)' }}>CHIEF DETECTIVE</span>
           </h4>
           <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: 'var(--text-lg)', lineHeight: '1.6' }}>
-            "We have thoroughly explored and understood the various properties of materials in the modern world. But wait! Most of the materials that we see today would have also existed earlier. I am curious to know... how did people classify them back then?"
+            &quot;We have thoroughly explored and understood the various properties of materials in the modern world. But wait! Most of the materials that we see today would have also existed earlier. I am curious to know... how did people classify them back then?&quot;
           </p>
         </div>
       </div>
 
       {/* Do You Know Section */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', border: '2px dashed var(--lesson-warning-border)', background: 'var(--lesson-warning-bg)', padding: '2rem' }}>
-        <h3 style={{ margin: 0, fontSize: 'var(--text-3xl)', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: 'var(--text-3xl)', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <BookOpen size={32} /> Do You Know? (Ancient Classification)
         </h3>
         
-        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--lesson-text)', lineHeight: '1.6' }}>
+        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--heading-sub)', lineHeight: '1.6' }}>
           A similar classification system existed in ancient India. <strong>Ayurveda</strong>, one of the Indian medical systems, has a system of grouping things using <strong>20 properties</strong> (<em>guṇa</em>—ten pairs of opposite properties).
         </p>
         
@@ -73,7 +74,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
 
       {/* Properties Grid */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
-        <h4 style={{ fontSize: 'var(--text-2xl)', color: 'var(--lesson-primary)', margin: '0 0 0.5rem 0' }}>The 10 Pairs of Opposite Properties:</h4>
+        <h4 style={{ fontSize: 'var(--text-2xl)', color: 'var(--heading-section)', margin: '0 0 0.5rem 0' }}>The 10 Pairs of Opposite Properties:</h4>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
           {gunasData.map((pair, idx) => (
@@ -111,9 +112,14 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
       
       {/* Footer Instructions */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', minHeight: '40px' }}>
-        <p style={{ color: 'var(--lesson-muted)', fontSize: '0.95rem' }}>Review the ancient properties, then click "Proceed to next" when you are ready for the final concept map.</p>
+        <p style={{ color: 'var(--lesson-muted)', fontSize: '0.95rem' }}>Review the ancient properties, then click &quot;Proceed to next&quot; when you are ready for the final concept map.</p>
       </div>
 
     </div>
   );
 }
+
+Stage8_AyurvedaSummary.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

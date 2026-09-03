@@ -396,7 +396,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                 {[
                   { name: 'School Shelf', icon: <BookOpen size={16} />, color: '#3b82f6', plankColor: '#94a3b8' },
                   { name: 'Home Shelf', icon: <Home size={16} />, color: '#f97316', plankColor: '#94a3b8' },
-                  { name: 'Kitchen Shelf', icon: <Utensils size={16} />, color: '#10b981', plankColor: '#94a3b8' }
+                  { name: 'Kitchen Shelf', icon: <Utensils size={16} />, color: '#3B2A1F', plankColor: '#94a3b8' }
                 ].map((shelf) => {
                   const sortedHere = items.filter(i => usePlacements[i.id] === shelf.name);
                   const isDraggingOverMe = draggingOverShelf === shelf.name;
@@ -503,7 +503,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               borderRadius: '18px',
               padding: '1rem',
               boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
-              border: '3px solid #6b4c20',
+              border: '3px solid #D9C9A3',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.75rem',
@@ -515,7 +515,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                 borderRadius: '8px',
                 padding: '0.4rem 1rem',
                 textAlign: 'center',
-                border: '2px solid #b8924a',
+                border: '2px solid #D9C9A3',
                 boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                 alignSelf: 'center',
                 minWidth: '160px'
@@ -538,7 +538,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       style={{
                         background: 'linear-gradient(145deg, #fdf6e3, #f5e6c8)',
                         borderRadius: '12px',
-                        border: '1.5px solid #c9a96e',
+                        border: '1.5px solid #D9C9A3',
                         padding: '0.6rem 0.4rem 0.5rem',
                         display: 'flex',
                         flexDirection: 'column',
@@ -561,7 +561,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       {isSorted && (
                         <div style={{
                           position: 'absolute', top: '5px', right: '5px',
-                          background: '#10b981', borderRadius: '50%',
+                          background: '#FFFFFF', borderRadius: '50%',
                           width: '18px', height: '18px',
                           display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
@@ -586,7 +586,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                           onChange={(e) => handleMaterialSort(item.id, e.target.value)}
                           style={{
                             fontSize: '0.75rem', padding: '0.25rem 0.3rem',
-                            border: '1px solid #c9a96e', borderRadius: '6px',
+                            border: '1px solid #D9C9A3', borderRadius: '6px',
                             background: 'rgba(255,255,255,0.8)', color: '#5c3d11',
                             outline: 'none', width: '100%', cursor: 'pointer'
                           }}
@@ -609,12 +609,12 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             {/* Right: Illustrated Material Baskets */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', overflowY: 'auto' }}>
               {[
-                { name: 'Paper', color: '#2563eb', icon: '📄', emoji: '♻️', bgLight: '#eff6ff', borderColor: '#93c5fd' },
-                { name: 'Wood', color: '#92400e', icon: '🪵', emoji: '🪵', bgLight: '#fef3c7', borderColor: '#d97706' },
-                { name: 'Plastic', color: '#16a34a', icon: '🧴', emoji: '♻️', bgLight: '#f0fdf4', borderColor: '#4ade80' },
-                { name: 'Metal', color: '#64748b', icon: '🔩', emoji: '🔧', bgLight: '#f1f5f9', borderColor: '#94a3b8' },
-                { name: 'Glass', color: '#0891b2', icon: '🥛', emoji: '♻️', bgLight: '#ecfeff', borderColor: '#67e8f9' },
-                { name: 'Cloth', color: '#dc2626', icon: '👕', emoji: '👕', bgLight: '#fff1f2', borderColor: '#fca5a5' }
+                { name: 'Paper', color: '#2563eb', icon: '📄', emoji: '♻️', bgLight: '#eff6ff', borderColor: '#D9C9A3' },
+                { name: 'Wood', color: '#92400e', icon: '🪵', emoji: '🪵', bgLight: '#fef3c7', borderColor: '#D9C9A3' },
+                { name: 'Plastic', color: '#16a34a', icon: '🧴', emoji: '♻️', bgLight: '#f0fdf4', borderColor: '#D9C9A3' },
+                { name: 'Metal', color: '#64748b', icon: '🔩', emoji: '🔧', bgLight: '#f1f5f9', borderColor: '#D9C9A3' },
+                { name: 'Glass', color: '#0891b2', icon: '🥛', emoji: '♻️', bgLight: '#ecfeff', borderColor: '#D9C9A3' },
+                { name: 'Cloth', color: '#dc2626', icon: '👕', emoji: '👕', bgLight: '#fff1f2', borderColor: '#D9C9A3' }
               ].map((basket) => {
                 const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
                 const isDraggingOverMe = draggingOverBasket === basket.name;
@@ -623,8 +623,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     <svg width="54" height="48" viewBox="0 0 54 48">
                       <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
                       <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#1d4ed8" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="none" stroke="#1e3a8a" strokeWidth="1.5" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#1e3a8a" strokeWidth="1" opacity="0.5"/>)}
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="none" stroke="#3B2A1F" strokeWidth="1.5" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#3B2A1F" strokeWidth="1" opacity="0.5"/>)}
                       <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#2563eb" />
                       <path d="M12 8 Q27 5 42 8 L44 16 Q27 12 10 16 Z" fill="#3b82f6" opacity="0.4" />
                     </svg>
@@ -673,7 +673,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#d97706" />
                       <rect x="14" y="10" width="8" height="8" rx="2" fill="#ef4444" opacity="0.8" />
                       <rect x="24" y="8" width="8" height="8" rx="2" fill="#3b82f6" opacity="0.8" />
-                      <rect x="34" y="10" width="8" height="8" rx="2" fill="#10b981" opacity="0.8" />
+                      <rect x="34" y="10" width="8" height="8" rx="2" fill="#3B2A1F" opacity="0.8" />
                     </svg>
                   )
                 };

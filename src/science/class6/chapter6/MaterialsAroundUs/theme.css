@@ -73,6 +73,11 @@
   --tab-active-bg: var(--lesson-accent);
   --tab-active-text: #ffffff;
   --tab-active-shadow: 0 2px 6px rgba(44, 110, 99, 0.2);
+
+  /* ── Chapter Heading Colors ── */
+  --heading-main: #1A5431; /* Rich Dark Green (Main Activity Headings) */
+  --heading-sub: #D35F2D; /* Warm Orange (Instruction / Subheadings) */
+  --heading-section: #4F386E; /* Purple (Section Headings) */
 }
 
 /* Ensure background color overrides tailwind bg classes */

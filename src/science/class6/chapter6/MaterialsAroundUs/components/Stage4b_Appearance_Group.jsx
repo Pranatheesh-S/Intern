@@ -148,10 +148,10 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
       {/* Header & Lamp toggle */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             📌 Material Tray
           </h3>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--lesson-muted)' }}>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--heading-sub)' }}>
             Drag each material to the correct group
           </p>
         </div>
@@ -279,7 +279,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
         }}
       >
         <div>
-          <h4 style={{ margin: '0 0 0.15rem 0', color: 'var(--lesson-primary)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h4 style={{ margin: '0 0 0.15rem 0', color: 'var(--heading-section)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🔍 Observation Area
           </h4>
           <p style={{ margin: 0, color: 'var(--lesson-accent)', fontSize: '0.85rem' }}>

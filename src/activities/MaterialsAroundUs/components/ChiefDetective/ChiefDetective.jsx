@@ -32,7 +32,7 @@ export default function ChiefDetective({
   }
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+    <div style={{ width: '100%', minHeight: '100vh', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <div className="blake-container">
         {/* Left: Character Sprite */}
         <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>

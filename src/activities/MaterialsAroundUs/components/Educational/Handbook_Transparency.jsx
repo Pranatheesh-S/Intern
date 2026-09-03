@@ -12,7 +12,7 @@ export default function Handbook_Transparency({ currentFlowIndex, stageCompleted
         background: 'white', borderRadius: '16px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
         display: 'flex', flexDirection: 'column', 
-        border: '12px solid #1b2a4a',
+        border: '12px solid #D9C9A3',
         position: 'relative',
         fontFamily: 'Arial, Helvetica, sans-serif',
         overflow: 'hidden'
@@ -30,10 +30,10 @@ export default function Handbook_Transparency({ currentFlowIndex, stageCompleted
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
           <div>
-            <h2 style={{ margin: '0 0 8px 0', fontSize: '24px', color: '#1e3a8a', fontWeight: 'bold', lineHeight: '1.3' }}>
+            <h2 style={{ margin: '0 0 8px 0', fontSize: '24px', color: '#3B2A1F', fontWeight: 'bold', lineHeight: '1.3' }}>
               6.3.3 Transparency
             </h2>
-            <div style={{ width: '40px', height: '4px', background: '#3b82f6', borderRadius: '2px' }} />
+            <div style={{ width: '40px', height: '4px', background: '#FFFFFF', borderRadius: '2px' }} />
           </div>
           <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
         </div>
@@ -44,7 +44,7 @@ export default function Handbook_Transparency({ currentFlowIndex, stageCompleted
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Transparent Box */}
-          <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ color: '#22c55e', marginTop: '4px' }}><Eye size={28} /></div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <strong style={{ color: '#15803d', fontSize: '16px' }}>Transparent</strong>
@@ -54,7 +54,7 @@ export default function Handbook_Transparency({ currentFlowIndex, stageCompleted
           </div>
 
           {/* Translucent Box */}
-          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ color: '#d97706', marginTop: '4px' }}><ShieldAlert size={28} /></div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <strong style={{ color: '#b45309', fontSize: '16px' }}>Translucent</strong>
@@ -64,7 +64,7 @@ export default function Handbook_Transparency({ currentFlowIndex, stageCompleted
           </div>
 
           {/* Opaque Box */}
-          <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ color: '#ef4444', marginTop: '4px' }}><EyeOff size={28} /></div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <strong style={{ color: '#b91c1c', fontSize: '16px' }}>Opaque</strong>
@@ -77,7 +77,7 @@ export default function Handbook_Transparency({ currentFlowIndex, stageCompleted
       </div>
 
       {/* Progress Footer */}
-      <div style={{ padding: '16px 20px', paddingLeft: '32px', borderTop: '1px solid #e2e8f0', background: '#f8fafc' }}>
+      <div style={{ padding: '16px 20px', paddingLeft: '32px', borderTop: '1px solid #e2e8f0', background: '#FFFFFF' }}>
         <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '12px', fontWeight: 'bold', textTransform: 'uppercase' }}>Mission Progress</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           

@@ -21,6 +21,7 @@ import {
   Award
 } from 'lucide-react';
 import { PhotorealisticHandDiceRoll3D, PhotorealisticBouncingSoccerBall3D, PhotorealisticHoneycomb3D, PhotorealisticHeptagonSpiderWeb3D, PhotorealisticStopSign3D, PhotorealisticNonagonPrism3D, PhotorealisticDecagonFerrisWheel3D } from './RealisticMath3D';
+import { COMPLETE_GRAPHS_DATASET } from './data';
 import './theme.css';
 
 
@@ -114,102 +115,117 @@ export const POLYGONS_DATA = [
 export const COMPLETE_GRAPHS_MODULAR_DATA = [
   {
     n: 2,
-    name: '2 Nails (1 String)',
+    code: 'K2',
+    symbol: 'K₂',
+    name: 'K₂ (1 Edge)',
     total: 1,
     formula: '\\frac{2 \\times 1}{2} = 1',
     triangularNumber: 'T₁ = 1',
     color: '#0284c7',
     icon: '📍',
-    realLifeTitle: '2 Nails on a Geoboard',
-    realLife: 'If you have 2 nails, you only need 1 string to connect them together.',
+    shapeName: 'Horizontal Line Segment',
+    realLifeTitle: '2 Pegs on a Geoboard (1 Edge)',
+    realLife: 'Two red pegs connected by 1 horizontal taut string. In real life, two friends shaking hands make exactly 1 handshake.',
     breakdown: [
-      { step: 'Nail 1 connects to Nail 2', count: 1 }
+      { step: 'Peg 1 connects to Peg 2', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k2-flight', name: 'Connect 2 Nails', icon: '📍', color: '#0284c7', edges: [{ u: 0, v: 1 }] }
+      { id: 'k2-line', name: 'Connect 2 Pegs', icon: '📍', color: '#0284c7', edges: [{ u: 0, v: 1 }] }
     ]
   },
   {
     n: 3,
-    name: '3 Nails (3 Strings)',
+    code: 'K3',
+    symbol: 'K₃',
+    name: 'K₃ (3 Edges)',
     total: 3,
     formula: '\\frac{3 \\times 2}{2} = 3',
     triangularNumber: 'T₂ = 2 + 1 = 3',
     color: '#059669',
     icon: '🔺',
-    realLifeTitle: '3 Nails make a Triangle',
-    realLife: 'With 3 nails, you need 3 strings. This creates a simple triangle shape!',
+    shapeName: 'Equilateral Triangle',
+    realLifeTitle: '3 Pegs Form an Equilateral Triangle',
+    realLife: 'With 3 pegs, connecting every pair requires 3 strings. Peg 1 adds 2 strings, Peg 2 adds 1 string (2 + 1 = 3).',
     breakdown: [
-      { step: 'Nail 1 connects to 2 other nails', count: 2 },
-      { step: 'Nail 2 connects to the last nail', count: 1 }
+      { step: 'Peg 1 connects to 2 other pegs', count: 2 },
+      { step: 'Peg 2 connects to the last peg', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k3-tri', name: 'All 3 Strings', icon: '🔺', color: '#059669', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 0 }] }
+      { id: 'k3-tri', name: 'All 3 Perimeter Strings', icon: '🔺', color: '#059669', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 0 }] }
     ]
   },
   {
     n: 4,
-    name: '4 Nails (6 Strings)',
+    code: 'K4',
+    symbol: 'K₄',
+    name: 'K₄ (6 Edges)',
     total: 6,
     formula: '\\frac{4 \\times 3}{2} = 6',
     triangularNumber: 'T₃ = 3 + 2 + 1 = 6',
     color: '#d97706',
-    icon: '🧵',
-    realLifeTitle: '4 Nails with Cross Strings',
-    realLife: 'Connecting 4 nails takes 6 strings. You get a square on the outside and an X on the inside.',
+    icon: '🔲',
+    shapeName: 'Square with Diagonal Cross (X)',
+    realLifeTitle: '4 Pegs: Square + Interior Cross (X)',
+    realLife: 'Connecting 4 pegs takes 6 strings: 4 perimeter strings form a square, and 2 interior diagonals form an X in the center (3 + 2 + 1 = 6).',
     breakdown: [
-      { step: 'Nail 1 connects to 3 other nails', count: 3 },
-      { step: 'Nail 2 connects to 2 other nails', count: 2 },
-      { step: 'Nail 3 connects to the last nail', count: 1 }
+      { step: 'Peg 1 connects to 3 other pegs', count: 3 },
+      { step: 'Peg 2 connects to 2 other pegs', count: 2 },
+      { step: 'Peg 3 connects to the last peg', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k4-perimeter', name: 'Outside Square Strings', icon: '🟦', color: '#0284c7', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 0 }] },
-      { id: 'k4-diagonal', name: 'Inside Cross Strings', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 1, v: 3 }] }
+      { id: 'k4-perimeter', name: '4 Outside Square Strings', icon: '🟦', color: '#0284c7', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 0 }] },
+      { id: 'k4-diagonal', name: '2 Inside Diagonal Strings', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 1, v: 3 }] }
     ]
   },
   {
     n: 5,
-    name: '5 Nails (10 Strings)',
+    code: 'K5',
+    symbol: 'K₅',
+    name: 'K₅ (10 Edges)',
     total: 10,
     formula: '\\frac{5 \\times 4}{2} = 10',
     triangularNumber: 'T₄ = 4 + 3 + 2 + 1 = 10',
     color: '#db2777',
     icon: '⭐',
-    realLifeTitle: '5 Nails make a Star',
-    realLife: 'With 5 nails, you need 10 strings. This makes a pentagon shape with a perfect star inside!',
+    shapeName: 'Pentagon with 5-Pointed Star',
+    realLifeTitle: '5 Pegs: Pentagon + Inlaid 5-Pointed Star',
+    realLife: '5 pegs take 10 strings: 5 perimeter strings form a regular pentagon, and 5 interior diagonals form a perfect 5-pointed star (4 + 3 + 2 + 1 = 10).',
     breakdown: [
-      { step: 'Nail 1 connects to 4 other nails', count: 4 },
-      { step: 'Nail 2 connects to 3 other nails', count: 3 },
-      { step: 'Nail 3 connects to 2 other nails', count: 2 },
-      { step: 'Nail 4 connects to the last nail', count: 1 }
+      { step: 'Peg 1 connects to 4 other pegs', count: 4 },
+      { step: 'Peg 2 connects to 3 other pegs', count: 3 },
+      { step: 'Peg 3 connects to 2 other pegs', count: 2 },
+      { step: 'Peg 4 connects to the last peg', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k5-pentagon', name: 'Outside Pentagon Strings', icon: '⬟', color: '#db2777', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 0 }] },
-      { id: 'k5-star', name: 'Inside Star Strings', icon: '⭐', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 2, v: 4 }, { u: 4, v: 1 }, { u: 1, v: 3 }, { u: 3, v: 0 }] }
+      { id: 'k5-pentagon', name: '5 Outside Pentagon Strings', icon: '⬟', color: '#db2777', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 0 }] },
+      { id: 'k5-star', name: '5 Inside Star Strings', icon: '⭐', color: '#f59e0b', edges: [{ u: 0, v: 2 }, { u: 2, v: 4 }, { u: 4, v: 1 }, { u: 1, v: 3 }, { u: 3, v: 0 }] }
     ]
   },
   {
     n: 6,
-    name: '6 Nails (15 Strings)',
+    code: 'K6',
+    symbol: 'K₆',
+    name: 'K₆ (15 Edges)',
     total: 15,
     formula: '\\frac{6 \\times 5}{2} = 15',
     triangularNumber: 'T₅ = 5 + 4 + 3 + 2 + 1 = 15',
     color: '#7c3aed',
-    icon: '🎨',
-    realLifeTitle: '6 Nails String Art Pattern',
-    realLife: '6 nails need 15 strings! This creates a beautiful and complex string art design.',
+    icon: '⬢',
+    shapeName: 'Hexagon with 9 Inner Chords',
+    realLifeTitle: '6 Pegs: Hexagon + 9 Inner Diagonals',
+    realLife: '6 pegs need 15 strings: 6 perimeter strings form a regular hexagon, and 9 interior strings form interlaced triangles and diametric chords (5 + 4 + 3 + 2 + 1 = 15).',
     breakdown: [
-      { step: 'Nail 1 connects to 5 other nails', count: 5 },
-      { step: 'Nail 2 connects to 4 other nails', count: 4 },
-      { step: 'Nail 3 connects to 3 other nails', count: 3 },
-      { step: 'Nail 4 connects to 2 other nails', count: 2 },
-      { step: 'Nail 5 connects to the last nail', count: 1 }
+      { step: 'Peg 1 connects to 5 other pegs', count: 5 },
+      { step: 'Peg 2 connects to 4 other pegs', count: 4 },
+      { step: 'Peg 3 connects to 3 other pegs', count: 3 },
+      { step: 'Peg 4 connects to 2 other pegs', count: 2 },
+      { step: 'Peg 5 connects to the last peg', count: 1 }
     ],
     shapeComponents: [
-      { id: 'k6-hexagon', name: 'Outside Hexagon Strings', icon: '⬢', color: '#7c3aed', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 5 }, { u: 5, v: 0 }] },
+      { id: 'k6-hexagon', name: '6 Outside Hexagon Strings', icon: '⬢', color: '#7c3aed', edges: [{ u: 0, v: 1 }, { u: 1, v: 2 }, { u: 2, v: 3 }, { u: 3, v: 4 }, { u: 4, v: 5 }, { u: 5, v: 0 }] },
       { id: 'k6-star1', name: 'First Triangle Star', icon: '🔺', color: '#ea580c', edges: [{ u: 0, v: 2 }, { u: 2, v: 4 }, { u: 4, v: 0 }] },
       { id: 'k6-star2', name: 'Second Triangle Star', icon: '🔻', color: '#059669', edges: [{ u: 1, v: 3 }, { u: 3, v: 5 }, { u: 5, v: 1 }] },
-      { id: 'k6-diameters', name: 'Middle Cross Strings', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 3 }, { u: 1, v: 4 }, { u: 2, v: 5 }] }
+      { id: 'k6-diameters', name: '3 Center Diametric Strings', icon: '⚡', color: '#f59e0b', edges: [{ u: 0, v: 3 }, { u: 1, v: 4 }, { u: 2, v: 5 }] }
     ]
   }
 ];
@@ -1296,137 +1312,134 @@ export const GEOBOARD_NAILS_DATA = [
   { id: 5, label: '6', color: '#0891b2', stringColor: '#67e8f9' }
 ];
 
-// Straight String Edge connecting two nails
-function StringEdge({ from, to, color }) {
-  const edgeGeo = useMemo(() => {
-    const vFrom = new THREE.Vector3(from.x, from.y + 0.15, from.z);
-    const vTo = new THREE.Vector3(to.x, to.y + 0.15, to.z);
-    const dist = vFrom.distanceTo(vTo);
-    
-    // Create a thin cylinder for the string
-    return new THREE.CylinderGeometry(0.015, 0.015, dist, 16);
-  }, [from, to]);
+// Exact regular polygon start angle to match the textbook Complete Graph figures K2 to K6
+function getCompleteGraphStartAngle(n) {
+  if (n === 2) return 0; // horizontal line: (-R, 0) to (R, 0)
+  if (n === 3) return -Math.PI / 2; // apex on top
+  if (n === 4) return -Math.PI * 3 / 4; // square with horizontal top/bottom and vertical sides
+  if (n === 5) return -Math.PI / 2; // pentagon with apex on top
+  if (n === 6) return 0; // hexagon with vertices on left and right (-R, 0) and (R, 0)
+  return -Math.PI / 2;
+}
 
-  const { position, quaternion } = useMemo(() => {
-    const vFrom = new THREE.Vector3(from.x, from.y + 0.15, from.z);
-    const vTo = new THREE.Vector3(to.x, to.y + 0.15, to.z);
+// Photorealistic tactile String Edge connecting two nails
+function StringEdge({ from, to, isPerimeter, isGhost = false }) {
+  const { position, quaternion, dist } = useMemo(() => {
+    const vFrom = new THREE.Vector3(from.x, 0.14, from.z);
+    const vTo = new THREE.Vector3(to.x, 0.14, to.z);
+    const dist = vFrom.distanceTo(vTo);
     const pos = vFrom.clone().lerp(vTo, 0.5);
-    
-    // Calculate rotation to point from A to B
     const direction = vTo.clone().sub(vFrom).normalize();
     const up = new THREE.Vector3(0, 1, 0);
     const quat = new THREE.Quaternion().setFromUnitVectors(up, direction);
-    return { position: pos, quaternion: quat };
+    return { position: pos, quaternion: quat, dist };
   }, [from, to]);
 
+  if (isGhost) {
+    return (
+      <group position={[position.x, 0.02, position.z]} quaternion={quaternion}>
+        <mesh>
+          <cylinderGeometry args={[0.008, 0.008, dist, 8]} />
+          <meshBasicMaterial color="#64748b" transparent opacity={0.25} />
+        </mesh>
+      </group>
+    );
+  }
+
+  // Taut elastic / silk cords:
+  // Perimeter edges: vibrant cyan / sky blue (#0284c7)
+  // Interior diagonals: radiant golden amber (#f59e0b)
+  const color = isPerimeter ? '#0284c7' : '#f59e0b';
+  const emissive = isPerimeter ? '#0369a1' : '#b45309';
+
   return (
-    <mesh geometry={edgeGeo} position={position} quaternion={quaternion} castShadow>
-      <meshStandardMaterial 
-        color={color} 
-        emissive={color} 
-        emissiveIntensity={0.8} 
-        roughness={0.6}
-        metalness={0.1}
-      />
-    </mesh>
+    <group position={position} quaternion={quaternion}>
+      {/* Main Taut Braided Cord */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.022, 0.022, dist, 16]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={emissive}
+          emissiveIntensity={0.35}
+          roughness={0.25}
+          metalness={0.12}
+        />
+      </mesh>
+
+      {/* Brass end rings where cord loops around the pegs */}
+      <mesh position={[0, -dist / 2 + 0.035, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <torusGeometry args={[0.034, 0.008, 12, 24]} />
+        <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.15} />
+      </mesh>
+      <mesh position={[0, dist / 2 - 0.035, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <torusGeometry args={[0.034, 0.008, 12, 24]} />
+        <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.15} />
+      </mesh>
+    </group>
   );
 }
 
 export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
-  const currentGraph = graph || COMPLETE_GRAPHS_MODULAR_DATA[0];
-  const n = currentGraph?.n || 4;
-  const radius = 1.42;
+  const woodTexture = useLoader(THREE.TextureLoader, '/hardwood_texture.jpg');
+  useMemo(() => {
+    if (woodTexture) {
+      woodTexture.wrapS = THREE.RepeatWrapping;
+      woodTexture.wrapT = THREE.RepeatWrapping;
+      woodTexture.repeat.set(2.5, 2.5);
+      woodTexture.colorSpace = THREE.SRGBColorSpace;
+    }
+  }, [woodTexture]);
 
-  // Active Connection Edge List
-  const connectedEdgesList = useMemo(() => {
-    if (!currentGraph) return [];
+  const currentGraph = graph || COMPLETE_GRAPHS_MODULAR_DATA[2] || COMPLETE_GRAPHS_MODULAR_DATA[0];
+  const n = currentGraph?.n || 4;
+  const radius = 1.38;
+
+  // All Potential Edge Pairs for Complete Graph Kn
+  const allGraphEdges = useMemo(() => {
     const list = [];
-    const allGraphEdges = [];
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
-        allGraphEdges.push({ id: `${i}-${j}`, u: i, v: j });
+        const isPerimeter = n === 2 ? true : (j - i === 1 || (i === 0 && j === n - 1));
+        list.push({
+          id: `${i}-${j}`,
+          u: i,
+          v: j,
+          isPerimeter,
+          type: isPerimeter ? 'perimeter' : 'diagonal'
+        });
       }
     }
-    allGraphEdges.forEach(e => {
-      const isDirect = activeComponentIds?.includes(e.id);
-      const isViaComponent = currentGraph.shapeComponents?.some(comp =>
-        activeComponentIds?.includes(comp.id) && comp.edges?.some(ce => (ce.u === e.u && ce.v === e.v) || (ce.u === e.v && ce.v === e.u))
-      );
-      if (isDirect || isViaComponent) {
-        list.push(e);
-      }
-    });
     return list;
-  }, [currentGraph, activeComponentIds, n]);
+  }, [n]);
 
-  // Single continuous flight path sequence covering all active edges
-  const flightPathSequence = useMemo(() => {
-    if (connectedEdgesList.length === 0) return [];
-    
-    // Build adjacency list for active edges
-    const adj = {};
-    for (let i = 0; i < n; i++) adj[i] = [];
-    connectedEdgesList.forEach(e => {
-      adj[e.u].push(e.v);
-      adj[e.v].push(e.u);
+  // Connected edges matching activeComponentIds (or all edges if activeComponentIds is empty/stale)
+  const connectedEdgesList = useMemo(() => {
+    if (!activeComponentIds || activeComponentIds.length === 0) {
+      return allGraphEdges;
+    }
+    const matched = allGraphEdges.filter(e => {
+      const isDirect = activeComponentIds.includes(e.id);
+      const isViaComponent = currentGraph.shapeComponents?.some(comp =>
+        activeComponentIds.includes(comp.id) && comp.edges?.some(ce => (ce.u === e.u && ce.v === e.v) || (ce.u === e.v && ce.v === e.u))
+      );
+      return isDirect || isViaComponent;
     });
+    return matched.length > 0 ? matched : allGraphEdges;
+  }, [allGraphEdges, activeComponentIds, currentGraph]);
 
-    const sequence = [];
-    let current = connectedEdgesList[0].u;
-    sequence.push(current);
-    
-    let visitedEdges = new Set();
-    let steps = 0;
-    
-    // Greedy Eulerian-like path generation
-    while (visitedEdges.size < connectedEdgesList.length && steps < 50) {
-      const neighbors = adj[current] || [];
-      if (neighbors.length === 0) break;
-      
-      let next = -1;
-      // Prefer unvisited edges
-      for (let neighbor of neighbors) {
-        const edgeId1 = `${current}-${neighbor}`;
-        const edgeId2 = `${neighbor}-${current}`;
-        if (!visitedEdges.has(edgeId1) && !visitedEdges.has(edgeId2)) {
-          next = neighbor;
-          visitedEdges.add(edgeId1);
-          visitedEdges.add(edgeId2);
-          break;
-        }
-      }
-      
-      // If all neighbor edges are visited, randomly traverse a connected neighbor
-      if (next === -1) {
-        next = neighbors[Math.floor(Math.random() * neighbors.length)];
-      }
-      
-      sequence.push(next);
-      current = next;
-      steps++;
-    }
-    
-    // Ensure the path loops seamlessly back to the start!
-    if (sequence[sequence.length - 1] !== sequence[0]) {
-      sequence.push(sequence[0]);
-    }
-    
-    return sequence;
-  }, [connectedEdgesList, n]);
-
-  // Positions of Nails in an exact Regular Polygon (Start Angle 0 for horizontal alignment!)
+  // Positions of Nails in an exact Regular Polygon matching textbook angles
   const hubNodes = useMemo(() => {
     const nodes = [];
-    const startAngle = 0;
+    const startAngle = getCompleteGraphStartAngle(n);
 
     for (let i = 0; i < n; i++) {
       const angle = startAngle + (i * 2 * Math.PI) / n;
-      const hub = GEOBOARD_NAILS_DATA[i % GEOBOARD_NAILS_DATA.length];
       const x = radius * Math.cos(angle);
       const z = radius * Math.sin(angle);
 
       nodes.push({
-        ...hub,
+        id: i,
+        label: `${i + 1}`,
         angle,
         x,
         y: 0,
@@ -1436,81 +1449,212 @@ export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
     return nodes;
   }, [n, radius]);
 
-  // All Potential Edge Pairs
-  const allPotentialEdges = useMemo(() => {
-    const edges = [];
-    for (let i = 0; i < n; i++) {
-      for (let j = i + 1; j < n; j++) {
-        edges.push({ id: `${i}-${j}`, u: i, v: j });
-      }
-    }
-    return edges;
-  }, [n]);
+  const totalPossible = allGraphEdges.length;
+  const connectedIdsSet = useMemo(() => new Set(connectedEdgesList.map(e => e.id)), [connectedEdgesList]);
 
   return (
-    <group position={[0, -0.2, 0]} rotation={[0.42, 0, 0]}>
-      {/* Photorealistic Studio Lighting */}
-      <ambientLight intensity={1.8} color="#fffbeb" />
-      <directionalLight position={[6, 12, 5]} intensity={2.2} color="#ffffff" castShadow />
-      <directionalLight position={[-6, 8, -4]} intensity={1.2} color="#f8fafc" />
+    <group position={[0, -0.15, 0]} rotation={[0.62, -0.18, 0]}>
+      {/* 1. Deep Space Studio Lighting */}
+      <ambientLight intensity={1.4} color="#cbd5e1" />
+      <directionalLight position={[6, 10, 8]} intensity={2.8} color="#ffffff" castShadow />
+      <directionalLight position={[-6, 4, -4]} intensity={2.0} color="#38bdf8" />
+      <pointLight position={[0, 3, 2]} intensity={1.8} color="#fef08a" distance={8} />
 
-      {/* ================= 1. WOODEN GEOBOARD BASE ================= */}
-      <group position={[0, 0, 0]}>
-        {/* Solid Wooden Board */}
-        <mesh receiveShadow castShadow position={[0, -0.05, 0]}>
-          <cylinderGeometry args={[1.9, 1.9, 0.1, 64]} />
+      {/* 2. Floating Golden Math Sparkles */}
+      <DreiSparkles count={28} scale={4.2} size={2.0} speed={0.35} color="#fde68a" />
+
+      {/* 3. Circular Polished Walnut Inspection Turntable */}
+      <group position={[0, -0.06, 0]}>
+        {/* Turntable Plinth */}
+        <mesh position={[0, -0.07, 0]} receiveShadow>
+          <cylinderGeometry args={[2.1, 2.18, 0.14, 64]} />
           <meshStandardMaterial
-            color="#78350f" 
-            roughness={0.6}
+            map={woodTexture}
+            bumpMap={woodTexture}
+            bumpScale={0.03}
+            color="#1c1917"
+            roughness={0.45}
+            metalness={0.15}
+          />
+        </mesh>
+
+        {/* Polished Brass Rim Bezel */}
+        <mesh position={[0, 0.008, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[2.1, 0.024, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.14} />
+        </mesh>
+
+        {/* Inlaid Concentric Gold Calibration Ring */}
+        <mesh position={[0, 0.01, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[1.92, 0.01, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* Recessed Light Maple Geoboard Bed */}
+        <mesh position={[0, 0.005, 0]} receiveShadow>
+          <cylinderGeometry args={[1.82, 1.82, 0.02, 64]} />
+          <meshStandardMaterial
+            map={woodTexture}
+            bumpMap={woodTexture}
+            bumpScale={0.02}
+            color="#eed6b8"
+            roughness={0.4}
             metalness={0.05}
           />
         </mesh>
-        {/* Lighter Wood Rim */}
-        <mesh receiveShadow castShadow position={[0, -0.05, 0]}>
-          <cylinderGeometry args={[1.95, 1.95, 0.08, 64]} />
-          <meshStandardMaterial color="#92400e" roughness={0.7} metalness={0.0} />
+
+        {/* Laser-Engraved Polygon Perimeter Groove */}
+        <mesh position={[0, 0.016, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[radius, 0.008, 16, 64]} />
+          <meshStandardMaterial color="#92400e" roughness={0.6} />
+        </mesh>
+
+        {/* Laser-Engraved Center Pivot Point */}
+        <mesh position={[0, 0.017, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.04, 16]} />
+          <meshBasicMaterial color="#78350f" />
         </mesh>
       </group>
 
-      {/* ================= 2. ACTIVE STRINGS ================= */}
+      {/* 4. Front & Top Engraved Labels */}
+      <group position={[0, 0.01, 0]}>
+        {/* Top Peg Count Label */}
+        <group position={[0, 0, -1.65]} rotation={[-Math.PI / 2, 0, 0]}>
+          <Text
+            position={[0, 0, 0.02]}
+            fontSize={0.15}
+            color="#38bdf8"
+            fontWeight="900"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {`n = ${n} Red Pegs (Vertices)`}
+          </Text>
+        </group>
+
+        {/* Front Formula Rim Label */}
+        <group position={[0, 0.015, 1.5]} rotation={[-Math.PI / 2, 0, 0]}>
+          <Text
+            position={[0, 0.07, 0.02]}
+            fontSize={0.14}
+            color="#fef08a"
+            fontWeight="900"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {`Complete Graph K${n} · Total = ${n}×${n - 1}/2 = ${totalPossible} Edges`}
+          </Text>
+          <Text
+            position={[0, -0.07, 0.02]}
+            fontSize={0.115}
+            color="#93c5fd"
+            fontWeight="800"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {`Triangular Series: T${n - 1} = ${Array.from({ length: n - 1 }, (_, i) => n - 1 - i).join(' + ')} = ${totalPossible} Strings`}
+          </Text>
+        </group>
+      </group>
+
+      {/* 5. Strings (Connecting Cords) */}
+      {/* Active Strings */}
       {connectedEdgesList.map((edge, idx) => {
         const from = hubNodes[edge.u];
         const to = hubNodes[edge.v];
         if (!from || !to) return null;
-
-        // Give the string the color of the starting nail for a nice multi-color effect
-        const edgeColor = from.stringColor;
-
         return (
-          <group key={`edge-${edge.id || idx}`}>
-            <StringEdge from={from} to={to} color={edgeColor} />
-          </group>
+          <StringEdge
+            key={`edge-${edge.id || idx}`}
+            from={from}
+            to={to}
+            isPerimeter={edge.isPerimeter}
+            isGhost={false}
+          />
         );
       })}
 
-      {/* ================= 3. BRASS NAILS ================= */}
+      {/* Unconnected Ghost Guide Strings */}
+      {allGraphEdges.map((edge, idx) => {
+        if (connectedIdsSet.has(edge.id)) return null;
+        const from = hubNodes[edge.u];
+        const to = hubNodes[edge.v];
+        if (!from || !to) return null;
+        return (
+          <StringEdge
+            key={`ghost-edge-${edge.id || idx}`}
+            from={from}
+            to={to}
+            isPerimeter={edge.isPerimeter}
+            isGhost={true}
+          />
+        );
+      })}
+
+      {/* 6. Red Pegs (Nails) Matching the Textbook Diagram */}
       {hubNodes.map((hub) => {
         return (
           <group key={`hub-${hub.id}`} position={[hub.x, 0, hub.z]}>
-            {/* Nail Body (Brass) */}
-            <mesh position={[0, 0.08, 0]} castShadow receiveShadow>
-              <cylinderGeometry args={[0.025, 0.025, 0.16, 16]} />
-              <meshStandardMaterial 
-                color="#fbbf24" 
-                roughness={0.3} 
-                metalness={0.9} 
+            {/* Brass Base Collar */}
+            <mesh position={[0, 0.02, 0]} receiveShadow castShadow>
+              <cylinderGeometry args={[0.065, 0.08, 0.04, 24]} />
+              <meshStandardMaterial color="#d97706" metalness={0.88} roughness={0.2} />
+            </mesh>
+
+            {/* Brass Peg Stem */}
+            <mesh position={[0, 0.09, 0]} castShadow receiveShadow>
+              <cylinderGeometry args={[0.032, 0.032, 0.14, 24]} />
+              <meshStandardMaterial color="#fbbf24" metalness={0.92} roughness={0.15} />
+            </mesh>
+
+            {/* String Groove Waist */}
+            <mesh position={[0, 0.14, 0]}>
+              <torusGeometry args={[0.034, 0.008, 16, 24]} />
+              <meshStandardMaterial color="#b45309" metalness={0.9} roughness={0.2} />
+            </mesh>
+
+            {/* Top Brass Crown Bezel */}
+            <mesh position={[0, 0.17, 0]} castShadow>
+              <cylinderGeometry args={[0.055, 0.036, 0.03, 24]} />
+              <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.16} />
+            </mesh>
+
+            {/* Vibrant Ruby-Red Enamel Dome Cap (matching the Red Dots in the textbook!) */}
+            <mesh position={[0, 0.205, 0]} castShadow>
+              <sphereGeometry args={[0.062, 24, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
+              <meshPhysicalMaterial
+                color="#ef4444"
+                roughness={0.12}
+                metalness={0.08}
+                clearcoat={1.0}
+                clearcoatRoughness={0.08}
+                emissive="#991b1b"
+                emissiveIntensity={0.25}
               />
             </mesh>
 
-            {/* Nail Head */}
-            <mesh position={[0, 0.16, 0]} castShadow receiveShadow>
-              <cylinderGeometry args={[0.05, 0.05, 0.015, 16]} />
-              <meshStandardMaterial 
-                color="#f59e0b" 
-                roughness={0.2} 
-                metalness={1.0} 
-              />
-            </mesh>
+            {/* Floating Gold Coin Number Tag */}
+            <group position={[0, 0.32, 0]}>
+              <mesh rotation={[-Math.PI / 2, 0, 0]}>
+                <circleGeometry args={[0.075, 24]} />
+                <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.15} />
+              </mesh>
+              <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <circleGeometry args={[0.062, 24]} />
+                <meshBasicMaterial color="#0f172a" />
+              </mesh>
+              <Text
+                position={[0, 0.003, 0]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                fontSize={0.09}
+                color="#fef08a"
+                fontWeight="900"
+                anchorX="center"
+                anchorY="middle"
+              >
+                {hub.label}
+              </Text>
+            </group>
           </group>
         );
       })}
@@ -1519,159 +1663,264 @@ export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
 }
 
 // -----------------------------------------------------------------------
-// 4. TABLE 3 MASTER 3D VIEWER: PHOTOREALISTIC HANDCRAFTED HERITAGE TILES WORKBENCH (STACKED SQUARES)
+// 4. TABLE 3 MASTER 3D VIEWER: PHOTOREALISTIC MONTESSORI HARDWOOD SQUARE GNOMON BENCH
+// Concept: Square Numbers n^2 via Consecutive Odd Number Gnomons (1 + 3 + 5 + 7 + 9)
 // -----------------------------------------------------------------------
 
-const HERITAGE_CERAMIC_PALETTES = [
-  { name: 'Layer 1 (Crimson)', base: '#991b1b', inlay: '#fca5a5', accent: '#fef2f2', rim: '#7f1d1d' },
-  { name: 'Layer 2 (Emerald)', base: '#065f46', inlay: '#6ee7b7', accent: '#ecfdf5', rim: '#064e3b' },
-  { name: 'Layer 3 (Saffron)', base: '#d97706', inlay: '#fde68a', accent: '#fffbeb', rim: '#b45309' },
-  { name: 'Layer 4 (Cobalt)', base: '#1e40af', inlay: '#93c5fd', accent: '#eff6ff', rim: '#1e3a8a' },
-  { name: 'Layer 5 (Amethyst)', base: '#6b21a8', inlay: '#d8b4fe', accent: '#faf5ff', rim: '#581c87' }
+const HERITAGE_GNOMON_LAYERS = [
+  { name: 'Layer 1 (Core)', color: '#f59e0b', stain: '#b45309', badge: '1', odd: 1 },
+  { name: 'Layer 2 (+3)', color: '#10b981', stain: '#047857', badge: '+3', odd: 3 },
+  { name: 'Layer 3 (+5)', color: '#f97316', stain: '#c2410c', badge: '+5', odd: 5 },
+  { name: 'Layer 4 (+7)', color: '#6366f1', stain: '#4338ca', badge: '+7', odd: 7 },
+  { name: 'Layer 5 (+9)', color: '#a855f7', stain: '#7e22ce', badge: '+9', odd: 9 },
 ];
-
-// Single Photorealistic Handcrafted Ceramic Floor Tile (Zero Floating, Zero Z-Fighting, Authentic Physical Chamfers)
-function PhotorealisticCeramicTile({ x, z, size = 0.48, layer = 0, isPlaced = true, isCorner = false }) {
-  const palette = HERITAGE_CERAMIC_PALETTES[layer % HERITAGE_CERAMIC_PALETTES.length];
-  const tileThickness = 0.036;
-
-  if (!isPlaced) {
-    return (
-      <group position={[x, 0.003, z]}>
-        {/* Recessed Blueprint Mortar Guide on Slate Bed */}
-        <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[size * 0.94, size * 0.94]} />
-          <meshBasicMaterial color="#e2e8f0" wireframe transparent opacity={0.35} />
-        </mesh>
-      </group>
-    );
-  }
-
-  return (
-    <group position={[x, 0.003, z]}>
-      {/* 1. Terracotta Clay Bisque Base (Zero Sinking, Exact Y = 0.003 + thickness/2) */}
-      <mesh position={[0, tileThickness / 2, 0]} castShadow receiveShadow>
-        <boxGeometry args={[size * 0.94, tileThickness, size * 0.94]} />
-        <meshStandardMaterial color="#7c2d12" roughness={0.88} metalness={0.05} />
-      </mesh>
-
-      {/* 2. Vitrified Mineral Enamel Glaze Surface (Chamfered Top) */}
-      <mesh position={[0, tileThickness + 0.0015, 0]} receiveShadow>
-        <boxGeometry args={[size * 0.91, 0.003, size * 0.91]} />
-        <meshPhysicalMaterial
-          color={palette.base}
-          roughness={0.12}
-          metalness={0.08}
-          clearcoat={1.0}
-          clearcoatRoughness={0.08}
-          reflectivity={0.9}
-        />
-      </mesh>
-
-      {/* 3. Handcrafted Traditional Geometric Mandala Inlay */}
-      <group position={[0, tileThickness + 0.004, 0]}>
-        {/* Outer Circular Inlay Border */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[size * 0.22, size * 0.31, 24]} />
-          <meshStandardMaterial color={palette.inlay} roughness={0.2} metalness={0.1} />
-        </mesh>
-
-        {/* Center Floral Medallion */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[size * 0.14, 16]} />
-          <meshStandardMaterial color={palette.accent} roughness={0.18} />
-        </mesh>
-
-        {/* Center Brass Pip Core */}
-        <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[size * 0.045, 12]} />
-          <meshStandardMaterial color="#f59e0b" metalness={0.85} roughness={0.2} />
-        </mesh>
-
-        {/* 4 Corner Traditional Symmetry Florets */}
-        {[-size * 0.27, size * 0.27].map((px, pxIdx) =>
-          [-size * 0.27, size * 0.27].map((pz, pzIdx) => (
-            <mesh key={`floret-${pxIdx}-${pzIdx}`} position={[px, 0.001, pz]} rotation={[-Math.PI / 2, 0, 0]}>
-              <circleGeometry args={[size * 0.055, 12]} />
-              <meshStandardMaterial color={palette.inlay} roughness={0.25} />
-            </mesh>
-          ))
-        )}
-      </group>
-    </group>
-  );
-}
 
 export function Table3StackedSquares3D({ rows = 3, placedLayers = 3 }) {
   const effectiveRows = Math.min(5, Math.max(1, rows || 3));
   const effectivePlaced = Math.min(effectiveRows, Math.max(1, placedLayers || 3));
-  const tileSize = 0.48;
-  const spacing = 0.51; // 3cm realistic dark mortar grout lines
-  const offset = ((effectiveRows - 1) * spacing) / 2;
-  const tableWidth = Math.max(3.4, (effectiveRows + 1.4) * spacing);
 
   return (
-    <group position={[0, -0.08, 0]} rotation={[0.48, -0.25, 0]}>
-      {/* Warm Natural Studio Lighting */}
-      <ambientLight intensity={1.5} color="#1e293b" />
-      <directionalLight position={[5, 8, 4]} intensity={2.6} color="#fffbeb" castShadow />
-      <directionalLight position={[-4, 5, -3]} intensity={1.2} color="#334155" />
-      <pointLight position={[0, 3, 0]} intensity={1.6} color="#fef08a" distance={7} />
+    <Suspense fallback={null}>
+      <RealisticStackedSquaresScene
+        effectiveRows={effectiveRows}
+        effectivePlaced={effectivePlaced}
+      />
+    </Suspense>
+  );
+}
 
-      {/* ================= 1. NATURAL TEAKWOOD ARTISAN WORKBENCH ================= */}
-      <group position={[0, 0, 0]}>
-        {/* Solid Wooden Tabletop Plate (Surface exactly at Y = 0.0) */}
-        <mesh position={[0, -0.06, 0]} receiveShadow castShadow>
-          <boxGeometry args={[tableWidth, 0.12, tableWidth]} />
-          <meshPhysicalMaterial
-            color="#291809"
-            roughness={0.42}
-            metalness={0.08}
-            clearcoat={0.35}
-            clearcoatRoughness={0.25}
+function RealisticStackedSquaresScene({ effectiveRows, effectivePlaced }) {
+  const woodTexture = useLoader(THREE.TextureLoader, '/hardwood_texture.jpg');
+  const [hoveredLayer, setHoveredLayer] = useState(null);
+
+  useMemo(() => {
+    if (woodTexture) {
+      woodTexture.wrapS = THREE.RepeatWrapping;
+      woodTexture.wrapT = THREE.RepeatWrapping;
+      woodTexture.repeat.set(2.5, 2.5);
+      woodTexture.colorSpace = THREE.SRGBColorSpace;
+    }
+  }, [woodTexture]);
+
+  const tileSize = 0.52;
+  const spacing = 0.58; // Clean tactile 6cm physical spacing
+  const offset = ((effectiveRows - 1) * spacing) / 2;
+  const gridExtent = effectiveRows * spacing;
+  const trayRadius = Math.max(1.85, (gridExtent * 0.707) + 0.42);
+
+  return (
+    <group position={[0, -0.16, 0]} rotation={[0.68, -0.22, 0]}>
+      {/* 1. Deep Space Studio Lighting for Dark Theme */}
+      <ambientLight intensity={1.3} color="#cbd5e1" />
+      <directionalLight position={[6, 10, 8]} intensity={2.8} color="#ffffff" castShadow />
+      <directionalLight position={[-6, 4, -4]} intensity={2.0} color="#38bdf8" />
+      <pointLight position={[0, 3, 2]} intensity={1.8} color="#fef08a" distance={8} />
+
+      {/* 2. Floating Golden Math Sparkles */}
+      <DreiSparkles count={28} scale={4.2} size={2.0} speed={0.35} color="#fde68a" />
+
+      {/* 3. Circular Polished Walnut Inspection Turntable */}
+      <group position={[0, -0.08, 0]}>
+        {/* Turntable Plinth */}
+        <mesh position={[0, -0.06, 0]} receiveShadow>
+          <cylinderGeometry args={[trayRadius, trayRadius + 0.12, 0.14, 64]} />
+          <meshStandardMaterial
+            map={woodTexture}
+            bumpMap={woodTexture}
+            bumpScale={0.03}
+            color="#1c1917"
+            roughness={0.45}
+            metalness={0.15}
           />
         </mesh>
 
-        {/* Polished Brass Framing Inlay around Working Bed */}
-        <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[effectiveRows * spacing + 0.14, effectiveRows * spacing + 0.14]} />
-          <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
+        {/* Polished Brass Rim Bezel */}
+        <mesh position={[0, 0.008, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[trayRadius, 0.024, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.14} />
         </mesh>
 
-        {/* Dark Terracotta Mortar Bed (Recessed at Y = 0.002) */}
-        <mesh position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-          <planeGeometry args={[effectiveRows * spacing + 0.05, effectiveRows * spacing + 0.05]} />
-          <meshStandardMaterial color="#1c1917" roughness={0.9} />
+        {/* Inlaid Concentric Gold Calibration Ring */}
+        <mesh position={[0, 0.01, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[trayRadius * 0.88, 0.01, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.2} />
         </mesh>
 
-        {/* Traditional Brass Artisan Ruler on Table Edge */}
-        <group position={[-tableWidth * 0.42, 0.008, 0]}>
-          <mesh castShadow receiveShadow>
-            <boxGeometry args={[0.08, 0.015, tableWidth * 0.75]} />
-            <meshStandardMaterial color="#fbbf24" metalness={0.88} roughness={0.25} />
-          </mesh>
+        {/* Recessed Dark Velvet/Slate Grid Inlay Bed */}
+        <mesh position={[0, 0.004, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[gridExtent + 0.22, gridExtent + 0.22]} />
+          <meshStandardMaterial color="#090d16" roughness={0.9} metalness={0.08} />
+        </mesh>
+
+        {/* Gold Grid Border Framing */}
+        <lineSegments position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <edgesGeometry args={[new THREE.PlaneGeometry(gridExtent + 0.22, gridExtent + 0.22)]} />
+          <lineBasicMaterial color="#f59e0b" linewidth={2} />
+        </lineSegments>
+      </group>
+
+      {/* 4. Side Length Dimension Brackets & Labels (n x n = n^2) */}
+      <group position={[0, 0.01, 0]}>
+        {/* Left Side Dimension Indicator (n units) */}
+        <group position={[-offset - tileSize * 0.72, 0, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
+          <Text
+            position={[0, 0, 0.02]}
+            fontSize={0.16}
+            color="#38bdf8"
+            fontWeight="900"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {effectiveRows} units
+          </Text>
+        </group>
+
+        {/* Top Side Dimension Indicator (n units) */}
+        <group position={[0, 0, -offset - tileSize * 0.72]} rotation={[-Math.PI / 2, 0, 0]}>
+          <Text
+            position={[0, 0, 0.02]}
+            fontSize={0.16}
+            color="#38bdf8"
+            fontWeight="900"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {effectiveRows} units
+          </Text>
         </group>
       </group>
 
-      {/* ================= 2. PHOTOREALISTIC HANDCRAFTED CERAMIC TILES MATRIX ================= */}
+      {/* 5. Tactile 3D Montessori Hardwood Number Blocks Matrix */}
       {Array.from({ length: effectiveRows }).map((_, r) =>
         Array.from({ length: effectiveRows }).map((_, c) => {
-          // L-shaped concentric gnomon layer (0-indexed)
+          // L-shaped concentric gnomon layer (0-indexed: 0..4)
           const layer = Math.max(r, c);
           const isPlaced = layer < effectivePlaced;
+          const isCorner = r === layer && c === layer;
+          const palette = HERITAGE_GNOMON_LAYERS[layer % HERITAGE_GNOMON_LAYERS.length];
+          const isHovered = hoveredLayer === layer;
+
           const x = c * spacing - offset;
           const z = r * spacing - offset;
+          const elevateY = isHovered ? 0.05 : 0;
 
+          if (!isPlaced) {
+            // UNPLACED LAYER: Carved socket groove with glowing blueprint guide
+            return (
+              <group key={`unplaced-slot-${r}-${c}`} position={[x, 0.005, z]}>
+                {/* Socket Floor */}
+                <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                  <planeGeometry args={[tileSize * 0.92, tileSize * 0.92]} />
+                  <meshStandardMaterial color="#020617" roughness={0.9} />
+                </mesh>
+                {/* Dashed Guideline Outline */}
+                <lineSegments position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                  <edgesGeometry args={[new THREE.PlaneGeometry(tileSize * 0.92, tileSize * 0.92)]} />
+                  <lineBasicMaterial
+                    color={palette.color}
+                    transparent
+                    opacity={0.45}
+                    linewidth={1}
+                  />
+                </lineSegments>
+                {/* Ghost numeral hint on the corner block */}
+                {isCorner && (
+                  <Text
+                    position={[0, 0.015, 0]}
+                    rotation={[-Math.PI / 2, 0, 0]}
+                    fontSize={0.17}
+                    color={palette.color}
+                    fontWeight="800"
+                    anchorX="center"
+                    anchorY="middle"
+                    fillOpacity={0.45}
+                  >
+                    {palette.badge}
+                  </Text>
+                )}
+              </group>
+            );
+          }
+
+          // PLACED TILE: Solid Tactile Beveled Hardwood Block
           return (
-            <PhotorealisticCeramicTile
-              key={`tile-${r}-${c}`}
-              x={x}
-              z={z}
-              size={tileSize}
-              layer={layer}
-              isPlaced={isPlaced}
-              isCorner={r === c}
-            />
+            <group
+              key={`placed-tile-${r}-${c}`}
+              position={[x, elevateY, z]}
+              onPointerOver={(e) => {
+                e.stopPropagation();
+                setHoveredLayer(layer);
+              }}
+              onPointerOut={(e) => {
+                e.stopPropagation();
+                setHoveredLayer(null);
+              }}
+            >
+              {/* Main Beveled Block Body (Sitting proudly at Y = 0.0 to 0.12) */}
+              <mesh position={[0, 0.06, 0]} castShadow receiveShadow>
+                <boxGeometry args={[tileSize * 0.92, 0.12, tileSize * 0.92]} />
+                <meshPhysicalMaterial
+                  map={woodTexture}
+                  bumpMap={woodTexture}
+                  bumpScale={0.02}
+                  color={palette.color}
+                  roughness={0.24}
+                  metalness={0.06}
+                  clearcoat={0.65}
+                  clearcoatRoughness={0.12}
+                />
+              </mesh>
+
+              {/* Chamfered Top Bevel Cap */}
+              <mesh position={[0, 0.122, 0]} receiveShadow>
+                <boxGeometry args={[tileSize * 0.85, 0.01, tileSize * 0.85]} />
+                <meshStandardMaterial
+                  color={palette.stain}
+                  roughness={0.3}
+                  metalness={0.1}
+                />
+              </mesh>
+
+              {/* Corner Block Gnomon Indicator (Brass Medallion + Odd Number Label) */}
+              {isCorner ? (
+                <group position={[0, 0.128, 0]}>
+                  {/* Circular Brass Inlay */}
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                    <circleGeometry args={[tileSize * 0.28, 24]} />
+                    <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.16} />
+                  </mesh>
+                  {/* Dark Core Pip */}
+                  <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[tileSize * 0.23, 24]} />
+                    <meshBasicMaterial color="#0f172a" />
+                  </mesh>
+                  {/* Engraved Odd Number Badge (e.g. 1, +3, +5, +7, +9) */}
+                  <Text
+                    position={[0, 0.003, 0]}
+                    rotation={[-Math.PI / 2, 0, 0]}
+                    fontSize={0.17}
+                    color="#fef08a"
+                    fontWeight="900"
+                    anchorX="center"
+                    anchorY="middle"
+                  >
+                    {palette.badge}
+                  </Text>
+                </group>
+              ) : (
+                /* Arm Block Inlay (Subtle Concentric Brass Dot) */
+                <group position={[0, 0.128, 0]}>
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                    <circleGeometry args={[tileSize * 0.11, 16]} />
+                    <meshStandardMaterial color="#fbbf24" metalness={0.88} roughness={0.18} />
+                  </mesh>
+                  <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <circleGeometry args={[tileSize * 0.055, 12]} />
+                    <meshBasicMaterial color="#1e293b" />
+                  </mesh>
+                </group>
+              )}
+            </group>
           );
         })
       )}
@@ -1958,23 +2207,23 @@ function RealisticWoodenBlocksScene({ rows }) {
         })}
       </group>
 
-      {/* 5. Centered Floating Educational Concept Plaque (Never clipped!) */}
+      {/* 5. Centered Floating Educational Concept Plaque (Light Theme) */}
       <group position={[0, 2.55, 0]}>
         {/* Plaque Background */}
         <mesh position={[0, 0, -0.02]}>
           <planeGeometry args={[4.4, 0.85]} />
-          <meshBasicMaterial color="#0f172a" transparent opacity={0.88} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.92} />
         </mesh>
         <mesh position={[0, 0, -0.015]}>
-          <planeGeometry args={[4.34, 0.79]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.12} />
+          <planeGeometry args={[4.36, 0.81]} />
+          <meshBasicMaterial color="#bae6fd" transparent opacity={0.4} />
         </mesh>
         
         {/* Title */}
         <Text
           position={[0, 0.18, 0]}
           fontSize={0.28}
-          color="#38bdf8"
+          color="#0369a1"
           fontWeight="900"
           anchorX="center"
           anchorY="middle"
@@ -1985,7 +2234,7 @@ function RealisticWoodenBlocksScene({ rows }) {
         <Text
           position={[0, -0.16, 0]}
           fontSize={0.25}
-          color="#fef08a"
+          color="#b45309"
           fontWeight="800"
           anchorX="center"
           anchorY="middle"
@@ -1998,241 +2247,297 @@ function RealisticWoodenBlocksScene({ rows }) {
 }
 
 // -----------------------------------------------------------------------
-// 5. TABLE 3 MASTER 3D VIEWER: PHOTOREALISTIC BILLIARDS 15-BALL TRIANGLE RACK
+// 5. TABLE 3 MASTER 3D VIEWER: PHOTOREALISTIC STACKED EQUILATERAL TRIANGLES
+// Concept: Stacking rows of unit equilateral triangles (1, 3, 5, 7, 9) produces Square Numbers n^2
 // -----------------------------------------------------------------------
 
-const BILLIARDS_BALLS_DATA = [
-  // Row 1 (Apex): 1 ball
-  { num: 1, type: 'solid', color: '#eab308', name: '1 Solid Yellow' },
-  // Row 2: 2 balls
-  { num: 2, type: 'solid', color: '#2563eb', name: '2 Solid Blue' },
-  { num: 3, type: 'solid', color: '#dc2626', name: '3 Solid Red' },
-  // Row 3: 3 balls (Standard 8-Ball in center!)
-  { num: 4, type: 'solid', color: '#7c3aed', name: '4 Solid Purple' },
-  { num: 8, type: 'solid', color: '#0f172a', name: '8 Solid Black' },
-  { num: 5, type: 'solid', color: '#ea580c', name: '5 Solid Orange' },
-  // Row 4: 4 balls
-  { num: 6, type: 'solid', color: '#16a34a', name: '6 Solid Green' },
-  { num: 7, type: 'solid', color: '#881337', name: '7 Solid Maroon' },
-  { num: 9, type: 'stripe', color: '#eab308', name: '9 Stripe Yellow' },
-  { num: 10, type: 'stripe', color: '#2563eb', name: '10 Stripe Blue' },
-  // Row 5: 5 balls
-  { num: 11, type: 'stripe', color: '#dc2626', name: '11 Stripe Red' },
-  { num: 12, type: 'stripe', color: '#7c3aed', name: '12 Stripe Purple' },
-  { num: 13, type: 'stripe', color: '#ea580c', name: '13 Stripe Orange' },
-  { num: 14, type: 'stripe', color: '#16a34a', name: '14 Stripe Green' },
-  { num: 15, type: 'stripe', color: '#881337', name: '15 Stripe Maroon' }
+const STACKED_TRIANGLE_TIERS = [
+  { name: 'Tier 1 (Odd: 1)', color: '#f59e0b', stain: '#b45309', badge: '1', odd: 1 },
+  { name: 'Tier 2 (Odd: 3)', color: '#10b981', stain: '#047857', badge: '+3', odd: 3 },
+  { name: 'Tier 3 (Odd: 5)', color: '#f97316', stain: '#c2410c', badge: '+5', odd: 5 },
+  { name: 'Tier 4 (Odd: 7)', color: '#6366f1', stain: '#4338ca', badge: '+7', odd: 7 },
+  { name: 'Tier 5 (Odd: 9)', color: '#a855f7', stain: '#7e22ce', badge: '+9', odd: 9 },
 ];
 
-// Single Photorealistic Phenolic Resin Billiard Ball (100% Glitch-Free & Zero Z-Fighting)
-function PhotorealisticBilliardBall({ radius = 0.22, ballInfo, isPlaced = true }) {
-  if (!isPlaced) {
-    return (
-      <mesh position={[0, radius, 0]}>
-        <sphereGeometry args={[radius * 0.92, 16, 16]} />
-        <meshStandardMaterial color="#64748b" transparent opacity={0.25} wireframe />
-      </mesh>
-    );
-  }
-
-  const isStripe = ballInfo.type === 'stripe';
+export function Table3StackedTriangles3D({ rows = 3, placedRows = 3 }) {
+  const effectiveRows = Math.min(5, Math.max(1, rows || 3));
+  const effectivePlaced = Math.min(effectiveRows, Math.max(1, placedRows || 3));
 
   return (
-    <group position={[0, radius, 0]}>
-      {/* 1. Main High-Gloss Phenolic Resin Ball */}
-      <mesh castShadow receiveShadow>
-        <sphereGeometry args={[radius, 32, 32]} />
-        <meshPhysicalMaterial
-          color={ballInfo.color}
-          roughness={0.12}
-          metalness={0.06}
-          clearcoat={0.9}
-          clearcoatRoughness={0.05}
-          reflectivity={0.9}
-        />
-      </mesh>
-
-      {/* 2. Stripe White Caps (for stripe balls 9-15) */}
-      {isStripe && (
-        <>
-          <mesh position={[0, radius * 0.72, 0]}>
-            <sphereGeometry args={[radius * 0.7, 24, 12]} />
-            <meshStandardMaterial color="#1e293b" roughness={0.15} />
-          </mesh>
-          <mesh position={[0, -radius * 0.72, 0]}>
-            <sphereGeometry args={[radius * 0.7, 24, 12]} />
-            <meshStandardMaterial color="#1e293b" roughness={0.15} />
-          </mesh>
-        </>
-      )}
-
-
-
-      {/* 4. Crisp High-Contrast Number Label */}
-      <Html position={[0, radius * 0.46, radius * 0.85]} center pointerEvents="none">
-        <div
-          style={{
-            color: '#0f172a',
-            fontSize: '0.62rem',
-            fontWeight: '900',
-            fontFamily: 'Inter, sans-serif',
-            userSelect: 'none',
-            lineHeight: 1,
-            textShadow: '0 0 2px rgba(255,255,255,0.8)'
-          }}
-        >
-          {ballInfo.num}
-        </div>
-      </Html>
-    </group>
+    <Suspense fallback={null}>
+      <RealisticStackedTrianglesScene
+        effectiveRows={effectiveRows}
+        effectivePlaced={effectivePlaced}
+      />
+    </Suspense>
   );
 }
 
-export function Table3StackedTriangles3D({ rows = 3, placedRows = 3 }) {
-  const ballRadius = 0.22;
-  const ballDiameter = ballRadius * 2.05; // Clean tangent spacing without overlap
-  const rowHeight = ballDiameter * 0.866025; // Equilateral triangle sqrt(3)/2
+function RealisticStackedTrianglesScene({ effectiveRows, effectivePlaced }) {
+  const woodTexture = useLoader(THREE.TextureLoader, '/hardwood_texture.jpg');
+  const [hoveredTier, setHoveredTier] = useState(null);
 
-  // Calculate clean coordinates for all 15 balls
-  const balls = useMemo(() => {
-    const list = [];
-    let idx = 0;
+  useMemo(() => {
+    if (woodTexture) {
+      woodTexture.wrapS = THREE.RepeatWrapping;
+      woodTexture.wrapT = THREE.RepeatWrapping;
+      woodTexture.repeat.set(2.5, 2.5);
+      woodTexture.colorSpace = THREE.SRGBColorSpace;
+    }
+  }, [woodTexture]);
 
-    const totalDepth = 4 * rowHeight;
-    const apexZ = -totalDepth * 0.42;
+  const s = 0.58; // Unit triangle side length
+  const H = s * (Math.sqrt(3) / 2); // Unit triangle height ~0.5022
+  const totalH = effectiveRows * H;
+  const centerZ = totalH * (2 / 3);
+  const trayRadius = Math.max(1.85, totalH * 0.72 + 0.68);
 
-    for (let r = 0; r < rows; r++) {
-      const countInRow = r + 1;
-      const z = apexZ + r * rowHeight;
-      const rowStartX = -((countInRow - 1) * ballDiameter) / 2;
+  // Tactile beveled equilateral triangle shape (Z-centered ONLY to preserve true centroid in X & Y)
+  const { triangleShape, triangleGeom } = useMemo(() => {
+    const size = 0.54; // slight gap for visible mortar lines
+    const h = size * (Math.sqrt(3) / 2);
+    const shape = new THREE.Shape();
+    // Upright 2D shape: Apex at (0, 2h/3), Base at y = -h/3
+    shape.moveTo(0, (2 * h) / 3);
+    shape.lineTo(size / 2, -h / 3);
+    shape.lineTo(-size / 2, -h / 3);
+    shape.closePath();
 
-      for (let c = 0; c < countInRow; c++) {
-        const x = rowStartX + c * ballDiameter;
-        const isPlaced = r < placedRows;
-        const ballInfo = BILLIARDS_BALLS_DATA[idx % BILLIARDS_BALLS_DATA.length];
-        list.push({ r, c, x, z, isPlaced, ballInfo });
-        idx++;
+    const geom = new THREE.ExtrudeGeometry(shape, {
+      depth: 0.12,
+      bevelEnabled: true,
+      bevelThickness: 0.016,
+      bevelSize: 0.016,
+      bevelSegments: 2,
+    });
+    // Center Z only (do NOT call geom.center() which destroys X/Y centroid)
+    geom.translate(0, 0, -0.06);
+    geom.computeVertexNormals();
+
+    return { triangleShape: shape, triangleGeom: geom };
+  }, []);
+
+  // Precompute triangle positions for all rows with 100% tessellation accuracy
+  const triangleItems = useMemo(() => {
+    const items = [];
+    for (let r = 0; r < effectiveRows; r++) {
+      const tierCount = 2 * r + 1;
+      const isPlaced = r < effectivePlaced;
+      const palette = STACKED_TRIANGLE_TIERS[r % STACKED_TRIANGLE_TIERS.length];
+
+      for (let k = 0; k < tierCount; k++) {
+        const isUpright = k % 2 === 0;
+        const x = (k - r) * (s / 2);
+        // Upright apex at r*H, base at (r+1)*H -> centroid at r*H + 2H/3
+        // Inverted base at r*H, apex at (r+1)*H -> centroid at r*H + H/3
+        const zRaw = isUpright ? (r * H + (2 * H) / 3) : (r * H + H / 3);
+        const z = zRaw - centerZ;
+        // Central triangle of the tier gets the badge
+        const isTierCenter = k === r;
+
+        items.push({
+          r,
+          k,
+          x,
+          z,
+          isUpright,
+          isPlaced,
+          palette,
+          isTierCenter,
+        });
       }
     }
-    return list;
-  }, [rows, placedRows, ballDiameter, rowHeight]);
+    return items;
+  }, [effectiveRows, effectivePlaced, s, H, centerZ]);
 
   return (
-    <group position={[0, -0.15, 0]} rotation={[0.3, 0, 0]}>
-      {/* Natural Ambient Room Lighting + Directional Window Daylight */}
-      <ambientLight intensity={0.7} color="#0f172a" />
-      <directionalLight position={[6, 9, 5]} intensity={1.8} color="#0f172a" castShadow shadow-mapSize={[2048, 2048]} shadow-camera-far={20} />
-      <directionalLight position={[-5, 4, -3]} intensity={0.5} color="#475569" />
-      <pointLight position={[0, 4, 1]} intensity={0.6} color="#fef08a" distance={10} />
+    <group position={[0, -0.16, 0]} rotation={[0.68, -0.22, 0]}>
+      {/* 1. Deep Space Studio Lighting for Dark Theme */}
+      <ambientLight intensity={1.3} color="#cbd5e1" />
+      <directionalLight position={[6, 10, 8]} intensity={2.8} color="#ffffff" castShadow />
+      <directionalLight position={[-6, 4, -4]} intensity={2.0} color="#38bdf8" />
+      <pointLight position={[0, 3, 2]} intensity={1.8} color="#fef08a" distance={8} />
 
-      {/* 1. TOURNAMENT GREEN BAZE FELT TABLE BED (Exact Surface at Y = 0) */}
-      <mesh position={[0, -0.06, 0]} receiveShadow>
-        <boxGeometry args={[4.2, 0.12, 3.6]} />
-        <meshStandardMaterial
-          color="#14532d" /* Deep, natural matte cloth green */
-          roughness={0.98}
-          metalness={0.0}
-        />
-      </mesh>
+      {/* 2. Floating Golden Math Sparkles */}
+      <DreiSparkles count={28} scale={4.2} size={2.0} speed={0.35} color="#fde68a" />
 
-      {/* 2. MAHOGANY HARDWOOD RAILS & CUSHIONS */}
-      {/* Top Rail */}
-      <mesh position={[0, 0.03, -1.86]} castShadow receiveShadow>
-        <boxGeometry args={[4.32, 0.1, 0.16]} />
-        <meshStandardMaterial color="#451a03" roughness={0.6} metalness={0.05} />
-      </mesh>
-      {/* Bottom Rail */}
-      <mesh position={[0, 0.03, 1.86]} castShadow receiveShadow>
-        <boxGeometry args={[4.32, 0.1, 0.16]} />
-        <meshStandardMaterial color="#451a03" roughness={0.6} metalness={0.05} />
-      </mesh>
-      {/* Left Rail */}
-      <mesh position={[-2.16, 0.03, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.16, 0.1, 3.88]} />
-        <meshStandardMaterial color="#451a03" roughness={0.6} metalness={0.05} />
-      </mesh>
-      {/* Right Rail */}
-      <mesh position={[2.16, 0.03, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.16, 0.1, 3.88]} />
-        <meshStandardMaterial color="#451a03" roughness={0.6} metalness={0.05} />
-      </mesh>
-
-      {/* 3. BRASS CORNER POCKET CASTINGS */}
-      {[
-        [-2.1, -1.8],
-        [2.1, -1.8],
-        [-2.1, 1.8],
-        [2.1, 1.8]
-      ].map(([px, pz], pIdx) => (
-        <group key={`pocket-${pIdx}`} position={[px, 0.03, pz]}>
-          <mesh castShadow>
-            <cylinderGeometry args={[0.16, 0.16, 0.11, 20]} />
-            <meshStandardMaterial color="#d97706" metalness={0.9} roughness={0.2} />
-          </mesh>
-          <mesh position={[0, 0.056, 0]}>
-            <cylinderGeometry args={[0.12, 0.12, 0.02, 20]} />
-            <meshStandardMaterial color="#09090b" roughness={0.9} />
-          </mesh>
-        </group>
-      ))}
-
-      {/* 4. SOLID OAK TRIANGULAR RACK FRAME (Resting on Felt) */}
-      <group position={[0, 0.06, 0.06]}>
-        {/* Left Rack Bar */}
-        <mesh position={[-0.64, 0, 0.02]} rotation={[0, 0.5236, 0]} castShadow>
-          <boxGeometry args={[0.05, 0.12, 2.45]} />
-          <meshStandardMaterial color="#78350f" roughness={0.5} metalness={0.02} />
-        </mesh>
-        {/* Right Rack Bar */}
-        <mesh position={[0.64, 0, 0.02]} rotation={[0, -0.5236, 0]} castShadow>
-          <boxGeometry args={[0.05, 0.12, 2.45]} />
-          <meshStandardMaterial color="#78350f" roughness={0.5} metalness={0.02} />
-        </mesh>
-        {/* Base Rack Bar */}
-        <mesh position={[0, 0, 1.08]} rotation={[0, Math.PI / 2, 0]} castShadow>
-          <boxGeometry args={[0.05, 0.12, 2.45]} />
-          <meshStandardMaterial color="#78350f" roughness={0.5} metalness={0.02} />
-        </mesh>
-        {/* Brass Corner Brackets */}
-        <mesh position={[0, 0, -1.02]}>
-          <cylinderGeometry args={[0.05, 0.05, 0.125, 16]} />
-          <meshStandardMaterial color="#fbbf24" metalness={0.9} roughness={0.2} />
-        </mesh>
-      </group>
-
-      {/* 5. ASH WOOD CUE STICK (Resting on Table) */}
-      <group position={[1.45, 0.05, 0.2]} rotation={[0, 0.25, 0]}>
-        {/* Main Shaft */}
-        <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <cylinderGeometry args={[0.02, 0.035, 3.2, 20]} />
-          <meshStandardMaterial color="#fde68a" roughness={0.3} metalness={0.05} />
-        </mesh>
-        {/* White Ferrule & Blue Chalk Tip */}
-        <mesh position={[0, 0, -1.62]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.02, 0.02, 0.04, 20]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.2} />
-        </mesh>
-        <mesh position={[0, 0, -1.65]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.019, 0.019, 0.02, 20]} />
-          <meshStandardMaterial color="#0284c7" roughness={0.9} />
-        </mesh>
-        {/* Grip Wrap */}
-        <mesh position={[0, 0, 1.0]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.033, 0.034, 0.7, 20]} />
-          <meshStandardMaterial color="#f8fafc" roughness={0.7} />
-        </mesh>
-      </group>
-
-      {/* 6. 15 PHOTOREALISTIC BILLIARD BALLS (Exact Tangent on Felt, Zero Overlap) */}
-      {balls.map((b, idx) => (
-        <group key={`ball-${idx}`} position={[b.x, 0, b.z]}>
-          <PhotorealisticBilliardBall
-            radius={ballRadius}
-            ballInfo={b.ballInfo}
-            isPlaced={b.isPlaced}
+      {/* 3. Circular Polished Walnut Inspection Turntable */}
+      <group position={[0, -0.08, 0]}>
+        {/* Turntable Plinth */}
+        <mesh position={[0, -0.06, 0]} receiveShadow>
+          <cylinderGeometry args={[trayRadius, trayRadius + 0.12, 0.14, 64]} />
+          <meshStandardMaterial
+            map={woodTexture}
+            bumpMap={woodTexture}
+            bumpScale={0.03}
+            color="#1c1917"
+            roughness={0.45}
+            metalness={0.15}
           />
+        </mesh>
+
+        {/* Polished Brass Rim Bezel */}
+        <mesh position={[0, 0.008, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[trayRadius, 0.024, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.92} roughness={0.14} />
+        </mesh>
+
+        {/* Inlaid Concentric Gold Calibration Ring */}
+        <mesh position={[0, 0.01, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <torusGeometry args={[trayRadius * 0.88, 0.01, 16, 64]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* Recessed Dark Velvet/Slate Inlay Bed */}
+        <mesh position={[0, 0.004, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[trayRadius * 1.6, trayRadius * 1.6]} />
+          <meshStandardMaterial color="#090d16" roughness={0.9} metalness={0.08} />
+        </mesh>
+      </group>
+
+      {/* 4. Side & Base Dimension Labels */}
+      <group position={[0, 0.01, 0]}>
+        {/* Left Side Slanted Dimension Label (n rows) */}
+        <group position={[-effectiveRows * (s / 3.2) - 0.42, 0, -0.1]} rotation={[-Math.PI / 2, 0, Math.PI / 3]}>
+          <Text
+            position={[0, 0, 0.02]}
+            fontSize={0.16}
+            color="#38bdf8"
+            fontWeight="900"
+            anchorX="center"
+            anchorY="middle"
+          >
+            n = {effectiveRows} Rows
+          </Text>
         </group>
-      ))}
+
+        {/* Bottom Total Formula Label */}
+        <group position={[0, 0, trayRadius * 0.72]} rotation={[-Math.PI / 2, 0, 0]}>
+          <Text
+            position={[0, 0, 0.02]}
+            fontSize={0.17}
+            color="#fef08a"
+            fontWeight="900"
+            anchorX="center"
+            anchorY="middle"
+          >
+            Total = {effectiveRows}² = {effectiveRows * effectiveRows} Triangles
+          </Text>
+        </group>
+      </group>
+
+      {/* 5. Tactile 3D Montessori Hardwood Stacked Triangles */}
+      {triangleItems.map((item, idx) => {
+        // Upright triangle points toward -Z (rotY = 0)
+        // Inverted triangle points toward +Z (rotY = Math.PI)
+        const rotY = item.isUpright ? 0 : Math.PI;
+        const isHovered = hoveredTier === item.r;
+        const elevateY = isHovered ? 0.05 : 0;
+
+        if (!item.isPlaced) {
+          // UNPLACED ROW: Recessed socket with glowing dashed blueprint wireframe
+          return (
+            <group key={`unplaced-tri-${idx}`} position={[item.x, 0.005, item.z]}>
+              <lineSegments position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, rotY]}>
+                <edgesGeometry args={[new THREE.ShapeGeometry(triangleShape)]} />
+                <lineBasicMaterial
+                  color={item.palette.color}
+                  transparent
+                  opacity={0.4}
+                  linewidth={1}
+                />
+              </lineSegments>
+              {item.isTierCenter && (
+                <Text
+                  position={[0, 0.015, 0]}
+                  rotation={[-Math.PI / 2, 0, 0]}
+                  fontSize={0.16}
+                  color={item.palette.color}
+                  fontWeight="800"
+                  anchorX="center"
+                  anchorY="middle"
+                  fillOpacity={0.45}
+                >
+                  {item.palette.badge}
+                </Text>
+              )}
+            </group>
+          );
+        }
+
+        // PLACED TRIANGLE: Solid Tactile Beveled Hardwood Prism
+        return (
+          <group
+            key={`placed-tri-${idx}`}
+            position={[item.x, 0.07 + elevateY, item.z]}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              setHoveredTier(item.r);
+            }}
+            onPointerOut={(e) => {
+              e.stopPropagation();
+              setHoveredTier(null);
+            }}
+          >
+            {/* Main Beveled Triangular Prism Block */}
+            <mesh
+              geometry={triangleGeom}
+              rotation={[-Math.PI / 2, 0, rotY]}
+              castShadow
+              receiveShadow
+            >
+              <meshPhysicalMaterial
+                map={woodTexture}
+                bumpMap={woodTexture}
+                bumpScale={0.02}
+                color={item.palette.color}
+                roughness={0.24}
+                metalness={0.06}
+                clearcoat={0.65}
+                clearcoatRoughness={0.12}
+              />
+            </mesh>
+
+            {/* Central Triangle of the Tier (Always upright facing viewer) */}
+            {item.isTierCenter ? (
+              <group position={[0, 0.064, 0]}>
+                {/* Circular Brass Inlay */}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                  <circleGeometry args={[0.13, 24]} />
+                  <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.16} />
+                </mesh>
+                <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                  <circleGeometry args={[0.105, 24]} />
+                  <meshBasicMaterial color="#0f172a" />
+                </mesh>
+                <Text
+                  position={[0, 0.003, 0]}
+                  rotation={[-Math.PI / 2, 0, 0]}
+                  fontSize={0.14}
+                  color="#fef08a"
+                  fontWeight="900"
+                  anchorX="center"
+                  anchorY="middle"
+                >
+                  {item.palette.badge}
+                </Text>
+              </group>
+            ) : (
+              /* Arm Triangle Inlay (Subtle Brass Pip) */
+              <group position={[0, 0.064, 0]}>
+                <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                  <circleGeometry args={[0.055, 16]} />
+                  <meshStandardMaterial color="#fbbf24" metalness={0.88} roughness={0.18} />
+                </mesh>
+                <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                  <circleGeometry args={[0.028, 12]} />
+                  <meshBasicMaterial color="#1e293b" />
+                </mesh>
+              </group>
+            )}
+          </group>
+        );
+      })}
     </group>
   );
 }
@@ -2443,9 +2748,9 @@ export default function PatternsInShapes({
 }) {
   const activities = [
     { id: 1, name: 'Regular Polygons', icon: '⬟', count: '3 to 10 Sides' },
-    { id: 2, name: 'Complete Graphs', icon: '✈️', count: 'Direct City Flights' },
+    { id: 2, name: 'Complete Graphs', icon: '🕸️', count: 'K₂ to K₆ · T(n-1)' },
     { id: 3, name: 'Stacked Squares', icon: '🔲', count: '1² to 5²' },
-    { id: 4, name: 'Stacked Triangles', icon: '🎱', count: '1, 3, 6, 10, 15 Balls' },
+    { id: 4, name: 'Stacked Triangles', icon: '🔺', count: '1² to 5²' },
     { id: 5, name: 'Koch Snowflake Rangoli', icon: '❄️', count: 'Depth 0 to 4' }
   ];
 
@@ -2647,11 +2952,11 @@ export default function PatternsInShapes({
         </div>
       )}
 
-      {/* ACTIVITY 2: COMPLETE GRAPHS — DIRECT NON-STOP CITY FLIGHT NETWORK */}
+      {/* ACTIVITY 2: COMPLETE GRAPHS — GEOBOARD STRING ART (TABLE 3) */}
       {activeActivity === 2 && (() => {
         const currentGraph = COMPLETE_GRAPHS_MODULAR_DATA[graphIdx || 0] || COMPLETE_GRAPHS_MODULAR_DATA[0];
         
-        // Generate ordered list of all pairwise flight corridors for current n
+        // Generate ordered list of all pairwise edges for current n
         const allPairwiseEdges = [];
         for (let i = 0; i < currentGraph.n; i++) {
           for (let j = i + 1; j < currentGraph.n; j++) {
@@ -2659,19 +2964,20 @@ export default function PatternsInShapes({
               id: `${i}-${j}`,
               u: i,
               v: j,
-              from: GEOBOARD_NAILS_DATA[i]?.label ? `Nail ${GEOBOARD_NAILS_DATA[i].label}` : `Nail ${i + 1}`,
-              to: GEOBOARD_NAILS_DATA[j]?.label ? `Nail ${GEOBOARD_NAILS_DATA[j].label}` : `Nail ${j + 1}`
+              from: `Peg ${i + 1}`,
+              to: `Peg ${j + 1}`
             });
           }
         }
 
-        // Active route count: supports both granular edge IDs and component IDs
-        const activeRouteCount = allPairwiseEdges.filter(e => 
-          activeComponentIds.includes(e.id) || 
-          currentGraph.shapeComponents.some(comp => activeComponentIds.includes(comp.id) && comp.edges?.some(ce => (ce.u === e.u && ce.v === e.v) || (ce.u === e.v && ce.v === e.u)))
-        ).length;
-
-        const isAllActive = activeRouteCount >= currentGraph.total;
+        // Active edge count: supports both granular edge IDs and component IDs
+        // If activeComponentIds is empty, default to all edges so the graph is full by default!
+        const activeRouteCount = activeComponentIds.length === 0
+          ? currentGraph.total
+          : allPairwiseEdges.filter(e => 
+              activeComponentIds.includes(e.id) || 
+              currentGraph.shapeComponents.some(comp => activeComponentIds.includes(comp.id) && comp.edges?.some(ce => (ce.u === e.u && ce.v === e.v) || (ce.u === e.v && ce.v === e.u)))
+            ).length;
 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', justifyContent: 'space-evenly' }}>
@@ -2679,19 +2985,19 @@ export default function PatternsInShapes({
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-                  {'Complete Graphs (Kn) — String Art on a Geoboard'}
+                  {'Complete Graphs (Kn) — Geoboard String Art'}
                 </h4>
                 <span style={{ fontSize: '0.72rem', background: '#ccfbf1', color: '#0f766e', padding: '2px 8px', borderRadius: '10px', fontWeight: '900', border: '1px solid #99f6e4' }}>
                   {'Triangular Series: T(n-1)'}
                 </span>
               </div>
               <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.85rem', color: '#334155', lineHeight: 1.5, textAlign: 'justify' }}>
-                If you have a wooden board with <strong>{currentGraph.n} brass nails</strong>, and you want to connect every single nail to every other nail using a string, how many strings do you need?
-                This forms a beautiful pattern! To find the total strings for <em>n</em> nails, we add up the numbers up to <em>(n-1)</em>. For example, adding a 6th nail means connecting it to the 5 existing nails, which adds exactly 5 new strings. You can quickly calculate the total strings using the formula <strong>n × (n-1) / 2</strong>.
+                In a <strong>Complete Graph ({currentGraph.symbol})</strong> with <strong>{currentGraph.n} red pegs</strong>, every single peg connects to every other peg with a string.
+                This generates the famous <strong>Triangular Number Sequence</strong>: <em>1, 3, 6, 10, 15...</em> You can calculate the total lines using the formula <strong>n × (n-1) / 2</strong>.
               </p>
             </div>
 
-            {/* City Hubs Selector Buttons (2 to 6 Cities) */}
+            {/* Complete Graph Selector Buttons (K2 to K6) */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
               {COMPLETE_GRAPHS_MODULAR_DATA.map((g, idx) => {
                 const isSelected = graphIdx === idx;
@@ -2700,7 +3006,7 @@ export default function PatternsInShapes({
                     key={idx}
                     onClick={() => {
                       setGraphIdx(idx);
-                      // By default, connect all for instant visual clarity
+                      // Connect all edges for the selected graph
                       const newEdges = [];
                       for (let i = 0; i < g.n; i++) {
                         for (let j = i + 1; j < g.n; j++) {
@@ -2725,13 +3031,13 @@ export default function PatternsInShapes({
                     }}
                   >
                     <span>{g.icon}</span>
-                    <span>{`${g.n} Nails (K${g.n})`}</span>
+                    <span>{`${g.code} (${g.total} ${g.total === 1 ? 'Edge' : 'Edges'})`}</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Granular Step-by-Step Flight Route Controls */}
+            {/* Granular Step-by-Step String Controls */}
             <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
               <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
                 Strings Connected: <span style={{ color: '#0284c7', fontWeight: '900' }}>{activeRouteCount} of {currentGraph.total}</span>
@@ -2739,8 +3045,11 @@ export default function PatternsInShapes({
               <div style={{ display: 'flex', gap: '0.35rem' }}>
                 <button
                   onClick={() => {
-                    if (activeComponentIds.length > 0) {
-                      setActiveComponentIds(prev => prev.slice(0, -1));
+                    const currentActive = activeComponentIds.length === 0
+                      ? allPairwiseEdges.map(e => e.id)
+                      : activeComponentIds;
+                    if (currentActive.length > 0) {
+                      setActiveComponentIds(currentActive.slice(0, -1));
                     }
                   }}
                   style={{
@@ -2759,9 +3068,12 @@ export default function PatternsInShapes({
                 </button>
                 <button
                   onClick={() => {
-                    const missing = allPairwiseEdges.find(e => !activeComponentIds.includes(e.id));
+                    const currentActive = activeComponentIds.length === 0
+                      ? allPairwiseEdges.map(e => e.id)
+                      : activeComponentIds;
+                    const missing = allPairwiseEdges.find(e => !currentActive.includes(e.id));
                     if (missing) {
-                      setActiveComponentIds(prev => [...prev, missing.id]);
+                      setActiveComponentIds([...currentActive, missing.id]);
                     }
                   }}
                   style={{
@@ -2792,10 +3104,10 @@ export default function PatternsInShapes({
                     boxShadow: '0 2px 6px rgba(2, 132, 199, 0.3)'
                   }}
                 >
-                  Connect All Strings 🧵
+                  Connect All Strings 🕸️
                 </button>
                 <button
-                  onClick={() => setActiveComponentIds([])}
+                  onClick={() => setActiveComponentIds([allPairwiseEdges[0]?.id].filter(Boolean))}
                   style={{
                     padding: '0.25rem 0.65rem',
                     borderRadius: '8px',
@@ -2812,12 +3124,12 @@ export default function PatternsInShapes({
               </div>
             </div>
 
-            {/* Step-by-Step Airway Breakdown & Formula Card */}
+            {/* Step-by-Step Breakdown & Formula Card */}
             <div style={{ background: '#ffffff', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
               {/* Step Breakdown Sequence */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 <span style={{ fontSize: '0.72rem', fontWeight: '900', color: '#0369a1', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  🧵 How Strings Add Up (Nail by Nail):
+                  🧵 How Strings Add Up (Peg by Peg):
                 </span>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                   {currentGraph.breakdown?.map((b, bIdx) => (
@@ -2848,11 +3160,11 @@ export default function PatternsInShapes({
               {/* Mathematical Metrics Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #cbd5e1' }}>
                 <div style={{ background: '#eff6ff', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #dbeafe', textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>TOTAL NAILS (n)</div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{currentGraph.n} Nails</div>
+                  <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>RED PEGS (n)</div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{currentGraph.n} Pegs</div>
                 </div>
                 <div style={{ background: '#fef3c7', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #fde68a', textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.62rem', color: '#92400e', fontWeight: '800' }}>STRINGS FORMULA</div>
+                  <div style={{ fontSize: '0.62rem', color: '#92400e', fontWeight: '800' }}>EDGES FORMULA</div>
                   <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#d97706' }}>{currentGraph.n}×{currentGraph.n - 1} / 2 = {currentGraph.total}</div>
                 </div>
                 <div style={{ background: '#fdf2f8', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #fbcfe8', textAlign: 'center' }}>
@@ -2863,7 +3175,7 @@ export default function PatternsInShapes({
 
               {/* Educational Rationale Insight */}
               <div style={{ fontSize: '0.76rem', color: '#334155', lineHeight: 1.45, background: '#f8fafc', padding: '0.45rem 0.65rem', borderRadius: '8px', textAlign: 'justify' }}>
-                💡 <strong>Why divide by 2?</strong> Each string connects <strong>2 nails</strong> at the same time. If we didn't divide by 2, we would be counting the exact same string twice (once for each nail)!
+                💡 <strong>Why divide by 2?</strong> Each string connects <strong>2 red pegs</strong> simultaneously. If we didn't divide by 2, we would count every single string twice (once from each end peg)!
               </div>
             </div>
           </div>
@@ -3064,113 +3376,118 @@ export default function PatternsInShapes({
         );
       })()}
 
-      {/* ACTIVITY 4: STACKED TRIANGLES (PHOTOREALISTIC BILLIARDS 15-BALL TRIANGLE RACK) */}
-      {activeActivity === 4 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem',  }}>
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-                {'Billiards 15-Ball Triangle Rack ($1, 3, 6, 10, 15$)'}
-              </h4>
-              <span style={{ fontSize: '0.72rem', background: '#ecfdf5', color: '#065f46', padding: '2px 8px', borderRadius: '10px', fontWeight: '900', border: '1px solid #a7f3d0' }}>
-                {'Triangular Numbers: T(n)'}
-              </span>
-            </div>
-            <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#334155', lineHeight: 1.4 }}>
-              In professional pool & billiards, 15 balls are packed inside a wooden triangle frame on green cloth. Each row adds consecutive numbers ($1 + 2 + 3 + 4 + 5 = 15$).
-            </p>
-          </div>
+      {/* ACTIVITY 4: STACKED TRIANGLES (TEXTBOOK: ROWS OF UNIT TRIANGLES -> SQUARE NUMBERS) */}
+      {activeActivity === 4 && (() => {
+        const totalTriangles = triangleRows * triangleRows;
+        const oddFormula = Array.from({ length: triangleRows }).map((_, i) => 2 * i + 1).join(' + ');
 
-          {/* Row Selector Buttons (1 to 5 Rows) */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-            {[1, 2, 3, 4, 5].map((t) => {
-              const isSelected = triangleRows === t;
-              const ballCount = (t * (t + 1)) / 2;
-              return (
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
+                  {'Stacked Equilateral Triangles (1², 2², 3², 4², 5²)'}
+                </h4>
+                <span style={{ fontSize: '0.72rem', background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '10px', fontWeight: '900', border: '1px solid #fde68a' }}>
+                  {'Square Numbers: n²'}
+                </span>
+              </div>
+              <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#334155', lineHeight: 1.4 }}>
+                Stacking rows of unit equilateral triangles forms a large equilateral triangle. Each row adds the next consecutive odd number of triangles (1 + 3 + 5 + 7 + 9 = 25 = 5²), visually proving that summing odd numbers yields square numbers!
+              </p>
+            </div>
+
+            {/* Row Selector Buttons (1 to 5 Rows) */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+              {[1, 2, 3, 4, 5].map((t) => {
+                const isSelected = triangleRows === t;
+                const triCount = t * t;
+                return (
+                  <button
+                    key={t}
+                    onClick={() => {
+                      setTriangleRows(t);
+                      setPlacedTriLayers(t);
+                    }}
+                    style={{
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '16px',
+                      border: isSelected ? '1.5px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
+                      background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#ffffff',
+                      color: isSelected ? '#ffffff' : 'var(--theme-heading, #134e4a)',
+                      fontWeight: '800',
+                      fontSize: '0.74rem',
+                      cursor: 'pointer',
+                      boxShadow: isSelected ? '0 2px 6px rgba(13, 148, 136, 0.3)' : 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <span>🔺</span>
+                    <span>{t} {t === 1 ? 'Row' : 'Rows'} ({triCount} {triCount === 1 ? 'Triangle' : 'Triangles'})</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Interactive Row Placement Controls */}
+            <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
+                Rows Placed in Stack: <span style={{ color: '#0d9488', fontWeight: '900' }}>{placedTriLayers} of {triangleRows}</span>
+              </div>
+              <div style={{ display: 'flex', gap: '0.35rem' }}>
                 <button
-                  key={t}
-                  onClick={() => {
-                    setTriangleRows(t);
-                    setPlacedTriLayers(t);
-                  }}
-                  style={{
-                    padding: '0.3rem 0.6rem',
-                    borderRadius: '16px',
-                    border: isSelected ? '1.5px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                    background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#ffffff',
-                    color: isSelected ? '#ffffff' : 'var(--theme-heading, #134e4a)',
-                    fontWeight: '800',
-                    fontSize: '0.74rem',
-                    cursor: 'pointer',
-                    boxShadow: isSelected ? '0 2px 6px rgba(13, 148, 136, 0.3)' : 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
+                  onClick={() => setPlacedTriLayers(prev => Math.max(1, prev - 1))}
+                  style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#ffffff', color: '#1e293b', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
                 >
-                  <span>🎱</span>
-                  <span>{t} Rows ({ballCount} Balls)</span>
+                  - Row
                 </button>
-              );
-            })}
-          </div>
-
-          {/* Interactive Row Placement Controls */}
-          <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
-              Rows Placed in Rack: <span style={{ color: '#0d9488', fontWeight: '900' }}>{placedTriLayers} of {triangleRows}</span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.35rem' }}>
-              <button
-                onClick={() => setPlacedTriLayers(prev => Math.max(1, prev - 1))}
-                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#ffffff', color: '#1e293b', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
-              >
-                - Row
-              </button>
-              <button
-                onClick={() => setPlacedTriLayers(prev => Math.min(triangleRows, prev + 1))}
-                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#ffffff', color: '#1e293b', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
-              >
-                + Row
-              </button>
-              <button
-                onClick={() => setPlacedTriLayers(triangleRows)}
-                style={{ padding: '0.25rem 0.75rem', borderRadius: '8px', border: 'none', background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#ffffff', fontSize: '0.74rem', fontWeight: '900', cursor: 'pointer', boxShadow: '0 2px 6px rgba(13, 148, 136, 0.3)' }}
-              >
-                Rack All 15 Balls 🎱
-              </button>
-              <button
-                onClick={() => setPlacedTriLayers(1)}
-                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#f8fafc', color: '#475569', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer' }}
-              >
-                Reset
-              </button>
-            </div>
-          </div>
-
-          {/* Mathematical Properties Badges */}
-          <div style={{ background: '#ffffff', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
-              <div style={{ background: '#eff6ff', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #dbeafe', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>ROWS (n)</div>
-                <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{triangleRows} Rows</div>
-              </div>
-              <div style={{ background: '#fef3c7', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #fde68a', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.62rem', color: '#92400e', fontWeight: '800' }}>GAUSS FORMULA</div>
-                <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#d97706' }}>{triangleRows}×{triangleRows + 1} / 2</div>
-              </div>
-              <div style={{ background: '#f0fdfa', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #ccfbf1', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.62rem', color: '#0f766e', fontWeight: '800' }}>TOTAL BALLS</div>
-                <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#0d9488' }}>{(triangleRows * (triangleRows + 1)) / 2} Balls</div>
+                <button
+                  onClick={() => setPlacedTriLayers(prev => Math.min(triangleRows, prev + 1))}
+                  style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#ffffff', color: '#1e293b', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
+                >
+                  + Row
+                </button>
+                <button
+                  onClick={() => setPlacedTriLayers(triangleRows)}
+                  style={{ padding: '0.25rem 0.75rem', borderRadius: '8px', border: 'none', background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#ffffff', fontSize: '0.74rem', fontWeight: '900', cursor: 'pointer', boxShadow: '0 2px 6px rgba(13, 148, 136, 0.3)' }}
+                >
+                  Complete Triangle Stack 🔺
+                </button>
+                <button
+                  onClick={() => setPlacedTriLayers(1)}
+                  style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#f8fafc', color: '#475569', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer' }}
+                >
+                  Reset
+                </button>
               </div>
             </div>
 
-            <div style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.35, background: '#f8fafc', padding: '0.35rem 0.6rem', borderRadius: '8px' }}>
-              {'💡 Geometric Insight: An equilateral triangular rack with n rows always holds exactly T(n) = n(n+1)/2 balls.'}
+            {/* Mathematical Properties Badges */}
+            <div style={{ background: '#ffffff', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
+                <div style={{ background: '#eff6ff', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #dbeafe', textAlign: 'center' }}>
+                  <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>ROWS (n)</div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{triangleRows} {triangleRows === 1 ? 'Row' : 'Rows'}</div>
+                </div>
+                <div style={{ background: '#fef3c7', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #fde68a', textAlign: 'center' }}>
+                  <div style={{ fontSize: '0.62rem', color: '#92400e', fontWeight: '800' }}>ODD SUM FORMULA</div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#d97706' }}>{oddFormula} = {totalTriangles}</div>
+                </div>
+                <div style={{ background: '#f0fdfa', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #ccfbf1', textAlign: 'center' }}>
+                  <div style={{ fontSize: '0.62rem', color: '#0f766e', fontWeight: '800' }}>SQUARE NUMBER</div>
+                  <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#0d9488' }}>{triangleRows}² = {totalTriangles}</div>
+                </div>
+              </div>
+
+              <div style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.35, background: '#f8fafc', padding: '0.35rem 0.6rem', borderRadius: '8px' }}>
+                {'💡 Why do stacked triangles form square numbers? In row r, alternating upright (r) and inverted (r-1) triangles always total 2r - 1 (the consecutive odd numbers). Summing all rows up to n always equals n²!'}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ACTIVITY 3: KOCH SNOWFLAKE RANGOLI */}
       {activeActivity === 5 && (

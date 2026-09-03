@@ -234,7 +234,7 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
           <h3 style={{ margin: 0, fontSize: '1.45rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '900' }}>
             <Eye size={24} color="var(--accent)" /> Phase 2: Activity 6.6 — Let us Classify
           </h3>
-          <p style={{ margin: '4px 0 0 0', fontSize: '1.21rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
+          <p style={{ margin: '4px 0 0 0', fontSize: '1.21rem', fontWeight: '600', color: 'var(--heading-sub)' }}>
             Drag each object into the correct tray. Transparent lets you see clearly. Translucent blurs. Opaque hides completely.
           </p>
         </div>
