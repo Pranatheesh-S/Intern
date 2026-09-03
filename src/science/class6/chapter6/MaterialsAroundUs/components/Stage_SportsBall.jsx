@@ -127,20 +127,20 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1 }}>
                           <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Primary Material</span>
+                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-accent)', textTransform: 'uppercase', fontWeight: 'bold' }}>Primary Material</span>
                             <div style={{ fontWeight: 'bold', fontSize: '1.4rem', color: 'var(--lesson-text)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.material}</div>
                           </div>
                           <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Hardness Level</span>
+                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-accent)', textTransform: 'uppercase', fontWeight: 'bold' }}>Hardness Level</span>
                             <div style={{ fontWeight: 'bold', fontSize: '1.4rem', color: 'var(--lesson-text)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.hardness}</div>
                           </div>
                           <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Weight</span>
+                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-accent)', textTransform: 'uppercase', fontWeight: 'bold' }}>Weight</span>
                             <div style={{ fontWeight: 'bold', fontSize: '1.4rem', color: 'var(--lesson-text)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.weight}</div>
                           </div>
                           <div style={{ background: 'var(--lesson-surface)', padding: '0.4rem 0.75rem', borderRadius: '8px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Design Purpose</span>
-                            <div style={{ fontWeight: 'bold', fontSize: '1.4rem', color: 'var(--lesson-accent)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.purpose}</div>
+                            <span style={{ fontSize: '1.6rem', color: 'var(--lesson-accent)', textTransform: 'uppercase', fontWeight: 'bold' }}>Design Purpose</span>
+                            <div style={{ fontWeight: 'bold', fontSize: '1.4rem', color: 'var(--lesson-text)', marginTop: '0.15rem', lineHeight: '1.2' }}>{ball.purpose}</div>
                           </div>
                         </div>
 
