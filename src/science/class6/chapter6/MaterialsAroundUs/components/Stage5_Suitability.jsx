@@ -93,7 +93,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         playsInline
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        style={{ width: '100%', height: '100%', objectFit: potMaterial === 'paper' ? 'contain' : 'cover' }}
       />
     );
   };
