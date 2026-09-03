@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, 
+  ArrowRight,
   Compass, 
   Target, 
   Crosshair, 
@@ -182,15 +183,15 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
             className="hud-btn hud-btn-back"
           >
             <ArrowLeft size={18} color="#ffffff" />
-            <span>BACK TO CLASS 6 WING</span>
+            <span>BACK</span>
           </button>
 
           <button 
-            onClick={() => onLaunchActivity('chapter_4_quiz')}
+            onClick={() => onLaunchActivity('intro_magnets')}
             className="hud-btn hud-btn-quiz"
           >
-            <GraduationCap size={20} color="#ffffff" />
-            <span>QUIZ HUB</span>
+            <span>NEXT</span>
+            <ArrowRight size={18} color="#ffffff" />
           </button>
         </div>
 

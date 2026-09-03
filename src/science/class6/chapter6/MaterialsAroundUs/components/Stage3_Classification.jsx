@@ -510,7 +510,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                                 style={{
                                   fontSize: 'clamp(14px, 2vw, 17px)',
                                   fontWeight: '800',
-                                  color: 'whitefff',
+                                  color: '#FFFFFF',
                                 textShadow: '0 1px 2px rgba(0,0,0,0.9)',
                                 background: 'rgba(15, 23, 42, 0.92)',
                                 backdropFilter: 'blur(4px)',
@@ -594,7 +594,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             {/* FULL-WIDTH HORIZONTAL EVIDENCE TRAY */}
             <div style={{
-              background: 'whitefff',
+              background: '#FFFFFF',
               borderRadius: '16px',
               padding: '12px 16px 14px 16px',
               border: '1px solid var(--lesson-border)',
@@ -648,7 +648,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                           : isSorted 
                             ? '1px solid rgba(16, 185, 129, 0.4)' 
                             : '1px solid var(--lesson-border)',
-                        background: isSorted ? 'var(--lesson-background)' : 'whitefff',
+                        background: isSorted ? 'var(--lesson-background)' : '#FFFFFF',
                         opacity: isSorted ? 0.45 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         display: 'flex',
@@ -695,7 +695,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: 'whitefff',
+                        background: '#FFFFFF',
                         pointerEvents: 'none'
                       }}>
                         <span style={{
@@ -726,7 +726,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                           backdropFilter: 'blur(1px)',
                           pointerEvents: 'none'
                         }}>
-                          <Check size={28} color="whitefff" strokeWidth={3.5} />
+                          <Check size={28} color="#FFFFFF" strokeWidth={3.5} />
                         </div>
                       )}
                     </div>
@@ -777,7 +777,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       }
                     }}
                     style={{
-                      background: 'whitefff',
+                      background: '#FFFFFF',
                       borderRadius: '16px',
                       border: '2px solid',
                       borderColor: isDraggingOverMe ? basket.color : basket.borderColor,
@@ -826,7 +826,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       height: '76px',
                       minHeight: '76px',
                       maxHeight: '76px',
-                      background: isDraggingOverMe ? basket.bgLight : 'whitefff',
+                      background: isDraggingOverMe ? basket.bgLight : '#FFFFFF',
                       borderTop: '1px solid var(--lesson-surface)',
                       borderBottom: '1px solid var(--lesson-surface)',
                       padding: '6px 8px',
@@ -854,7 +854,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                               height: '46px',
                               borderRadius: '8px',
                               border: `1.5px solid ${basket.borderColor}`,
-                              background: 'whitefff',
+                              background: '#FFFFFF',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -894,7 +894,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                               boxShadow: '0 1px 2px rgba(0,0,0,0.3)',
                               pointerEvents: 'none'
                             }}>
-                              <Check size={8} color="whitefff" strokeWidth={3.5} />
+                              <Check size={8} color="#FFFFFF" strokeWidth={3.5} />
                             </div>
                           </div>
                         ))
@@ -909,7 +909,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       alignItems: 'center',
                       justifyContent: 'center',
                       textAlign: 'center',
-                      background: 'whitefff',
+                      background: '#FFFFFF',
                       flexShrink: 0,
                       pointerEvents: 'none'
                     }}>
@@ -942,7 +942,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     left: '50%',
                     transform: 'translateX(-50%)',
                     background: 'rgba(220, 38, 38, 0.95)',
-                    color: 'whitefff',
+                    color: '#FFFFFF',
                     padding: '8px 18px',
                     borderRadius: '8px',
                     fontWeight: '700',

@@ -257,23 +257,25 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderLeft: '2px solid var(--lesson-border)' }} />
             <div style={{ position: 'absolute', top: '10px', right: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderRight: '2px solid var(--lesson-border)' }} />
 
-            <div style={{ borderBottom: '2px dashed var(--lesson-border)', paddingBottom: '20px', marginBottom: '12px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Search size={32} color="var(--lesson-primary)" />
-                <h4 style={{ margin: 0, fontSize: '2rem', letterSpacing: '1px', color: 'var(--lesson-primary)', fontWeight: '900' }}>EVIDENCE BOARD</h4>
+            <div style={{ borderBottom: '2px solid rgba(122, 106, 82, 0.2)', paddingBottom: '16px', marginBottom: '12px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Search size={32} color="#3B2A1F" />
+                  <h4 style={{ margin: 0, fontSize: '2.4rem', letterSpacing: '1.5px', color: '#3B2A1F', fontWeight: '900', fontFamily: 'serif' }}>EVIDENCE BOARD</h4>
+                </div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--lesson-accent)', color: 'white', padding: '6px 14px', borderRadius: '20px', fontSize: '0.95rem', fontWeight: '800', letterSpacing: '0.5px', boxShadow: '0 4px 10px rgba(166, 75, 39, 0.2)' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'white' }} />
+                  {objectsToScan.length} ITEMS • READY TO SCAN
+                </div>
               </div>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: 'var(--lesson-accent)', color: 'white', padding: '6px 14px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'white' }} />
-                {objectsToScan.length} ITEMS • READY TO SCAN
-              </div>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#7A6A52', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
             </div>
             
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
-              gap: '12px', 
+              gridTemplateColumns: '1fr 1fr 1fr', 
+              gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
+              gap: '16px', 
               alignItems: 'stretch',
               flex: 1,
               minHeight: 0
@@ -290,23 +292,28 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 let bgColor = 'whitefff';
                 let nameColor = 'var(--lesson-accent)'; // BURNT ORANGE / TERRACOTTA
                 
+                let borderWidth = '1px';
+                
                 if (isScanned) {
-                  borderColor = 'var(--lesson-success)';
-                  bgColor = '#f4fcf6';
+                  borderColor = 'var(--lesson-accent)';
+                  borderWidth = '2px';
+                  bgColor = '#FAF8F5';
                   labelText = 'SCANNED';
                   labelColor = 'var(--lesson-success)';
                 } else if (isScanning) {
                   borderColor = 'var(--lesson-accent)';
-                  shadow = '0 0 20px rgba(188, 74, 26, 0.2)';
+                  borderWidth = '2px';
+                  shadow = '0 0 20px rgba(166, 75, 39, 0.2)';
                   labelText = 'SCANNING...';
                   labelColor = 'var(--lesson-accent)';
                 } else if (isSelected) {
                   borderColor = 'var(--lesson-accent)';
-                  shadow = '0 6px 16px rgba(188, 74, 26, 0.15)';
-                  labelText = 'SELECTED FOR SCAN';
+                  borderWidth = '2px';
+                  shadow = '0 6px 16px rgba(166, 75, 39, 0.15)';
+                  bgColor = 'rgba(166, 75, 39, 0.05)';
+                  labelText = 'SELECTED';
                   labelColor = 'var(--lesson-accent)';
                 }
-
                 return (
                   <div
                     key={obj.id}
@@ -318,9 +325,10 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     className={`interactive-tray-item ${isScanned ? 'scanned-item' : ''}`}
                     style={{
                       width: '100%',
-                      padding: '16px',
-                      borderRadius: '16px',
-                      border: `2px solid ${borderColor}`,
+                      height: '100%',
+                      padding: 0,
+                      borderRadius: '8px',
+                      border: `${borderWidth} solid ${borderColor}`,
                       background: bgColor,
                       display: 'flex',
                       flexDirection: 'row',
@@ -331,55 +339,79 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       position: 'relative'
                     }}
                   >
-                    {/* Left: Text Content */}
-                    <div style={{ flex: '1 1 65%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px', minWidth: 0 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: 'var(--lesson-secondary)', fontWeight: '800', letterSpacing: '0.5px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <div style={{ width: '4px', height: '12px', background: 'var(--lesson-accent)', borderRadius: '2px' }} />
-                          <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
-                        </div>
-                        {isScanned && <Check size={16} strokeWidth={3} style={{ color: 'var(--lesson-success)' }} />}
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span style={{ fontSize: '1.3rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
-                        <span style={{ fontSize: '0.95rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '6px', minHeight: '18px' }}>
-                          {isScanning && (
-                             <motion.span
-                               animate={{ opacity: [1, 0.4, 1] }}
-                               transition={{ duration: 1, repeat: Infinity }}
-                               style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--lesson-accent)', display: 'inline-block' }}
-                             />
-                          )}
-                          {labelText}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Right: Image Content */}
+                    {/* Image Area (Dominant) */}
                     <div style={{ 
-                      flex: '0 0 35%',
+                      flex: '1 1 60%',
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       position: 'relative', 
-                      minHeight: '80px'
+                      minHeight: 0,
+                      background: isSelected ? 'rgba(166, 75, 39, 0.05)' : (isScanned ? '#FAF8F5' : '#FDFCF9'),
+                      overflow: 'hidden'
                     }}>
+                      {/* Evidence Identifier Overlay */}
+                      <div style={{ 
+                        position: 'absolute', 
+                        top: '12px', 
+                        left: '12px', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px',
+                        zIndex: 2
+                      }}>
+                        <div style={{ width: '6px', height: '18px', background: 'var(--lesson-accent)', borderRadius: '2px' }} />
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px', color: '#7A6A52', fontWeight: '800' }}>
+                          <span style={{ fontSize: '0.9rem', letterSpacing: '1px' }}>EVIDENCE</span>
+                          <span style={{ fontSize: '1.25rem', fontWeight: '900', color: '#3B2A1F' }}>{(index + 1).toString().padStart(2, '0')}</span>
+                        </div>
+                      </div>
+
                       {obj.boardImage || obj.image ? (
                         <img 
                           src={obj.boardImage || obj.image} 
                           alt={obj.name} 
                           style={{ 
                             display: 'block', 
-                            width: '100%', 
-                            height: '100%', 
+                            width: '75%', 
+                            height: '75%', 
+                            marginTop: '20px',
                             objectFit: 'contain',
                             objectPosition: 'center',
                             mixBlendMode: 'multiply',
-                            transform: 'scale(1.25)'
+                            filter: isSelected ? 'drop-shadow(0 6px 12px rgba(166, 75, 39, 0.15))' : 'drop-shadow(0 4px 8px rgba(0,0,0,0.06))'
                           }} 
                         />
                       ) : null}
+                    </div>
+                    
+                    {/* Divider */}
+                    <div style={{ height: '1px', background: (isSelected || isScanned) ? 'rgba(166, 75, 39, 0.2)' : 'rgba(0,0,0,0.08)', width: '100%' }} />
+
+                    {/* Footer: Name & Status */}
+                    <div style={{ 
+                      padding: '12px 16px 14px 16px', 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: '4px',
+                      background: isSelected ? 'rgba(166, 75, 39, 0.02)' : (isScanned ? '#FAF8F5' : '#FFFFFF'),
+                    }}>
+                      <span style={{ fontSize: '1.45rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {obj.name}
+                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
+                        <span style={{ fontSize: '1.05rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          {isScanning && (
+                             <motion.span
+                               animate={{ opacity: [1, 0.4, 1] }}
+                               transition={{ duration: 1, repeat: Infinity }}
+                               style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--lesson-accent)', display: 'inline-block' }}
+                             />
+                          )}
+                          {labelText}
+                        </span>
+                        {(isScanned || isSelected) && <Check size={22} strokeWidth={3} style={{ color: 'var(--lesson-accent)' }} />}
+                      </div>
                     </div>
                   </div>
                 );
@@ -501,7 +533,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', gap: '24px' }}>
                         <h3 style={{ margin: 0, color: 'rgba(56, 189, 248, 0.9)', fontSize: '0.85rem', fontWeight: '800', letterSpacing: '1px' }}>SCANNER ACTIVE</h3>
-                        <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'whitefff' }}>{scanProgress}%</div>
+                        <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#FFFFFF' }}>{scanProgress}%</div>
                       </div>
                       
                       {/* Progress bar */}

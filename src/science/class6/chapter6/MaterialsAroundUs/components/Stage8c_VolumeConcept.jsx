@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Info, CheckCircle, Lightbulb, Star, Box, Coffee, Droplet, GlassWater, ArrowRight, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Info, CheckCircle, Star, Box, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
   const [activeStep, setActiveStep] = useState(0);
@@ -140,7 +141,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                   
                   {/* Right: Explanation */}
                   <div style={{ flex: '1.2', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <h3 style={{ fontSize: '2.5rem', color: 'var(--lesson-primary)', margin: '0 0 32px 0', lineHeight: '1.2', fontWeight: '900' }}>WHY CAN'T I ADD MORE WATER?</h3>
+                    <h3 style={{ fontSize: '2.5rem', color: 'var(--lesson-primary)', margin: '0 0 32px 0', lineHeight: '1.2', fontWeight: '900' }}>WHY CAN&apos;T I ADD MORE WATER?</h3>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: '1.6rem', lineHeight: '1.5' }}>
@@ -427,3 +428,8 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage8c_VolumeConcept.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

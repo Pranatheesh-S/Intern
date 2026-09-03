@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { CheckCircle, AlertCircle, Award, RefreshCw, Star, Shield, Lightbulb, Search, FileText, CheckSquare, Brain } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -7,7 +8,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [selectedAns, setSelectedAns] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [score, setScore] = useState(0);
+  const [, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
 
   const questions = [
@@ -104,7 +105,9 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
           spread: 80,
           origin: { y: 0.6 }
         });
-      } catch (e) {}
+      } catch {
+        // Confetti failed
+      }
     }
   };
 
@@ -125,6 +128,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
   // Alphabet for options
   const alphabet = ['A', 'B', 'C', 'D'];
   const progressPercentage = (currentQIndex / questions.length) * 100;
+  const ansState = isAnswered ? (selectedAns === questions[currentQIndex].correctIndex ? 'correct' : 'incorrect') : null;
 
   return (
     <div style={{ display: 'flex', gap: '1.5rem', width: '100%', height: '100%', alignItems: 'stretch' }}>
@@ -354,11 +358,11 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               <p style={{ margin: 0, fontSize: 'clamp(20px, 2.5vw, 24px)', fontWeight: '600', color: 'var(--lesson-secondary)' }}>Master Investigator Badge Unlocked!</p>
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <button onClick={restartQuiz} style={{ background: 'white', color: 'var(--lesson-primary)', border: '2px solid var(--lesson-primary)', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-                <RefreshCcw size={20} /> Retry Mission
+              <button onClick={restartQuiz} style={{ background: 'var(--lesson-accent)', color: '#FFFFFF', border: '2px solid var(--lesson-primary)', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                <RefreshCw size={20} /> Retry Mission
               </button>
-              <div style={{ background: 'var(--lesson-success)', color: 'white', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Click "Proceed to next" in the bottom right corner!
+              <div style={{ background: 'var(--lesson-accent)', color: 'white', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                Click &quot;Proceed to next&quot; in the bottom right corner!
               </div>
             </div>
           </motion.div>
@@ -392,3 +396,8 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage9_Quiz.propTypes = {
+  onComplete: PropTypes.func.isRequired,
+  addXp: PropTypes.func.isRequired
+};

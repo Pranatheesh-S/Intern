@@ -7,72 +7,73 @@
   --font-body: 'Inter', sans-serif;
 
   /* ── Page ── */
-  --lesson-background: #FDFBF7; /* very light warm ivory/cream */
-  --lesson-background-gradient: #FDFBF7;
+  --lesson-background: #F8F4EC; /* warm parchment */
+  --lesson-background-gradient: #F8F4EC;
 
   /* ── Card / Panel ── */
-  --lesson-card: #FBF7F0; /* soft cream */
-  --lesson-border: #E8DECE; /* muted warm tan */
-  --card-shadow: 0 4px 20px rgba(110, 80, 50, 0.06), 0 8px 32px rgba(110, 80, 50, 0.04);
-  --card-hover-border: #D8C3A5;
-  --card-hover-shadow: 0 8px 32px rgba(44, 110, 99, 0.12);
+  /* ── Card / Panel ── */
+  --lesson-card: #FFFFFF;
+  --lesson-border: #D9C9A3;
+  --card-shadow: 0 4px 20px rgba(59, 42, 31, 0.05), 0 8px 32px rgba(59, 42, 31, 0.03);
+  --card-hover-border: #D9C9A3;
+  --card-hover-shadow: 0 8px 32px rgba(59, 42, 31, 0.08);
 
   /* ── Text ── */
-  --lesson-primary: #3E2723; /* deep espresso */
-  --lesson-text: #4E342E; /* warm dark brown */
-  --lesson-secondary: #5D4037;
-  --lesson-muted: #8D6E63;
-  --text-faint: #A1887F;
-  --map-popup-desc: var(--lesson-muted);
+  --lesson-primary: #3B2A1F; /* Deep Warm Brown */
+  --lesson-text: #3B2A1F;
+  --lesson-secondary: #7A6A52; /* Warm Taupe */
+  --lesson-muted: #7A6A52;
+  --text-faint: #7A6A52;
+  --map-popup-desc: var(--lesson-secondary);
 
-  /* ── Accent (Muted Teal/Blue-Green) ── */
-  --lesson-accent: #2C6E63; /* muted teal/blue-green */
-  --lesson-accent-bg: #E6F0EE; /* very light teal/cream mix */
-  --lesson-accent-border: #B2D1CB; /* soft teal border */
-  --lesson-accent-text: #1B4D45; /* deep teal for text */
-  --lesson-highlight: #fef08a; /* for text highlighting */
+  /* ── Buttons / Progress (Terracotta) ── */
+  --lesson-accent: #A64B27; 
+  --lesson-accent-bg: #FFFFFF; 
+  --lesson-accent-border: #D9C9A3; 
+  --lesson-accent-text: #FFFFFF; 
+  --lesson-highlight: #FFFFFF; 
 
-  /* ── Success (warm harmonized green) ── */
-  --lesson-success: #689F38;
-  --lesson-success-bg: #F1F8E9;
-  --lesson-success-border: #C5E1A5;
+  /* ── Success ── */
+  --lesson-success: #A64B27; 
+  --lesson-success-bg: #FFFFFF;
+  --lesson-success-border: #D9C9A3;
 
-  /* ── Danger (warm harmonized red/terracotta) ── */
-  --lesson-danger: #D84315;
-  --lesson-danger-bg: #FBE9E7;
-  --lesson-danger-border: #FFCCBC;
+  /* ── Danger ── */
+  --lesson-danger: #A64B27;
+  --lesson-danger-bg: #FFFFFF;
+  --lesson-danger-border: #D9C9A3;
 
-  /* ── Warning (muted golden yellow) ── */
-  --lesson-warning: #FBC02D;
-  --lesson-warning-bg: #FFFDE7;
-  --lesson-warning-border: #FFF59D;
+  /* ── Warning ── */
+  --lesson-warning: #A64B27;
+  --lesson-warning-bg: #FFFFFF;
+  --lesson-warning-border: #D9C9A3;
 
-  /* ── Neutral ── */
-  --neutral-bg: #F4ECE1;
-  --neutral-text: #4E342E;
-  --neutral-border: #E8DECE;
+  /* ── Neutral / Beige ── */
+  --neutral-bg: #FFFFFF;
+  --neutral-text: #3B2A1F;
+  --neutral-border: #D9C9A3;
 
-  /* ── Surface (light beige) ── */
-  --lesson-surface: #F5EFE6;
-  --surface-hover: #EBE3D5;
+  /* ── Surface ── */
+  --lesson-surface: #FFFFFF;
+  --surface-hover: #FFFFFF;
 
   /* ── Canvas ── */
-  --canvas-bg: #FDFBF7;
-  --canvas-border: #E8DECE;
-  --canvas-grid: rgba(139, 115, 85, 0.06);
+  --canvas-bg: #FFFFFF;
+  --canvas-border: #D9C9A3;
+  --canvas-grid: rgba(59, 42, 31, 0.05);
 
   /* ── Scrollbar ── */
-  --scrollbar-track: #F5EFE6;
-  --scrollbar-thumb: #D8C3A5;
+  --scrollbar-track: #FFFFFF;
+  --scrollbar-thumb: #D9C9A3;
 
   /* ── Tabs ── */
-  --tab-bg: #F5EFE6;
-  --tab-text: #8D6E63;
-  --tab-hover-bg: #EBE3D5;
-  --tab-hover-text: #4E342E;
-  --tab-active-bg: var(--lesson-accent);
-  --tab-active-text: #ffffff;
-  --tab-active-shadow: 0 2px 6px rgba(44, 110, 99, 0.2);
+  --tab-bg: #FFFFFF;
+  --tab-text: #7A6A52;
+  --tab-hover-bg: #FFFFFF;
+  --tab-hover-text: #3B2A1F;
+  --tab-active-bg: #A64B27;
+  --tab-active-text: #FFFFFF;
+  --tab-active-shadow: none;
 }
 
 /* Ensure background color overrides tailwind bg classes */

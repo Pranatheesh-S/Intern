@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Compass, BookOpen } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
@@ -45,7 +46,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
             <span style={{ background: 'var(--lesson-primary)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: 'var(--text-sm)' }}>CHIEF DETECTIVE</span>
           </h4>
           <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: 'var(--text-lg)', lineHeight: '1.6' }}>
-            "We have thoroughly explored and understood the various properties of materials in the modern world. But wait! Most of the materials that we see today would have also existed earlier. I am curious to know... how did people classify them back then?"
+            &quot;We have thoroughly explored and understood the various properties of materials in the modern world. But wait! Most of the materials that we see today would have also existed earlier. I am curious to know... how did people classify them back then?&quot;
           </p>
         </div>
       </div>
@@ -111,9 +112,14 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
       
       {/* Footer Instructions */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', minHeight: '40px' }}>
-        <p style={{ color: 'var(--lesson-muted)', fontSize: '0.95rem' }}>Review the ancient properties, then click "Proceed to next" when you are ready for the final concept map.</p>
+        <p style={{ color: 'var(--lesson-muted)', fontSize: '0.95rem' }}>Review the ancient properties, then click &quot;Proceed to next&quot; when you are ready for the final concept map.</p>
       </div>
 
     </div>
   );
 }
+
+Stage8_AyurvedaSummary.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

@@ -28,7 +28,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
       }}
     >
       <div style={{
-        position: 'absolute', top: '-14px', left: '24px', background: '#64748b', color: 'white',
+        position: 'absolute', top: '-14px', left: '24px', background: '#FFFFFF', color: 'white',
         padding: '4px 12px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold',
         letterSpacing: '1px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
       }}>

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
 import { Scale, CheckCircle2, AlertCircle, Info, Target, GripHorizontal } from 'lucide-react';
 import { RealisticCup } from './Stage8a_Mass_Components/RealisticCup';
 import { DraggableCup } from './Stage8a_Mass_Components/DraggableCup';
@@ -268,3 +269,8 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage8a_Mass.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

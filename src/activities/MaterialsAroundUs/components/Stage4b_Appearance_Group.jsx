@@ -78,12 +78,12 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
   }, [items, observedItem, onComplete]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', background: '#FFFFFF', padding: '1.5rem', borderRadius: '16px' }}>
       
       {/* Header & Lamp toggle */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#3B2A1F', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             📌 Material Tray
           </h3>
           <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b' }}>
@@ -109,7 +109,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
       </div>
 
       {/* Material Tray */}
-      <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1rem', minHeight: '180px' }}>
+      <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #D9C9A3', padding: '1rem', minHeight: '180px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
           <AnimatePresence>
             {items.map(item => (
@@ -121,7 +121,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 style={{
-                  padding: '1rem', background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px',
+                  padding: '1rem', background: 'white', border: '1px solid #D9C9A3', borderRadius: '12px',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'grab',
                   boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
                 }}
@@ -145,7 +145,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, 'shiny')}
           style={{ 
-            border: '2px dashed #fde047', background: '#fefce8', borderRadius: '16px',
+            border: '2px dashed #fde047', background: '#FFFFFF', borderRadius: '16px',
             display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1.5rem',
             position: 'relative', overflowY: 'auto'
           }}
@@ -158,7 +158,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             {placed.shiny.map(item => (
-              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '12px', border: '1px solid #fef08a', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', width: '80px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '12px', border: '1px solid #D9C9A3', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', width: '80px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                 <div style={{ fontSize: '2rem' }}>{item.icon}</div>
                 <div style={{ fontSize: '0.7rem', color: '#ca8a04', textAlign: 'center', lineHeight: '1.2' }}>{item.name}</div>
               </motion.div>
@@ -174,7 +174,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, 'dull')}
           style={{ 
-            border: '2px dashed #94a3b8', background: '#f8fafc', borderRadius: '16px',
+            border: '2px dashed #94a3b8', background: '#FFFFFF', borderRadius: '16px',
             display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1.5rem',
             position: 'relative', overflowY: 'auto'
           }}
@@ -187,7 +187,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             {placed.dull.map(item => (
-              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '12px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', width: '80px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '12px', border: '1px solid #D9C9A3', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', width: '80px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                 <div style={{ fontSize: '2rem' }}>{item.icon}</div>
                 <div style={{ fontSize: '0.7rem', color: '#475569', textAlign: 'center', lineHeight: '1.2' }}>{item.name}</div>
               </motion.div>
@@ -204,7 +204,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
         onDragOver={handleDragOver}
         onDrop={(e) => handleDrop(e, 'observe')}
         style={{ 
-          background: 'white', borderRadius: '12px', border: '1px solid #c7d2fe', padding: '1rem',
+          background: 'white', borderRadius: '12px', border: '1px solid #D9C9A3', padding: '1rem',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}
       >
@@ -218,7 +218,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
         </div>
         <div style={{ 
           border: '2px dashed #a5b4fc', borderRadius: '12px', padding: '0.5rem 1rem', 
-          background: '#eef2ff', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '200px', justifyContent: 'center'
+          background: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '200px', justifyContent: 'center'
         }}>
           {observedItem ? (
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -254,7 +254,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
             exit={{ opacity: 0, y: 20 }}
             style={{ 
               position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)',
-              background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '12px', padding: '1rem 1.5rem',
+              background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '1rem 1.5rem',
               display: 'flex', alignItems: 'center', gap: '0.75rem', boxShadow: '0 10px 25px rgba(220, 38, 38, 0.2)',
               zIndex: 50, color: '#991b1b', maxWidth: '600px'
             }}

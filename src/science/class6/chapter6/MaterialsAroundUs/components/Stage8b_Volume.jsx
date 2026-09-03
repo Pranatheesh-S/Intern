@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Box, Droplet, CheckCircle2, AlertCircle,
@@ -49,7 +50,6 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
   const canvasRef = useRef(null);
   const dropletsRef = useRef([]);
   const ripplesRef = useRef([]);
-  const rippleIdRef = useRef(0);
 
   /* ── Think-more ── */
   const [selectedOption, setSelectedOption] = useState(null);
@@ -91,46 +91,6 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
      HELPER: canvas bounding-box origin
   ────────────────────────────────────── */
   const getCanvasRect = () => containerRef.current?.getBoundingClientRect();
-
-  /* ──────────────────────────────────────
-     HELPER: bottle mouth position in canvas-space
-     The SVG bottle is 120×240, origin at top-left of motion.div.
-     The bottle neck opening (ellipse cx=60 cy=22) is the mouth.
-     The motion.div is positioned bottom:bottlePos.y, left:bottlePos.x
-     in the 560-wide canvas.
-  ────────────────────────────────────── */
-  const getMouthCanvas = (pos, tilt) => {
-    const tiltRad = (tilt * Math.PI) / 180;
-    // transformOrigin of the bottle is '60px 40px' (pivot near cap)
-    // mouth in local space relative to pivot: (0, -18) roughly
-    // so mouth rotates around pivot (60,40):
-    //   local mouth = (60, 22)  →  delta = (0, -18)
-    //   rotated delta = (-18*sin(tilt), -18*cos(tilt))
-    const pivotLocalX = 60;
-    const pivotLocalY = 40;
-    const mouthLocalX = 60;
-    const mouthLocalY = 22;
-    const dx = mouthLocalX - pivotLocalX;
-    const dy = mouthLocalY - pivotLocalY;
-    const cos = Math.cos(tiltRad);
-    const sin = Math.sin(tiltRad);
-    const rotDx = dx * cos - dy * sin;
-    const rotDy = dx * sin + dy * cos;
-
-    // The motion.div left=pos.x, bottom=pos.y  →  top = canvasH - pos.y - 240
-    // We need canvasH. Use 320px as a safe estimate (we'll subtract from flex container).
-    const canvasH = containerRef.current ? containerRef.current.clientHeight : 340;
-    const divTop  = canvasH - pos.y - 240;  // top of the 240px-tall bottle div
-    const divLeft = pos.x;
-
-    const pivotX = divLeft + pivotLocalX;
-    const pivotY = divTop  + pivotLocalY;
-
-    return {
-      x: pivotX + rotDx,
-      y: pivotY + rotDy,
-    };
-  };
 
   /* ──────────────────────────────────────
      ON_COMPLETE TRIGGER
@@ -356,7 +316,6 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
       running = false;
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ──────────────────────────────────────
@@ -1087,3 +1046,8 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage8b_Volume.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

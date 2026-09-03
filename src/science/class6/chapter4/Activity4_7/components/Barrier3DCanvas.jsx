@@ -1,6 +1,7 @@
-import React, { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { Suspense, useMemo } from 'react';
+import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { ContactShadows, Environment } from '@react-three/drei';
+import * as THREE from 'three';
 import ErrorBoundary from '../../../../../components/ErrorBoundary';
 
 import TreeBarrier from './TreeBarrier';
@@ -8,11 +9,57 @@ import BottleBarrier from './BottleBarrier';
 import GlassBarrier from './GlassBarrier';
 import CardboardBarrier from './CardboardBarrier';
 
+// Dynamic Cinematic Camera Reframing Controller
+function CinematicCameraController({ stage, type }) {
+  const { camera } = useThree();
+
+  useFrame(() => {
+    // Tailored optimal camera distance and framing per stage
+    let targetX = 0;
+    let targetY = 0.45;
+    let targetZ = 4.4;
+    let targetFov = 40;
+
+    if (type === 'wood') {
+      if (stage === 1) { targetY = -0.75; targetZ = 4.3; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.8; targetFov = 42; }
+      else if (stage === 3) { targetY = -0.70; targetZ = 4.9; targetFov = 42; }
+      else if (stage === 4) { targetY = -0.55; targetZ = 7.4; targetFov = 50; }
+    } else if (type === 'plastic') {
+      if (stage === 1) { targetY = -0.80; targetZ = 4.3; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.8; targetFov = 41; }
+      else if (stage === 3) { targetY = -0.70; targetZ = 5.2; targetFov = 42; }
+      else if (stage === 4) { targetY = -0.65; targetZ = 5.6; targetFov = 44; }
+    } else if (type === 'glass') {
+      if (stage === 1) { targetY = -0.75; targetZ = 4.3; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.9; targetFov = 42; }
+      else if (stage === 3) { targetY = -0.80; targetZ = 4.5; targetFov = 40; }
+      else if (stage === 4) { targetY = -0.65; targetZ = 5.2; targetFov = 43; }
+    } else if (type === 'cardboard') {
+      if (stage === 1) { targetY = -0.75; targetZ = 4.4; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.6; targetFov = 41; }
+      else if (stage === 3) { targetY = -0.70; targetZ = 4.6; targetFov = 41; }
+      else if (stage === 4) { targetY = -0.70; targetZ = 5.3; targetFov = 43; }
+    }
+
+    // Smooth cinematic damping
+    camera.position.x += (targetX - camera.position.x) * 0.06;
+    camera.position.y += (targetY - camera.position.y) * 0.06;
+    camera.position.z += (targetZ - camera.position.z) * 0.06;
+    if (Math.abs(camera.fov - targetFov) > 0.1) {
+      camera.fov += (targetFov - camera.fov) * 0.06;
+      camera.updateProjectionMatrix();
+    }
+  });
+
+  return null;
+}
+
 // Stable stage wrapper for clear, stationary 3D presentation
-function BarrierModelWrapper({ type, stage = 1, thickness = 1, woodViewMode = 'textured' }) {
+function BarrierModelWrapper({ type, stage = 1, thickness = 1 }) {
   return (
-    <group rotation={[0.06, -0.28, 0]}>
-      {type === 'wood' && <TreeBarrier stage={stage} thickness={thickness} woodViewMode={woodViewMode} />}
+    <group rotation={[0, 0, 0]}>
+      {type === 'wood' && <TreeBarrier stage={stage} thickness={thickness} />}
       {type === 'plastic' && <BottleBarrier stage={stage} thickness={thickness} />}
       {type === 'glass' && <GlassBarrier stage={stage} thickness={thickness} />}
       {type === 'cardboard' && <CardboardBarrier stage={stage} thickness={thickness} />}
@@ -59,177 +106,92 @@ const BADGE_CONFIG = {
 
 export default function Barrier3DCanvas({ type = 'wood', treeStage = 1, stage = null, thickness = 1, width = 360, height = 420 }) {
   const currentStage = stage !== null ? stage : (treeStage || 1);
-  const [woodViewMode, setWoodViewMode] = React.useState('textured'); // 'textured' | 'clay' | 'quads'
-
-  const materialConfig = BADGE_CONFIG[type] || BADGE_CONFIG.wood;
-  const badge = materialConfig[currentStage] || materialConfig[1] || { title: 'Material Barrier', bg: '#0284C7', border: '#7DD3FC' };
-
-  const isLogStage = type === 'wood' && currentStage === 2;
 
   return (
     <div style={{
-      width: `${width}px`,
-      height: `${height}px`,
+      width: typeof width === 'number' ? `${width}px` : width,
+      height: typeof height === 'number' ? `${height}px` : height,
       position: 'relative',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       userSelect: 'none',
-      background: 'transparent'
+      background: 'transparent',
+      overflow: 'visible'
     }}>
-      {/* Top Floating Material Tag Badge */}
-      <div style={{
-        position: 'absolute',
-        top: '-18px',
-        background: badge.bg,
-        color: '#FFFFFF',
-        padding: '5px 14px',
-        borderRadius: '16px',
-        fontSize: '11px',
-        fontWeight: 900,
-        boxShadow: '0 4px 14px rgba(0,0,0,0.35)',
-        border: `1.5px solid ${badge.border}`,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '6px',
-        zIndex: 10,
-        whiteSpace: 'nowrap',
-        pointerEvents: 'none'
-      }}>
-        <span>{badge.title}</span>
-        <span style={{
-          background: 'rgba(255,255,255,0.25)',
-          padding: '1px 6px',
-          borderRadius: '8px',
-          fontSize: '10px',
-          fontWeight: 800
-        }}>
-          {thickness}x
-        </span>
-      </div>
-
-      {/* 3D Mesh Inspection Mode Selector for Rustic Wooden Log */}
-      {isLogStage && (
-        <div style={{
-          position: 'absolute',
-          bottom: '8px',
-          zIndex: 20,
-          display: 'flex',
-          gap: '4px',
-          background: 'rgba(15, 23, 42, 0.85)',
-          backdropFilter: 'blur(8px)',
-          padding: '3px 6px',
-          borderRadius: '20px',
-          border: '1px solid rgba(148, 163, 184, 0.35)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
-        }}>
-          {[
-            { id: 'textured', label: '🪵 Weathered Wood', desc: 'Weathered Grain & Cracks' },
-            { id: 'clay', label: '🏛️ Gray Clay', desc: 'Untextured 3D Sculpt' },
-            { id: 'quads', label: '🌐 Quad Mesh', desc: 'Quad Topology Grid' }
-          ].map((m) => {
-            const active = woodViewMode === m.id;
-            return (
-              <button
-                key={m.id}
-                onClick={() => setWoodViewMode(m.id)}
-                title={m.desc}
-                style={{
-                  background: active ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 'transparent',
-                  color: active ? '#FFFFFF' : '#CBD5E1',
-                  border: 'none',
-                  borderRadius: '14px',
-                  padding: '3px 9px',
-                  fontSize: '10px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                {m.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
-
       {/* 3D WebGL Canvas */}
       <ErrorBoundary title="3D Barrier Model Glitch">
-        <div style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <div style={{ width: '100%', height: '100%', pointerEvents: 'none', overflow: 'visible' }}>
           <Canvas
             shadows
-            camera={{ position: [0, 0.95, 4.4], fov: 44 }}
+            camera={{ position: [0, 0.45, 4.4], fov: 40 }}
             gl={{
               antialias: true,
               alpha: true,
-              powerPreference: 'high-performance',
-              tone: 'aces' // Better tone mapping
+              powerPreference: 'high-performance'
             }}
             style={{ width: '100%', height: '100%', background: 'transparent' }}
           >
             <Suspense fallback={<BarrierLoader />}>
-              {/* Premium Studio Environment Map for Specular Highlights & Glass Transmission */}
-              <Environment preset="studio" intensity={1.2} />
+              {/* Dynamic Camera Framing */}
+              <CinematicCameraController stage={currentStage} type={type} />
 
-              {/* Studio Ambient Light */}
-              <ambientLight intensity={1.4} color="#ffffff" />
+              {/* Studio Environment Map */}
+              <Environment preset="studio" intensity={0.2} />
 
-              {/* Primary Key Directional Light */}
+              {/* Natural Ambient Illumination */}
+              <ambientLight intensity={0.6} color="#ffffff" />
+
+              {/* Balanced Key Sunlight */}
               <directionalLight
-                position={[8, 10, 8]}
-                intensity={2.5}
+                position={[5, 8, 6]}
+                intensity={0.55}
                 castShadow
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
-                shadow-bias={-0.0002}
-                color="#ffffff"
+                shadow-bias={-0.00015}
+                shadow-radius={3.0}
+                color="#fffcf5"
               />
 
-              {/* Bright Cool Sky Fill Light */}
-              <directionalLight 
-                position={[-8, 4, 6]} 
-                intensity={1.6} 
-                color="#e0f2fe" 
+              {/* Soft Sky Fill Light */}
+              <directionalLight
+                position={[-5, 4, 4]}
+                intensity={0.4}
+                color="#f0f9ff"
               />
 
-              {/* Warm Studio Rim Light */}
-              <directionalLight 
-                position={[0, 6, -8]} 
-                intensity={1.4} 
-                color="#fef3c7" 
-              />
-
-              {/* Bottom Ground Bounce Light */}
-              <directionalLight 
-                position={[0, -3, 3]} 
-                intensity={0.7} 
-                color="#f1f5f9" 
-              />
-
-              {/* Additional left-side accent light for depth on clay wrinkles & bark */}
-              <pointLight
-                position={[-6, 3, 0]}
-                intensity={1.2}
-                color="#dbeafe"
+              {/* Subtle Rear Silhouette Rim Light */}
+              <directionalLight
+                position={[0, 6, -6]}
+                intensity={0.4}
+                color="#fef3c7"
               />
 
               {/* Realistic Ground Contact Shadows */}
               <ContactShadows
-                position={[0, -1.05, 0]}
-                opacity={0.4}
-                scale={4.0}
-                blur={2.0}
-                far={3.5}
+                position={[
+                  0,
+                  type === 'wood' && currentStage === 4
+                    ? -1.68
+                    : type === 'plastic'
+                      ? (currentStage === 1 ? -2.8 : currentStage === 2 ? -3.1 : currentStage === 3 ? -3.3 : -3.4)
+                      : -1.08,
+                  0
+                ]}
+                opacity={0.45}
+                scale={type === 'plastic' ? 5.2 : 4.5}
+                blur={2.2}
+                far={3.8}
                 color="#0f172a"
               />
 
               {/* The 3D Barrier Model */}
-              <BarrierModelWrapper 
-                type={type} 
-                stage={currentStage} 
-                thickness={thickness} 
-                woodViewMode={woodViewMode} 
+              <BarrierModelWrapper
+                type={type}
+                stage={currentStage}
+                thickness={thickness}
               />
             </Suspense>
           </Canvas>

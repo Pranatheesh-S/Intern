@@ -15,7 +15,7 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
         background: 'white', borderRadius: '16px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
         display: 'flex', flexDirection: 'column', 
-        border: '12px solid #1b2a4a', // Dark blue border as requested
+        border: '12px solid #D9C9A3', // Dark blue border as requested
         position: 'relative',
         fontFamily: 'Arial, Helvetica, sans-serif',
         overflow: 'hidden',
@@ -24,7 +24,7 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
         overflowY: 'auto'
     }}>
       {/* Title */}
-      <h2 style={{ margin: '0', fontSize: '20px', color: '#1e3a8a', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <h2 style={{ margin: '0', fontSize: '20px', color: '#3B2A1F', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Layers size={24} style={{ color: '#3b82f6' }} /> Investigation: Group by Appearance
       </h2>
 
@@ -34,7 +34,7 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       </div>
 
       {/* Yellow Tip Box */}
-      <div style={{ background: '#fefce8', border: '1px solid #fef08a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
         <Lightbulb size={20} color="#eab308" style={{ flexShrink: 0, marginTop: '2px' }} />
         <div style={{ fontSize: '14px', color: '#854d0e', lineHeight: '1.4' }}>
           Look carefully under the lamp.<br/>
@@ -43,7 +43,7 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       </div>
 
       {/* Mission Checklist */}
-      <div style={{ border: '2px solid #22c55e', borderRadius: '12px', padding: '16px', background: '#f0fdf4' }}>
+      <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: '#FFFFFF' }}>
         <h4 style={{ margin: '0 0 12px 0', color: '#16a34a', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Target size={18} /> MISSION CHECKLIST
         </h4>
@@ -64,17 +64,17 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       </div>
 
       {/* How to do */}
-      <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', background: '#f8fafc' }}>
-        <h4 style={{ margin: '0 0 12px 0', color: '#1e3a8a', fontSize: '14px' }}>How to do:</h4>
+      <div style={{ border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: '#FFFFFF' }}>
+        <h4 style={{ margin: '0 0 12px 0', color: '#3B2A1F', fontSize: '14px' }}>How to do:</h4>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-            <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><MousePointer2 size={16} /></div> Drag an item from the tray
+            <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><MousePointer2 size={16} /></div> Drag an item from the tray
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-            <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Move size={16} /></div> Drop it in the right group
+            <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Move size={16} /></div> Drop it in the right group
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-            <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Eye size={16} /></div> Click the lamp to observe again
+            <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Eye size={16} /></div> Click the lamp to observe again
           </div>
         </div>
       </div>
@@ -82,8 +82,8 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       {/* Detective Tip */}
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: 'auto', paddingTop: '10px' }}>
         <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: '60px', height: '60px' }} />
-        <div style={{ background: '#f1f5f9', padding: '12px', borderRadius: '12px', fontSize: '13px', color: '#334155', position: 'relative', flex: 1, border: '1px solid #e2e8f0' }}>
-          <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: '#f1f5f9', borderLeft: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', transform: 'rotate(45deg)' }} />
+        <div style={{ background: '#FFFFFF', padding: '12px', borderRadius: '12px', fontSize: '13px', color: '#334155', position: 'relative', flex: 1, border: '1px solid #D9C9A3' }}>
+          <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: '#FFFFFF', borderLeft: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', transform: 'rotate(45deg)' }} />
           Remember, shiny surfaces reflect more light!
         </div>
       </div>
