@@ -67,7 +67,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         playsInline
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
-        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
       />
     );
   };
@@ -93,7 +93,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         playsInline
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
-        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
       />
     );
   };
@@ -110,7 +110,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', overflow: 'hidden' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)', flex: '0 0 auto' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Shield size={22} style={{ color: 'var(--lesson-accent)' }} /> Activity 6.3: Let Us Think (Material Suitability)
         </h3>
         <p style={{ margin: 0, fontSize: '1.45rem', color: 'var(--heading-sub)', lineHeight: '1.4' }}>
@@ -122,7 +122,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         {/* Tumbler Designer */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', border: '1px solid var(--lesson-border)', minHeight: 0 }}>
           <div style={{ borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flex: '0 0 auto' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '2.0rem' }}>1. Storing Water: The Tumbler Test</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.9rem' }}>1. Storing Water: The Tumbler Test</span>
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flex: '0 0 auto' }}>
@@ -152,7 +152,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         {/* Stove Cooking pot */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', border: '1px solid var(--lesson-border)', minHeight: 0 }}>
           <div style={{ borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flex: '0 0 auto' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '2.0rem' }}>2. Direct Flame: The Cooking Pot</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.9rem' }}>2. Direct Flame: The Cooking Pot</span>
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flex: '0 0 auto' }}>
