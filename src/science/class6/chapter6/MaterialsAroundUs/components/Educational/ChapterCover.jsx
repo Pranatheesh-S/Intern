@@ -191,101 +191,122 @@ export default function ChapterCover({ onOpenBook, onBack }) {
         </svg>
       </div>
 
-      {/* TYPOGRAPHY UI LAYER */}
-      <div style={{ position: 'absolute', zIndex: 2, top: '13%', left: '50%', width: '45%', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: '"Outfit", "Inter", sans-serif' }}>
-        
-        {/* CLASS 6 - SCIENCE Pill */}
-        <div className="text-dark-blue text-outline-pill" style={{ fontSize: '1.2vw' }}>
-          CLASS 6 - SCIENCE
-        </div>
+      {/* RIGHT SIDE CONTENT WRAPPER */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: '50%',
+        width: '45%',
+        height: '100%',
+        zIndex: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: '13vh',
+        paddingBottom: '17vh',
+        boxSizing: 'border-box'
+      }}>
+        {/* TYPOGRAPHY UI LAYER */}
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          width: '100%', 
+          fontFamily: '"Outfit", "Inter", sans-serif',
+          flex: '0 1 auto',
+          minHeight: 0
+        }}>
+          
+          {/* CLASS 6 - SCIENCE Pill */}
+          <div className="text-dark-blue text-outline-pill" style={{ fontSize: 'min(1.2vw, 2vh)' }}>
+            CLASS 6 - SCIENCE
+          </div>
 
-        {/* Chemistry Lab Title */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1vh', width: '100%' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'relative' }}>
-            <h1 className="text-dark-blue" style={{ fontSize: '8vw', fontWeight: 900, margin: 0, lineHeight: 1, letterSpacing: '-0.02em' }}>
-              Chemistry
-            </h1>
-            <h1 className="text-cyan-gradient" style={{ fontSize: '7.5vw', fontWeight: 900, margin: 0, lineHeight: 1, letterSpacing: '-0.02em', marginTop: '-2vh', marginRight: '5%' }}>
-              Lab
-            </h1>
+          {/* Chemistry Lab Title */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1vh', width: '100%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', position: 'relative' }}>
+              <h1 className="text-dark-blue" style={{ fontSize: 'min(8vw, 12vh)', fontWeight: 900, margin: 0, lineHeight: 1, letterSpacing: '-0.02em' }}>
+                Chemistry
+              </h1>
+              <h1 className="text-cyan-gradient" style={{ fontSize: 'min(7.5vw, 11vh)', fontWeight: 900, margin: 0, lineHeight: 1, letterSpacing: '-0.02em', marginTop: '-2vh', marginRight: '5%' }}>
+                Lab
+              </h1>
+            </div>
+          </div>
+
+          {/* Subtitle Pill */}
+          <div style={{ marginTop: '3vh' }}>
+            <div className="text-dark-blue text-outline-pill" style={{ borderRadius: '0.5vw', fontSize: 'min(1.8vw, 2.5vh)', gap: '1.5vw', padding: '1vw 3vw', backgroundColor: 'rgba(255,255,255,0.25)' }}>
+              <span style={{ fontWeight: 600 }}>CH 06 / 12</span>
+              <span style={{ width: '2px', height: 'min(2vw, 3vh)', backgroundColor: '#0b1d5c', opacity: 0.3 }}></span>
+              <span style={{ fontWeight: 900, color: '#051240' }}>Materials Around Us</span>
+            </div>
+          </div>
+
+          {/* Bullet Points */}
+          <div style={{ marginTop: '3.5vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5vh' }}>
+            <div style={{ color: '#518ac9', fontSize: 'min(1.7vw, 2.5vh)', fontWeight: 800, letterSpacing: '0.05em', display: 'flex', gap: '1.8vw', alignItems: 'center' }}>
+              <span>SORTING</span>
+              <div style={{ width: 'min(0.5vw, 0.8vh)', height: 'min(0.5vw, 0.8vh)', borderRadius: '50%', backgroundColor: '#00938a' }}></div>
+              <span>APPEARANCE</span>
+              <div style={{ width: 'min(0.5vw, 0.8vh)', height: 'min(0.5vw, 0.8vh)', borderRadius: '50%', backgroundColor: '#00938a' }}></div>
+              <span>HARDNESS</span>
+            </div>
+            <div style={{ color: '#518ac9', fontSize: 'min(1.7vw, 2.5vh)', fontWeight: 800, letterSpacing: '0.05em', display: 'flex', gap: '1.8vw', alignItems: 'center' }}>
+              <span>SOLUBILITY</span>
+              <div style={{ width: 'min(0.5vw, 0.8vh)', height: 'min(0.5vw, 0.8vh)', borderRadius: '50%', backgroundColor: '#00938a' }}></div>
+              <span>TRANSPARENCY</span>
+            </div>
           </div>
         </div>
 
-        {/* Subtitle Pill */}
-        <div style={{ marginTop: '3vh' }}>
-          <div className="text-dark-blue text-outline-pill" style={{ borderRadius: '0.5vw', fontSize: '1.8vw', gap: '1.5vw', padding: '1vw 3vw', backgroundColor: 'rgba(255,255,255,0.25)' }}>
-            <span style={{ fontWeight: 600 }}>CH 06 / 12</span>
-            <span style={{ width: '2px', height: '2vw', backgroundColor: '#0b1d5c', opacity: 0.3 }}></span>
-            <span style={{ fontWeight: 900, color: '#051240' }}>Materials Around Us</span>
+        {/* Visible Styled ENTER LAB button */}
+        <button
+          className="glowing-btn"
+          onClick={onOpenBook}
+          aria-label="Enter Lab"
+          title="Enter Lab"
+          style={{
+            width: '84%', // 37.79% of 100vw = 83.9% of 45vw container
+            height: 'min(13.4vh, 90px)', // Original was 13.38% of height
+            background: 'linear-gradient(180deg, #1e4bb2 0%, #061a55 100%)',
+            border: '1.5px solid rgba(167, 219, 255, 0.6)',
+            borderRadius: '9999px',
+            cursor: 'pointer',
+            outline: 'none',
+            transition: 'transform 0.15s ease, filter 0.15s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 5%',
+            color: 'white',
+            fontFamily: '"Inter", "Outfit", sans-serif',
+            flexShrink: 0
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.02)';
+            e.currentTarget.style.filter = 'brightness(1.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1.0)';
+            e.currentTarget.style.filter = 'brightness(1.0)';
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            {/* Custom Flask Icon mimicking the reference */}
+            <svg width="clamp(24px, 3.5vw, 60px)" height="clamp(24px, 3.5vw, 60px)" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 2v7.31M14 9.31V2M8.5 2h7M14 9.31L4.72 20.55A2.16 2.16 0 0 0 6.64 24h10.72a2.16 2.16 0 0 0 1.92-3.45L14 9.31Z" />
+              <path d="M6 16h12" />
+              <circle cx="10" cy="19" r="1" fill="white" stroke="none" />
+              <circle cx="13" cy="21" r="1.5" fill="white" stroke="none" />
+              <circle cx="15" cy="18" r="0.8" fill="white" stroke="none" />
+            </svg>
+            <span style={{ fontSize: 'clamp(18px, min(2.8vw, 4vh), 48px)', fontWeight: 900, letterSpacing: '0.02em', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>ENTER LAB</span>
           </div>
-        </div>
-
-        {/* Bullet Points */}
-        <div style={{ marginTop: '3.5vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5vh' }}>
-          <div style={{ color: '#518ac9', fontSize: '1.7vw', fontWeight: 800, letterSpacing: '0.05em', display: 'flex', gap: '1.8vw', alignItems: 'center' }}>
-            <span>SORTING</span>
-            <div style={{ width: '0.5vw', height: '0.5vw', borderRadius: '50%', backgroundColor: '#00938a' }}></div>
-            <span>APPEARANCE</span>
-            <div style={{ width: '0.5vw', height: '0.5vw', borderRadius: '50%', backgroundColor: '#00938a' }}></div>
-            <span>HARDNESS</span>
-          </div>
-          <div style={{ color: '#518ac9', fontSize: '1.7vw', fontWeight: 800, letterSpacing: '0.05em', display: 'flex', gap: '1.8vw', alignItems: 'center' }}>
-            <span>SOLUBILITY</span>
-            <div style={{ width: '0.5vw', height: '0.5vw', borderRadius: '50%', backgroundColor: '#00938a' }}></div>
-            <span>TRANSPARENCY</span>
-          </div>
-        </div>
-
+          <ArrowRight size={"clamp(20px, min(3vw, 4vh), 50px)"} strokeWidth={3} />
+        </button>
       </div>
-
-      {/* Visible Styled ENTER LAB button */}
-      <button
-        className="glowing-btn"
-        onClick={onOpenBook}
-        aria-label="Enter Lab"
-        title="Enter Lab"
-        style={{
-          position: 'absolute',
-          top: 'calc(67.87% + 1.5vh)',
-          left: '53.68%',
-          width: '37.79%',
-          height: '13.38%',
-          background: 'linear-gradient(180deg, #1e4bb2 0%, #061a55 100%)',
-          border: '1.5px solid rgba(167, 219, 255, 0.6)',
-          borderRadius: '9999px',
-          cursor: 'pointer',
-          outline: 'none',
-          transition: 'transform 0.15s ease, filter 0.15s ease',
-          zIndex: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 5%',
-          color: 'white',
-          fontFamily: '"Inter", "Outfit", sans-serif'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.02)';
-          e.currentTarget.style.filter = 'brightness(1.15)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1.0)';
-          e.currentTarget.style.filter = 'brightness(1.0)';
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          {/* Custom Flask Icon mimicking the reference */}
-          <svg width="clamp(30px, 3.5vw, 60px)" height="clamp(30px, 3.5vw, 60px)" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10 2v7.31M14 9.31V2M8.5 2h7M14 9.31L4.72 20.55A2.16 2.16 0 0 0 6.64 24h10.72a2.16 2.16 0 0 0 1.92-3.45L14 9.31Z" />
-            <path d="M6 16h12" />
-            <circle cx="10" cy="19" r="1" fill="white" stroke="none" />
-            <circle cx="13" cy="21" r="1.5" fill="white" stroke="none" />
-            <circle cx="15" cy="18" r="0.8" fill="white" stroke="none" />
-          </svg>
-          <span style={{ fontSize: 'clamp(20px, 2.8vw, 48px)', fontWeight: 900, letterSpacing: '0.02em', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>ENTER LAB</span>
-        </div>
-        <ArrowRight size={"clamp(24px, 3vw, 50px)"} strokeWidth={3} />
-      </button>
 
       {/* Visible Styled BACK button */}
       <button
@@ -294,10 +315,10 @@ export default function ChapterCover({ onOpenBook, onBack }) {
         title="Back"
         style={{
           position: 'absolute',
-          top: 'calc(87.21% + 1.5vh)',
-          left: '3.78%',
-          width: '12.44%',
-          height: '6.54%',
+          bottom: '5vh',
+          left: '4vw',
+          width: 'max(120px, 12.44vw)',
+          height: 'min(6.54vh, 50px)',
           background: '#ffffff',
           border: 'none',
           borderRadius: '9999px',
