@@ -14,7 +14,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
         background: 'white', borderRadius: '16px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
         display: 'flex', flexDirection: 'column', 
-        border: '12px solid #1b2a4a', // Dark blue border
+        border: '12px solid #D9C9A3', // Dark blue border
         position: 'relative',
         fontFamily: 'Arial, Helvetica, sans-serif',
         overflow: 'hidden'
@@ -32,10 +32,10 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           {/* ================= LEFT PAGE ================= */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <h2 style={{ margin: '0 0 8px 0', fontSize: '24px', color: '#1e3a8a', fontWeight: 'bold', lineHeight: '1.3' }}>
+              <h2 style={{ margin: '0 0 8px 0', fontSize: '24px', color: '#3B2A1F', fontWeight: 'bold', lineHeight: '1.3' }}>
                 6.3.2 Hardness
               </h2>
-              <div style={{ width: '40px', height: '4px', background: '#3b82f6', borderRadius: '2px' }} />
+              <div style={{ width: '40px', height: '4px', background: '#FFFFFF', borderRadius: '2px' }} />
             </div>
             <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Sam&backgroundColor=transparent" alt="Student" style={{ width: '60px', height: '60px', marginTop: '-5px' }} />
           </div>
@@ -45,7 +45,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           </div>
 
           {/* Soft Box */}
-          <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: '28px', marginTop: '4px' }}>☁️</div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <strong style={{ color: '#15803d', fontSize: '16px' }}>Soft Materials</strong>
@@ -55,7 +55,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           </div>
 
           {/* Hard Box */}
-          <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
             <div style={{ fontSize: '28px', marginTop: '4px' }}>🧱</div>
             <div style={{ fontSize: '15px', color: '#1e293b', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <strong style={{ color: '#b91c1c', fontSize: '16px' }}>Hard Materials</strong>
@@ -65,7 +65,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           </div>
 
           {/* Scratch Test Tip */}
-          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginTop: 'auto' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginTop: 'auto' }}>
             <div style={{ fontSize: '20px', transform: 'rotate(-45deg)' }}>📌</div>
             <div style={{ fontSize: '14px', color: '#1e293b', lineHeight: '1.5' }}>
               <strong style={{ color: '#d97706', display: 'block', marginBottom: '4px' }}>The Scratch Test</strong>
@@ -77,7 +77,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px' }}>
             <button 
               onClick={() => { setBookPage(2); }}
-              style={{ background: '#1e3a8a', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(30, 58, 138, 0.3)' }}
+              style={{ background: '#FFFFFF', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(30, 58, 138, 0.3)' }}
             >
               Next Page ➔
             </button>
@@ -86,7 +86,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
       ) : (
         <div style={{ flex: 1, minHeight: 0, padding: '24px 20px', paddingLeft: '32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           {/* ================= RIGHT PAGE ================= */}
-          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', color: '#1e3a8a', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h2 style={{ margin: '0 0 16px 0', fontSize: '20px', color: '#3B2A1F', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Target size={24} style={{ color: '#3b82f6' }} /> Investigation: Hardness
           </h2>
 
@@ -95,7 +95,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           </div>
 
           {/* Mission Checklist */}
-          <div style={{ border: '2px solid #22c55e', borderRadius: '12px', padding: '16px', background: '#f0fdf4', marginBottom: '16px' }}>
+          <div style={{ border: '2px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: '#FFFFFF', marginBottom: '16px' }}>
             <h4 style={{ margin: '0 0 12px 0', color: '#16a34a', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Target size={18} /> MISSION CHECKLIST
             </h4>
@@ -113,23 +113,23 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           </div>
 
           {/* How to do */}
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', background: '#f8fafc', marginBottom: '16px' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: '#1e3a8a', fontSize: '14px' }}>How to do:</h4>
+          <div style={{ border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', background: '#FFFFFF', marginBottom: '16px' }}>
+            <h4 style={{ margin: '0 0 12px 0', color: '#3B2A1F', fontSize: '14px' }}>How to do:</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-                <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><MousePointer2 size={16} /></div> Click an object from the list.
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><MousePointer2 size={16} /></div> Click an object from the list.
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-                <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Layers size={16} /></div> Choose the material it is made of.
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Layers size={16} /></div> Choose the material it is made of.
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#334155' }}>
-                <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Lightbulb size={16} /></div> It will be added to your Evidence Board.
+                <div style={{ background: '#FFFFFF', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Lightbulb size={16} /></div> It will be added to your Evidence Board.
               </div>
             </div>
           </div>
 
           {/* Detective Tip */}
-          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginTop: 'auto' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start', marginTop: 'auto' }}>
             <div style={{ fontSize: '20px', transform: 'rotate(-45deg)' }}>💡</div>
             <div style={{ fontSize: '14px', color: '#1e293b', lineHeight: '1.5' }}>
               <strong style={{ color: '#d97706', display: 'block', marginBottom: '4px' }}>Detective Tip</strong>
@@ -141,7 +141,7 @@ export default function Handbook_Hardness({ highestUnlockedIndex = 0, currentFlo
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
             <button 
               onClick={() => setBookPage(1)}
-              style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}
+              style={{ background: 'white', border: '1px solid #D9C9A3', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}
             >
               <span style={{ fontSize: '16px' }}>←</span> Previous
             </button>

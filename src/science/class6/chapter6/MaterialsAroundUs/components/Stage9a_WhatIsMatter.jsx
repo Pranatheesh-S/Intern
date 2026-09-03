@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HelpCircle, CheckCircle2, Circle, Scale, Box, Wind, Droplets } from 'lucide-react';
+import { HelpCircle, CheckCircle2, Circle, Scale, Droplets } from 'lucide-react';
 import AirExperiments3D from './AirExperiments3D';
 
 export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
@@ -35,7 +36,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
             </div>
          </div>
          <div style={{ fontSize: '0.85rem', color: 'var(--lesson-secondary)', fontStyle: 'italic', paddingLeft: '8px', borderLeft: '2px solid var(--lesson-border)' }}>
-            Follow the clues to crack what 'matter' really means.
+            Follow the clues to crack what &apos;matter&apos; really means.
          </div>
          
          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -84,7 +85,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '12px', flexShrink: 0 }}>
                <img src="/images/chief_detective_blake.png" alt="Aura" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
                <div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>Detective Aura: Let's begin with a simple situation.</div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>Detective Aura: Let&apos;s begin with a simple situation.</div>
                   <div style={{ fontSize: '1rem', color: 'var(--lesson-text)' }}>What are we trying to find out here?</div>
                </div>
             </div>
@@ -93,7 +94,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
             <div style={{ display: 'flex', gap: '20px', flexShrink: 0 }}>
                <div style={{ flex: '0 0 180px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', background: 'var(--lesson-background)', borderRadius: '16px', padding: '12px', border: '1px solid var(--lesson-border)' }}>
                   <div style={{ fontSize: '0.85rem', fontWeight: '800', color: 'var(--lesson-primary)' }}>Observe the scene</div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--lesson-text)', textAlign: 'center', fontWeight: 'bold' }}>Why can't we fill this bottle completely?</div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--lesson-text)', textAlign: 'center', fontWeight: 'bold' }}>Why can&apos;t we fill this bottle completely?</div>
                   <div style={{ flex: 1, width: '100%', minHeight: '80px', position: 'relative' }}>
                      <img src="/images/volume_overflow.png" alt="Bottle" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                   </div>
@@ -200,3 +201,8 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage9a_WhatIsMatter.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

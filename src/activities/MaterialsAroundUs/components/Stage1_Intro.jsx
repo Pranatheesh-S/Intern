@@ -100,7 +100,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
       <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: '380px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', background: 'var(--classroom-bg)' }}>
           
           {/* Classroom Chalkboard */}
-          <div style={{ position: 'absolute', top: '30px', left: '5%', width: '460px', height: '210px', border: '10px solid #4b5563', background: '#064e3b', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.7)', zIndex: 15 }}>
+          <div style={{ position: 'absolute', top: '30px', left: '5%', width: '460px', height: '210px', border: '10px solid #D9C9A3', background: '#FFFFFF', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.7)', zIndex: 15 }}>
             {completed ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', textAlign: 'center' }}>
                 <span style={{ fontFamily: 'Arial, sans-serif', color: '#6ee7b7', fontSize: '1.3rem', fontWeight: 'bold' }}>All Objects Identified!</span>
@@ -123,8 +123,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               ...classroomObjects.find(o => o.id === 'window').pos, 
               cursor: 'pointer',
               borderRadius: '6px',
-              border: clickedObjects.window ? '2px solid #10b981' : '2px dashed transparent',
-              boxShadow: clickedObjects.window ? '0 0 10px #10b981' : 'none',
+              border: clickedObjects.window ? '2px solid #3B2A1F' : '2px dashed transparent',
+              boxShadow: clickedObjects.window ? '0 0 10px #3B2A1F' : 'none',
               transition: 'all 0.3s'
             }}
           >
@@ -146,8 +146,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               ...classroomObjects.find(o => o.id === 'desk').pos, 
               cursor: 'pointer',
               borderRadius: '6px',
-              border: clickedObjects.desk ? '2px solid #10b981' : '2px dashed transparent',
-              boxShadow: clickedObjects.desk ? '0 0 10px #10b981' : 'none',
+              border: clickedObjects.desk ? '2px solid #3B2A1F' : '2px dashed transparent',
+              boxShadow: clickedObjects.desk ? '0 0 10px #3B2A1F' : 'none',
               transition: 'all 0.3s'
             }}
           >
@@ -171,8 +171,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               cursor: 'pointer',
               zIndex: 10,
               borderRadius: '4px',
-              border: clickedObjects.notebook ? '2px solid #10b981' : '2px dashed transparent',
-              boxShadow: clickedObjects.notebook ? '0 0 10px #10b981' : 'none',
+              border: clickedObjects.notebook ? '2px solid #3B2A1F' : '2px dashed transparent',
+              boxShadow: clickedObjects.notebook ? '0 0 10px #3B2A1F' : 'none',
               transition: 'all 0.3s'
             }}
           >
@@ -198,13 +198,13 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               cursor: 'pointer',
               zIndex: 11,
               borderRadius: '4px',
-              border: clickedObjects.pen ? '2px solid #10b981' : '2px dashed transparent',
-              boxShadow: clickedObjects.pen ? '0 0 10px #10b981' : 'none',
+              border: clickedObjects.pen ? '2px solid #3B2A1F' : '2px dashed transparent',
+              boxShadow: clickedObjects.pen ? '0 0 10px #3B2A1F' : 'none',
               transition: 'all 0.3s'
             }}
           >
             <svg width="50" height="21" viewBox="0 0 35 15" style={{ transform: 'rotate(-10deg)' }}>
-              <rect x="2" y="5" width="22" height="5" rx="1" fill="#10b981" />
+              <rect x="2" y="5" width="22" height="5" rx="1" fill="#3B2A1F" />
               <polygon points="24,5 30,7.5 24,10" fill="#cbd5e1" />
               <circle cx="30" cy="7.5" r="0.8" fill="#000" />
             </svg>
@@ -220,8 +220,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               cursor: 'pointer',
               zIndex: 12,
               borderRadius: '4px',
-              border: clickedObjects.bottle ? '2px solid #10b981' : '2px dashed transparent',
-              boxShadow: clickedObjects.bottle ? '0 0 10px #10b981' : 'none',
+              border: clickedObjects.bottle ? '2px solid #3B2A1F' : '2px dashed transparent',
+              boxShadow: clickedObjects.bottle ? '0 0 10px #3B2A1F' : 'none',
               transition: 'all 0.3s'
             }}
           >
@@ -242,8 +242,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               ...classroomObjects.find(o => o.id === 'cushion').pos, 
               cursor: 'pointer',
               borderRadius: '6px',
-              border: clickedObjects.cushion ? '2px solid #10b981' : '2px dashed transparent',
-              boxShadow: clickedObjects.cushion ? '0 0 10px #10b981' : 'none',
+              border: clickedObjects.cushion ? '2px solid #3B2A1F' : '2px dashed transparent',
+              boxShadow: clickedObjects.cushion ? '0 0 10px #3B2A1F' : 'none',
               transition: 'all 0.3s'
             }}
           >
@@ -259,13 +259,13 @@ export default function Stage1_Intro({ onComplete, addXp }) {
           {/* Character Avatars */}
           <div style={{ position: 'absolute', bottom: '15px', right: '20px', zIndex: 20, display: 'flex', gap: '1rem', background: 'rgba(15,23,42,0.6)', padding: '0.4rem 0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
                 <User size={18} />
               </div>
               <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: 'bold' }}>You</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
                 <GraduationCap size={18} />
               </div>
               <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: 'bold' }}>Teacher</span>

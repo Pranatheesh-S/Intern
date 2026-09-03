@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Lightbulb, CheckCircle2, Target } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Search, CheckCircle2, Target } from 'lucide-react';
 
 export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
   const [classifications, setClassifications] = useState({});
@@ -53,11 +54,11 @@ export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
       {/* Header */}
       <div style={{ background: 'var(--lesson-background)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.02)', flexShrink: 0 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-          <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--heading-main)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
+          <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
             <Search size={32} color="var(--lesson-accent)" /> Phase 2: Table 6.5
           </h3>
-          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--heading-sub)', fontWeight: '500' }}>
-            Now that you've tested the materials, let's classify them based on whether they disappear in water.
+          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
+            Now that you&apos;ve tested the materials, let&apos;s classify them based on whether they disappear in water.
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
@@ -77,7 +78,7 @@ export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
         <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--lesson-border)', overflowY: 'auto' }}>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <h4 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--heading-section)', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold' }}>
+            <h4 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold' }}>
               <div style={{ background: 'var(--lesson-accent)', color: 'white', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', fontWeight: 'bold' }}>2</div>
               Let us classify
             </h4>
@@ -181,7 +182,7 @@ export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
 
         {/* RIGHT SIDE: Observation Box */}
         <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.6rem', color: 'var(--heading-section)', fontWeight: 'bold', textTransform: 'uppercase' }}>
+          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.6rem', color: 'var(--lesson-primary)', fontWeight: 'bold', textTransform: 'uppercase' }}>
             Observation Box
           </h4>
           <p style={{ margin: '0 0 1.5rem 0', fontSize: '1.1rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
@@ -240,3 +241,8 @@ export default function Stage7b_SolubilityClassify({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage7b_SolubilityClassify.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

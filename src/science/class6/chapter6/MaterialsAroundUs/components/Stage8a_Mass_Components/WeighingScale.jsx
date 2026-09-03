@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { RealisticCup } from './RealisticCup';
 
 export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
@@ -70,7 +71,7 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'radial-gradient(ellipse at 50% -20%, whitefff 0%, #f2f0ec 50%, #e5e2db 100%)',
+        background: 'radial-gradient(ellipse at 50% -20%, #FFFFFF 0%, #f2f0ec 50%, #e5e2db 100%)',
         borderRadius: '16px',
         overflow: 'hidden',
         boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.05)'
@@ -242,7 +243,7 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
             width: '260px', height: '110px', 
             background: 'linear-gradient(135deg, #d3d8db 0%, #aab5bc 40%, #e6eaec 60%, #8b99a3 100%)',
             borderRadius: '50%',
-            border: isHovered ? '2px solid var(--lesson-success)' : '1.5px solid whitefff',
+            border: isHovered ? '2px solid var(--lesson-accent)' : '1.5px solid #FFFFFF',
             borderBottom: '3px solid #89959e',
             boxShadow: isHovered 
               ? 'inset 0 0 25px rgba(0,0,0,0.15), 0 12px 15px rgba(0,0,0,0.5), 0 0 16px rgba(217, 119, 6, 0.35)' 
@@ -334,4 +335,10 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
       </div>
     </div>
   );
+};
+
+WeighingScale.propTypes = {
+  currentCupOnScale: PropTypes.string,
+  mass: PropTypes.number,
+  isHovered: PropTypes.bool
 };
