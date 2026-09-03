@@ -603,7 +603,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               <div style={{
                 fontSize: 'clamp(20px, 2.5vw, 24px)',
                 fontWeight: '900',
-                color: '#0f172a',
+                color: 'var(--heading-section)',
                 letterSpacing: '-0.01em'
               }}>
                 Evidence Tray

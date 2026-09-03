@@ -195,7 +195,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                   </div>
 
                   <div style={{ background: '#f0fdfa', borderRadius: '12px', padding: '1.25rem', border: '1px solid #ccfbf1', marginTop: 'auto' }}>
-                    <div style={{ color: '#0d9488', fontSize: '1.05rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
+                    <div style={{ color: 'var(--heading-section)', fontSize: '1.05rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
                     <div style={{ color: '#115e59', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: 'bold' }}>
                       {selectedSpot.conclusion}
                     </div>

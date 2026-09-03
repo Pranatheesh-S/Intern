@@ -729,7 +729,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                 ) : (
                   <>
                     <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #d6d3d1', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                      <div style={{ color: 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
+                      <div style={{ color: 'var(--heading-section)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', fontWeight: 'bold', color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)' }}>
                         {selectedSubstance.type === 'Soluble' ? 'Disappears in water' : 'Does not disappear'}
                       </div>
