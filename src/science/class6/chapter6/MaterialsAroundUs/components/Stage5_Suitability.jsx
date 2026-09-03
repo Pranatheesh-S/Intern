@@ -74,8 +74,10 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
 
   const renderPotAnimation = () => {
     let vidSrc = null;
+    let objPos = 'center';
     if (potMaterial === 'paper') {
       vidSrc = vidPotPaper;
+      objPos = '25% center';
     } else if (potMaterial === 'metal') {
       vidSrc = vidPotMetal;
     }
@@ -93,7 +95,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         playsInline
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
-        style={{ width: '100%', height: '100%', objectFit: potMaterial === 'paper' ? 'contain' : 'cover' }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: objPos }}
       />
     );
   };
