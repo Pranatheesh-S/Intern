@@ -903,8 +903,74 @@ export default function Simulation({ onComplete, onNext }) {
             <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
           </button>
 
+          {/* 1. Vintage Wooden Study Desk Background for Crystal Glass */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'url(/assets/study_desk_bg.jpg)',
+              backgroundPosition: 'center 62%',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              opacity: activeMaterial === 'glass' ? 1 : 0,
+              transition: 'opacity 0.45s ease-in-out',
+              pointerEvents: 'none',
+              zIndex: 1
+            }}
+          />
+
+          {/* 2. Modern Kitchen Counter Background for Plastic Bottle */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'url(/assets/kitchen_counter_bg.jpg)',
+              backgroundPosition: 'center 62%',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              opacity: activeMaterial === 'plastic' ? 1 : 0,
+              transition: 'opacity 0.45s ease-in-out',
+              pointerEvents: 'none',
+              zIndex: 1
+            }}
+          />
+
+          {/* 3. Shipping Port Cargo Harbor Background for Shipping Box */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'url(/assets/shipping_port_bg.jpg)',
+              backgroundPosition: 'center 60%',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              opacity: activeMaterial === 'cardboard' ? 1 : 0,
+              transition: 'opacity 0.45s ease-in-out',
+              pointerEvents: 'none',
+              zIndex: 1
+            }}
+          />
+
+          {/* 4. Deep Ancient Forest Background for Tree */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'url(/assets/forest_tree_bg.jpg)',
+              backgroundPosition: 'center center',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              filter: 'blur(7px)',
+              transform: 'scale(1.05)',
+              opacity: activeMaterial === 'wood' ? 1 : 0,
+              transition: 'opacity 0.45s ease-in-out',
+              pointerEvents: 'none',
+              zIndex: 1
+            }}
+          />
+
           {/* Draggable / Fixed Objects Stage */}
-          <div style={{ position: 'absolute', inset: 0 }}>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 10 }}>
 
             {/* Center Material Barrier Visual - Natural Tabletop Placement Animation */}
             <AnimatePresence mode="wait">
@@ -939,7 +1005,10 @@ export default function Simulation({ onComplete, onNext }) {
                 transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 zIndex: 20, 
                 pointerEvents: 'none',
-                userSelect: 'none'
+                userSelect: 'none',
+                filter: (activeMaterial === 'glass' || activeMaterial === 'cardboard' || activeMaterial === 'wood') 
+                  ? 'drop-shadow(0 14px 24px rgba(0, 0, 0, 0.55))' 
+                  : undefined
               }}
             >
               <ExactCompass rotation={needleRotation} size={COMPASS_SIZE} />

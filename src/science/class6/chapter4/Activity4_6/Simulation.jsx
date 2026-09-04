@@ -1028,7 +1028,7 @@ export default function Simulation({ onComplete, onNext }) {
               alignItems: 'center',
               gap: '0.35rem'
             }}>
-              {/* Steampunk 3D Textured Bar Magnet Mesh (Compact Scale, Vivid Brightness & Polished Metallic Sheen) */}
+              {/* 3D Bar Magnet (Realistic & Natural appearance, no artificial white glare) */}
               <div 
                 onClick={!isAnimating ? handleFlipMagnet : undefined}
                 title="Click to Flip Polarity (North ↔ South)"
@@ -1041,7 +1041,7 @@ export default function Simulation({ onComplete, onNext }) {
                   justifyContent: 'center',
                   cursor: isAnimating ? 'default' : 'pointer',
                   userSelect: 'none',
-                  filter: 'drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18))',
+                  filter: 'drop-shadow(0 6px 14px rgba(0, 0, 0, 0.2))',
                   transition: 'transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.18s ease'
                 }}
                 onMouseEnter={(e) => {
@@ -1054,7 +1054,7 @@ export default function Simulation({ onComplete, onNext }) {
                 <img 
                   key={isFlipped ? 'steampunk-sn' : 'steampunk-ns'}
                   src={isFlipped ? '/assets/magnet_bar_steampunk_sn.png' : '/assets/magnet_bar_steampunk_ns.png'}
-                  alt={isFlipped ? "Steampunk Bar Magnet (South-North Polarity)" : "Steampunk Bar Magnet (North-South Polarity)"}
+                  alt={isFlipped ? "Bar Magnet (South-North Polarity)" : "Bar Magnet (North-South Polarity)"}
                   draggable={false}
                   style={{
                     width: '100%',
@@ -1062,24 +1062,7 @@ export default function Simulation({ onComplete, onNext }) {
                     objectFit: 'contain',
                     display: 'block',
                     pointerEvents: 'none',
-                    userSelect: 'none',
-                    filter: 'contrast(1.05) brightness(1.05)'
-                  }}
-                />
-
-                {/* Polished Metallic Sheen Specular Highlight Overlay */}
-                <div 
-                  style={{
-                    position: 'absolute',
-                    top: '8%',
-                    bottom: '8%',
-                    left: '5%',
-                    right: '5%',
-                    borderRadius: '8px',
-                    pointerEvents: 'none',
-                    background: 'linear-gradient(115deg, rgba(255,255,255,0) 25%, rgba(255,255,255,0.18) 46%, rgba(255,255,255,0.42) 50%, rgba(255,255,255,0.12) 54%, rgba(255,255,255,0) 75%)',
-                    mixBlendMode: 'screen',
-                    opacity: 0.9
+                    userSelect: 'none'
                   }}
                 />
               </div>

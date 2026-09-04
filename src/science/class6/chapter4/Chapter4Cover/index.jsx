@@ -294,11 +294,11 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
           transform: translateY(0) scale(0.98);
         }
 
-        /* Cover Back Button (Restored Previous Dark Sci-Fi Glass Color & Style) */
+        /* Cover Back Button - Bottom Left Position */
         .cover-back-btn {
           position: absolute;
-          top: 1.5rem;
-          left: 1.5rem;
+          bottom: clamp(20px, 3vw, 40px);
+          left: clamp(20px, 3vw, 40px);
           z-index: 100;
           display: inline-flex;
           align-items: center;
