@@ -212,100 +212,83 @@ const MaterialBarrierVisual = ({ type, stage = 1, thickness = 1 }) => {
   return <Barrier3DCanvas type={type} stage={stage} thickness={thickness} width={width} height={height} />;
 };
 
-const STAGE_CONFIG = {
-  wood: {
-    categoryLabel: 'Wood Types:',
-    stages: [
-      { stage: 1, label: '1. Paper', fullName: 'Paper Sheet (Wood Cellulose)', icon: '📄' },
-      { stage: 2, label: '2. Wood Log', fullName: 'Rustic Timber Log (Wood Piece)', icon: '🪵' },
-      { stage: 3, label: '3. Plant', fullName: 'Sprouting Potted Plant (Sapling)', icon: '🌱' },
-      { stage: 4, label: '4. Tree', fullName: 'Living Oak Tree (Full Tree)', icon: '🌳' }
-    ]
-  },
-  plastic: {
-    categoryLabel: 'Bottle Types:',
-    stages: [
-      { stage: 1, label: '1. 200mL', fullName: '200 mL Pocket Water Bottle', icon: '🧴' },
-      { stage: 2, label: '2. 500mL', fullName: '500 mL Spring Water Bottle', icon: '🧴' },
-      { stage: 3, label: '3. 1 Litre', fullName: '1 Litre Sports Water Bottle', icon: '🍶' },
-      { stage: 4, label: '4. 20 Litre', fullName: '20 Litre Water Canister Jug', icon: '🛢️' }
-    ]
-  },
-  glass: {
-    categoryLabel: 'Glass Types:',
-    stages: [
-      { stage: 1, label: '1. Small Glass', fullName: 'Small Shot Glass Tumbler', icon: '🥃' },
-      { stage: 2, label: '2. Big Glass', fullName: 'Big Highball Glass with Ice', icon: '🥛' },
-      { stage: 3, label: '3. Glass Bowl', fullName: 'Curved Pyrex Glass Bowl', icon: '🥣' },
-      { stage: 4, label: '4. Container', fullName: 'Glass Storage Container Jar', icon: '🫙' }
-    ]
-  },
-  cardboard: {
-    categoryLabel: 'Cardboard Types:',
-    stages: [
-      { stage: 1, label: '1. Small Box', fullName: 'Small Gift Carton Box', icon: '📦' },
-      { stage: 2, label: '2. Sheet', fullName: 'Single-Wall Cardboard Sheet', icon: '📄' },
-      { stage: 3, label: '3. 3 Layers', fullName: '3 Layers Cardboard Sheet', icon: '📚' },
-      { stage: 4, label: '4. Shipping Box', fullName: 'Large Shipping Cardboard Box', icon: '📦' }
-    ]
-  }
-};
-
 const MATERIALS = [
-  { id: 'wood', name: 'Wood & Plant', icon: '🌳', desc: 'Paper, Wood Log, Plant, and Tree' },
-  { id: 'plastic', name: 'PET Plastic Bottles', icon: '🧴', desc: 'From pocket bottle to 20L water can' },
-  { id: 'glass', name: 'Crystal Glass', icon: '🥛', desc: 'Small glass, big tumbler, bowl, and jar' },
-  { id: 'cardboard', name: 'Cardboards', icon: '📦', desc: 'Small box, sheets, triple-layer, and carton' }
+  {
+    id: 'glass',
+    name: 'Crystal glass',
+    itemLabel: 'Small Glass',
+    fullName: 'Small Crystal Glass Tumbler',
+    type: 'glass',
+    stage: 1,
+    icon: '🥛',
+    desc: 'Small crystal glass tumbler',
+    deflection: { angle: -48, label: 'High Deflection', fieldPower: '85%' }
+  },
+  {
+    id: 'plastic',
+    name: 'Plastic bottle',
+    itemLabel: '20L Can',
+    fullName: '20 Litre Plastic Water Canister Jug',
+    type: 'plastic',
+    stage: 4,
+    icon: '🛢️',
+    desc: '20 Litre plastic canister jug',
+    deflection: { angle: -38, label: 'Medium-High Deflection', fieldPower: '70%' }
+  },
+  {
+    id: 'cardboard',
+    name: 'Cardboard',
+    itemLabel: 'Shipping Box',
+    fullName: 'Large Shipping Cardboard Box',
+    type: 'cardboard',
+    stage: 4,
+    icon: '📦',
+    desc: 'Large shipping cardboard box',
+    deflection: { angle: -28, label: 'Moderate Deflection', fieldPower: '55%' }
+  },
+  {
+    id: 'wood',
+    name: 'Tree',
+    itemLabel: 'Tree',
+    fullName: 'Living Oak Tree Trunk',
+    type: 'wood',
+    stage: 4,
+    icon: '🌳',
+    desc: 'Living oak tree trunk',
+    deflection: { angle: -18, label: 'Subtle Deflection', fieldPower: '38%' }
+  }
 ];
 
 const COMPASS_SIZE = 240;
 const COMPASS_RADIUS = 120;
 
-// Exact Red North Needle deflection angles facing North-West (NW) in normal polarity, and North-East (NE) when flipped:
-// - Stage 1: Level 1 Maximum Deflection -> Red North needle faces 300° NW (-60°) / when flipped: 60° NE (+60°)
-// - Stage 2: Level 2 High Deflection -> Red North needle faces 315° NW (-45°) / when flipped: 45° NE (+45°)
-// - Stage 3: Level 3 Moderate Deflection -> Red North needle faces 330° NW (-30°) / when flipped: 30° NE (+30°)
-// - Stage 4: Level 4 Subtle Deflection -> Red North needle faces 342° NNW (-18°) / when flipped: 18° NNE (+18°)
-const STAGE_DEFLECTIONS = {
-  1: { angle: -60, label: 'Level 1: Max Deflection', fieldPower: '95%' },
-  2: { angle: -45, label: 'Level 2: High Deflection', fieldPower: '80%' },
-  3: { angle: -30, label: 'Level 3: Moderate Deflection', fieldPower: '60%' },
-  4: { angle: -18, label: 'Level 4: Subtle Deflection', fieldPower: '35%' }
-};
-
 export default function Simulation({ onComplete, onNext }) {
   const [selectedMaterialIndex, setSelectedMaterialIndex] = useState(0);
-  const [materialStages, setMaterialStages] = useState({
-    wood: 1,
-    plastic: 1,
-    glass: 1,
-    cardboard: 1
-  });
   const [workspaceSize, setWorkspaceSize] = useState({ width: 840, height: 560 });
   const [isFlipped, setIsFlipped] = useState(false);
   const [isObjectArrived, setIsObjectArrived] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [needleRotation, setNeedleRotation] = useState(0); // Holds active North needle deflection angle
+  const [needleRotation, setNeedleRotation] = useState(-48);
   const [thickness, setThickness] = useState(1);
   const [observations, setObservations] = useState({
-    wood: null,
-    cardboard: null,
+    glass: null,
     plastic: null,
-    glass: null
+    cardboard: null,
+    wood: null
   });
 
   const [feedback, setFeedback] = useState({
     type: 'info',
-    text: '🚀 Starting Auto Demo: Object moving into center position...'
+    text: '🚀 Starting Auto Demo: Crystal glass (Small Glass) moving into center position...'
   });
 
   const workspaceContainerRef = useRef(null);
   const arrivalTimerRef = useRef(null);
   const autoAdvanceTimerRef = useRef(null);
 
-  const activeMaterialObj = MATERIALS[selectedMaterialIndex] || MATERIALS[0];
-  const activeMaterial = activeMaterialObj.id;
-  const currentStage = materialStages[activeMaterial] || 1;
+  const activeItem = MATERIALS[selectedMaterialIndex] || MATERIALS[0];
+  const activeMaterial = activeItem.type;
+  const currentStage = activeItem.stage;
 
   // Measure dynamic workspace dimensions
   useEffect(() => {
@@ -334,34 +317,29 @@ export default function Simulation({ onComplete, onNext }) {
   const compassX = Math.max(500, workspaceSize.width - COMPASS_RADIUS - 35);
   const magnetX = 145;
 
-  const stageDeflection = STAGE_DEFLECTIONS[currentStage] || STAGE_DEFLECTIONS[1];
   const isTreeStage = activeMaterial === 'wood' && currentStage === 4;
 
-  // Helper to trigger object slide-in and delayed needle deflection
-  // The compass needle stays at its current angle and NEVER moves to North-South (0°) while another object is coming
-  const triggerObjectArrival = useCallback((targetStageNum, targetMatId = activeMaterial, isAutoMode = isAutoPlaying) => {
-    // Clear any previous timers
+  // Helper to trigger object slide-in and sequential needle deflection in requested order
+  const triggerObjectArrival = useCallback((targetIndex = 0, isAutoMode = isAutoPlaying) => {
     if (arrivalTimerRef.current) clearTimeout(arrivalTimerRef.current);
     if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
 
-    // 1. Mark object as transitioning (isObjectArrived = false)
-    // NOTE: We do NOT reset needleRotation here, avoiding any unwanted swing back to 0° North-South!
+    // Mark transition
     setIsObjectArrived(false);
     playMagneticSound('whoosh');
 
-    const stageConfigObj = STAGE_CONFIG[targetMatId]?.stages.find(s => s.stage === targetStageNum);
-    const stageName = stageConfigObj ? stageConfigObj.fullName : `Stage ${targetStageNum}`;
-    const targetDefl = STAGE_DEFLECTIONS[targetStageNum] || STAGE_DEFLECTIONS[1];
+    const targetItem = MATERIALS[targetIndex] || MATERIALS[0];
+    const targetDefl = targetItem.deflection;
     const targetAngle = isFlipped ? -targetDefl.angle : targetDefl.angle;
 
     setFeedback({
       type: 'info',
-      text: `📦 Moving ${stageName} into center station... (North needle holding deflection)`
+      text: `📦 Moving ${targetItem.itemLabel} (${targetItem.name}) into center station... (North needle holding deflection)`
     });
 
     arrivalTimerRef.current = setTimeout(() => {
       setIsObjectArrived(true);
-      setNeedleRotation(targetAngle); // Smoothly moves North needle directly to new deflection angle
+      setNeedleRotation(targetAngle);
       playMagneticSound('snap');
 
       const dirName = targetAngle < 0 ? 'North-West (NW)' : 'North-East (NE)';
@@ -369,12 +347,12 @@ export default function Simulation({ onComplete, onNext }) {
 
       setFeedback({
         type: 'success',
-        text: `✨ ${stageName} in position! Magnetic field penetrates barrier ➔ Red North Needle points to ${degVal}° ${dirName} (${targetDefl.label})!`
+        text: `✨ ${targetItem.itemLabel} in position! Magnetic field penetrates barrier ➔ Red North Needle points to ${degVal}° ${dirName} (${targetDefl.label})!`
       });
 
       // Mark observation
       setObservations(prev => {
-        const updated = { ...prev, [targetMatId]: 'deflects' };
+        const updated = { ...prev, [targetItem.id]: 'deflects' };
         const allTested = MATERIALS.every(m => updated[m.id] === 'deflects');
         if (allTested && onComplete) {
           onComplete();
@@ -382,34 +360,33 @@ export default function Simulation({ onComplete, onNext }) {
         return updated;
       });
 
-      // 3. If in Auto-Play mode, wait for observation dwell time then auto-advance to next type!
+      // Sequential auto-tour in exact requested order:
+      // 1. Crystal glass (small glass) -> 2. Plastic bottle (20L can) -> 3. Cardboard (Shipping box) -> 4. Tree (tree)
       if (isAutoMode) {
-        if (targetStageNum < 4) {
+        if (targetIndex < MATERIALS.length - 1) {
           autoAdvanceTimerRef.current = setTimeout(() => {
-            const nextStage = targetStageNum + 1;
-            setMaterialStages(prev => ({ ...prev, [targetMatId]: nextStage }));
-            triggerObjectArrival(nextStage, targetMatId, true);
-          }, 3000); // 3.0s dwell time for clear student observation
+            const nextIdx = targetIndex + 1;
+            setSelectedMaterialIndex(nextIdx);
+            triggerObjectArrival(nextIdx, true);
+          }, 3000); // 3.0s dwell time for student observation
         } else {
-          // Reached Type 4: auto-tour completed for this material
           autoAdvanceTimerRef.current = setTimeout(() => {
             setIsAutoPlaying(false);
             setFeedback({
               type: 'success',
-              text: `🎉 Auto-Demo complete for ${MATERIALS.find(m => m.id === targetMatId)?.name}! All 4 types demonstrate magnetic penetration.`
+              text: `🎉 Auto-Demo complete! All 4 items (Crystal glass, Plastic bottle, Cardboard, Tree) demonstrate magnetic penetration.`
             });
           }, 3200);
         }
       }
-    }, 650); // 650ms slide-in animation duration
-  }, [activeMaterial, isAutoPlaying, isFlipped, onComplete]);
+    }, 650);
+  }, [isAutoPlaying, isFlipped, onComplete]);
 
-  // Initial enter behavior: automatically run from Type 1 to Type 4
+  // Initial enter behavior: automatically run in order from 0 to 3
   useEffect(() => {
-    // Start at Type 1 for wood on entry
-    setMaterialStages(prev => ({ ...prev, [activeMaterial]: 1 }));
+    setSelectedMaterialIndex(0);
     setIsAutoPlaying(true);
-    triggerObjectArrival(1, activeMaterial, true);
+    triggerObjectArrival(0, true);
 
     return () => {
       if (arrivalTimerRef.current) clearTimeout(arrivalTimerRef.current);
@@ -423,66 +400,34 @@ export default function Simulation({ onComplete, onNext }) {
     if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
 
     setSelectedMaterialIndex(idx);
-    const selectedMat = MATERIALS[idx];
-    const targetStage = 1; // Start from type 1 when switching material
-    setMaterialStages(prev => ({ ...prev, [selectedMat.id]: targetStage }));
-    setIsAutoPlaying(true); // Auto-advance types 1 to 4 for new material
-    triggerObjectArrival(targetStage, selectedMat.id, true);
-  };
-
-  // Handle Next Object Button
-  const handleNextObject = () => {
-    const nextIdx = (selectedMaterialIndex + 1) % MATERIALS.length;
-    handleSelectObject(nextIdx);
-  };
-
-  // Handle Manual Stage/Type Button Click (e.g. 1. Paper, 2. Wood Log, 3. Plant, 4. Tree)
-  const handleSelectStage = (stage) => {
-    if (arrivalTimerRef.current) clearTimeout(arrivalTimerRef.current);
-    if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
-
-    setIsAutoPlaying(false); // Switch to manual observation
-    setMaterialStages(prev => ({ ...prev, [activeMaterial]: stage }));
-    triggerObjectArrival(stage, activeMaterial, false);
+    setIsAutoPlaying(false);
+    triggerObjectArrival(idx, false);
   };
 
   // Toggle Auto-Demo Play/Pause
   const toggleAutoPlay = () => {
     if (isAutoPlaying) {
-      // Pause
       if (arrivalTimerRef.current) clearTimeout(arrivalTimerRef.current);
       if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
       setIsAutoPlaying(false);
       setFeedback({
         type: 'info',
-        text: '⏸ Auto-Demo paused. Click any stage to test manually or resume Auto-Demo.'
+        text: '⏸ Auto-Demo paused. Click any barrier button to test manually or resume Auto-Demo.'
       });
     } else {
-      // Resume / Start 1 -> 4
       setIsAutoPlaying(true);
-      const startStage = currentStage >= 4 ? 1 : currentStage;
-      setMaterialStages(prev => ({ ...prev, [activeMaterial]: startStage }));
-      triggerObjectArrival(startStage, activeMaterial, true);
+      const startIdx = selectedMaterialIndex >= MATERIALS.length - 1 ? 0 : selectedMaterialIndex;
+      setSelectedMaterialIndex(startIdx);
+      triggerObjectArrival(startIdx, true);
     }
-  };
-
-  // Replay from Type 1 to 4
-  const handleReplayDemo = () => {
-    if (arrivalTimerRef.current) clearTimeout(arrivalTimerRef.current);
-    if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
-
-    setIsAutoPlaying(true);
-    setMaterialStages(prev => ({ ...prev, [activeMaterial]: 1 }));
-    triggerObjectArrival(1, activeMaterial, true);
   };
 
   const flipMagnet = () => {
     playMagneticSound('snap');
     setIsFlipped(prev => {
       const nextFlipped = !prev;
-      const targetDefl = STAGE_DEFLECTIONS[currentStage] || STAGE_DEFLECTIONS[1];
-      // In [N][S] (nextFlipped === false): angle is negative -> North-West (NW)
-      // In [S][N] (nextFlipped === true): angle is positive -> North-East (NE)
+      const currentItem = MATERIALS[selectedMaterialIndex] || MATERIALS[0];
+      const targetDefl = currentItem.deflection;
       const newAngle = nextFlipped ? -targetDefl.angle : targetDefl.angle;
       setNeedleRotation(newAngle);
 
@@ -506,11 +451,10 @@ export default function Simulation({ onComplete, onNext }) {
     setIsFlipped(false);
     setThickness(1);
     setSelectedMaterialIndex(0);
-    setNeedleRotation(0);
-    setMaterialStages({ wood: 1, plastic: 1, glass: 1, cardboard: 1 });
-    setObservations({ wood: null, cardboard: null, plastic: null, glass: null });
+    setNeedleRotation(-48);
+    setObservations({ glass: null, plastic: null, cardboard: null, wood: null });
     setIsAutoPlaying(true);
-    triggerObjectArrival(1, 'wood', true);
+    triggerObjectArrival(0, true);
   };
 
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -601,7 +545,7 @@ export default function Simulation({ onComplete, onNext }) {
               marginTop: '2px'
             }}>1</div>
             <p style={{ margin: 0, fontSize: '1.05rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
-              <strong>Select or Auto-Play:</strong> Objects automatically advance from <strong>Type 1 to Type 4</strong> (or choose any material card below to inspect individual sizes/shapes).
+              <strong>Select or Auto-Play:</strong> Barriers advance in order: <strong>Crystal glass ➔ Plastic bottle ➔ Cardboard ➔ Tree</strong> (or click any item below to test manually).
             </p>
           </div>
 
@@ -625,7 +569,7 @@ export default function Simulation({ onComplete, onNext }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0.8rem 0.95rem',
+                    padding: '0.75rem 0.85rem',
                     borderRadius: '16px',
                     border: isSelected ? '2.5px solid #F59E0B' : '1.5px solid #FDE68A',
                     background: isSelected ? 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' : '#FFFFFF',
@@ -633,7 +577,7 @@ export default function Simulation({ onComplete, onNext }) {
                     boxShadow: isSelected ? '0 4px 14px rgba(245, 158, 11, 0.22)' : '0 2px 8px rgba(217, 119, 6, 0.05)',
                     transition: 'all 0.2s ease',
                     textAlign: 'left',
-                    gap: '0.6rem',
+                    gap: '0.5rem',
                     boxSizing: 'border-box',
                     width: '100%'
                   }}
@@ -650,7 +594,7 @@ export default function Simulation({ onComplete, onNext }) {
                     }
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0 }}>
                     <div style={{
                       width: '38px',
                       height: '38px',
@@ -666,8 +610,13 @@ export default function Simulation({ onComplete, onNext }) {
                       {mat.icon}
                     </div>
 
-                    <div style={{ fontWeight: 900, fontSize: '0.96rem', color: isSelected ? '#92400E' : '#78350F', lineHeight: 1.25 }}>
-                      {mat.name}
+                    <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                      <div style={{ fontWeight: 900, fontSize: '0.94rem', color: isSelected ? '#92400E' : '#78350F', lineHeight: 1.2 }}>
+                        {mat.name}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: isSelected ? '#B45309' : '#047857', fontWeight: 700, marginTop: '2px' }}>
+                        {mat.itemLabel}
+                      </div>
                     </div>
                   </div>
 
@@ -786,58 +735,56 @@ export default function Simulation({ onComplete, onNext }) {
           gap: '0.5rem',
           flexWrap: 'wrap'
         }}>
-          {/* Dynamic 4-Part Evolution / Size Switcher for Active Material (No Outer Enclosing Box) */}
-          {STAGE_CONFIG[activeMaterial] && (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.35rem'
-            }}>
-              <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#065F46', marginRight: '2px' }}>
-                {STAGE_CONFIG[activeMaterial].categoryLabel}
-              </span>
-              {STAGE_CONFIG[activeMaterial].stages.map(s => {
-                const isCurrent = currentStage === s.stage;
-                return (
-                  <button
-                    key={s.stage}
-                    onClick={() => handleSelectStage(s.stage)}
-                    title={s.fullName}
-                    style={{
-                      padding: '5px 12px',
-                      fontSize: '0.82rem',
-                      fontWeight: 900,
-                      borderRadius: '14px',
-                      border: isCurrent ? '1.5px solid #D97706' : '1.5px solid #A7F3D0',
-                      background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
-                      color: isCurrent ? '#FFFFFF' : '#065F46',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                      boxShadow: isCurrent ? '0 3px 10px rgba(217, 119, 6, 0.35)' : '0 1px 4px rgba(0,0,0,0.04)',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isCurrent) {
-                        e.currentTarget.style.borderColor = '#10B981';
-                        e.currentTarget.style.background = '#ECFDF5';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isCurrent) {
-                        e.currentTarget.style.borderColor = '#A7F3D0';
-                        e.currentTarget.style.background = '#FFFFFF';
-                      }
-                    }}
-                  >
-                    <span>{s.icon}</span>
-                    <span>{s.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          {/* 4 Selected Barrier Items Switcher */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.35rem'
+          }}>
+            <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#065F46', marginRight: '2px' }}>
+              Barrier Items:
+            </span>
+            {MATERIALS.map((m, idx) => {
+              const isCurrent = selectedMaterialIndex === idx;
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => handleSelectObject(idx)}
+                  title={m.fullName}
+                  style={{
+                    padding: '5px 12px',
+                    fontSize: '0.82rem',
+                    fontWeight: 900,
+                    borderRadius: '14px',
+                    border: isCurrent ? '1.5px solid #D97706' : '1.5px solid #A7F3D0',
+                    background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
+                    color: isCurrent ? '#FFFFFF' : '#065F46',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    boxShadow: isCurrent ? '0 3px 10px rgba(217, 119, 6, 0.35)' : '0 1px 4px rgba(0,0,0,0.04)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isCurrent) {
+                      e.currentTarget.style.borderColor = '#10B981';
+                      e.currentTarget.style.background = '#ECFDF5';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isCurrent) {
+                      e.currentTarget.style.borderColor = '#A7F3D0';
+                      e.currentTarget.style.background = '#FFFFFF';
+                    }
+                  }}
+                >
+                  <span>{m.icon}</span>
+                  <span>{`${idx + 1}. ${m.itemLabel}`}</span>
+                </button>
+              );
+            })}
+          </div>
 
           {/* Auto-Demo Tour Control & Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>

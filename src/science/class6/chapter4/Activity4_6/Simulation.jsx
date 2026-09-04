@@ -9,7 +9,9 @@ import {
   RefreshCw, 
   Play, 
   ArrowUpRight, 
-  ArrowDownRight 
+  ArrowDownRight,
+  Sparkles,
+  Hand
 } from 'lucide-react';
 import ExactCompass from '../components/ExactCompass.jsx';
 
@@ -166,6 +168,8 @@ export default function Simulation({ onComplete, onNext }) {
   const [hasVisitedTopLeft, setHasVisitedTopLeft] = useState(false);
   const [hasVisitedBottomRight, setHasVisitedBottomRight] = useState(false);
   const [hasCompletedTour, setHasCompletedTour] = useState(false);
+  const [hasFlippedOnce, setHasFlippedOnce] = useState(false);
+  const [hasDraggedOnce, setHasDraggedOnce] = useState(false);
 
   const containerRef = useRef(null);
   const workspaceRef = useRef(null);
@@ -183,6 +187,14 @@ export default function Simulation({ onComplete, onNext }) {
     };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  // Preload Steampunk Bar Magnet Textures for Instant Flipping
+  useEffect(() => {
+    const img1 = new Image();
+    img1.src = '/assets/magnet_bar_steampunk_ns.png';
+    const img2 = new Image();
+    img2.src = '/assets/magnet_bar_steampunk_sn.png';
   }, []);
 
   const toggleFullscreen = () => {
@@ -250,7 +262,7 @@ export default function Simulation({ onComplete, onNext }) {
 
     // General Smooth Orbit Deflection along the path
     // Calculate dipole forces
-    const halfLen = 42;
+    const halfLen = 45; // Calibrated for the compact 170px magnet scale
     const leftPoleX = x - halfLen;
     const leftPoleY = y;
     const rightPoleX = x + halfLen;
@@ -522,6 +534,7 @@ export default function Simulation({ onComplete, onNext }) {
     const nextFlipped = !isFlipped;
     setIsFlipped(nextFlipped);
     isFlippedRef.current = nextFlipped;
+    setHasFlippedOnce(true);
     updateCompassPhysics(pos.x, pos.y, nextFlipped);
     setStatusMessage(nextFlipped ? 'Flipped magnet polarity to [[ 🔵 S ][ 🔴 N ]]!' : 'Flipped magnet polarity to [[ 🔴 N ][ 🔵 S ]]!');
   };
@@ -636,6 +649,8 @@ export default function Simulation({ onComplete, onNext }) {
     setHasVisitedBottomRight(false);
     setHasCompletedTour(false);
     setIsCompleted(false);
+    setHasFlippedOnce(false);
+    setHasDraggedOnce(false);
     compassAngleRef.current = 0;
     setCompassAngle(0);
     setStatusMessage('Magnet resting at bottom-left corner');
@@ -659,6 +674,9 @@ export default function Simulation({ onComplete, onNext }) {
     if (!isDraggingRef.current) return;
     const dx = e.clientX - dragStartRef.current.mouseX;
     const dy = e.clientY - dragStartRef.current.mouseY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      setHasDraggedOnce(true);
+    }
     const newX = Math.max(-290, Math.min(290, dragStartRef.current.startX + dx));
     const newY = Math.max(-260, Math.min(260, dragStartRef.current.startY + dy));
     setPos({ x: newX, y: newY });
@@ -701,9 +719,10 @@ export default function Simulation({ onComplete, onNext }) {
       {/* Left Column: Activity Step Instructions & Controls */}
       <div className="custom-scroll" style={{
         background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+        backdropFilter: 'blur(14px)',
         borderRadius: '24px',
         border: '1.5px solid #FDE68A',
-        padding: '1.5rem',
+        padding: '1.5rem 1.45rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -711,193 +730,172 @@ export default function Simulation({ onComplete, onNext }) {
         zIndex: 10,
         overflowY: 'auto'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.05rem' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <CompassIcon size={28} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#78350F', fontWeight: 900, letterSpacing: '-0.02em' }}>
-                Activity 4.6 Lab
+              <CompassIcon size={34} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.75rem', color: '#78350F', fontWeight: 900, letterSpacing: '-0.02em' }}>
+                Compass & Bar Magnet
               </h3>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-              <span style={{
-                background: '#FEF3C7',
-                color: '#92400E',
-                fontWeight: 900,
-                fontSize: '0.92rem',
-                padding: '0.35rem 0.85rem',
-                borderRadius: '12px',
-                border: '1.5px solid #F59E0B',
-                boxShadow: '0 2px 6px rgba(217, 119, 6, 0.12)'
-              }}>
-                Step {currentStep} of 4
-              </span>
-            </div>
+            <span style={{
+              background: '#FEF3C7',
+              color: '#92400E',
+              fontWeight: 900,
+              fontSize: '0.95rem',
+              padding: '0.4rem 0.9rem',
+              borderRadius: '12px',
+              border: '1.5px solid #F59E0B',
+              boxShadow: '0 2px 6px rgba(217, 119, 6, 0.12)'
+            }}>
+              Step {currentStep} of 4
+            </span>
           </div>
 
-          {/* How to Operate & Experiment Flow Card */}
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.96)',
-            border: '1.5px solid #FDE68A',
-            borderRadius: '22px',
-            padding: '1.5rem 1.6rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.25rem',
-            boxShadow: '0 6px 20px rgba(217, 119, 6, 0.08)'
-          }}>
-            {/* Title */}
-            <h4 style={{ 
-              margin: 0, 
-              fontSize: '1.4rem', 
-              fontWeight: 900, 
-              color: '#78350F',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.25
-            }}>
-              How to Operate & Experiment Flow
-            </h4>
+          {/* Instruction Card Containers (Designed like Activity 4.7) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+            {[
+              {
+                id: 'step1',
+                stepNum: 1,
+                badge: '1',
+                label: "Step 1 (Bottom-Left):",
+                content: <>Click <strong>'Run the flow'</strong> at bottom-right to begin. Magnet starts at rest; compass points naturally to <strong>Magnetic North (0° N)</strong>.</>,
+                isDone: currentStep > 1 || hasVisitedTopLeft || hasCompletedTour
+              },
+              {
+                id: 'step2',
+                stepNum: 2,
+                badge: '2',
+                label: "Step 2 (Top-Left):",
+                content: <>Watch the magnet move upward without flipping. Observe the compass needle deflect toward the magnet's pole.</>,
+                isDone: hasVisitedTopLeft
+              },
+              {
+                id: 'step3',
+                stepNum: 3,
+                badge: '3',
+                label: "Step 3 (Bottom-Right):",
+                content: <>Follow the magnet as it shifts across in the same orientation. Needle tracks the magnet's movement.</>,
+                isDone: hasVisitedBottomRight
+              },
+              {
+                id: 'step4',
+                stepNum: 4,
+                badge: '4',
+                label: "Step 4 (Return to Start):",
+                content: <>The magnet smoothly returns along the base to rest. Needle realigns naturally to <strong>0° North</strong>.</>,
+                isDone: hasCompletedTour
+              },
+              {
+                id: 'flip',
+                badge: <RefreshCw size={15} strokeWidth={2.5} />,
+                label: "Flip Magnet:",
+                content: <>Click <strong>'Flip Magnet'</strong> button or tap the magnet body: inverts polarity <strong>(N ↔ S)</strong> to test opposite needle deflections.</>,
+                isDone: hasFlippedOnce || isFlipped
+              },
+              {
+                id: 'drag',
+                badge: <Hand size={15} strokeWidth={2.5} />,
+                label: "Drag Magnet:",
+                content: <>Touch or click & drag: freely reposition the bar magnet anywhere around the compass to test custom magnetic positions.</>,
+                isDone: hasDraggedOnce
+              }
+            ].map((card) => {
+              const isCurrentActive = card.stepNum === currentStep && isAnimating;
 
-            {/* Run the Flow Section */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{ 
-                fontSize: '1.18rem', 
-                fontWeight: 900, 
-                color: '#92400E', 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.55rem' 
-              }}>
-                <Play size={20} fill="#D97706" color="#D97706" />
-                <span>Run the Flow (Step-by-Step Tour):</span>
-              </div>
+              return (
+                <div
+                  key={card.id}
+                  style={{
+                    background: card.isDone ? '#DCFCE7' : 'rgba(255, 255, 255, 0.96)',
+                    border: card.isDone 
+                      ? '1.5px solid #86EFAC' 
+                      : isCurrentActive
+                        ? '2px solid #F59E0B' 
+                        : '1.5px solid #FDE68A',
+                    borderRadius: '18px',
+                    padding: '1rem 1.25rem',
+                    boxShadow: card.isDone 
+                      ? '0 3px 10px rgba(16, 185, 129, 0.12)' 
+                      : isCurrentActive
+                        ? '0 4px 14px rgba(245, 158, 11, 0.16)'
+                        : '0 3px 10px rgba(217, 119, 6, 0.05)',
+                    transition: 'all 0.25s ease',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.85rem'
+                  }}
+                >
+                  <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: card.isDone ? '#059669' : '#FEF3C7',
+                    border: card.isDone ? '2px solid #059669' : '2px solid #F59E0B',
+                    color: card.isDone ? '#FFFFFF' : '#92400E',
+                    fontSize: '1.02rem',
+                    fontWeight: 900,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginTop: '2px'
+                  }}>
+                    {card.badge}
+                  </div>
 
-              {/* Steps 1 to 4 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {[
-                  {
-                    num: 1,
-                    label: "Step 1 (Bottom-Left):",
-                    text: "Magnet starts at rest; compass points naturally to Magnetic North (0° N)."
-                  },
-                  {
-                    num: 2,
-                    label: "Step 2 (Top-Left):",
-                    text: "Moves upward without flipping. Needle deflects toward the magnet's pole."
-                  },
-                  {
-                    num: 3,
-                    label: "Step 3 (Bottom-Right):",
-                    text: "Shifts across in the same orientation. Needle tracks the magnet's movement."
-                  },
-                  {
-                    num: 4,
-                    label: "Step 4 (Return to Start):",
-                    text: "Smoothly returns along the base to rest. Needle realigns to 0° North."
-                  }
-                ].map((s) => {
-                  const isCurrent = currentStep === s.num;
-                  const isPast = (s.num === 1 && currentStep > 1) ||
-                                 (s.num === 2 && hasVisitedTopLeft) ||
-                                 (s.num === 3 && hasVisitedBottomRight) ||
-                                 (s.num === 4 && hasCompletedTour);
+                  <p style={{ 
+                    margin: 0, 
+                    flex: 1, 
+                    fontSize: '1.14rem', 
+                    color: card.isDone ? '#166534' : '#065F46', 
+                    lineHeight: 1.55, 
+                    fontWeight: 600 
+                  }}>
+                    <strong style={{ 
+                      color: card.isDone ? '#14532D' : '#064E3B', 
+                      fontWeight: 900 
+                    }}>
+                      {card.label}
+                    </strong>{' '}
+                    {card.content}
+                  </p>
 
-                  return (
-                    <div
-                      key={s.num}
-                      style={{
-                        padding: '0.95rem 1.25rem',
-                        borderRadius: '16px',
-                        background: isPast ? '#DCFCE7' : isCurrent ? '#FEF3C7' : 'rgba(255, 255, 255, 0.98)',
-                        border: isPast 
-                          ? '1.5px solid #86EFAC' 
-                          : isCurrent 
-                            ? '2px solid #F59E0B' 
-                            : '1.5px solid #FDE68A',
-                        boxShadow: isPast 
-                          ? '0 3px 10px rgba(16, 185, 129, 0.12)' 
-                          : isCurrent 
-                            ? '0 4px 14px rgba(245, 158, 11, 0.16)' 
-                            : '0 2px 8px rgba(217, 119, 6, 0.04)',
-                        transition: 'all 0.25s ease',
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: '0.75rem'
-                      }}
-                    >
-                      <div style={{ flex: 1, fontSize: '1.08rem', lineHeight: 1.6 }}>
-                        <strong style={{ 
-                          color: isPast ? '#15803D' : isCurrent ? '#B45309' : '#78350F', 
-                          fontWeight: 900 
-                        }}>
-                          {s.label}
-                        </strong>{' '}
-                        <span style={{ 
-                          color: isPast ? '#166534' : isCurrent ? '#78350F' : '#92400E', 
-                          fontWeight: isPast ? 700 : 650 
-                        }}>
-                          {s.text}
-                        </span>
-                      </div>
-                      {isPast && <CheckCircle2 size={22} color="#16A34A" style={{ flexShrink: 0, marginTop: '3px' }} />}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Additional Operating Controls */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.75rem',
-              paddingTop: '0.9rem',
-              borderTop: '1.5px solid #FDE68A'
-            }}>
-              <div style={{ fontSize: '1.08rem', lineHeight: 1.6 }}>
-                <strong style={{ color: (isFlipped || isCompleted) ? '#15803D' : '#78350F', fontWeight: 900 }}>Flip Magnet:</strong>{' '}
-                <span style={{ color: (isFlipped || isCompleted) ? '#166534' : '#92400E', fontWeight: 650 }}>
-                  Inverts polarity (N ↔ S) to test opposite needle deflections.
-                </span>
-              </div>
-              <div style={{ fontSize: '1.08rem', lineHeight: 1.6 }}>
-                <strong style={{ color: isCompleted ? '#15803D' : '#78350F', fontWeight: 900 }}>Drag Magnet:</strong>{' '}
-                <span style={{ color: isCompleted ? '#166534' : '#92400E', fontWeight: 650 }}>
-                  Freely reposition the bar magnet anywhere around the compass via touch or mouse.
-                </span>
-              </div>
-            </div>
+                  {card.isDone && (
+                    <CheckCircle2 size={22} color="#16A34A" style={{ flexShrink: 0, marginTop: '3px' }} />
+                  )}
+                </div>
+              );
+            })}
           </div>
-
         </div>
 
-        {/* Proceed to Quiz Button (when completed) */}
-        {isCompleted && (
-          <div style={{ marginTop: '1.25rem' }}>
-            <button
-              type="button"
-              onClick={onNext}
-              className="gold-glow-btn"
-              style={{
-                width: '100%',
-                padding: '1rem',
-                borderRadius: '18px',
-                color: '#FFFFFF',
-                fontWeight: 900,
-                fontSize: '1.12rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.55rem',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              Proceed to Quiz <ArrowRight size={20} />
-            </button>
-          </div>
-        )}
+        {/* Bottom Summary & Proceed Action - Always Accessible with Gold Glow Button */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '1rem' }}>
+          <button
+            type="button"
+            onClick={onNext}
+            className="gold-glow-btn"
+            style={{
+              width: '100%',
+              padding: '1rem 1.4rem',
+              borderRadius: '16px',
+              fontSize: '1.12rem',
+              fontWeight: 900,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.2s ease',
+              color: '#FFFFFF'
+            }}
+          >
+            <Sparkles size={20} /> Proceed to Concept Check <ArrowRight size={20} />
+          </button>
+        </div>
       </div>
 
       {/* Right Column: Nautical Sea Workspace Arena with Vintage Parchment Map Background */}
@@ -1030,81 +1028,60 @@ export default function Simulation({ onComplete, onNext }) {
               alignItems: 'center',
               gap: '0.35rem'
             }}>
-              {/* Flat Horizontal 3D Bar Magnet Body */}
+              {/* Steampunk 3D Textured Bar Magnet Mesh (Compact Scale, Vivid Brightness & Polished Metallic Sheen) */}
               <div 
                 onClick={!isAnimating ? handleFlipMagnet : undefined}
                 title="Click to Flip Polarity (North ↔ South)"
                 style={{
-                  width: '140px',
-                  height: '46px',
-                  borderRadius: '12px',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  overflow: 'hidden',
-                  boxShadow: '0 16px 36px rgba(0,0,0,0.65), 0 0 24px rgba(56, 189, 248, 0.35)',
-                  border: '2px solid rgba(255,255,255,0.9)',
+                  width: '168px',
+                  height: '56px',
                   position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   cursor: isAnimating ? 'default' : 'pointer',
-                  transition: 'transform 0.15s ease'
+                  userSelect: 'none',
+                  filter: 'drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18))',
+                  transition: 'transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.18s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isAnimating) e.currentTarget.style.transform = 'scale(1.04)';
+                }}
+                onMouseLeave={(e) => {
+                  if (!isAnimating) e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                {/* Left Half of Magnet */}
-                <div style={{
-                  flex: 1,
-                  background: isFlipped
-                    ? 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)'
-                    : 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontWeight: 900,
-                  fontSize: '1.25rem',
-                  letterSpacing: '1.5px',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.6)',
-                  borderRight: '1.5px solid rgba(255,255,255,0.4)'
-                }}>
-                  {isFlipped ? 'S' : 'N'}
-                </div>
+                <img 
+                  key={isFlipped ? 'steampunk-sn' : 'steampunk-ns'}
+                  src={isFlipped ? '/assets/magnet_bar_steampunk_sn.png' : '/assets/magnet_bar_steampunk_ns.png'}
+                  alt={isFlipped ? "Steampunk Bar Magnet (South-North Polarity)" : "Steampunk Bar Magnet (North-South Polarity)"}
+                  draggable={false}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                    filter: 'contrast(1.05) brightness(1.05)'
+                  }}
+                />
 
-                {/* Central Metallic Chrome Joint Seam */}
-                <div style={{
-                  width: '6px',
-                  height: '100%',
-                  background: 'linear-gradient(180deg, #FFFFFF 0%, #94A3B8 50%, #475569 100%)',
-                  boxShadow: 'inset 0 0 2px rgba(0,0,0,0.5)',
-                  zIndex: 2
-                }} />
-
-                {/* Right Half of Magnet */}
-                <div style={{
-                  flex: 1,
-                  background: isFlipped
-                    ? 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)'
-                    : 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontWeight: 900,
-                  fontSize: '1.25rem',
-                  letterSpacing: '1.5px',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.6)',
-                  borderLeft: '1.5px solid rgba(255,255,255,0.4)'
-                }}>
-                  {isFlipped ? 'N' : 'S'}
-                </div>
-
-                {/* Top Glass Specular Highlight Sheen */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '40%',
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%)',
-                  pointerEvents: 'none'
-                }} />
+                {/* Polished Metallic Sheen Specular Highlight Overlay */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '8%',
+                    bottom: '8%',
+                    left: '5%',
+                    right: '5%',
+                    borderRadius: '8px',
+                    pointerEvents: 'none',
+                    background: 'linear-gradient(115deg, rgba(255,255,255,0) 25%, rgba(255,255,255,0.18) 46%, rgba(255,255,255,0.42) 50%, rgba(255,255,255,0.12) 54%, rgba(255,255,255,0) 75%)',
+                    mixBlendMode: 'screen',
+                    opacity: 0.9
+                  }}
+                />
               </div>
             </div>
           </div>

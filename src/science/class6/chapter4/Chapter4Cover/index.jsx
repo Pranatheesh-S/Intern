@@ -56,7 +56,7 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
         onClick={onBack || (() => window.history.back())}
         className="cover-back-btn"
       >
-        <ArrowLeft size={20} /> Back
+        <ArrowLeft size={16} /> Back
       </button>
 
       <style>{`
@@ -294,56 +294,41 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
           transform: translateY(0) scale(0.98);
         }
 
-        /* Cover Back Button matching Start Journey Aqua Gradient & Effects */
+        /* Cover Back Button (Restored Previous Dark Sci-Fi Glass Color & Style) */
         .cover-back-btn {
           position: absolute;
-          bottom: clamp(20px, 3vw, 40px);
-          left: clamp(20px, 3vw, 40px);
+          top: 1.5rem;
+          left: 1.5rem;
           z-index: 100;
           display: inline-flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 0.95rem 2.2rem;
-          border-radius: 30px;
-          background: linear-gradient(135deg, #00F2FE 0%, #00C6FF 100%);
-          border: none;
-          color: #030712;
+          gap: 0.45rem;
+          padding: 0.55rem 1.15rem;
+          border-radius: 24px;
+          border: 1px solid rgba(56, 189, 248, 0.35);
+          background: rgba(3, 7, 18, 0.88);
+          backdrop-filter: blur(12px);
+          color: #E0F2FE;
           font-family: var(--geo);
-          font-weight: 900;
-          font-size: 1.15rem;
-          letter-spacing: 0.03em;
+          font-weight: 700;
+          font-size: 0.88rem;
+          letter-spacing: 0.02em;
           cursor: pointer;
-          overflow: hidden;
-          transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-          box-shadow: 0 10px 30px rgba(0, 242, 254, 0.45);
-        }
-
-        .cover-back-btn::after {
-          content: '';
-          position: absolute;
-          top: -50%;
-          left: -75%;
-          width: 50%;
-          height: 200%;
-          background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.75) 50%,
-            rgba(255, 255, 255, 0) 100%
-          );
-          transform: rotate(25deg);
-          animation: shimmerSweep 2.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
-          pointer-events: none;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+          transition: all 0.2s ease;
         }
 
         .cover-back-btn:hover {
-          transform: translateY(-2px) scale(1.03);
-          box-shadow: 0 16px 40px rgba(0, 242, 254, 0.7);
-          background: linear-gradient(135deg, #38BDF8 0%, #00F2FE 100%);
+          border-color: rgba(56, 189, 248, 0.8);
+          color: #FFFFFF;
+          background: rgba(6, 182, 212, 0.15);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
         }
 
         .cover-back-btn:active {
-          transform: translateY(0) scale(0.98);
+          transform: translateY(0);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
         }
 
         /* Center-Left Meridian Dashed Divider Line */

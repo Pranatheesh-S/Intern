@@ -1025,7 +1025,7 @@ export default function App() {
 
                   <button 
                     onClick={() => {
-                      if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                      if (chapter.num === 4) navigateTo('class6', 'chapter4_cover');
                       else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
                       else if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
                       else navigateTo('class6', `chapter${chapter.num}`);
