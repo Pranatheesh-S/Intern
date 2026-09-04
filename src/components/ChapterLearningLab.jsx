@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ArrowLeft, Play, X, ChevronLeft, ChevronRight, Volume2, VolumeX, RefreshCw, Check } from "lucide-react";
 import CoverPage from "./CoverPage";
 import SloganPage from "./SloganPage";
@@ -63,6 +63,9 @@ import tulsiImg from "../assets/specimens/tulsi.png";
 import roseImg from "../assets/specimens/rose.png";
 import mangoImg from "../assets/specimens/mango.png";
 import banyanImg from "../assets/specimens/banyan.png";
+import tomatoImg from "../assets/specimens/tomato.png";
+import grassImg from "../assets/specimens/grass.png";
+import hibiscusImg from "../assets/specimens/hibiscus.png";
 
 const LEVEL_QUIZZES = {
   'biodiversity_concept': [
@@ -221,20 +224,38 @@ const contentLessonsData = {
     title: '2.2.1-A Plant Classification',
     slides: [
       {
-        title: 'Activity 2.4: Let us group',
-        content: 'Plants display an incredible range of sizes and forms. We categorize them based on their height, stem thickness, and branch levels:',
+        title: 'Activity 2.4: Let us group — Herbs',
+        content: 'Plants display an incredible range of sizes and forms. Herbs are small plants characterized by soft, green, and tender stems that bend easily without breaking:',
         bullets: [
-          '🌿 Herbs: Short plants with soft, green, and tender stems that bend easily (e.g. Grass, Tomato, Coriander, Tulsi).',
-          '🌺 Shrubs: Medium height, thin woody stems branching out close to the base/ground (e.g. Rose, Lemon, Hibiscus).',
+          '🌿 Herbs: Short plants with soft, green, and tender stems that bend easily (e.g. Grass, Tomato, Coriander, Tulsi).'
+        ]
+      },
+      {
+        title: 'Activity 2.4: Let us group — Shrubs',
+        content: 'Shrubs are medium-sized bushy plants with hard, thin woody stems that branch out close to the ground or base:',
+        bullets: [
+          '🌸 Shrubs: Medium height, thin woody stems branching out close to the base/ground (e.g. Rose, Lemon, Hibiscus).'
+        ]
+      },
+      {
+        title: 'Activity 2.4: Let us group — Trees',
+        content: 'Trees are tall, grand plants with thick, hard brown woody trunks that branch high up above the ground:',
+        bullets: [
           '🌳 Trees: Tall plants with thick, hard brown woody trunks branching high up (e.g. Mango, Banyan, Neem, Deodar).'
         ]
       },
       {
-        title: 'Climbers & Creepers',
-        content: 'Some plants have weak stems that cannot stand upright on their own:',
+        title: 'Activity 2.4: Let us group — Creepers',
+        content: 'Creepers have weak, tender stems that cannot stand upright and instead spread horizontally along the soil surface:',
         bullets: [
-          '🍉 Creepers: Plants that creep and spread horizontally along the ground (e.g., Pumpkin, Watermelon, Sweet Potato).',
-          '🍇 Climbers: Plants that climb up using neighboring structures or trees for support (e.g., Money Plant, Pea Plant, Grapevine).'
+          '🍉 Creepers: Plants that creep and spread horizontally along the ground (e.g., Pumpkin, Watermelon, Sweet Potato).'
+        ]
+      },
+      {
+        title: 'Activity 2.4: Let us group — Climbers',
+        content: 'Climbers have weak stems and climb upward by taking support of neighboring structures, fences, or trees:',
+        bullets: [
+          '🌱 Climbers: Plants that climb up using neighboring structures or trees for support (e.g., Money Plant, Pea Plant, Grapevine).'
         ]
       }
     ]
@@ -527,11 +548,9 @@ const CHAPTER_2_FLOW = [
   { type: 'lab', levelId: 'lvl-1', actIdx: 2, focused: true, subStep: 'quiz', slide: 0, name: 'Ecosystem Quiz' },
   /* 9. Activity 2.3 — Classification Lab */
   { type: 'lab', levelId: 'lvl-1', actIdx: 3, focused: true, subStep: null, slide: 0, name: 'Activity 2.3 — Classification Lab' },
-  /* 10. 2.2.1 — How to Group Plants? */
-  { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: false, subStep: null, slide: 0, name: '2.2.1 — How to Group Plants?' },
-  /* 11. Activity 2.4 — Let Us Group */
-  { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: false, subStep: null, slide: 1, name: 'Activity 2.4 — Let Us Group' },
-  /* 12. Activity 2.4 — Herbs, Shrubs & Trees */
+  /* 10. 2.2.1 — How to Group Plants? Activity 2.4 */
+  { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: false, subStep: null, slide: 0, name: 'Activity 2.4 — Let Us Group' },
+  /* 11. Activity 2.4 — Herbs, Shrubs & Trees */
   { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: true, subStep: null, slide: 0, name: 'Activity 2.4 — Herbs, Shrubs & Trees' },
   /* 13. Lesson Pane — Activity 2.5: Let Us Compare */
   { type: 'lab', levelId: 'lvl-4', actIdx: 0, focused: false, subStep: null, slide: 0, name: 'Lesson Pane — Activity 2.5: Let Us Compare' },
@@ -711,7 +730,7 @@ function speakWithProfile(text, characterName, muteFlag, onEndCallback, onErrorC
   return utt;
 }
 
-function speakIndianMaleNarrator(text, muteFlag, onEndCallback, onErrorCallback) {
+function speakIndianMaleNarrator(text, muteFlag, onEndCallback, onErrorCallback, onBoundaryCallback) {
   if (muteFlag || !('speechSynthesis' in window)) return null;
   window.speechSynthesis.cancel();
 
@@ -723,11 +742,18 @@ function speakIndianMaleNarrator(text, muteFlag, onEndCallback, onErrorCallback)
 
   const utt = new SpeechSynthesisUtterance(spokenText);
   utt.pitch = 0.98; // Natural, resonant adult male educator pitch
-  utt.rate = 0.88;  // Clear, moderate pacing for Class 6 comprehension
+  utt.rate = 0.85;  // Slower, clear natural pacing for Class 6 comprehension (0.85x)
   utt.volume = 1.0;
 
   if (onEndCallback) utt.onend = onEndCallback;
   if (onErrorCallback) utt.onerror = onErrorCallback;
+  if (onBoundaryCallback) {
+    utt.onboundary = (e) => {
+      if (e.name === 'word') {
+        onBoundaryCallback(e);
+      }
+    };
+  }
 
   const voices = window.speechSynthesis.getVoices();
   if (voices.length > 0) {
@@ -773,6 +799,7 @@ function IntroStoryteller({ onComplete, onBack }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [dialogueStep, setDialogueStep] = useState(0);
   const [isNarrationMuted, setIsNarrationMuted] = useState(false);
+  const [activeWordIndex, setActiveWordIndex] = useState(null);
   const dialogueTimerRef = useRef(null);
   const { theme = 'dark' } = useTheme() || {};
 
@@ -838,6 +865,81 @@ function IntroStoryteller({ onComplete, onBack }) {
 
   const totalScenes = scenes.length;
   const scene = scenes[currentScene];
+  const [subtitleIndex, setSubtitleIndex] = useState(0);
+
+  const getSingleLineCues = (text) => {
+    const rawSentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    const rawCues = [];
+    rawSentences.forEach(s => {
+      const trimmed = s.trim();
+      if (trimmed.length > 55 && trimmed.includes(' — ')) {
+        const parts = trimmed.split(' — ');
+        parts.forEach(p => rawCues.push(p.trim()));
+      } else if (trimmed.length > 65 && trimmed.includes(', and ')) {
+        const parts = trimmed.split(', and ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('and ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(' into a ')) {
+        const parts = trimmed.split(' into a ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('into a ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(' without ')) {
+        const parts = trimmed.split(' without ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('without ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(', others are ')) {
+        const parts = trimmed.split(', others are ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('others are ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(', each ')) {
+        const parts = trimmed.split(', each ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('each ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(', marveling ')) {
+        const parts = trimmed.split(', marveling ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('marveling ' + parts[1].trim());
+      } else {
+        rawCues.push(trimmed);
+      }
+    });
+
+    const spokenText = text.replace(/—/g, ', ').replace(/\s+/g, ' ').trim();
+    let searchPos = 0;
+    let globalWordCounter = 0;
+
+    const structuredCues = rawCues.map((cueText, cueIdx) => {
+      const wordTokens = cueText.split(/\s+/).filter(Boolean);
+      const words = wordTokens.map((w, wIdxInCue) => {
+        const cleanWord = w.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        let foundIndex = spokenText.toLowerCase().indexOf(cleanWord, searchPos);
+        if (foundIndex === -1) {
+          foundIndex = searchPos;
+        }
+        searchPos = foundIndex + (cleanWord.length || 1);
+
+        return {
+          text: w,
+          clean: cleanWord,
+          cueIndex: cueIdx,
+          wordIndexInCue: wIdxInCue,
+          globalIndex: globalWordCounter++,
+          charStart: foundIndex,
+          charEnd: foundIndex + cleanWord.length
+        };
+      });
+
+      return {
+        text: cueText,
+        words
+      };
+    });
+
+    return structuredCues;
+  };
+
+  const cues = useMemo(() => getSingleLineCues(scene.text), [scene.text]);
+  const allWords = useMemo(() => cues.flatMap(c => c.words), [cues]);
 
   useEffect(() => {
     if ('speechSynthesis' in window) {
@@ -846,13 +948,47 @@ function IntroStoryteller({ onComplete, onBack }) {
     clearTimeout(dialogueTimerRef.current);
     setDialogueStep(0);
     setImgLoaded(false);
+    setActiveWordIndex(null);
+    setSubtitleIndex(0);
 
-    // Speak center information box narration with Indian male teacher voice immediately as scene opens
+    const handleBoundary = (event) => {
+      const charIdx = event.charIndex;
+      let matched = null;
+      for (let i = 0; i < allWords.length; i++) {
+        const w = allWords[i];
+        if (charIdx >= w.charStart && charIdx <= w.charEnd + 2) {
+          matched = w;
+          break;
+        }
+      }
+      if (!matched) {
+        matched = allWords.find((w, i) => {
+          const next = allWords[i + 1];
+          return charIdx >= w.charStart && (!next || charIdx < (next?.charStart || Infinity));
+        });
+      }
+      if (matched) {
+        setSubtitleIndex(matched.cueIndex);
+        setActiveWordIndex(matched.wordIndexInCue);
+      }
+    };
+
+    const handleSpeechEnd = () => {
+      setActiveWordIndex(null);
+    };
+
+    // Speak center narration with Indian male teacher voice and real-time word boundary sync
     let speakTimer = null;
     if (!isNarrationMuted && 'speechSynthesis' in window) {
       speakTimer = setTimeout(() => {
         const doSpeak = () => {
-          speakIndianMaleNarrator(scene.text, isNarrationMuted);
+          speakIndianMaleNarrator(
+            scene.text,
+            isNarrationMuted,
+            handleSpeechEnd,
+            handleSpeechEnd,
+            handleBoundary
+          );
         };
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
@@ -868,7 +1004,7 @@ function IntroStoryteller({ onComplete, onBack }) {
       clearTimeout(dialogueTimerRef.current);
       if (speakTimer) clearTimeout(speakTimer);
     };
-  }, [currentScene, isNarrationMuted]);
+  }, [currentScene, isNarrationMuted, allWords, scene.text]);
 
   useEffect(() => {
     let active = true;
@@ -920,6 +1056,18 @@ function IntroStoryteller({ onComplete, onBack }) {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
+      <style>{`
+        @keyframes movieSubtitleFade {
+          0% {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
       
       <div style={{
         position: 'relative',
@@ -949,7 +1097,7 @@ function IntroStoryteller({ onComplete, onBack }) {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 25%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.65) 78%, rgba(0,0,0,0.82) 100%)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 25%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.45) 78%, rgba(0,0,0,0.68) 100%)',
           pointerEvents: 'none',
           zIndex: 1
         }} />
@@ -1019,6 +1167,7 @@ function IntroStoryteller({ onComplete, onBack }) {
         })}
       </div>
 
+      {/* Scene Index Indicator */}
       <div style={{
         position: 'absolute', top: '0.9rem', left: '0.9rem', zIndex: 12,
         background: 'rgba(0,0,0,0.52)', backdropFilter: 'blur(10px)',
@@ -1029,6 +1178,7 @@ function IntroStoryteller({ onComplete, onBack }) {
         Class 6 · Scene {currentScene + 1} of {totalScenes}
       </div>
 
+      {/* Back to Slogan Button (Green highlighted on Scene 1) */}
       {onBack && (
         <div style={{
           position: 'absolute', bottom: '1.2rem', left: '1.2rem', zIndex: 15
@@ -1036,79 +1186,162 @@ function IntroStoryteller({ onComplete, onBack }) {
           <button 
             onClick={(e) => { e.stopPropagation(); onBack(); }}
             style={{
-              padding: '0.7rem 1.4rem', fontSize: '0.9rem', fontWeight: '700',
-              borderRadius: '8px', border: 'none',
-              background: '#10b981', color: '#fff',
+              padding: '0.6rem 1.25rem', fontSize: '0.88rem', fontWeight: '700',
+              borderRadius: '8px',
+              border: currentScene === 0 ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(255,255,255,0.18)',
+              background: currentScene === 0
+                ? 'linear-gradient(135deg, #10b981, #059669)'
+                : 'rgba(0,0,0,0.65)',
+              color: '#fff',
               backdropFilter: 'blur(12px)', cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)', transition: 'all 0.2s',
+              boxShadow: currentScene === 0
+                ? '0 4px 16px rgba(16, 185, 129, 0.45)'
+                : '0 4px 16px rgba(0,0,0,0.4)',
+              transition: 'all 0.2s',
               display: 'flex', alignItems: 'center', gap: '0.5rem'
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#059669'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = '#10b981'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#059669';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = currentScene === 0
+                ? 'linear-gradient(135deg, #10b981, #059669)'
+                : 'rgba(0,0,0,0.65)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
           >
             ← Back to Slogan
           </button>
         </div>
       )}
 
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        display: 'flex', justifyContent: 'center',
-        padding: '0 1rem 1.1rem',
-        zIndex: 14,
-        transform: 'translateY(0)',
-        transition: 'transform 0.3s ease'
-      }}>
-        <div style={{
-          width: '100%', maxWidth: '780px',
-          background: '#E6BF83', 
-          color: '#000000',
-          backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(160, 82, 45, 0.5)', 
-          borderRadius: '16px',
-          padding: '1.4rem 1.8rem 1.2rem',
-          boxShadow: '0 -2px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(230, 191, 131, 0.18)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '1.28rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
-              {scene.title}
-            </span>
-          </div>
-
+      {/* Real Movie-Style Subtitles (Exact Viewport Center, One Single Line, Audio-Synced Word Highlight) */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '4.6rem',
+          left: 0,
+          right: 0,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 14,
+          pointerEvents: 'none'
+        }}
+      >
+        <div
+          key={`sub-${currentScene}-${subtitleIndex}`}
+          style={{
+            maxWidth: '78vw',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            animation: 'movieSubtitleFade 0.35s ease-out'
+          }}
+        >
           <p style={{
-            margin: '0 0 0.85rem 0', fontSize: '1.18rem',
-            color: '#523418', lineHeight: '1.68', fontWeight: '500',
-            minHeight: '3.2em', fontFamily: "'Georgia', 'Times New Roman', serif"
+            margin: 0,
+            fontSize: 'clamp(1.25rem, 2.2vw, 1.55rem)',
+            fontWeight: '700',
+            lineHeight: '1.45',
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+            letterSpacing: '0.015em'
           }}>
-            {scene.text}
+            {(cues[subtitleIndex]?.words || []).map((w, wIdx) => {
+              const isSpoken = activeWordIndex === wIdx;
+              return (
+                <span
+                  key={wIdx}
+                  style={{
+                    display: 'inline-block',
+                    margin: '0 0.18em',
+                    color: isSpoken ? '#34d399' : '#ffffff',
+                    transition: 'color 0.12s ease, text-shadow 0.12s ease',
+                    textShadow: isSpoken
+                      ? '0 0 16px rgba(52, 211, 153, 0.9), 0 2px 4px rgba(0, 0, 0, 0.95), -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000'
+                      : '0 2px 4px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.9), -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000'
+                  }}
+                >
+                  {w.text}
+                </span>
+              );
+            })}
           </p>
-
-          <div style={{ display: 'flex', gap: '0.55rem', alignItems: 'center', justifyContent: 'center' }}>
-            <button onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-              disabled={currentScene === 0}
-              style={{
-                padding: '0.45rem 1.1rem', fontSize: '0.82rem', fontWeight: '700',
-                borderRadius: '9px', border: 'none',
-                background: currentScene === 0 ? 'rgba(255,255,255,0.1)' : '#10b981',
-                color: '#fff',
-                cursor: currentScene === 0 ? 'not-allowed' : 'pointer',
-                opacity: currentScene === 0 ? 0.4 : 1, transition: 'all 0.2s',
-                boxShadow: currentScene === 0 ? 'none' : '0 3px 12px rgba(16, 185, 129, 0.4)'
-              }}>← Prev</button>
-            <button onClick={(e) => { e.stopPropagation(); handleNext(); }}
-              style={{
-                padding: '0.42rem 1.3rem', fontSize: '0.78rem', fontWeight: '700',
-                borderRadius: '9px', border: 'none',
-                background: currentScene === totalScenes - 1
-                  ? 'linear-gradient(135deg,#059669,#34d399)'
-                  : 'linear-gradient(135deg,#b45309,#d97706)',
-                color: '#fff', cursor: 'pointer',
-                boxShadow: '0 3px 12px rgba(0,0,0,0.35)', transition: 'all 0.2s'
-              }}>
-              {currentScene === totalScenes - 1 ? 'Finish Story ✓' : 'Next Scene →'}
-            </button>
-          </div>
         </div>
+      </div>
+
+      {/* Floating Movie Scene Controls */}
+      <div style={{
+        position: 'absolute',
+        bottom: '1.2rem',
+        right: '1.2rem',
+        zIndex: 15,
+        display: 'flex',
+        gap: '0.65rem',
+        alignItems: 'center'
+      }}>
+        {/* Prev Button (Green highlighted on Scenes 2 through 7) */}
+        <button
+          onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+          disabled={currentScene === 0}
+          style={{
+            padding: '0.55rem 1.15rem',
+            fontSize: '0.86rem',
+            fontWeight: '700',
+            borderRadius: '8px',
+            border: currentScene > 0 ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(255,255,255,0.12)',
+            background: currentScene > 0
+              ? 'linear-gradient(135deg, #10b981, #059669)'
+              : 'rgba(0,0,0,0.35)',
+            color: currentScene === 0 ? 'rgba(255,255,255,0.35)' : '#ffffff',
+            backdropFilter: 'blur(10px)',
+            cursor: currentScene === 0 ? 'not-allowed' : 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: currentScene > 0
+              ? '0 4px 14px rgba(16, 185, 129, 0.45)'
+              : 'none'
+          }}
+          onMouseEnter={(e) => {
+            if (currentScene > 0) {
+              e.currentTarget.style.background = '#059669';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (currentScene > 0) {
+              e.currentTarget.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }
+          }}
+        >
+          ← Prev
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); handleNext(); }}
+          style={{
+            padding: '0.55rem 1.3rem',
+            fontSize: '0.86rem',
+            fontWeight: '800',
+            borderRadius: '8px',
+            border: '1px solid rgba(255,255,255,0.25)',
+            background: currentScene === totalScenes - 1
+              ? 'linear-gradient(135deg, #059669, #34d399)'
+              : 'linear-gradient(135deg, #10b981, #059669)',
+            color: '#ffffff',
+            cursor: 'pointer',
+            boxShadow: '0 4px 16px rgba(16, 185, 129, 0.45)',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {currentScene === totalScenes - 1 ? 'Finish Story ✓' : 'Next Scene →'}
+        </button>
       </div>
     </div>
   );
@@ -2715,6 +2948,10 @@ export default function ChapterLearningLab({
   const [appreciatingSubStep, setAppreciatingSubStep] = useState('appreciate');
   const [challengeQuestionIdx, setChallengeQuestionIdx] = useState(0);
 
+  // Activity 2.4 Interactive Learning States
+  const [act24SelectedGroup, setAct24SelectedGroup] = useState('herbs');
+  const [act24ExploredGroups, setAct24ExploredGroups] = useState({ herbs: true });
+
   const goToChapter2Step = (targetIndex) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -3547,348 +3784,190 @@ export default function ChapterLearningLab({
                 );
               })}
             </div>
-            </div>
           </div>
-        )}
-      </div>
-    );
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+  const PLANT_DATA = {
+    herbs: {
+      id: 'herbs',
+      name: 'Herbs',
+      icon: '🌿',
+      title: '🌿 Herbs',
+      badgeColor: '#065f46',
+      badgeBg: '#dcfce7',
+      badgeBorder: '#86efac',
+      color: '#10b981',
+      bg: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(52,211,153,0.03) 100%)',
+      definition: 'Short plants with soft green stems.',
+      examples: 'Grass • Tomato • Coriander • Tulsi',
+      imgSrc: tulsiImg,
+      imgAlt: 'Tulsi Herb',
+      keyFeatures: [
+        { id: 'height', label: 'Height: Short', hotspotId: 'height' },
+        { id: 'stem', label: 'Stem: Soft & tender', hotspotId: 'stem' },
+        { id: 'growth', label: 'Growth: Small plant', hotspotId: 'growth' }
+      ]
+    },
+    shrubs: {
+      id: 'shrubs',
+      name: 'Shrubs',
+      icon: '🌸',
+      title: '🌸 Shrubs',
+      badgeColor: '#9a3412',
+      badgeBg: '#ffedd5',
+      badgeBorder: '#fed7aa',
+      color: '#d97706',
+      bg: 'linear-gradient(135deg, rgba(217,119,6,0.08) 0%, rgba(251,191,36,0.03) 100%)',
+      definition: 'Medium bushy plants branching near base.',
+      examples: 'Rose • Lemon • Hibiscus • Henna',
+      imgSrc: roseImg,
+      imgAlt: 'Rose Shrub',
+      keyFeatures: [
+        { id: 'height', label: 'Height: Medium', hotspotId: 'height' },
+        { id: 'stem', label: 'Stem: Woody', hotspotId: 'stem' },
+        { id: 'branches', label: 'Branches: Near ground', hotspotId: 'branches' }
+      ]
+    },
+    trees: {
+      id: 'trees',
+      name: 'Trees',
+      icon: '🌳',
+      title: '🌳 Trees',
+      badgeColor: '#15803d',
+      badgeBg: '#dcfce7',
+      badgeBorder: '#86efac',
+      color: '#059669',
+      bg: 'linear-gradient(135deg, rgba(5,150,105,0.08) 0%, rgba(16,185,129,0.03) 100%)',
+      definition: 'Tall plants with thick woody trunks.',
+      examples: 'Mango • Banyan • Neem • Deodar',
+      imgSrc: banyanImg,
+      imgAlt: 'Banyan Tree',
+      keyFeatures: [
+        { id: 'height', label: 'Height: Tall', hotspotId: 'height' },
+        { id: 'stem', label: 'Stem: Thick, hard, woody', hotspotId: 'stem' },
+        { id: 'branches', label: 'Branches: Higher up', hotspotId: 'branches' }
+      ]
+    },
+    creepers: {
+      id: 'creepers',
+      name: 'Creepers',
+      icon: '🍉',
+      title: '🍉 Creepers',
+      badgeColor: '#0369a1',
+      badgeBg: '#e0f2fe',
+      badgeBorder: '#7dd3fc',
+      color: '#0284c7',
+      bg: 'linear-gradient(135deg, rgba(2,132,199,0.08) 0%, rgba(56,189,248,0.03) 100%)',
+      definition: 'Creeps along the ground.',
+      examples: 'Pumpkin • Watermelon • Sweet Potato',
+      imgSrc: creeperImg,
+      imgAlt: 'Watermelon Creeper',
+      keyFeatures: [
+        { id: 'stem', label: 'Stem: Weak', hotspotId: 'stem' },
+        { id: 'growth', label: 'Growth: Along ground', hotspotId: 'growth' },
+        { id: 'fruit', label: 'Fruit: Supported on soil', hotspotId: 'fruit' }
+      ]
+    },
+    climbers: {
+      id: 'climbers',
+      name: 'Climbers',
+      icon: '🌱',
+      title: '🌱 Climbers',
+      badgeColor: '#7c2d12',
+      badgeBg: '#fef3c7',
+      badgeBorder: '#fde68a',
+      color: '#ea580c',
+      bg: 'linear-gradient(135deg, rgba(234,88,12,0.08) 0%, rgba(251,146,60,0.03) 100%)',
+      definition: 'Climbs upward using support.',
+      examples: 'Money Plant • Pea • Grapevine',
+      imgSrc: climberImg,
+      imgAlt: 'Climber on support',
+      keyFeatures: [
+        { id: 'stem', label: 'Stem: Weak', hotspotId: 'stem' },
+        { id: 'support', label: 'Needs Support: Upward', hotspotId: 'support' },
+        { id: 'growth', label: 'Growth: Upward with Support', hotspotId: 'growth' }
+      ]
+    }
   };
 
-
-  function PlantVarietyMorpher() {
-    const [stage, setStage] = useState(0);
-    const [activeHotspot, setActiveHotspot] = useState(null);
-    const [creeperFlipped, setCreeperFlipped] = useState(false);
-    const [climberFlipped, setClimberFlipped] = useState(false);
-
-    const stages = [
-      {
-        title: '🌿 Herb',
-        height: 'Short (usually less than 1 meter)',
-        stem: 'Soft, green, and tender stem. Very easy to bend without breaking.',
-        examples: 'Tomato, Basil, Wheat, Grass',
-        color: '#10b981',
-        bg: 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(52,211,153,0.02) 100%)',
-        desc: 'Herbs are small plants with soft, non-woody stems. They contain a high water concentration in their cells.',
-        imgSrc: tulsiImg,
-        anatomy: (
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <defs>
-              <clipPath id="herb-clip">
-                <circle cx="50" cy="50" r="38" />
-              </clipPath>
-            </defs>
-            <circle cx="50" cy="50" r="39" fill="#10b981" />
-            <image 
-              href="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=200&q=80" 
-              x="12" y="12" width="76" height="76" 
-              clipPath="url(#herb-clip)" 
-            />
-            {/* Overlay a subtle green radial mask to blend with Pith */}
-            <circle cx="50" cy="50" r="38" fill="rgba(16, 185, 129, 0.15)" clipPath="url(#herb-clip)" pointerEvents="none" />
-            
-            {/* Capillaries / Vascular Bundles (Interactive Hotspots) */}
-            {[
-              { cx: 50, cy: 22, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 50, cy: 78, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 22, cy: 50, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 78, cy: 50, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 30, cy: 30, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 70, cy: 30, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 30, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 70, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' }
-            ].map((pt, i) => (
-              <g key={i} className="anatomy-hotspot" onClick={() => setActiveHotspot({
-                title: pt.name,
-                text: '• In herbs, water and mineral transport is handled by ring-arranged vascular capillaries (xylem/phloem).\n• Since there is no thick wood or bark, the surrounding tissues are soft, green parenchyma cells, making the stem highly flexible.'
-              })}>
-                <circle cx={pt.cx} cy={pt.cy} r="6.5" fill="rgba(59, 130, 246, 0.3)" stroke="#3b82f6" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 2px rgba(59,130,246,0.5))' }} />
-                <circle cx={pt.cx} cy={pt.cy} r="2.5" fill="#2563eb" />
-              </g>
-            ))}
-            {/* Center Pith */}
-            <circle cx="50" cy="50" r="14" fill="rgba(200, 230, 201, 0.85)" stroke="#81c784" strokeWidth="1" />
-            <text x="50" y="52" textAnchor="middle" fill="#1b5e20" fontSize="6.5" fontWeight="bold">PITH</text>
-          </svg>
-        )
-      },
-      {
-        title: '🌺 Shrub',
-        height: 'Medium height (typically 1 to 3 meters)',
-        stem: 'Hard, thin, woody stem. Branches emerge close to the soil level.',
-        examples: 'Rose, Hibiscus, Lemon, Henna',
-        color: '#d97706',
-        bg: 'linear-gradient(135deg, rgba(217,119,6,0.06) 0%, rgba(251,191,36,0.02) 100%)',
-        desc: 'Shrubs are medium-sized plants with hard stems branching near the ground. They lack a single clear trunk.',
-        imgSrc: roseImg,
-        anatomy: (
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <defs>
-              <clipPath id="shrub-clip">
-                <circle cx="50" cy="50" r="35" />
-              </clipPath>
-            </defs>
-            <circle cx="50" cy="50" r="36" fill="#d97706" />
-            <image 
-              href="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=200&q=80" 
-              x="14" y="14" width="72" height="72" 
-              clipPath="url(#shrub-clip)" 
-            />
-            {/* Thin Wood Core (Hotspot) */}
-            <circle 
-              cx="50" cy="50" r="26" 
-              className="anatomy-hotspot pulse-ring-element"
-              fill="rgba(254, 215, 170, 0.45)" stroke="#ea580c" strokeWidth="2.5"
-              style={{ filter: 'drop-shadow(0 0 3px rgba(234,88,12,0.3))' }}
-              onClick={() => setActiveHotspot({
-                title: '🪵 Thin Wood Core',
-                text: '• Shrubs develop a thin core of lignified woody xylem tissue.\n• This wood provides rigid structural support allowing them to stand upright, but it remains thin compared to trees, keeping stems slender and slightly bendable.'
-              })}
-            />
-            {/* Thorns */}
-            {[
-              { x1: 50, y1: 15, x2: 50, y2: 4, path: "M48,15 L50,4 L52,15 Z" },
-              { x1: 50, y1: 85, x2: 50, y2: 96, path: "M48,85 L50,96 L52,85 Z" },
-              { x1: 15, y1: 50, x2: 4, y2: 50, path: "M15,48 L4,50 L15,52 Z" },
-              { x1: 85, y1: 50, x2: 96, y2: 50, path: "M85,48 L96,50 L85,52 Z" }
-            ].map((th, i) => (
-              <path 
-                key={i} 
-                d={th.path}
-                className="anatomy-hotspot"
-                fill="#9a3412" stroke="#451a03" strokeWidth="1"
-                onClick={() => setActiveHotspot({
-                  title: '🌵 Protective Thorns / Prickles',
-                  text: '• Many shrubs, like Wild Rose, develop thorns directly from their epidermal stem layer.\n• These sharp extensions act as a mechanical defense mechanism to deter herbivores from eating their leaves and stems.'
-                })}
-              />
-            ))}
-            <circle cx="50" cy="50" r="9" fill="#9a3412" opacity="0.9" />
-            <circle cx="50" cy="50" r="5" fill="#fdba74" />
-          </svg>
-        )
-      },
-      {
-        title: '🌳 Tree',
-        height: 'Tall (usually exceeding 3 meters)',
-        stem: 'Thick, hard, brown woody trunk. Branches start high up.',
-        examples: 'Neem, Mango, Banyan, Coconut',
-        color: '#1e3a8a',
-        bg: 'linear-gradient(135deg, rgba(30,58,138,0.06) 0%, rgba(59,130,246,0.02) 100%)',
-        desc: 'Trees are tall woody plants with a single main supporting trunk. They grow continuously for many years.',
-        imgSrc: banyanImg,
-        anatomy: (
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <defs>
-              <clipPath id="tree-clip">
-                <circle cx="50" cy="50" r="38" />
-              </clipPath>
-            </defs>
-            <circle cx="50" cy="50" r="40" fill="#451a03" />
-            <image 
-              href="https://images.unsplash.com/photo-1546482502-04b017f1190f?auto=format&fit=crop&w=200&q=80" 
-              x="10" y="10" width="80" height="80" 
-              clipPath="url(#tree-clip)" 
-            />
-            {/* Semi-transparent bark cork hotspot */}
-            <circle 
-              cx="50" cy="50" r="38" 
-              className="anatomy-hotspot"
-              fill="rgba(69, 26, 3, 0.2)" stroke="#ffd700" strokeWidth="1.5" strokeDasharray="3,3"
-              onClick={() => setActiveHotspot({
-                title: '🟫 Outer Cork Bark',
-                text: '• The outer bark is a thick layer of dead cork cells.\n• It serves as a rugged shield protecting the tree trunk against physical damage, fires, insects, water loss, and freezing mountain cold.'
-              })}
-            />
-            {/* Annual growth rings overlay */}
-            {[28, 20, 12].map((r, i) => (
-              <circle 
-                key={i} cx="50" cy="50" r={r} 
-                className="anatomy-hotspot pulse-ring-element"
-                fill="none" stroke="rgba(255, 215, 0, 0.45)" strokeWidth="2"
-                style={{ filter: 'drop-shadow(0 0 3px rgba(255,215,0,0.3))' }}
-                onClick={() => setActiveHotspot({
-                  title: '⭕ Annual Growth Rings',
-                  text: '• Concentric rings formed by secondary growth xylem divisions each season.\n• Fast spring growth creates wide light rings; slow summer growth creates thin dark rings. Counting them estimates trunk age!'
-                })}
-              />
-            ))}
-            <circle cx="50" cy="50" r="6" fill="#451a03" />
-          </svg>
-        )
-      }
-    ];
+  function PlantVarietyMorpher({
+    selectedGroup = 'herbs'
+  }) {
+    const curGroup = PLANT_DATA[selectedGroup] || PLANT_DATA.herbs;
 
     return (
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '1.25rem', 
-        width: '100%', 
-        padding: '1.5rem', 
-        background: 'linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%)', 
-        backdropFilter: 'blur(16px)', 
-        borderRadius: '20px', 
-        border: '1.5px solid rgba(167, 243, 208, 0.85)', 
-        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.35)' 
+      <div id="act24-interactive-explorer" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.05rem',
+        width: '100%',
+        minHeight: '100%',
+        padding: '1.3rem 1.5rem',
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.99) 0%, rgba(240, 253, 244, 0.97) 100%)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: '20px',
+        border: '1.5px solid rgba(167, 243, 208, 0.95)',
+        boxShadow: '0 14px 36px rgba(0, 0, 0, 0.15)',
+        position: 'relative',
+        justifyContent: 'center'
       }}>
-        <div style={{ borderBottom: '1.5px solid rgba(167, 243, 208, 0.85)', paddingBottom: '0.65rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.9rem', fontWeight: '800', color: '#047857', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            🔬 Plant Growth Form Morpher
-          </span>
-          <span style={{ fontSize: '12px', color: '#065f46', fontWeight: '700' }}>Tap rings/spots to magnifying cellular details!</span>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 100px', gap: '1rem', alignItems: 'center' }}>
-          <div style={{ padding: '0.85rem 1rem', borderRadius: '14px', background: stages[stage].bg, border: `1.5px solid ${stages[stage].color}44`, minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '0 2px 8px rgba(6, 78, 59, 0.05)' }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: stages[stage].color, fontSize: '1.15rem', fontWeight: '800' }}>
-              {stages[stage].title}
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '14.5px', color: '#064e3b', lineHeight: '1.5', fontWeight: '700' }}>
-              <span><b>Average Height:</b> {stages[stage].height}</span>
-              <span><b>Stem Character:</b> {stages[stage].stem}</span>
-              <span><b>NCERT Examples:</b> <i style={{ color: '#047857' }}>{stages[stage].examples}</i></span>
+        {/* EXPLORE & LEARN AREA (LARGE HD PLANT VISUAL FOCUS) */}
+        <div style={{
+          background: curGroup.bg,
+          border: `1.5px solid ${curGroup.color}44`,
+          borderRadius: '16px',
+          padding: '1.15rem 1.25rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.95rem',
+          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.04)'
+        }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem', borderBottom: '1.5px solid rgba(0,0,0,0.06)', paddingBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1.25rem' }}>🔍</span>
+              <strong style={{ fontSize: '1.18rem', color: curGroup.color, fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                EXPLORE &amp; LEARN: {curGroup.name}
+              </strong>
             </div>
+            <span style={{ fontSize: '0.9rem', color: '#065f46', fontWeight: '800' }}>
+              Observe the key features of {curGroup.name.toLowerCase()}.
+            </span>
           </div>
-          {/* Realistic View */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 4px 12px rgba(6, 78, 59, 0.08)', overflow: 'hidden' }}>
-              <img src={stages[stage].imgSrc} alt={stages[stage].title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
-            </div>
-            <span style={{ fontSize: '10px', color: '#047857', fontWeight: '800' }}>Realistic View</span>
-          </div>
-        </div>
 
-        {/* Morph Slider */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: '#ffffff', padding: '0.85rem 1.25rem', borderRadius: '14px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)' }}>
-          <input 
-            type="range" 
-            min="0" 
-            max="2" 
-            value={stage} 
-            onChange={(e) => { setStage(parseInt(e.target.value)); setActiveHotspot(null); }} 
-            style={{ width: '100%', accentColor: stages[stage].color, cursor: 'pointer', height: '6px', borderRadius: '3px' }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '800', color: '#064e3b' }}>
-            <span style={{ color: stage === 0 ? '#047857' : 'inherit', transition: 'color 0.2s' }}>Herb</span>
-            <span style={{ color: stage === 1 ? '#d97706' : 'inherit', transition: 'color 0.2s' }}>Shrub</span>
-            <span style={{ color: stage === 2 ? '#1e3a8a' : 'inherit', transition: 'color 0.2s' }}>Tree</span>
-          </div>
-        </div>
-
-        {/* Hotspot details panel */}
-        {activeHotspot ? (
+          {/* Plant Image (Fills Entire Box Area Edge-to-Edge, Full Original Image Visible, No Empty Side Space) */}
           <div style={{
-            background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)',
-            borderLeft: '4px solid #eab308',
-            border: '1.5px solid #fde047',
-            borderLeftWidth: '4px',
-            borderRadius: '10px',
-            padding: '0.85rem 1.1rem',
-            fontSize: '13.5px',
-            lineHeight: '1.55',
-            boxShadow: '0 2px 8px rgba(234, 179, 8, 0.15)',
-            animation: 'fadeIn 0.25s ease-out'
-          }}>
-            <strong style={{ color: '#854d0e', display: 'block', marginBottom: '0.25rem', fontWeight: '800' }}>{activeHotspot.title}</strong>
-            <p style={{ margin: 0, color: '#713f12', whiteSpace: 'pre-line', fontWeight: '700' }}>{activeHotspot.text}</p>
-          </div>
-        ) : (
-          <div style={{
-            background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)',
-            borderLeft: '4px solid #eab308',
-            border: '1.5px solid #fde047',
-            borderLeftWidth: '4px',
-            borderRadius: '10px',
-            padding: '0.85rem 1.1rem',
-            fontSize: '13.5px',
-            color: '#713f12',
-            fontWeight: '700',
-            textAlign: 'center',
+            position: 'relative',
+            borderRadius: '14px',
+            overflow: 'hidden',
+            border: `2px solid ${curGroup.color}44`,
+            boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
+            width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            boxShadow: '0 2px 8px rgba(234, 179, 8, 0.15)'
+            lineHeight: 0,
+            background: '#ffffff'
           }}>
-            <span>🔍</span>
-            <span><b>Directions:</b> Tap the glowing rings or points in the <b>Cellular Anatomy</b> view above to inspect growth details!</span>
+            <img
+              src={curGroup.imgSrc}
+              alt={curGroup.imgAlt}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxHeight: '480px',
+                objectFit: 'contain',
+                display: 'block',
+                userSelect: 'none',
+                borderRadius: '12px'
+              }}
+            />
           </div>
-        )}
-
-        {/* Climbers vs Creepers comparative panel (Upgraded for high visual visibility & interactive 3D flips) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', borderTop: '1.5px solid rgba(167, 243, 208, 0.85)', paddingTop: '1.25rem' }}>
-          
-          {/* Creeper Card Flip Container */}
-          <div className="flip-card-container" onClick={() => setCreeperFlipped(f => !f)}>
-            <div className={`flip-card-inner ${creeperFlipped ? 'flipped' : ''}`}>
-              
-              {/* Front Side: Visual */}
-              <div className="flip-card-front" style={{ border: '1.5px solid rgba(245, 158, 11, 0.5)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderRadius: '14px' }}>
-                <img src={creeperImg} alt="Creeper" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍉</span>
-                    <strong style={{ fontSize: '15px' }}>Creepers (Spread on Ground)</strong>
-                  </div>
-                  <span style={{ fontSize: '11px', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700' }}>👉 Tap to read details</span>
-                </div>
-              </div>
-
-              {/* Back Side: Details */}
-              <div className="flip-card-back" style={{ background: '#ffffff', border: '1.5px solid rgba(245, 158, 11, 0.45)', borderRadius: '14px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem', boxShadow: '0 4px 14px rgba(0,0,0,0.08)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(245, 158, 11, 0.2)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍉</span>
-                    <strong style={{ fontSize: '15px', color: '#b45309', fontWeight: '800' }}>Creepers (Spread on Ground)</strong>
-                  </div>
-                  <span style={{ fontSize: '10px', color: '#854d0e', textTransform: 'uppercase', fontWeight: '700' }}>Tap to view image</span>
-                </div>
-                <div style={{ margin: 0, fontSize: '13.5px', lineHeight: '1.55', color: '#064e3b', fontWeight: '700', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <span>🌱 <b>Growth Habit:</b> They creep horizontally along the ground and spread out on the surface of the soil.</span>
-                  <span>⚠️ <b>Stem Weakness:</b> Their stems are so thin and fragile that they <b>cannot grow vertically</b> at all, even with external supports.</span>
-                  <span>🍉 <b>Fruits:</b> Frequently produce large, heavy fruits (like Watermelon or Pumpkin) that must rest on the ground.</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Climber Card Flip Container */}
-          <div className="flip-card-container" onClick={() => setClimberFlipped(f => !f)}>
-            <div className={`flip-card-inner ${climberFlipped ? 'flipped' : ''}`}>
-              
-              {/* Front Side: Visual */}
-              <div className="flip-card-front" style={{ border: '1.5px solid rgba(2, 132, 199, 0.5)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderRadius: '14px' }}>
-                <img src={climberImg} alt="Climber" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍇</span>
-                    <strong style={{ fontSize: '15px' }}>Climbers (Climb Up Support)</strong>
-                  </div>
-                  <span style={{ fontSize: '11px', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700' }}>👉 Tap to read details</span>
-                </div>
-              </div>
-
-              {/* Back Side: Details */}
-              <div className="flip-card-back" style={{ background: '#ffffff', border: '1.5px solid rgba(2, 132, 199, 0.45)', borderRadius: '14px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem', boxShadow: '0 4px 14px rgba(0,0,0,0.08)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(2, 132, 199, 0.2)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍇</span>
-                    <strong style={{ fontSize: '15px', color: '#0369a1', fontWeight: '800' }}>Climbers (Climb Up Support)</strong>
-                  </div>
-                  <span style={{ fontSize: '10px', color: '#0284c7', textTransform: 'uppercase', fontWeight: '700' }}>Tap to view image</span>
-                </div>
-                <div style={{ margin: 0, fontSize: '13.5px', lineHeight: '1.55', color: '#064e3b', fontWeight: '700', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <span>🎋 <b>Growth Habit:</b> They grow vertically by clasping onto nearby supports (sticks, trees, or walls).</span>
-                  <span>🔗 <b>Adaptation:</b> They develop special climbing organs called coiled <b>Tendrils</b> or sticky roots to latch and pull themselves up.</span>
-                  <span>☀️ <b>Goal:</b> Climbing allows their leaves to reach higher areas with direct sunlight (e.g., Pea, Grapevine, Money Plant).</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
         </div>
       </div>
     );
@@ -4920,7 +4999,7 @@ export default function ChapterLearningLab({
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '0.9rem',
+                gap: '0.85rem',
                 margin: '0 0 1rem 0',
                 flex: 1
               }}>
@@ -4928,64 +5007,180 @@ export default function ChapterLearningLab({
                   let badgeColor = '#065f46';
                   let badgeBg = '#dcfce7';
                   let badgeBorder = '#86efac';
+                  let gKey = 'herbs';
+                  let gImg = tulsiImg;
                   
                   if (b.includes('Shrubs')) {
                     badgeColor = '#9a3412';
                     badgeBg = '#ffedd5';
                     badgeBorder = '#fed7aa';
+                    gKey = 'shrubs';
+                    gImg = roseImg;
                   } else if (b.includes('Trees')) {
                     badgeColor = '#15803d';
                     badgeBg = '#dcfce7';
                     badgeBorder = '#86efac';
+                    gKey = 'trees';
+                    gImg = banyanImg;
                   } else if (b.includes('Creepers')) {
                     badgeColor = '#0369a1';
                     badgeBg = '#e0f2fe';
                     badgeBorder = '#7dd3fc';
+                    gKey = 'creepers';
+                    gImg = creeperImg;
                   } else if (b.includes('Climbers')) {
                     badgeColor = '#7c2d12';
                     badgeBg = '#fef3c7';
                     badgeBorder = '#fde68a';
+                    gKey = 'climbers';
+                    gImg = climberImg;
                   }
 
+                  const isSelected = true;
                   const parts = b.split(': ');
+                  const groupData = PLANT_DATA[gKey] || PLANT_DATA.herbs;
+
                   return (
-                    <div key={i} style={{
-                      background: '#ffffff',
-                      border: '1.5px solid rgba(167, 243, 208, 0.95)',
-                      borderRadius: '14px',
-                      padding: '1.1rem 1.25rem',
-                      boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.4rem',
-                      flex: 1
-                    }}>
-                      {parts.length > 1 ? (
-                        <>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <React.Fragment key={i}>
+                      <div
+                        style={{
+                          background: 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)',
+                          border: `2.5px solid ${badgeBorder}`,
+                          borderRadius: '14px',
+                          padding: '0.95rem 1.15rem',
+                          boxShadow: '0 8px 24px rgba(6, 95, 70, 0.16)',
+                          display: 'flex',
+                          gap: '0.85rem',
+                          alignItems: 'center',
+                          transform: 'translateY(-2px) scale(1.01)',
+                          transition: 'all 0.2s ease',
+                          position: 'relative'
+                        }}
+                      >
+                        {/* Thumbnail Image */}
+                        <div style={{
+                          width: '54px',
+                          height: '54px',
+                          borderRadius: '10px',
+                          overflow: 'hidden',
+                          border: `1.5px solid ${badgeBorder}`,
+                          flexShrink: 0,
+                          background: '#ffffff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
+                        }}>
+                          <img
+                            src={gImg}
+                            alt={parts[0] || 'Plant'}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        </div>
+
+                        {/* Content Area */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.3rem' }}>
                             <span style={{
                               background: badgeBg,
                               color: badgeColor,
                               border: `1.5px solid ${badgeBorder}`,
-                              padding: '0.22rem 0.75rem',
+                              padding: '0.18rem 0.65rem',
                               borderRadius: '8px',
                               fontWeight: '900',
-                              fontSize: '1.08rem',
+                              fontSize: '1rem',
                               letterSpacing: '0.01em'
                             }}>
                               {parts[0]}
                             </span>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {isSelected && (
+                                <span style={{
+                                  fontSize: '0.72rem',
+                                  color: '#047857',
+                                  fontWeight: '800',
+                                  textTransform: 'uppercase'
+                                }}>
+                                  Active 🔍
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <div style={{ color: '#1e293b', fontSize: '1.05rem', lineHeight: '1.58', fontWeight: '600', paddingLeft: '0.15rem' }}>
-                            {parts[1]}
-                          </div>
-                        </>
-                      ) : (
-                        <div style={{ color: '#0f172a', fontSize: '1.08rem', lineHeight: '1.58', fontWeight: '700' }}>
-                          {b}
+
+                          {parts.length > 1 ? (
+                            <div style={{ color: '#1e293b', fontSize: '0.98rem', lineHeight: '1.5', fontWeight: '600', paddingLeft: '0.1rem' }}>
+                              {parts[1]}
+                            </div>
+                          ) : (
+                            <div style={{ color: '#0f172a', fontSize: '1rem', lineHeight: '1.5', fontWeight: '700' }}>
+                              {b}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
+                      </div>
+
+                      {/* Definition & Examples Row */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: '0.85rem' }}>
+                        <div style={{
+                          background: '#ffffff',
+                          border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                          borderRadius: '12px',
+                          padding: '0.75rem 1rem',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+                        }}>
+                          <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: '900', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.04em' }}>
+                            Textbook Definition
+                          </div>
+                          <div style={{ color: '#0f172a', fontWeight: '800', fontSize: '1.08rem', lineHeight: '1.45' }}>
+                            “{groupData.definition}”
+                          </div>
+                        </div>
+
+                        <div style={{
+                          background: '#ffffff',
+                          border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                          borderRadius: '12px',
+                          padding: '0.75rem 1rem',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+                        }}>
+                          <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: '900', textTransform: 'uppercase', marginBottom: '2px', letterSpacing: '0.04em' }}>
+                            Examples
+                          </div>
+                          <div style={{ color: '#0f172a', fontWeight: '700', fontSize: '1.02rem', lineHeight: '1.4' }}>
+                            {groupData.examples}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 3 Key Feature Badges */}
+                      <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.88rem', fontWeight: '900', color: '#065f46', textTransform: 'uppercase', marginRight: '4px' }}>
+                          Key Features:
+                        </span>
+                        {groupData.keyFeatures.map((chip, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              padding: '0.35rem 0.8rem',
+                              borderRadius: '10px',
+                              fontSize: '0.92rem',
+                              fontWeight: '800',
+                              background: '#ffffff',
+                              color: '#065f46',
+                              border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                              boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '5px'
+                            }}
+                          >
+                            <span>🌿</span>
+                            <span>{chip.label}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </React.Fragment>
                   );
                 })}
               </div>
@@ -5314,7 +5509,9 @@ export default function ChapterLearningLab({
               </div>
             )
           ) : lessonId === 'plant_variety_concept' ? (
-            <PlantVarietyMorpher />
+            <PlantVarietyMorpher
+              selectedGroup={['herbs', 'shrubs', 'trees', 'creepers', 'climbers'][currentSlideIndex] || 'herbs'}
+            />
           ) : lessonId === 'venation_roots_concept' ? (
             <VenationRootsCorrelationExplorer />
           ) : lessonId === 'cotyledons_concept' ? (
