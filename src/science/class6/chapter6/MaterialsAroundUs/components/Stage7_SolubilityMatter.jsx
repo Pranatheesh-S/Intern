@@ -1,13 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { Beaker, Weight } from 'lucide-react';
 
+import sugarVid from '../../../../../assets/sugar_soluble.mp4';
+import saltVid from '../../../../../assets/salt_soluble.mp4';
+import chalkVid from '../../../../../assets/chalk_insoluble.mp4';
+import sandVid from '../../../../../assets/sand_insoluble.mp4';
+import sawdustVid from '../../../../../assets/sawdust_insoluble.mp4';
+
+const videoMap = {
+  sugar: sugarVid,
+  salt: saltVid,
+  chalk: chalkVid,
+  sand: sandVid,
+  sawdust: sawdustVid
+};
+
 export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'both' }) {
   // Solubility state
   const [selectedSubstance, setSelectedSubstance] = useState(null);
-  const [stirState, setStirState] = useState('idle'); // 'idle', 'stirring', 'resolved'
+  const [stirState, setStirState] = useState('idle'); // 'idle', 'playing', 'resolved'
   const [solubilityResults, setSolubilityResults] = useState({});
+  const videoRef = useRef(null);
 
   // ORS state
   const [orsIngredients, setOrsIngredients] = useState({ sugar: 0, salt: 0 });
@@ -33,15 +48,11 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
     { id: 'pebbles', name: 'Cup C (Pebbles)', mass: '380g' }
   ];
 
-  const handleStir = () => {
+  const handleVideoEnd = () => {
     if (!selectedSubstance) return;
-    setStirState('stirring');
-
-    setTimeout(() => {
-      setStirState('resolved');
-      setSolubilityResults(prev => ({ ...prev, [selectedSubstance.id]: selectedSubstance.correct }));
-      addXp(10);
-    }, 1500);
+    setStirState('resolved');
+    setSolubilityResults(prev => ({ ...prev, [selectedSubstance.id]: selectedSubstance.correct }));
+    addXp(10);
   };
 
   const handleMixOrs = () => {
@@ -91,7 +102,14 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
               {substances.map((sub) => (
                 <button
                   key={sub.id}
-                  onClick={() => { setSelectedSubstance(sub); setStirState('idle'); }}
+                  onClick={() => { 
+                    setSelectedSubstance(sub); 
+                    setStirState('playing'); 
+                    if (videoRef.current) {
+                      videoRef.current.load();
+                      videoRef.current.play().catch(e => console.log('Autoplay prevented:', e));
+                    }
+                  }}
                   className={selectedSubstance?.id === sub.id ? 'outline active' : 'outline'}
                   style={{ padding: '0.5rem 0.8rem', fontSize: '0.9rem' }}
                 >
@@ -100,48 +118,33 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
               ))}
             </div>
 
-            {/* Stirring beaker simulation */}
+            {/* Stirring beaker simulation / Video */}
             <div 
               style={{ 
-                height: '140px', 
+                height: '200px', 
                 background: 'var(--lesson-text)', 
                 borderRadius: '12px', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                position: 'relative' 
+                position: 'relative',
+                overflow: 'hidden'
               }}
             >
               {selectedSubstance ? (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', width: '100%', height: '100%', position: 'relative' }}>
-                  <svg width="60" height="80" viewBox="0 0 60 80" style={{ marginTop: '15px' }}>
-                    {/* Beaker */}
-                    <path d="M10,10 L10,70 Q10,75 15,75 L45,75 Q50,75 50,70 L50,10" fill="none" stroke="white" strokeWidth="3" />
-                    {/* Water liquid */}
-                    <rect 
-                      x="12" y="35" width="36" height="38" rx="2" 
-                      fill={stirState === 'resolved' && selectedSubstance.correct === 'Insoluble' ? selectedSubstance.effectColor : 'rgba(56, 189, 248, 0.4)'} 
-                      style={{ transition: 'fill 0.5s' }}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', height: '100%', position: 'relative' }}>
+                  {videoMap[selectedSubstance.id] ? (
+                    <video 
+                      ref={videoRef}
+                      src={videoMap[selectedSubstance.id]} 
+                      autoPlay 
+                      muted 
+                      playsInline
+                      onEnded={handleVideoEnd}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
                     />
-                    {/* Stirring spoon */}
-                    {stirState === 'stirring' && (
-                      <motion.line 
-                        x1="30" y1="15" x2="30" y2="55" 
-                        stroke="var(--lesson-border)" strokeWidth="4" 
-                        animate={{ x: [20, 40, 20], rotate: [0, 10, -10, 0] }}
-                        transition={{ repeat: Infinity, duration: 0.5 }}
-                      />
-                    )}
-                  </svg>
-
-                  {stirState === 'idle' && (
-                    <button 
-                      onClick={handleStir} 
-                      className="primary" 
-                      style={{ position: 'absolute', bottom: '10px', padding: '0.4rem 0.9rem', fontSize: '0.9rem' }}
-                    >
-                      Stir Solution
-                    </button>
+                  ) : (
+                    <div style={{ color: 'white', marginTop: '2rem' }}>Video not found</div>
                   )}
 
                   {stirState === 'resolved' && (
