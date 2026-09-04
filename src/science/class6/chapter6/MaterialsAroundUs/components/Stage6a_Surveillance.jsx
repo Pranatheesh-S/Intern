@@ -87,7 +87,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       <div style={{ display: 'flex', gap: '1.25rem', flex: 1, minHeight: 0 }}>
         
         {/* Main Surveillance Scene (2x2 Grid of CSS Cards) */}
-        <div style={{ flex: 1.8, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '12px' }}>
+        <div style={{ flex: '0 0 70%', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '12px' }}>
           
           {spots.map((spot, index) => {
             const isSelected = selectedSpot?.id === spot.id;
@@ -165,9 +165,9 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
         {/* Observation Console */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           
-          <div style={{ background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <h4 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', fontSize: '1.3rem' }}>
-              <Camera size={22} color="var(--accent)" /> Observation Console
+          <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <h4 style={{ margin: '0 0 1rem 0', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.1rem' }}>
+              <Camera size={20} color="#A64B27" /> Observation Console
             </h4>
             
             <AnimatePresence mode="wait">
@@ -180,33 +180,33 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                   style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '1.05rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Target Location</div>
-                    <div style={{ fontSize: '1.5rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>{selectedSpot.name}</div>
+                    <div style={{ color: 'var(--lesson-muted)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Target Location</div>
+                    <div style={{ fontSize: '1.2rem', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>{selectedSpot.name}</div>
                   </div>
 
-                  <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '1.25rem', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '1.05rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Visibility</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.35rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                  <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: '1rem', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ color: 'var(--lesson-muted)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Visibility</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--lesson-text)' }}>
                       {selectedSpot.icon} {selectedSpot.view}
                     </div>
-                    <div style={{ color: 'var(--text-secondary)', fontSize: '1.15rem', lineHeight: '1.5' }}>
+                    <div style={{ color: 'var(--lesson-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
                       {selectedSpot.desc}
                     </div>
                   </div>
 
-                  <div style={{ background: '#f0fdfa', borderRadius: '12px', padding: '1.25rem', border: '1px solid #ccfbf1', marginTop: 'auto' }}>
-                    <div style={{ color: 'var(--heading-section)', fontSize: '1.05rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
-                    <div style={{ color: '#115e59', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: 'bold' }}>
+                  <div style={{ background: 'var(--lesson-success-bg)', borderRadius: '12px', padding: '1rem', border: '1px solid var(--lesson-success-border)', marginTop: 'auto' }}>
+                    <div style={{ color: 'var(--heading-section)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
+                    <div style={{ color: '#115e59', fontSize: '1rem', lineHeight: '1.5', fontWeight: 'bold' }}>
                       {selectedSpot.conclusion}
                     </div>
                   </div>
                 </motion.div>
               ) : (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: 'var(--lesson-muted)', textAlign: 'center', border: '2px dashed var(--lesson-border)', borderRadius: '12px', padding: '2rem' }}>
-                  <div style={{ background: 'var(--lesson-surface)', padding: '15px', borderRadius: '50%' }}>
+                  <div style={{ background: '#FFFFFF', padding: '15px', borderRadius: '50%' }}>
                     <Camera size={40} color="var(--lesson-border)" />
                   </div>
-                  <span style={{ fontSize: '1.15rem' }}>Select a location on the left to begin observation.</span>
+                  <span style={{ fontSize: '0.95rem' }}>Select a location on the left to begin observation.</span>
                 </div>
               )}
             </AnimatePresence>
@@ -219,17 +219,17 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       </div>
 
       {/* Footer Progress */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
-          <div style={{ background: '#fefce8', padding: '8px', borderRadius: '50%' }}>
-            <Target size={22} />
+      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#A64B27' }}>
+          <div style={{ background: 'var(--lesson-warning-bg)', padding: '8px', borderRadius: '50%' }}>
+            <Target size={20} />
           </div>
-          <span style={{ color: 'var(--text-secondary)', fontSize: '1.25rem' }}>Click on each location (1-4) to check if the suspect is visible through the material.</span>
+          <span style={{ color: 'var(--lesson-secondary)', fontSize: '1rem' }}>Click on each location (1-4) to check if the suspect is visible through the material.</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ fontWeight: 'bold', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--surface)', padding: '8px 16px', borderRadius: '20px', border: '1px solid var(--border)', fontSize: '1.1rem' }}>
-            <img src="/images/chief_detective_blake.png" alt="Hat" style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
-            Observations: <span style={{ color: isComplete ? '#16a34a' : 'var(--text-heading)', fontSize: '1.25rem' }}>{obsCount} / 4</span>
+          <div style={{ fontWeight: 'bold', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 16px', borderRadius: '20px', border: '1px solid var(--lesson-border)' }}>
+            <img src="/images/chief_detective_blake.png" alt="Hat" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
+            Observations: <span style={{ color: isComplete ? '#A64B27' : 'var(--lesson-primary)', fontSize: '1.1rem' }}>{obsCount} / 4</span>
           </div>
         </div>
       </div>

@@ -10,9 +10,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     matter: {
       id: 'matter',
       title: 'What is Matter?',
-      color: 'var(--lesson-success)',
+      color: '#A64B27',
       bg: 'var(--lesson-success-bg)',
-      icon: <Box size={24} color="var(--lesson-success)" />,
+      icon: <Box size={24} color="#A64B27" />,
       desc: 'Anything that occupies space (volume) and has mass is called matter.',
       prefix: 'Matter',
       summary: 'is everything around us that has mass and occupies space.',
@@ -85,10 +85,10 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', overflowY: 'auto', paddingRight: '0.5rem' }}>
       
       {/* Top Header */}
-      <div style={{ background: 'var(--lesson-surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', gap: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0, background: 'var(--lesson-surface)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', gap: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0, background: '#FFFFFF', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Book size={40} color="var(--lesson-primary)" />
-          <div style={{ position: 'absolute', bottom: -5, right: -5, background: 'var(--lesson-success)', borderRadius: '50%', padding: '4px', border: '3px solid white' }}>
+          <div style={{ position: 'absolute', bottom: -5, right: -5, background: '#A64B27', borderRadius: '50%', padding: '4px', border: '3px solid white' }}>
             <Compass size={20} color="white" />
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       <div style={{ display: 'flex', gap: '1rem', flex: 1, minHeight: 0 }}>
         
         {/* Left Map Panel */}
-        <div style={{ flex: 2, background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 2, background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           
           {/* Navigation Buttons */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center', marginBottom: '1.2rem', zIndex: 10 }}>
@@ -242,8 +242,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
 
           <div style={{ padding: '1.5rem', background: 'var(--lesson-success-bg)', borderTop: '1px solid var(--lesson-success-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ color: 'var(--lesson-accent)', fontWeight: 'bold', fontSize: '1.1rem' }}>Great job, Detective!</div>
-              <div style={{ color: 'var(--lesson-accent)', fontSize: '0.9rem' }}>You&apos;ve learned so much today!</div>
+              <div style={{ color: '#A64B27', fontWeight: 'bold', fontSize: '1.1rem' }}>Great job, Detective!</div>
+              <div style={{ color: '#A64B27', fontSize: '0.9rem' }}>You&apos;ve learned so much today!</div>
             </div>
             <Trophy size={40} color="var(--lesson-warning)" />
           </div>
