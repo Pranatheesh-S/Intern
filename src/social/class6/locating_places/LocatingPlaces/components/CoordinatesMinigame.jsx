@@ -17,8 +17,16 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
   const [modalState, setModalState] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [options, setOptions] = useState([]);
+  const [guessFeedback, setGuessFeedback] = useState(null);
 
   const currentCity = cities[currentCityIndex];
+
+  React.useEffect(() => {
+    const others = cities.filter(c => c.name !== currentCity.name).sort(() => 0.5 - Math.random()).slice(0, 3);
+    const allOptions = [currentCity, ...others].sort(() => 0.5 - Math.random());
+    setOptions(allOptions);
+  }, [currentCityIndex]);
 
   const getTop = (lat) => `${((90 - lat) / 180) * 100}%`;
   const getLeft = (lon) => `${((lon + 180) / 360) * 100}%`;
@@ -33,8 +41,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
 
   const handleConfirm = () => {
     if (latDiff <= 1.5 && lonDiff <= 1.5) {
-      setModalState('correct');
-      setShowCelebration(true);
+      setModalState('question');
     } else {
       setModalState('incorrect');
     }
@@ -43,6 +50,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
   const handleNextCity = () => {
     setModalState(null);
     setShowCelebration(false);
+    setGuessFeedback(null);
     if (currentCityIndex < cities.length - 1) {
       setCurrentCityIndex(c => c + 1);
       setUserLat(0);
@@ -126,15 +134,20 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
           <img src={worldMapUrl} alt="World Map" className="coords-mini-map-image" style={{ pointerEvents: 'none', userSelect: 'none', WebkitUserSelect: 'none' }} draggable="false" />
           
           {/* Axis Labels */}
-          {[-60, -30, 0, 30, 60].map(lat => (
+          {[-60, -45, -30, -15, 0, 15, 30, 45, 60].map(lat => (
             <div key={`lat-${lat}`} className="map-axis-label lat-label" style={{ top: getTop(lat) }}>
               {lat === 0 ? '0°' : `${Math.abs(lat)}°${lat > 0 ? 'N' : 'S'}`}
             </div>
           ))}
-          {[-150, -90, -30, 30, 90, 150].map(lon => (
-            <div key={`lon-${lon}`} className="map-axis-label lon-label" style={{ left: getLeft(lon) }}>
-              {lon === 0 ? '0°' : `${Math.abs(lon)}°${lon > 0 ? 'E' : 'W'}`}
-            </div>
+          {[-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150].map(lon => (
+            <React.Fragment key={`lon-${lon}`}>
+              <div className="map-axis-label lon-label-bottom" style={{ left: getLeft(lon) }}>
+                {lon === 0 ? '0°' : `${Math.abs(lon)}°${lon > 0 ? 'E' : 'W'}`}
+              </div>
+              <div className="map-axis-label lon-label-top" style={{ left: getLeft(lon) }}>
+                {lon === 0 ? '0°' : `${Math.abs(lon)}°${lon > 0 ? 'E' : 'W'}`}
+              </div>
+            </React.Fragment>
           ))}
 
           {/* Static Reference Lines */}
@@ -168,11 +181,11 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
 
         <div className="coords-mini-city-card">
           <div className="city-card-top">
-            <h2>Find {currentCity.name} <span className="city-flag">{currentCity.flag}</span></h2>
+            <h2>Move to Coordinates</h2>
             <div className="city-counter">{currentCityIndex + 1} / {cities.length}</div>
           </div>
-          <p className="city-target-desc">
-            Target: {Math.abs(currentCity.lat)}&deg;{currentCity.lat >= 0 ? 'N' : 'S'}, {Math.abs(currentCity.lon)}&deg;{currentCity.lon >= 0 ? 'E' : 'W'} ({currentCity.desc})
+          <p className="city-target-desc" style={{ fontSize: '18px', padding: '10px 0' }}>
+            Target: <strong>{Math.abs(currentCity.lat)}&deg;{currentCity.lat >= 0 ? 'N' : 'S'}, {Math.abs(currentCity.lon)}&deg;{currentCity.lon >= 0 ? 'E' : 'W'}</strong>
           </p>
         </div>
 
@@ -227,17 +240,53 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
       {modalState && (
         <div className="coords-mini-modal-bg">
           <div className="coords-mini-modal">
-            {modalState === 'correct' ? (
+            {modalState === 'question' ? (
+              <>
+                <h2>Which city is this?</h2>
+                <div style={{display: 'flex', flexDirection: 'column', gap: '12px', margin: '24px 0'}}>
+                  {options.map(opt => (
+                    <button 
+                      key={opt.name}
+                      style={{
+                        background: '#FFF9F0', border: '2px solid #F2DFBC', color: '#78350F', 
+                        padding: '16px', borderRadius: '12px', cursor: 'pointer', 
+                        fontSize: '16px', fontWeight: 'bold', transition: 'all 0.2s',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                      }}
+                      onMouseOver={(e) => { e.currentTarget.style.background = '#F2DFBC'; }}
+                      onMouseOut={(e) => { e.currentTarget.style.background = '#FFF9F0'; }}
+                      onClick={() => {
+                        if(opt.name === currentCity.name) {
+                          setModalState('correct');
+                          setShowCelebration(true);
+                          setGuessFeedback(null);
+                        } else {
+                          setGuessFeedback(`Not ${opt.name}. Try again!`);
+                        }
+                      }}
+                    >
+                      <span>{opt.name}</span>
+                      <span>{opt.flag}</span>
+                    </button>
+                  ))}
+                </div>
+                {guessFeedback && <div style={{color: '#ef4444', fontWeight: 'bold', fontSize: '15px'}}>{guessFeedback}</div>}
+              </>
+            ) : modalState === 'correct' ? (
               <>
                 <div className="modal-icon-success">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
                 <h2>Correct!</h2>
+                <p style={{fontSize: '18px', fontWeight: '800', color: '#16A34A', marginBottom: '16px'}}>
+                  Yes, the city is {currentCity.name}! {currentCity.flag}
+                </p>
                 <div className="modal-fun-fact">
-                  <strong>Fun Fact about {currentCity.name}:</strong> {currentCity.funFact}
+                  <strong>Fun Fact:</strong> {currentCity.funFact}
                 </div>
-                <p>You found {currentCity.name}. {currentCityIndex < cities.length - 1 ? "Let's find the next one!" : "Mission Accomplished!"}</p>
-                <button className="modal-btn-success" onClick={handleNextCity}>Continue</button>
+                <button className="modal-btn-success" onClick={handleNextCity}>
+                  {currentCityIndex < cities.length - 1 ? "Next City" : "Finish"}
+                </button>
               </>
             ) : (
               <>
@@ -245,7 +294,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
                 <h2>Not quite!</h2>
-                <p>{currentCity.name} is at {Math.abs(currentCity.lat)}&deg;{currentCity.lat >= 0 ? 'N' : 'S'}, {Math.abs(currentCity.lon)}&deg;{currentCity.lon >= 0 ? 'E' : 'W'}. Adjust the sliders closer.</p>
+                <p>You haven't reached the target coordinates yet. Adjust the sliders closer to {Math.abs(currentCity.lat)}&deg;{currentCity.lat >= 0 ? 'N' : 'S'}, {Math.abs(currentCity.lon)}&deg;{currentCity.lon >= 0 ? 'E' : 'W'}.</p>
                 <button className="modal-btn-retry" onClick={() => setModalState(null)}>Try Again</button>
               </>
             )}

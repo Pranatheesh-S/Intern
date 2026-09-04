@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, FastForward, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function ClockActivity({ onNext }) {
-  const [clockAddHours, setClockAddHours] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  // Time state
+  const [rotations, setRotations] = useState(0);
+  const [extraHours, setExtraHours] = useState(0); // 0 to 11
   
+  // Wizard State
+  const [wizardStep, setWizardStep] = useState(0); 
+  const [q1Answer, setQ1Answer] = useState('');
+  const [q2Answer, setQ2Answer] = useState('');
+  const [finalAnswer, setFinalAnswer] = useState(null);
+  
+  const [errorMsg, setErrorMsg] = useState('');
+
+  // Clock animation state
   const [currentSeconds, setCurrentSeconds] = useState(0);
 
   useEffect(() => {
@@ -20,371 +30,410 @@ export default function ClockActivity({ onNext }) {
   }, []);
 
   const clockStartHour = 9;
-  const currentClockHour = ((clockStartHour + clockAddHours - 1) % 12) + 1;
+  const totalHoursAdded = (rotations * 12) + extraHours;
+  const currentClockHour = ((clockStartHour + totalHoursAdded - 1) % 12) + 1;
+  
+  // Continuous angle for smooth winding
+  const hourHandAngle = ((clockStartHour - 3) * 30) + (totalHoursAdded * 30);
+
+  const handleQ1Submit = () => {
+    if (parseInt(q1Answer) === 4) {
+      setErrorMsg(''); setWizardStep(2);
+    } else {
+      setErrorMsg('Not quite. 50 ÷ 12 = ?');
+    }
+  };
+
+  const handleQ2Submit = () => {
+    if (parseInt(q2Answer) === 2) {
+      setErrorMsg(''); setWizardStep(3);
+      setRotations(4); setExtraHours(2);
+    } else {
+      setErrorMsg('Try again. 50 - (4 × 12) = ?');
+    }
+  };
+
+  const handleFinalAnswer = (ans) => {
+    setFinalAnswer(ans);
+    if (ans === 11) {
+      setErrorMsg(''); setWizardStep(4);
+    } else {
+      setErrorMsg('Remember, we just need to add the 2 extra hours to the starting time (9).');
+    }
+  };
 
   return (
-    <div className="dark-coords-main-content" style={{ minHeight: '100vh', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-      {/* Visual Column */}
-      <div className="dark-coords-left" style={{ position: 'relative', overflow: 'hidden', padding: 0, display: 'flex', flexDirection: 'column', background: '#020617' }}>
-        
-        {/* Immersive Deep Space Background */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          background: 'radial-gradient(ellipse at center, #0B0F19 0%, #000000 100%)',
-          overflow: 'hidden'
-        }}>
-          {/* Intense Nebula Clouds */}
-          <div style={{
-            position: 'absolute', top: '-10%', left: '-10%', width: '120%', height: '120%',
-            background: 'radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 40%), radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%), radial-gradient(circle at 50% 10%, rgba(14, 165, 233, 0.1) 0%, transparent 40%)',
-            filter: 'blur(40px)', mixBlendMode: 'screen'
-          }} />
-          
-          {/* Parallax Star Layers */}
-          {[...Array(30)].map((_, i) => (
-             <div key={`star-sm-${i}`} style={{
-               position: 'absolute',
-               width: '1px', height: '1px', background: '#fff', borderRadius: '50%',
-               top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`,
-               opacity: Math.random() * 0.4 + 0.1
-             }} />
-          ))}
-          {[...Array(20)].map((_, i) => (
-             <div key={`star-md-${i}`} style={{
-               position: 'absolute',
-               width: '2px', height: '2px', background: Math.random() > 0.5 ? '#93c5fd' : '#fca5a5', borderRadius: '50%',
-               top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`,
-               opacity: Math.random() * 0.6 + 0.3,
-               boxShadow: '0 0 8px rgba(255,255,255,0.8)'
-             }} />
-          ))}
-          {[...Array(5)].map((_, i) => (
-             <div key={`star-lg-${i}`} style={{
-               position: 'absolute',
-               width: '3px', height: '3px', background: '#fff', borderRadius: '50%',
-               top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`,
-               opacity: 1,
-               boxShadow: '0 0 15px 2px rgba(255,255,255,1)'
-             }} />
-          ))}
-        </div>
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', overflow: 'hidden', display: 'flex', background: '#e2e8f0', fontFamily: 'system-ui, sans-serif' }}>
+      
+      {/* Realistic Wall Background */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(circle at 50% 30%, #f1f5f9 0%, #cbd5e1 100%)',
+        overflow: 'hidden', zIndex: 0
+      }}>
+        {/* Subtle wall texture */}
+        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.4, mixBlendMode: 'multiply' }}>
+          <filter id="wallNoise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter>
+          <rect width="100%" height="100%" filter="url(#wallNoise)"/>
+        </svg>
+      </div>
 
+      <div style={{ position: 'absolute', top: '40px', left: '40px', zIndex: 10 }}>
+         <div style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '2px', color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>
+           Activity 2 of 3
+         </div>
+         <h1 style={{ fontSize: '42px', fontWeight: '900', color: '#0f172a', margin: 0, textShadow: '0 2px 4px rgba(255,255,255,0.5)' }}>
+           The Clock Pattern
+         </h1>
+      </div>
+
+      {/* Left Area: Center the Clock */}
+      <div style={{ flex: 1, paddingRight: '450px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+        
+        {/* Photorealistic Classic Wall Clock */}
         <div style={{
-          flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '500px'
+          position: 'relative', width: '500px', height: '500px', borderRadius: '50%',
+          // Thick dark mahogany wood frame
+          background: 'linear-gradient(135deg, #451a03 0%, #78350f 50%, #270f01 100%)',
+          boxShadow: '0 30px 60px rgba(0,0,0,0.5), inset 0 4px 10px rgba(255,255,255,0.2), inset 0 -4px 10px rgba(0,0,0,0.8)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}>
-          {/* The Highly Realistic Premium Clock */}
+          {/* Inner brass rim */}
           <div style={{
-            position: 'relative',
-            width: '380px',
-            height: '380px',
-            borderRadius: '50%',
-            // Outer Brushed Metal Chamfer
-            background: 'linear-gradient(135deg, #e2e8f0 0%, #64748b 30%, #1e293b 70%, #94a3b8 100%)',
-            boxShadow: '0 50px 100px rgba(0,0,0,0.9), 0 0 0 1px #000',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            position: 'absolute', width: '430px', height: '430px', borderRadius: '50%',
+            background: 'linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #92400e 100%)',
+            boxShadow: 'inset 0 2px 5px rgba(255,255,255,0.5), 0 5px 15px rgba(0,0,0,0.8)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}>
-            {/* Inner Metallic Bezel Ring */}
+            
+            {/* Clock Face (Vintage Cream Paper) */}
             <div style={{
-              position: 'absolute',
-              width: '350px',
-              height: '350px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #0f172a 0%, #475569 50%, #0f172a 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: 'inset 0 2px 10px rgba(255,255,255,0.4), inset 0 -2px 10px rgba(0,0,0,0.8)'
+              position: 'absolute', width: '410px', height: '410px', borderRadius: '50%',
+              background: '#fffbeb', // warm cream
+              boxShadow: 'inset 0 15px 40px rgba(0,0,0,0.3)', // deep shadow inside the rim
+              overflow: 'hidden'
             }}>
               
-              {/* Dial (Face) */}
-              <div style={{
-                position: 'absolute',
-                width: '330px',
-                height: '330px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle at center, #1e293b 0%, #020617 100%)',
-                boxShadow: 'inset 0 15px 40px rgba(0,0,0,0.9)',
-                overflow: 'hidden'
-              }}>
+              {/* Paper Texture */}
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.08, mixBlendMode: 'multiply' }}>
+                <filter id="paperNoise"><feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="3" stitchTiles="stitch"/></filter>
+                <rect width="100%" height="100%" filter="url(#paperNoise)"/>
+              </svg>
+
+              {/* Ticks (Classic thin lines) */}
+              {[...Array(60)].map((_, i) => {
+                const isHour = i % 5 === 0; 
+                const angle = ((i - 15) * 6 * Math.PI) / 180;
+                const r = isHour ? 175 : 185;
+                const length = isHour ? 18 : 8;
+                const thickness = isHour ? 4 : 2;
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
+                return (
+                  <div key={`tick-${i}`} style={{
+                    position: 'absolute', left: '50%', top: '50%', width: `${length}px`, height: `${thickness}px`,
+                    background: '#1c1917', borderRadius: '2px',
+                    transform: `translate(calc(-50% + ${x - length/2}px), calc(-50% + ${y}px)) rotate(${i * 6}deg)`
+                  }} />
+                );
+              })}
+
+              {/* Numbers (Classic Serif Font) */}
+              {[...Array(12)].map((_, i) => {
+                const angle = ((i - 3) * 30 * Math.PI) / 180;
+                const rText = 135;
+                const xText = Math.cos(angle) * rText;
+                const yText = Math.sin(angle) * rText;
+                const hour = i === 0 ? 12 : i;
+                const isTarget = hour === currentClockHour;
+
+                return (
+                  <div key={i} style={{
+                    position: 'absolute', left: '50%', top: '50%',
+                    transform: `translate(calc(-50% + ${xText}px), calc(-50% + ${yText}px))`,
+                    fontWeight: 'bold', fontSize: '42px', fontFamily: '"Times New Roman", Times, serif',
+                    color: isTarget ? '#ea580c' : '#1c1917', // burnt orange for highlight
+                    textShadow: '0 1px 2px rgba(255,255,255,0.8)',
+                    zIndex: 2, transition: 'color 0.3s'
+                  }}>
+                    {hour}
+                  </div>
+                );
+              })}
+
+              {/* Realistic Hands Container with Global Drop Shadow */}
+              <div style={{ position: 'absolute', inset: 0, zIndex: 10, filter: 'drop-shadow(4px 8px 6px rgba(0,0,0,0.4))' }}>
                 
-                {/* Dial Texture (Carbon/Matte look) */}
-                <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0.15, mixBlendMode: 'overlay' }}>
-                  <filter id="noiseFilter">
-                    <feTurbulence type="fractalNoise" baseFrequency="1.5" numOctaves="3" stitchTiles="stitch"/>
-                  </filter>
-                  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
-                </svg>
-
-                {/* Sub-dials/Rings */}
+                {/* Minute Hand (Classic Spade Shape - approximated with CSS borders) */}
                 <div style={{
-                  position: 'absolute', top: '2%', left: '2%', width: '96%', height: '96%',
-                  borderRadius: '50%', border: '1px solid rgba(255,255,255,0.05)'
-                }} />
+                  position: 'absolute', left: '50%', top: '50%', transformOrigin: 'left center', transform: 'rotate(-90deg)'
+                }}>
+                  {/* Base pointer */}
+                  <div style={{
+                    position: 'absolute', left: '-20px', top: '-4px', width: '190px', height: '8px',
+                    background: '#1c1917', borderRadius: '4px'
+                  }} />
+                  {/* Decorative spade tip */}
+                  <div style={{
+                    position: 'absolute', left: '160px', top: '-10px', width: '20px', height: '20px',
+                    background: '#1c1917', borderRadius: '50%'
+                  }} />
+                  <div style={{
+                    position: 'absolute', left: '175px', top: '0',
+                    borderLeft: '15px solid #1c1917', borderTop: '4px solid transparent', borderBottom: '4px solid transparent',
+                    transform: 'translateY(-50%)'
+                  }} />
+                </div>
+
+                {/* Hour Hand (Dynamic) */}
                 <div style={{
-                  position: 'absolute', top: '15%', left: '15%', width: '70%', height: '70%',
-                  borderRadius: '50%', border: '2px dashed rgba(255,255,255,0.03)'
-                }} />
+                  position: 'absolute', left: '50%', top: '50%', transformOrigin: 'left center',
+                  transform: `rotate(${hourHandAngle}deg)`, transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                }}>
+                   {/* Base pointer */}
+                   <div style={{
+                    position: 'absolute', left: '-20px', top: '-6px', width: '130px', height: '12px',
+                    background: '#1c1917', borderRadius: '6px'
+                  }} />
+                  {/* Decorative spade body */}
+                  <div style={{
+                    position: 'absolute', left: '70px', top: '-14px', width: '28px', height: '28px',
+                    background: '#1c1917', borderRadius: '50%'
+                  }} />
+                  <div style={{
+                    position: 'absolute', left: '95px', top: '0',
+                    borderLeft: '20px solid #1c1917', borderTop: '6px solid transparent', borderBottom: '6px solid transparent',
+                    transform: 'translateY(-50%)'
+                  }} />
+                </div>
 
-                {/* Minute Ticks */}
-                {[...Array(60)].map((_, i) => {
-                  const isHour = i % 5 === 0; 
-                  const angle = ((i - 15) * 6 * Math.PI) / 180;
-                  const r = isHour ? 148 : 154;
-                  const length = isHour ? 14 : 6;
-                  const thickness = isHour ? 4 : 2;
-                  const x = Math.cos(angle) * r;
-                  const y = Math.sin(angle) * r;
-                  return (
-                    <div key={`tick-${i}`} style={{
-                      position: 'absolute', left: '50%', top: '50%',
-                      width: `${length}px`, height: `${thickness}px`,
-                      background: isHour ? '#fff' : 'rgba(255,255,255,0.3)',
-                      boxShadow: isHour ? '0 0 8px rgba(255,255,255,0.6)' : 'none',
-                      borderRadius: '2px',
-                      transform: `translate(calc(-50% + ${x - length/2}px), calc(-50% + ${y}px)) rotate(${i * 6}deg)`
-                    }} />
-                  );
-                })}
-
-                {/* 3D Metallic Numbers */}
-                {[...Array(12)].map((_, i) => {
-                  const angle = ((i - 3) * 30 * Math.PI) / 180;
-                  const rText = 115;
-                  const xText = Math.cos(angle) * rText;
-                  const yText = Math.sin(angle) * rText;
-                  const hour = i === 0 ? 12 : i;
-                  const isTarget = hour === clockStartHour;
-
-                  return (
-                    <div key={i} style={{
-                      position: 'absolute', left: '50%', top: '50%',
-                      transform: `translate(calc(-50% + ${xText}px), calc(-50% + ${yText}px))`,
-                      fontWeight: '800', fontSize: '26px',
-                      fontFamily: '"SF Pro Display", -apple-system, sans-serif',
-                      color: isTarget ? '#fcd34d' : '#f8fafc',
-                      // Gives a sharp embossed 3D metallic feel
-                      textShadow: isTarget 
-                        ? '0 0 20px rgba(245, 158, 11, 0.9), 1px 1px 0px #b45309, -1px -1px 0px #fef3c7' 
-                        : '1px 1px 2px rgba(0,0,0,0.8), -1px -1px 1px rgba(255,255,255,0.2)',
-                      zIndex: 2
-                    }}>
-                      {hour}
-                    </div>
-                  );
-                })}
-
-                {/* Glass Glare Overlay (Curved Reflections) */}
+                {/* Sweeping Second Hand (Thin Brass) */}
                 <div style={{
-                  position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.03) 100%)',
-                  borderRadius: '50%', pointerEvents: 'none', zIndex: 20
-                }} />
-                
-                {/* Crescent Glare */}
+                  position: 'absolute', left: '50%', top: '50%', transformOrigin: 'left center',
+                  transform: `rotate(${(currentSeconds * 6) - 90}deg)`
+                }}>
+                  <div style={{ position: 'absolute', left: '-30px', top: '-1px', width: '200px', height: '2px', background: '#d97706' }} />
+                  <div style={{ position: 'absolute', left: '-25px', top: '-5px', width: '10px', height: '10px', background: '#d97706', borderRadius: '50%' }} />
+                </div>
+
+                {/* Center Pin (Brass) */}
                 <div style={{
-                  position: 'absolute', top: '2%', left: '10%', width: '80%', height: '35%',
-                  background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.08) 0%, transparent 70%)',
-                  borderRadius: '50%', pointerEvents: 'none', zIndex: 20
+                  position: 'absolute', left: '50%', top: '50%', width: '16px', height: '16px',
+                  background: 'radial-gradient(circle at 30% 30%, #fde68a 0%, #d97706 50%, #78350f 100%)',
+                  borderRadius: '50%', transform: 'translate(-50%, -50%)',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.6)', zIndex: 11
                 }} />
+              </div>
 
-                {/* Hands container */}
-                <div style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 10 }}>
-                  
-                  {/* Minute Hand (Static at 12, highly realistic sword shape) */}
-                  <div style={{
-                    position: 'absolute', left: '50%', top: '50%',
-                    transformOrigin: 'left center', transform: 'rotate(-90deg)',
-                    filter: 'drop-shadow(15px 15px 10px rgba(0,0,0,0.6))'
-                  }}>
-                    {/* Metal body */}
-                    <div style={{
-                      position: 'absolute', left: '-15px', top: '-4px', width: '140px', height: '8px',
-                      background: 'linear-gradient(180deg, #94a3b8 0%, #cbd5e1 50%, #94a3b8 100%)',
-                      clipPath: 'polygon(0 20%, 90% 40%, 100% 50%, 90% 60%, 0 80%)'
-                    }}>
-                      {/* Luminescent core */}
-                      <div style={{ position: 'absolute', left: '20px', top: '30%', width: '100px', height: '40%', background: '#fff', borderRadius: '10px', boxShadow: '0 0 8px rgba(255,255,255,0.5)' }} />
-                    </div>
-                  </div>
+              {/* Heavy Glass Reflection Overlay */}
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 30%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%)', borderRadius: '50%', pointerEvents: 'none', zIndex: 20 }} />
+              <div style={{ position: 'absolute', top: '5%', left: '5%', width: '90%', height: '90%', background: 'radial-gradient(ellipse at top left, rgba(255,255,255,0.15) 0%, transparent 60%)', borderRadius: '50%', pointerEvents: 'none', zIndex: 20 }} />
 
-                  {/* The Hour Hand (Dynamic) */}
-                  <div style={{
-                    position: 'absolute', left: '50%', top: '50%',
-                    transformOrigin: 'left center',
-                    transform: `rotate(${(currentClockHour - 3) * 30}deg)`,
-                    transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    filter: 'drop-shadow(12px 12px 8px rgba(0,0,0,0.6))'
-                  }}>
-                     {/* Metal body */}
-                     <div style={{
-                      position: 'absolute', left: '-10px', top: '-5px', width: '100px', height: '10px',
-                      background: 'linear-gradient(180deg, #3b82f6 0%, #7dd3fc 50%, #3b82f6 100%)',
-                      clipPath: 'polygon(0 20%, 90% 40%, 100% 50%, 90% 60%, 0 80%)',
-                      boxShadow: 'inset 0 0 5px rgba(255,255,255,0.5)'
-                    }}>
-                      {/* Glowing core */}
-                      <div style={{ position: 'absolute', left: '15px', top: '30%', width: '60px', height: '40%', background: '#fff', borderRadius: '10px', boxShadow: '0 0 10px rgba(59,130,246,0.8)' }} />
-                    </div>
-                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                  {/* Sweeping Second Hand (Red, ultra-thin, precise) */}
-                  <div style={{
-                    position: 'absolute', left: '50%', top: '50%',
-                    transformOrigin: 'left center',
-                    transform: `rotate(${(currentSeconds * 6) - 90}deg)`,
-                    filter: 'drop-shadow(20px 20px 15px rgba(0,0,0,0.4))'
-                  }}>
-                    <div style={{
-                      position: 'absolute', left: '-30px', top: '-1px', width: '170px', height: '2px',
-                      background: '#ef4444'
-                    }} />
-                    {/* Counterweight circle */}
-                    <div style={{
-                      position: 'absolute', left: '-25px', top: '-5px', width: '10px', height: '10px',
-                      background: '#ef4444', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.3)'
-                    }} />
-                  </div>
+      {/* Right Floating Light Glass Panel */}
+      <div style={{ 
+          position: 'absolute', right: '40px', top: '40px', bottom: '40px', width: '480px',
+          background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,0.8)', borderRadius: '32px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255,255,255,0.5)',
+          display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 20
+      }}>
+        <div style={{ padding: '40px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          
+          <div style={{ background: 'rgba(255,255,255,0.6)', padding: '24px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
+            <p style={{ fontSize: '18px', color: '#334155', lineHeight: '1.6', margin: 0 }}>
+              The clock repeats itself every 12 hours. Because of this, it <strong>wraps around</strong> seamlessly. 
+            </p>
+          </div>
 
-                  {/* The Center Cap / Pin (3D machined metal) */}
-                  <div style={{
-                    position: 'absolute', left: '50%', top: '50%', width: '20px', height: '20px',
-                    background: 'radial-gradient(circle at 40% 40%, #f8fafc 0%, #94a3b8 40%, #0f172a 100%)',
-                    borderRadius: '50%', transform: 'translate(-50%, -50%)',
-                    boxShadow: '0 5px 15px rgba(0,0,0,0.8), inset 0 -2px 5px rgba(0,0,0,0.8)', zIndex: 11
-                  }}>
-                    <div style={{ position: 'absolute', left: '20%', top: '20%', width: '40%', height: '40%', background: 'rgba(255,255,255,0.4)', borderRadius: '50%' }} />
-                  </div>
+          {wizardStep === 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.5s ease-out' }}>
+              <h3 style={{ fontSize: '22px', fontWeight: '800', color: '#0f172a', margin: 0 }}>Explore the Clock</h3>
+              
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <button 
+                  onClick={() => setRotations(r => r + 1)}
+                  style={{
+                    flex: 1, padding: '16px', background: '#eff6ff', border: '1px solid #bfdbfe',
+                    borderRadius: '16px', color: '#2563eb', fontWeight: '700', fontSize: '16px', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all 0.2s',
+                    boxShadow: '0 4px 10px rgba(37, 99, 235, 0.1)'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = '#dbeafe' }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = '#eff6ff' }}
+                >
+                  <FastForward size={20} /> +12 Hours (1 Full Rotation)
+                </button>
+              </div>
 
+              <div style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.8)', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.02)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <span style={{ color: '#475569', fontWeight: '600' }}>Add extra hours:</span>
+                  <span style={{ color: '#0f172a', fontWeight: '800' }}>+{extraHours}</span>
+                </div>
+                <input 
+                  type="range" min="0" max="11" 
+                  value={extraHours} 
+                  onChange={(e) => setExtraHours(parseInt(e.target.value))}
+                  style={{ width: '100%', accentColor: '#2563eb', cursor: 'pointer', marginBottom: '24px' }}
+                />
+
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '16px', borderRadius: '12px', fontSize: '18px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', justifyContent: 'center', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)' }}>
+                  <span style={{ color: '#ea580c', fontWeight: '800' }}>{clockStartHour}</span>
+                  <span style={{ color: '#94a3b8' }}>+</span>
+                  <span style={{ color: '#64748b' }}>(</span>
+                  <span style={{ color: '#0f172a', fontWeight: '700' }}>{rotations}</span>
+                  <span style={{ color: '#64748b', fontSize: '14px' }}>x 12h</span>
+                  <span style={{ color: '#64748b' }}>)</span>
+                  <span style={{ color: '#94a3b8' }}>+</span>
+                  <span style={{ color: '#2563eb', fontWeight: '800' }}>{extraHours}h</span>
+                  <span style={{ color: '#94a3b8' }}>=</span>
+                  <strong style={{ color: '#0f172a', fontSize: '22px' }}>{currentClockHour}</strong>
                 </div>
               </div>
+
+              <button 
+                onClick={() => setWizardStep(1)}
+                style={{
+                  marginTop: '10px', padding: '18px', background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                  borderRadius: '16px', border: 'none', color: '#fff', fontWeight: '800', fontSize: '18px', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px',
+                  boxShadow: '0 10px 20px rgba(234, 88, 12, 0.3)'
+                }}
+              >
+                Solve the 50-Hour Challenge <ArrowRight size={20} />
+              </button>
             </div>
-          </div>
-        </div>
-      </div>
+          )}
 
-      {/* Text/Interaction Column */}
-      <div className="dark-coords-right" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '40px' }}>
-        <div>
-          <div className="dark-top-title" style={{ fontSize: '14px', marginBottom: '8px', opacity: 0.8 }}>ACTIVITY 2 OF 3</div>
-          <h2 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '16px', color: '#f8fafc' }}>
-            The Clock Pattern
-          </h2>
-          <p style={{ fontSize: '18px', color: '#94a3b8', lineHeight: '1.6' }}>
-            The clock repeats itself every 12 hours. It <strong>wraps around</strong> seamlessly.
-          </p>
-        </div>
-
-        {/* Time Slider */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '16px', color: '#94a3b8', fontWeight: '600' }}>Add hours:</span>
-            <div style={{ background: 'rgba(59, 130, 246, 0.15)', padding: '6px 16px', borderRadius: '8px', color: '#60a5fa', fontWeight: '800', fontSize: '18px' }}>
-              +{clockAddHours}
-            </div>
-          </div>
-          <input 
-            type="range" 
-            min="0" max="24" 
-            value={clockAddHours} 
-            onChange={(e) => setClockAddHours(parseInt(e.target.value))}
-            style={{ width: '100%', accentColor: '#3b82f6', cursor: 'pointer' }}
-          />
-          <div style={{ fontSize: '20px', fontWeight: '300', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
-            <span style={{ color: '#f59e0b', fontWeight: '600' }}>{clockStartHour}</span>
-            <span style={{ color: '#64748b' }}>+</span>
-            <span>{clockAddHours} hr</span>
-            <span style={{ color: '#64748b' }}>→</span>
-            <strong style={{ color: '#fff' }}>{currentClockHour} o'clock</strong>
-          </div>
-        </div>
-
-        <div style={{
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          padding: '24px',
-          borderRadius: '16px',
-        }}>
-          <h3 style={{ fontSize: '18px', marginBottom: '20px', color: '#e2e8f0', lineHeight: 1.5 }}>
-            If it is exactly <strong>9 o'clock</strong> now, what time will it be after exactly <strong>50 hours</strong>?
-          </h3>
-          
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            {[8, 9, 10, 11, 12].map(ans => {
-              const isSelected = selectedAnswer === ans;
-              const isCorrect = ans === 11;
-              const showResult = selectedAnswer !== null;
-
-              let btnBg = 'rgba(255,255,255,0.05)';
-              let btnBorder = 'rgba(255,255,255,0.1)';
+          {wizardStep > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', animation: 'fadeIn 0.5s ease-out' }}>
               
-              if (showResult && isSelected) {
-                if (isCorrect) {
-                  btnBg = 'rgba(34, 197, 94, 0.2)'; btnBorder = '#22c55e';
-                } else {
-                  btnBg = 'rgba(239, 68, 68, 0.2)'; btnBorder = '#ef4444';
-                }
-              } else if (showResult && isCorrect) {
-                btnBorder = '#22c55e';
-              }
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => setWizardStep(0)}>
+                <ArrowLeft size={20} color="#64748b" />
+                <span style={{ color: '#64748b', fontWeight: '700', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px' }}>Back to Explore</span>
+              </div>
 
-              return (
+              <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', padding: '24px', borderRadius: '20px' }}>
+                <h3 style={{ fontSize: '24px', fontWeight: '800', color: '#c2410c', margin: '0 0 8px 0', lineHeight: 1.3 }}>
+                  If it is exactly 9 o'clock now, what time will it be after exactly 50 hours?
+                </h3>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', opacity: wizardStep === 1 ? 1 : 0.5, transition: 'opacity 0.3s' }}>
+                <label style={{ fontSize: '16px', color: '#334155', fontWeight: '700', lineHeight: 1.5 }}>
+                  1. How many full 12-hour rotations fit into 50 hours?
+                </label>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <input 
+                    type="number" value={q1Answer} onChange={e => setQ1Answer(e.target.value)} disabled={wizardStep > 1}
+                    style={{ flex: 1, padding: '16px', borderRadius: '12px', border: '2px solid #cbd5e1', background: '#fff', color: '#0f172a', fontSize: '20px', fontWeight: 'bold' }}
+                    placeholder="e.g. 2"
+                  />
+                  {wizardStep === 1 && (
+                    <button onClick={handleQ1Submit} style={{ padding: '0 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Check</button>
+                  )}
+                  {wizardStep > 1 && (
+                    <div style={{ display: 'flex', alignItems: 'center', color: '#16a34a' }}><CheckCircle size={28} /></div>
+                  )}
+                </div>
+              </div>
+
+              {wizardStep >= 2 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', opacity: wizardStep === 2 ? 1 : 0.5, transition: 'opacity 0.3s', animation: 'fadeIn 0.5s ease-out' }}>
+                  <label style={{ fontSize: '16px', color: '#334155', fontWeight: '700', lineHeight: 1.5 }}>
+                    2. We found 4 rotations (48 hours). How many extra hours are left over from 50?
+                  </label>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <input 
+                      type="number" value={q2Answer} onChange={e => setQ2Answer(e.target.value)} disabled={wizardStep > 2}
+                      style={{ flex: 1, padding: '16px', borderRadius: '12px', border: '2px solid #cbd5e1', background: '#fff', color: '#0f172a', fontSize: '20px', fontWeight: 'bold' }}
+                      placeholder="e.g. 5"
+                    />
+                    {wizardStep === 2 && (
+                      <button onClick={handleQ2Submit} style={{ padding: '0 24px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Check</button>
+                    )}
+                    {wizardStep > 2 && (
+                      <div style={{ display: 'flex', alignItems: 'center', color: '#16a34a' }}><CheckCircle size={28} /></div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {wizardStep >= 3 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', animation: 'fadeIn 0.5s ease-out' }}>
+                  <label style={{ fontSize: '18px', color: '#ea580c', fontWeight: '800', lineHeight: 1.5 }}>
+                    3. Final Step: Add the {q2Answer} extra hours to the starting time (9). What is the time?
+                  </label>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    {[8, 9, 10, 11, 12].map(ans => {
+                      const isSelected = finalAnswer === ans;
+                      const isCorrect = ans === 11;
+                      const isDone = wizardStep === 4;
+                      
+                      let bg = '#f8fafc';
+                      let border = '#cbd5e1';
+                      let color = '#334155';
+                      
+                      if (isDone) {
+                        if (isCorrect) { bg = '#dcfce7'; border = '#22c55e'; color = '#16a34a'; }
+                        else if (isSelected) { bg = '#fee2e2'; border = '#ef4444'; color = '#dc2626'; }
+                      } else if (isSelected) {
+                        bg = '#eff6ff'; border = '#3b82f6';
+                      }
+
+                      return (
+                        <button
+                          key={ans} onClick={() => handleFinalAnswer(ans)} disabled={isDone}
+                          style={{
+                            flex: '1 1 calc(20% - 10px)', padding: '16px 8px', borderRadius: '12px',
+                            background: bg, border: `2px solid ${border}`, color: color, fontSize: '20px', fontWeight: '900',
+                            cursor: isDone ? 'default' : 'pointer', transition: 'all 0.2s',
+                            opacity: (isDone && !isCorrect) ? 0.5 : 1
+                          }}
+                        >
+                          {ans}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {errorMsg && (
+                <div style={{ padding: '12px 16px', background: '#fee2e2', borderLeft: '4px solid #ef4444', color: '#b91c1c', borderRadius: '0 8px 8px 0', fontSize: '15px', fontWeight: '600' }}>
+                  {errorMsg}
+                </div>
+              )}
+
+              {wizardStep === 4 && (
                 <button
-                  key={ans}
-                  onClick={() => setSelectedAnswer(ans)}
-                  disabled={showResult}
+                  onClick={onNext}
                   style={{
-                    flex: '1 1 calc(20% - 10px)',
-                    padding: '16px 8px', borderRadius: '12px',
-                    background: btnBg, border: `2px solid ${btnBorder}`,
-                    color: '#fff', fontSize: '18px', fontWeight: '600',
-                    cursor: showResult ? 'default' : 'pointer',
-                    transition: 'all 0.2s',
-                    opacity: showResult && !isSelected && !isCorrect ? 0.5 : 1,
-                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                    marginTop: 'auto', width: '100%', background: '#16a34a', color: 'white', border: 'none',
+                    padding: '20px', borderRadius: '16px', fontSize: '20px', fontWeight: '800', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px',
+                    boxShadow: '0 10px 25px rgba(22, 163, 74, 0.4)', animation: 'fadeIn 0.5s ease-out'
                   }}
                 >
-                  {ans}
+                  Activity Complete! <CheckCircle size={24} />
                 </button>
-              );
-            })}
-          </div>
-
-          {selectedAnswer && (
-            <div style={{ marginTop: '20px', fontSize: '15px', color: selectedAnswer === 11 ? '#4ade80' : '#f87171', fontWeight: '500', lineHeight: 1.5 }}>
-              {selectedAnswer === 11 
-                ? "Correct! 50 ÷ 12 = 4 with a remainder of 2. It's the same as adding 2 hours: 9 + 2 = 11." 
-                : 'Not quite. Try to find the remainder when 50 is divided by 12!'}
+              )}
             </div>
-          )}
-
-          {selectedAnswer === 11 && (
-            <button
-              onClick={onNext}
-              style={{
-                marginTop: '24px',
-                width: '100%',
-                background: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                padding: '16px',
-                borderRadius: '12px',
-                fontSize: '18px',
-                fontWeight: '800',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)'
-              }}
-            >
-              Next Activity <CheckCircle size={20} />
-            </button>
           )}
         </div>
       </div>
+      
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }

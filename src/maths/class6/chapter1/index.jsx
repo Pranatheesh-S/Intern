@@ -518,7 +518,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
               </h2>
             </div>
             <div style={{ background: 'var(--theme-badge-bg, #ccfbf1)', color: 'var(--theme-badge-text, #0f766e)', padding: '4px 12px', borderRadius: '10px', fontSize: '0.78rem', fontWeight: '900', border: '1px solid var(--theme-border, #a7f3d0)' }}>
-              Slide {currentSlide} / {totalSlides}
+              LEARNING STEP 0{currentSlide} / 0{totalSlides}
             </div>
           </div>
           )}
@@ -616,8 +616,8 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
             flexShrink: 0
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <span style={{ fontWeight: '900', color: 'var(--theme-heading, #134e4a)', fontSize: '0.88rem' }}>
-                Slide {currentSlide} of {totalSlides}
+              <span style={{ fontWeight: '800', color: 'var(--theme-heading, #0f172a)', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                LEARNING STEP 0{currentSlide} / 0{totalSlides}
               </span>
               <div style={{ display: 'flex', gap: '5px' }}>
                 {Array.from({ length: totalSlides }).map((_, i) => (

@@ -3,6 +3,8 @@ import { ChevronRight } from 'lucide-react';
 import { SEQUENCES } from './NumberSequencesTable';
 
 const SequenceVisualizer = ({ id }) => {
+  const [shape36, setShape36] = useState('square');
+
   const renderVisual = () => {
     switch (id) {
       case 1: // All 1's
@@ -279,10 +281,183 @@ const SequenceVisualizer = ({ id }) => {
               </g>
               <text x="30" y="5" fill="#f8fafc" fontSize="12" className="anim-fade" style={{animationDelay: '0.2s'}}>1</text>
               <text x="120" y="45" fill="#f8fafc" fontSize="12" className="anim-fade" style={{animationDelay: '0.7s'}}>3</text>
-              <text x="150" y="85" fill="#f8fafc" fontSize="12" className="anim-fade" style={{animationDelay: '1.2s'}}>9</text>
             </g>
           </svg>
         );
+      case 11: // Hexagonal numbers (1, 7, 19, 37, 61)
+        return (
+          <svg viewBox="0 0 800 150" className="seq-svg">
+            <g transform="translate(60, 75)">
+              {[1, 2, 3, 4, 5].map((num, idx) => {
+                const xOffset = idx * 160;
+                let dots = [];
+                for (let r = 0; r < num; r++) {
+                  if (r === 0) {
+                    dots.push(<circle key="0-0" cx={xOffset} cy="0" r="5.5" fill="#ef4444" stroke="#7f1d1d" strokeWidth="1.5" className="anim-pop" style={{animationDelay:`${idx*0.2}s`}}/>);
+                  } else {
+                    const D = 14;
+                    for (let i = 0; i < 6; i++) {
+                      const a1 = i * Math.PI / 3;
+                      const a2 = ((i + 1) % 6) * Math.PI / 3;
+                      const p1 = { x: Math.cos(a1)*r*D, y: Math.sin(a1)*r*D };
+                      const p2 = { x: Math.cos(a2)*r*D, y: Math.sin(a2)*r*D };
+                      for (let step = 0; step < r; step++) {
+                        const t = step / r;
+                        dots.push(
+                          <circle key={`${r}-${i}-${step}`} 
+                            cx={xOffset + p1.x * (1 - t) + p2.x * t} 
+                            cy={p1.y * (1 - t) + p2.y * t} 
+                            r="5.5" fill="#ef4444" stroke="#7f1d1d" strokeWidth="1.5" 
+                            className="anim-pop" style={{animationDelay:`${idx*0.2 + r*0.1}s`}}/>
+                        );
+                      }
+                    }
+                  }
+                }
+                const total = num === 1 ? 1 : num === 2 ? 7 : num === 3 ? 19 : num === 4 ? 37 : 61;
+                dots.push(<text key="t" x={xOffset} y="70" fill="#94a3b8" fontSize="12" textAnchor="middle">{total}</text>);
+                return <g key={idx}>{dots}</g>;
+              })}
+            </g>
+          </svg>
+        );
+      case 12: { // 0D to 4D Geometric (Powers of 2)
+        const c1 = "#0ea5e9"; // Cyan
+        const c2 = "#0ea5e9"; // Cyan
+        const cConn = "rgba(14, 165, 233, 0.7)"; // Cyan (Connectors)
+
+        const makeSquare = (cx, cy, s, c) => ({
+          p: [ {x:cx-s, y:cy-s, c}, {x:cx+s, y:cy-s, c}, {x:cx+s, y:cy+s, c}, {x:cx-s, y:cy+s, c} ],
+          e: [ [0,1,c], [1,2,c], [2,3,c], [3,0,c] ]
+        });
+
+        const makeSolidCube = (cx, cy, s, dx, dy, c) => {
+          const sq1 = makeSquare(cx, cy, s, c);
+          const sq2 = makeSquare(cx+dx, cy+dy, s, c);
+          return {
+            p: [...sq1.p, ...sq2.p],
+            e: [...sq1.e, ...sq2.e.map(e => [e[0]+4, e[1]+4, e[2]]), [0,4,c], [1,5,c], [2,6,c], [3,7,c]]
+          };
+        };
+
+        const shapes = [
+          { p: [{x:0, y:0, c:c1}], e: [], label: "2⁰ = 1", desc: "Point" },
+          { 
+            p: [{x:-20, y:0, c:c1}, {x:20, y:0, c:c2}], 
+            e: [[0,1,cConn]], 
+            label: "2¹ = 2", desc: "Line" 
+          },
+          (() => {
+            const p = [
+              {x:-15, y:-15, c:c1}, {x:-15, y:15, c:c1}, 
+              {x:15, y:-15, c:c2}, {x:15, y:15, c:c2}
+            ];
+            const e = [[0,1,c1], [2,3,c2], [0,2,cConn], [1,3,cConn]];
+            return { p, e, label: "2² = 4", desc: "Square" };
+          })(),
+          (() => { // Cube: Base Square + Projected Square
+            const b = makeSquare(0, 0, 20, c1);
+            const p = makeSquare(20, -20, 20, c2);
+            const cmX = 10, cmY = -10;
+            const bShifted = { ...b, p: b.p.map(pt => ({...pt, x: pt.x - cmX, y: pt.y - cmY})) };
+            const pShifted = { ...p, p: p.p.map(pt => ({...pt, x: pt.x - cmX, y: pt.y - cmY})) };
+            return {
+              p: [...bShifted.p, ...pShifted.p],
+              e: [...bShifted.e, ...pShifted.e.map(e => [e[0]+4, e[1]+4, e[2]]), [0,4,cConn], [1,5,cConn], [2,6,cConn], [3,7,cConn]],
+              label: "2³ = 8", desc: "Cube"
+            };
+          })(),
+          (() => { // Tesseract: Perfect Mathematical Schlegel Projection
+            const b = makeSolidCube(0, 0, 45, 25, -25, c1); // Outer Cube
+            // Inner cube is scaled by 0.4 and shifted proportionally to align centers of mass
+            const p = makeSolidCube(7.5, -7.5, 18, 10, -10, c2); // Inner Cube
+            
+            const cmX = 12.5, cmY = -12.5; // Center of mass of the whole 4D projection
+            const bShifted = { ...b, p: b.p.map(pt => ({...pt, x: pt.x - cmX, y: pt.y - cmY})) };
+            const pShifted = { ...p, p: p.p.map(pt => ({...pt, x: pt.x - cmX, y: pt.y - cmY})) };
+
+            return {
+              p: [...bShifted.p, ...pShifted.p],
+              e: [...bShifted.e, ...pShifted.e.map(e => [e[0]+8, e[1]+8, e[2]]), ...[0,1,2,3,4,5,6,7].map(i => [i, i+8, cConn])],
+              label: "2⁴ = 16", desc: "Tesseract"
+            };
+          })()
+        ];
+
+        return (
+          <svg viewBox="0 0 1000 300" className="seq-svg">
+            <defs>
+              <filter id="glowLine" filterUnits="userSpaceOnUse" x="-1000" y="-1000" width="3000" height="3000">
+                <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <g transform="translate(100, 130)">
+              {shapes.map((s, idx) => (
+                <g key={idx} transform={`translate(${idx * 200}, 0)`}>
+                  {/* Edges */}
+                  <g className="anim-draw-path" style={{ animationDelay: `${idx * 0.8}s`, animationDuration: '2s' }}>
+                    {s.e.map((edge, i) => (
+                      <line key={i} x1={s.p[edge[0]].x} y1={s.p[edge[0]].y} x2={s.p[edge[1]].x} y2={s.p[edge[1]].y} 
+                        stroke={edge[2]} strokeWidth="1.5" strokeOpacity="0.8" filter="url(#glowLine)" />
+                    ))}
+                  </g>
+                  {/* Nodes */}
+                  {s.p.map((pt, i) => (
+                    <g key={i} className="anim-pop" style={{ animationDelay: `${idx * 0.8 + i * 0.05}s` }}>
+                      <circle cx={pt.x} cy={pt.y} r="8" fill={pt.c} opacity="0.25" filter="url(#glowLine)" />
+                      <circle cx={pt.x} cy={pt.y} r="3.5" fill={pt.c} opacity="0.8" filter="url(#glowLine)" />
+                      <circle cx={pt.x} cy={pt.y} r="1.5" fill="#fff" />
+                    </g>
+                  ))}
+                  {/* Labels */}
+                  <text x="0" y="110" fill="#f8fafc" fontSize="18" fontWeight="800" textAnchor="middle" className="anim-fade" style={{ animationDelay: `${idx * 0.8 + 0.5}s` }}>
+                    {s.label}
+                  </text>
+                  <text x="0" y="135" fill="#94a3b8" fontSize="14" textAnchor="middle" className="anim-fade" style={{ animationDelay: `${idx * 0.8 + 0.6}s` }}>
+                    ({s.desc})
+                  </text>
+                </g>
+              ))}
+            </g>
+          </svg>
+        );
+      }
+      case 13: { // 36 Shapeshifter
+        const getSqrPos = (index) => {
+          const row = Math.floor(index / 6);
+          const col = index % 6;
+          return { x: (col * 30) - 75, y: (row * 30) - 75 };
+        };
+        const getTriPos = (index) => {
+          let row = 0; let count = 0;
+          while (count + (row + 1) <= index) { count += ++row; }
+          const col = index - count;
+          return { x: (col * 30) - (row * 15), y: row * 26 - 100 };
+        };
+        return (
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <svg viewBox="-200 -150 400 300" style={{ width: '400px', height: '300px', overflow: 'visible' }}>
+              {[...Array(36)].map((_, i) => {
+                const pos = shape36 === 'square' ? getSqrPos(i) : getTriPos(i);
+                return (
+                  <g key={i} style={{ transition: 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)', transform: `translate(${pos.x}px, ${pos.y}px)` }}>
+                    <circle cx="0" cy="0" r="10" fill="#0ea5e9" opacity="0.8" />
+                    <circle cx="-2" cy="-2" r="3" fill="#fff" opacity="0.9" />
+                  </g>
+                );
+              })}
+            </svg>
+            <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
+              <button onClick={() => setShape36('square')} style={{ padding: '12px 24px', borderRadius: '12px', background: shape36 === 'square' ? '#3b82f6' : '#1e293b', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: '800', transition: 'all 0.2s', boxShadow: shape36 === 'square' ? '0 0 15px rgba(59,130,246,0.5)' : 'none' }}>Form Square (6×6)</button>
+              <button onClick={() => setShape36('triangle')} style={{ padding: '12px 24px', borderRadius: '12px', background: shape36 === 'triangle' ? '#3b82f6' : '#1e293b', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: '800', transition: 'all 0.2s', boxShadow: shape36 === 'triangle' ? '0 0 15px rgba(59,130,246,0.5)' : 'none' }}>Form Triangle (Base 8)</button>
+            </div>
+          </div>
+        );
+      }
       default:
         return null;
     }
@@ -298,8 +473,14 @@ const SequenceVisualizer = ({ id }) => {
 export default function VisualisingSequences({ onNext }) {
   const [activeId, setActiveId] = useState(1);
   
-  const activeSeq = SEQUENCES.find(s => s.id === activeId);
-  const isLast = activeId === SEQUENCES.length;
+  const TOTAL_SLIDES = SEQUENCES.length + 2;
+  const isLast = activeId === TOTAL_SLIDES;
+
+  const activeSeq = activeId <= SEQUENCES.length 
+    ? SEQUENCES.find(s => s.id === activeId) 
+    : activeId === 12
+      ? { rule: "Powers of 2 (Geometric Dimensions)", seq: "1, 2, 4, 8, 16" }
+      : { rule: "The 36 Shapeshifter", seq: "36 = Square & Triangle!" };
 
   const handleNext = () => {
     if (isLast) {
@@ -354,7 +535,7 @@ export default function VisualisingSequences({ onNext }) {
         <h2 style={{ fontSize: '28px', fontWeight: '800', color: '#f8fafc', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
           Visualising Sequences
           <span style={{ fontSize: '14px', background: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', padding: '4px 12px', borderRadius: '12px' }}>
-            Pattern {activeId} of {SEQUENCES.length}
+            Pattern {activeId} of {TOTAL_SLIDES}
           </span>
         </h2>
         <p style={{ color: '#94a3b8', fontSize: '16px', margin: 0 }}>

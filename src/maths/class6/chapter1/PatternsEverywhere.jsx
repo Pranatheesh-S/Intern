@@ -277,6 +277,10 @@ export default function PatternsEverywhere({ onNext, onPrev }) {
           50% { opacity: 0.6; }
           100% { transform: scale(1.5) translateY(-10px); opacity: 0; }
         }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
       `}</style>
 
       <div className="dark-coords-main-content">
@@ -343,22 +347,28 @@ export default function PatternsEverywhere({ onNext, onPrev }) {
           </div>
         </div>
 
-        <div className="dark-coords-right">
+        <div className="dark-coords-right" style={{ overflowY: 'auto', paddingRight: '20px' }}>
           <div className="dark-step-eyebrow">STEP 2 OF 4</div>
-          <h2 className="dark-step-title">Patterns are everywhere</h2>
+          <h2 className="dark-step-title">Patterns are everywhere!</h2>
           
           <div className="dark-step-text">
-            Such patterns indeed exist all around us — in nature, in our homes and schools, and in the motion of the sun, moon and stars. They occur in everything we do and see: shopping and cooking, throwing a ball and playing games, understanding weather patterns and using technology.
+            Look at the pictures on the left. Did you know you probably saw all these patterns before you even finished breakfast?
           </div>
           
           <div className="dark-step-text">
-            The search for patterns and their explanations can be a fun and creative endeavour. It is for this reason that mathematicians think of mathematics both as an <strong>art</strong> and as a <strong>science</strong>.
+            The <strong>sun</strong> moves in a perfect curved path across the sky every day. The <strong>tiles</strong> on the floor and the <strong>bricks</strong> in a wall are carefully placed in repeating, neat rows.
           </div>
 
-
+          <div className="dark-step-text">
+            You can also <i>hear</i> patterns! A <strong>song</strong> has a repeating beat that makes you want to dance, and your <strong>heart</strong> pumps in a steady rhythm.
+          </div>
           
           <div className="dark-step-text">
-            For example, understanding patterns in the motion of stars, planets and their satellites led humankind to the theory of gravitation — which let us launch satellites and send rockets to the Moon and Mars. Understanding patterns in genomes has helped in diagnosing and curing diseases.
+            Even <strong>railway tracks</strong> use repeating wooden planks spaced perfectly apart to keep trains running safely.
+          </div>
+
+          <div className="dark-step-text" style={{ color: '#fcd34d', fontWeight: 'bold' }}>
+            Math is all about finding these hidden patterns in the world around us. It is just like being a detective!
           </div>
         </div>
       </div>

@@ -1,14 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircle } from 'lucide-react';
 
-export default function TrafficSignalActivity({ onNext }) {
-  const [signalChanges, setSignalChanges] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  
+function CarAnimationLayer({ signalChanges, STOP_LINE_X }) {
   const signalColors = ['red', 'yellow', 'green'];
-  const currentSignalColor = signalColors[signalChanges % 3];
-
   const requestRef = useRef(null);
   const lastTimeRef = useRef(performance.now());
   const signalChangesRef = useRef(signalChanges);
@@ -20,18 +14,6 @@ export default function TrafficSignalActivity({ onNext }) {
   const carsRef = useRef([]);
   const [renderCars, setRenderCars] = useState([]);
   const nextCarSpawnRef = useRef(0);
-
-  const STOP_LINE_X = 400; 
-
-  useEffect(() => {
-    let interval;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setSignalChanges(prev => prev + 1);
-      }, 1500); 
-    }
-    return () => clearInterval(interval);
-  }, [isRunning]);
 
   const updatePhysics = (time) => {
     const deltaTime = Math.max(0, Math.min((time - lastTimeRef.current) / 1000, 0.05));
@@ -48,7 +30,7 @@ export default function TrafficSignalActivity({ onNext }) {
             x: -200,
             v: 300, 
             maxV: 300 + Math.random() * 50,
-            hue: Math.floor(Math.random() * 360), // For metallic car paint
+            hue: Math.floor(Math.random() * 360),
             type: Math.random() > 0.5 ? 'sedan' : 'sport',
             bounce: 0
           });
@@ -62,13 +44,14 @@ export default function TrafficSignalActivity({ onNext }) {
       let targetV = car.maxV;
 
       let distToStop = Infinity;
-      if (currentLight !== 'green' && car.x < STOP_LINE_X) {
-        distToStop = STOP_LINE_X - car.x;
+      const frontX = car.x + 180;
+      if (currentLight !== 'green' && frontX < STOP_LINE_X + 40) {
+        distToStop = (STOP_LINE_X + 50) - frontX;
       }
       
       if (i > 0) {
         const carAhead = carsRef.current[i - 1];
-        const distToCar = carAhead.x - car.x - 160; // safe distance
+        const distToCar = carAhead.x - car.x - 160;
         if (distToCar < distToStop) {
           distToStop = distToCar;
         }
@@ -88,8 +71,13 @@ export default function TrafficSignalActivity({ onNext }) {
       car.x += car.v * deltaTime;
       car.isBraking = isBraking && car.v > 0;
       
-      // Suspension bounce effect based on speed
-      car.bounce = Math.sin(car.x * 0.1) * (car.v / 150);
+      // Realistic suspension: pitch forward when braking, squat when accelerating
+      const targetPitch = car.isBraking ? 1.5 : (car.v < car.maxV && !isBraking && car.v > 20 ? -0.5 : 0);
+      car.pitch = car.pitch || 0;
+      car.pitch += (targetPitch - car.pitch) * deltaTime * 6;
+      
+      // Smooth road vibration
+      car.bounce = Math.sin(car.x * 0.03) * (car.v / 250) + Math.cos(car.x * 0.01) * 0.5;
     }
 
     carsRef.current = carsRef.current.filter(car => car.x < 1000);
@@ -104,7 +92,237 @@ export default function TrafficSignalActivity({ onNext }) {
   }, []); 
 
   return (
-    <div className="dark-coords-main-content" style={{ minHeight: '100vh', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+    <>
+      {renderCars.map(car => {
+        const isSport = car.type === 'sport';
+        
+        const bodyPath = isSport 
+          ? "M 12,50 L 8,32 L 35,26 L 80,12 L 110,12 L 150,28 L 195,38 L 192,50 L 173,50 A 18 18 0 0 0 137 50 L 63,50 A 18 18 0 0 0 27 50 Z"
+          : "M 8,50 L 5,30 C 5,28 10,25 25,25 C 50,25 65,10 85,10 L 115,10 C 135,10 150,25 155,26 C 170,28 190,32 192,35 C 193,37 192,50 190,50 L 173,50 A 18 18 0 0 0 137 50 L 63,50 A 18 18 0 0 0 27 50 Z";
+
+        const windowPath = isSport
+          ? "M 45,26 L 82,14 L 95,14 L 95,26 Z M 98,14 L 105,14 L 135,26 L 98,26 Z"
+          : "M 35,25 C 55,25 68,13 85,13 L 95,13 L 95,25 Z M 100,13 L 112,13 C 125,13 142,22 148,25 L 100,25 Z";
+
+        const doorSeams = isSport
+          ? "M 95,26 L 95,48 M 140,26 C 138,36 135,48 132,48 M 45,26 C 45,36 48,48 55,48"
+          : "M 95,25 L 95,48 M 150,25 C 148,35 142,48 137,48 M 35,25 C 35,35 40,48 48,48";
+
+        const mirrorPath = isSport
+          ? "M 132,25 C 135,22 140,22 142,24 C 142,27 138,27 132,27 Z"
+          : "M 145,24 C 148,20 153,20 155,23 C 155,26 151,26 145,26 Z";
+
+        const handlePath = isSport
+          ? "M 90,32 L 95,32 L 95,33 L 90,33 Z"
+          : "M 90,30 L 95,30 L 95,31 L 90,31 Z M 60,30 L 65,30 L 65,31 L 60,31 Z";
+
+        const tailLight = isSport
+          ? "M 12,50 L 8,32 L 12,32 L 15,48 Z"
+          : "M 8,50 L 5,30 L 8,30 L 10,48 Z";
+
+        const headLight = isSport
+          ? "M 195,38 L 193.5,42 L 189,42 L 190,38 Z"
+          : "M 192,35 C 192.5,37 192,40 191.5,40 L 186,40 L 186,35 Z";
+
+        const roofHighlight = isSport
+          ? "M 15,31 L 35,26 L 80,12 L 110,12 L 150,28 L 190,38"
+          : "M 10,30 C 10,25 25,25 25,25 C 50,25 65,10 85,10 L 115,10 C 135,10 150,25 155,26 C 170,28 190,32 192,35";
+          
+        const spoilerPath = isSport ? "M 12,31 L 5,23 L 15,22 L 20,26 Z" : "";
+
+        return (
+          <div key={car.id} style={{
+            position: 'absolute',
+            left: `${car.x}px`,
+            bottom: car.type === 'sport' ? '10%' : '50%',
+            width: '200px',
+            height: '60px',
+            transform: `translateY(${car.bounce}px) rotate(${car.pitch || 0}deg)`,
+            transformOrigin: '50% 70%',
+            zIndex: 20
+          }}>
+            
+            {/* Headlight Beam */}
+            <div style={{
+              position: 'absolute', left: '190px', top: isSport ? '10px' : '7.5px', width: '300px', height: '60px',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 40%, transparent 100%)',
+              clipPath: 'polygon(0 45%, 100% -20%, 100% 120%, 0 55%)',
+              pointerEvents: 'none', filter: 'blur(3px)', mixBlendMode: 'screen'
+            }} />
+
+            <svg viewBox="0 0 200 60" width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible' }}>
+              <defs>
+                <linearGradient id={`paint-${car.id}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={`hsl(${car.hue}, 70%, 80%)`} />
+                  <stop offset="15%" stopColor={`hsl(${car.hue}, 85%, 55%)`} />
+                  <stop offset="45%" stopColor={`hsl(${car.hue}, 95%, 40%)`} />
+                  <stop offset="50%" stopColor={`hsl(${car.hue}, 80%, 20%)`} />
+                  <stop offset="55%" stopColor={`hsl(${car.hue}, 90%, 35%)`} />
+                  <stop offset="100%" stopColor={`hsl(${car.hue}, 90%, 10%)`} />
+                </linearGradient>
+                <linearGradient id="window-glass" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#0f172a" />
+                  <stop offset="40%" stopColor="#334155" />
+                  <stop offset="45%" stopColor="#94a3b8" />
+                  <stop offset="50%" stopColor="#1e293b" />
+                  <stop offset="100%" stopColor="#020617" />
+                </linearGradient>
+              </defs>
+              
+              {/* Drop Shadow Base */}
+              <path d={bodyPath} fill="rgba(0,0,0,0.4)" transform="translate(0, 5) scale(1, 0.95)" filter="blur(3px)" />
+
+              {/* Spoiler */}
+              {isSport && <path d={spoilerPath} fill="#111" />}
+
+              {/* Chassis Base */}
+              <path d={bodyPath} fill={`url(#paint-${car.id})`} />
+              
+              {/* Windows */}
+              <path d={windowPath} fill="url(#window-glass)" stroke="#020617" strokeWidth="1" />
+              
+              {/* Details */}
+              <path d={doorSeams} fill="none" stroke="rgba(0,0,0,0.4)" strokeWidth="1" />
+              <path d={handlePath} fill="#cbd5e1" />
+              <path d={mirrorPath} fill={`hsl(${car.hue}, 90%, 35%)`} stroke="rgba(0,0,0,0.5)" strokeWidth="0.5" />
+              
+              {/* Lights */}
+              <path d={headLight} fill="#f8fafc" filter="drop-shadow(0 0 4px #fff)" />
+              <path d={tailLight} fill={car.isBraking ? "#ef4444" : "#991b1b"} />
+              
+              {/* Edge Highlights for 3D effect */}
+              <path d={roofHighlight} fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
+            </svg>
+
+            {/* Brake Light Glow Effect */}
+            <div style={{ 
+              position: 'absolute', left: '-15px', top: isSport ? '35px' : '30px', width: '30px', height: '15px', 
+              background: car.isBraking ? 'radial-gradient(ellipse at right, rgba(239,68,68,0.9) 0%, transparent 70%)' : 'transparent', 
+              borderRadius: '50%',
+              transition: 'background 0.1s',
+              pointerEvents: 'none', filter: 'blur(2px)'
+            }} />
+
+            {/* Realistic Alloy Wheels */}
+            {[45, 155].map((centerX, idx) => (
+              <div key={idx} style={{ 
+                position: 'absolute', bottom: '-8px', left: `${centerX - 18}px`, width: '36px', height: '36px', 
+                background: 'radial-gradient(circle, #020617 40%, #1e293b 80%, #050505 100%)', 
+                borderRadius: '50%', boxSizing: 'border-box',
+                boxShadow: '0 8px 12px rgba(0,0,0,0.9), inset 0 0 5px rgba(0,0,0,1)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                {/* Brake Caliper */}
+                <div style={{
+                  position: 'absolute', top: '5px', right: '3px', width: '8px', height: '14px',
+                  background: car.isBraking ? '#ef4444' : (isSport ? '#ef4444' : '#f59e0b'),
+                  borderRadius: '8px 4px 4px 8px', zIndex: 1, 
+                  boxShadow: 'inset 2px 0 4px rgba(255,255,255,0.4), inset -2px -2px 4px rgba(0,0,0,0.6)'
+                }} />
+                
+                {/* Brake Disc (Slotted Metallic) */}
+                <div style={{ 
+                  position: 'absolute', width: '22px', height: '22px', 
+                  background: 'repeating-radial-gradient(circle, #94a3b8 0px, #cbd5e1 1px, #64748b 2.5px)', 
+                  borderRadius: '50%', zIndex: 1, border: '1px solid #334155'
+                }} />
+                
+                {/* Spinning Rim */}
+                <svg viewBox="0 0 32 32" style={{ 
+                  width: '32px', height: '32px', 
+                  animation: `spin ${300 / Math.max(1, car.v)}s linear infinite`,
+                  zIndex: 2,
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))'
+                }}>
+                  <defs>
+                    <linearGradient id={`metal-${car.id}`} x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#f8fafc" />
+                      <stop offset="40%" stopColor="#94a3b8" />
+                      <stop offset="100%" stopColor="#475569" />
+                    </linearGradient>
+                    <linearGradient id={`metal-dark-${car.id}`} x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#cbd5e1" />
+                      <stop offset="40%" stopColor="#64748b" />
+                      <stop offset="100%" stopColor="#0f172a" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Outer Rim Lip */}
+                  <circle cx="16" cy="16" r="14" fill="none" stroke={`url(#metal-${car.id})`} strokeWidth="1.5" />
+                  <circle cx="16" cy="16" r="14.5" fill="none" stroke="#000" strokeWidth="0.5" />
+
+                  {isSport ? (
+                    // Sport rim: Aggressive Y-spokes
+                    <g fill="none" stroke={`url(#metal-${car.id})`} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round">
+                      {[0, 72, 144, 216, 288].map(angle => (
+                        <path key={angle} d="M 16,13 L 16,6.5 L 12.5,2.5 M 16,6.5 L 19.5,2.5" transform={`rotate(${angle} 16 16)`} />
+                      ))}
+                    </g>
+                  ) : (
+                    // Sedan rim: Luxury multi-spoke
+                    <g fill="none" stroke={`url(#metal-dark-${car.id})`} strokeWidth="2.5" strokeLinecap="round">
+                      {[0, 45, 90, 135, 180, 225, 270, 315].map(angle => (
+                        <line key={angle} x1="16" y1="13" x2="16" y2="2.5" transform={`rotate(${angle} 16 16)`} />
+                      ))}
+                    </g>
+                  )}
+                  
+                  {/* Center Hub */}
+                  <circle cx="16" cy="16" r="4" fill={`url(#metal-${car.id})`} />
+                  <circle cx="16" cy="16" r="1.5" fill="#020617" />
+                  
+                  {/* Lug Nuts */}
+                  <g fill="#0f172a">
+                    {[0, 72, 144, 216, 288].map(angle => (
+                      <circle key={angle} cx="16" cy="13.5" r="0.6" transform={`rotate(${angle} 16 16)`} />
+                    ))}
+                  </g>
+                </svg>
+              </div>
+            ))}
+            
+            {/* Drop shadow on road */}
+            <div style={{
+              position: 'absolute', bottom: '-10px', left: '20px', width: '160px', height: '16px',
+              background: 'rgba(0,0,0,0.8)', filter: 'blur(6px)', borderRadius: '50%', zIndex: -1
+            }} />
+            
+            {/* Wet reflection of the car itself on the road */}
+            <div style={{
+              position: 'absolute', bottom: '-45px', left: '0px', width: '200px', height: '40px',
+              background: `linear-gradient(180deg, hsl(${car.hue}, 80%, 40%), transparent)`,
+              opacity: 0.25, filter: 'blur(8px)', borderRadius: '10px', zIndex: -2,
+              transform: 'scaleY(-1)'
+            }} />
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+export default function TrafficSignalActivity({ onNext }) {
+  const [signalChanges, setSignalChanges] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  
+  const signalColors = ['red', 'yellow', 'green'];
+  const currentSignalColor = signalColors[signalChanges % 3];
+
+  const STOP_LINE_X = 400; 
+
+  useEffect(() => {
+    let interval;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setSignalChanges(prev => prev + 1);
+      }, 1500); 
+    }
+    return () => clearInterval(interval);
+  }, [isRunning]);
+
+  return (
+    <div className="dark-coords-main-content" style={{ height: '100%', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
       {/* Visual Column */}
       <div className="dark-coords-left" style={{ position: 'relative', overflow: 'hidden', padding: 0, display: 'flex', flexDirection: 'column', background: '#020617' }}>
         
@@ -299,129 +517,7 @@ export default function TrafficSignalActivity({ onNext }) {
           }} />
 
           {/* Cars */}
-          {renderCars.map(car => {
-            const isSport = car.type === 'sport';
-            
-            // SVG Body Definitions
-            const bodyPath = isSport 
-              ? "M 10,50 L 10,35 Q 10,25 25,25 L 60,25 L 90,10 Q 110,8 130,10 L 155,25 L 185,28 Q 195,30 195,40 L 195,50 L 173,50 A 18 18 0 0 0 137 50 L 63,50 A 18 18 0 0 0 27 50 Z"
-              : "M 10,50 L 10,30 Q 10,20 20,20 L 40,20 L 70,5 Q 100,2 130,5 L 165,22 L 190,25 Q 195,27 195,40 L 195,50 L 173,50 A 18 18 0 0 0 137 50 L 63,50 A 18 18 0 0 0 27 50 Z";
-
-            const windowPath = isSport
-              ? "M 65,25 L 92,12 Q 110,10 128,12 L 150,25 Z"
-              : "M 45,20 L 72,7 Q 100,4 128,7 L 160,22 Z";
-
-            const windowPillar = isSport
-              ? "M 105,12 L 100,25"
-              : "M 105,5 L 105,22";
-
-            return (
-              <div key={car.id} style={{
-                position: 'absolute',
-                left: `${car.x}px`,
-                bottom: car.type === 'sport' ? '10%' : '50%',
-                width: '200px',
-                height: '60px',
-                transform: `translateY(${car.bounce}px)`,
-                zIndex: 20
-              }}>
-                
-                {/* Headlight Beam */}
-                <div style={{
-                  position: 'absolute', right: '-240px', top: isSport ? '18px' : '15px', width: '250px', height: '60px',
-                  background: 'linear-gradient(90deg, rgba(255,255,255,0.4) 0%, transparent 100%)',
-                  clipPath: 'polygon(0 40%, 100% 0, 100% 100%, 0 60%)',
-                  pointerEvents: 'none', filter: 'blur(5px)'
-                }} />
-
-                {/* SVG Car Body */}
-                <svg viewBox="0 0 200 60" width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible' }}>
-                  <defs>
-                    <linearGradient id={`paint-${car.id}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={`hsl(${car.hue}, 80%, 65%)`} />
-                      <stop offset="50%" stopColor={`hsl(${car.hue}, 90%, 40%)`} />
-                      <stop offset="100%" stopColor={`hsl(${car.hue}, 100%, 20%)`} />
-                    </linearGradient>
-                    <linearGradient id="window-glass" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#bae6fd" />
-                      <stop offset="100%" stopColor="#0284c7" />
-                    </linearGradient>
-                  </defs>
-                  
-                  {/* Chassis Base */}
-                  <path d={bodyPath} fill={`url(#paint-${car.id})`} />
-                  
-                  {/* Glossy Top Edge Highlight */}
-                  <path d={bodyPath} fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" transform="translate(0, -1)" />
-                  
-                  {/* Glass */}
-                  <path d={windowPath} fill="url(#window-glass)" stroke="rgba(0,0,0,0.5)" strokeWidth="1" />
-                  
-                  {/* Door / Window Pillar */}
-                  <path d={windowPillar} stroke={`hsl(${car.hue}, 100%, 15%)`} strokeWidth="3" />
-                  
-                  {/* Beltline Highlight */}
-                  <path d={isSport ? "M 25,25 L 185,28" : "M 20,20 L 190,25"} stroke="rgba(255,255,255,0.3)" strokeWidth="1" fill="none" />
-                  
-                  {/* Headlight */}
-                  <path d={isSport ? "M 180,28 L 195,30 L 195,36 L 180,36 Z" : "M 185,25 L 195,27 L 195,34 L 185,34 Z"} fill="#fff" />
-                  
-                  {/* Rear Brake Light Housing */}
-                  <path d={isSport ? "M 9,35 L 15,35 L 15,42 L 9,42 Z" : "M 9,30 L 15,30 L 15,38 L 9,38 Z"} fill={car.isBraking ? "#ef4444" : "#991b1b"} />
-                </svg>
-
-                {/* Brake Light External Glow Effect */}
-                <div style={{ 
-                  position: 'absolute', left: '-5px', top: isSport ? '35px' : '30px', width: '20px', height: '20px', 
-                  background: car.isBraking ? '#ef4444' : 'transparent', 
-                  boxShadow: car.isBraking ? '0 0 35px 15px rgba(239,68,68,0.95)' : '0 0 10px 2px rgba(239,68,68,0.3)', 
-                  borderRadius: '50%',
-                  transition: 'background 0.1s, box-shadow 0.1s',
-                  pointerEvents: 'none'
-                }} />
-
-                {/* Realistic Alloy Wheels */}
-                {[45, 155].map((centerX, idx) => (
-                  <div key={idx} style={{ 
-                    position: 'absolute', bottom: '-8px', left: `${centerX - 18}px`, width: '36px', height: '36px', 
-                    background: '#0f172a', borderRadius: '50%', border: '4px solid #1e293b',
-                    boxShadow: '0 5px 10px rgba(0,0,0,0.9), inset 0 0 5px rgba(0,0,0,1)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    animation: `spin ${300 / Math.max(1, car.v)}s linear infinite`
-                  }}>
-                    {/* Alloy Rim Detail using repeating-conic-gradient */}
-                    <div style={{ 
-                      width: '24px', height: '24px', 
-                      background: 'radial-gradient(circle, #cbd5e1 0%, #64748b 70%, #334155 100%)', 
-                      borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' 
-                    }}>
-                      <div style={{ 
-                        width: '20px', height: '20px', 
-                        background: 'repeating-conic-gradient(from 0deg, transparent 0deg 40deg, #1e293b 40deg 72deg)', 
-                        borderRadius: '50%' 
-                      }} />
-                      {/* Center Cap */}
-                      <div style={{ position: 'absolute', width: '6px', height: '6px', background: '#020617', borderRadius: '50%' }} />
-                    </div>
-                  </div>
-                ))}
-                
-                {/* Drop shadow on road */}
-                <div style={{
-                  position: 'absolute', bottom: '-10px', left: '20px', width: '160px', height: '20px',
-                  background: 'rgba(0,0,0,0.95)', filter: 'blur(7px)', borderRadius: '50%', zIndex: -1
-                }} />
-                
-                {/* Wet reflection of the car itself on the road */}
-                <div style={{
-                  position: 'absolute', bottom: '-45px', left: '0px', width: '200px', height: '40px',
-                  background: `linear-gradient(180deg, hsl(${car.hue}, 80%, 40%), transparent)`,
-                  opacity: 0.35, filter: 'blur(8px)', borderRadius: '10px', zIndex: -2,
-                  transform: 'scaleY(-1)'
-                }} />
-              </div>
-            );
-          })}
+          <CarAnimationLayer signalChanges={signalChanges} STOP_LINE_X={STOP_LINE_X} />
         </div>
       </div>
 

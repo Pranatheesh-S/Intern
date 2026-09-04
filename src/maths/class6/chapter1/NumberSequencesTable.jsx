@@ -11,7 +11,8 @@ export const SEQUENCES = [
   { id: 7, seq: "1, 8, 27, 64, 125, 216, ...", rule: "Cubes", next: ["343", "512", "729"] },
   { id: 8, seq: "1, 2, 3, 5, 8, 13, 21, ...", rule: "Virahānka numbers", next: ["34", "55", "89"] },
   { id: 9, seq: "1, 2, 4, 8, 16, 32, 64, ...", rule: "Powers of 2", next: ["128", "256", "512"] },
-  { id: 10, seq: "1, 3, 9, 27, 81, 243, 729, ...", rule: "Powers of 3", next: ["2187", "6561", "19683"] }
+  { id: 10, seq: "1, 3, 9, 27, 81, 243, 729, ...", rule: "Powers of 3", next: ["2187", "6561", "19683"] },
+  { id: 11, seq: "1, 7, 19, 37, 61, 91, 127, ...", rule: "Hexagonal numbers", next: ["169", "217", "271"] }
 ];
 
 const SequenceRow = ({ data, isSolved, onSolve }) => {

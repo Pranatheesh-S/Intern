@@ -41,19 +41,34 @@ const darkStepsData = [
     keyIdea: <span key="ki">The Earth turns <strong>15° of longitude = 1 hour</strong> of time.</span>
   },
 ];
+const CameraController = ({ step }) => {
+  const controlsRef = useRef();
+  
+  useFrame((state) => {
+    if (!controlsRef.current) return;
+    const targetPos = step === 1 ? new THREE.Vector3(5, 0, 16) : new THREE.Vector3(1.5, 0, 7);
+    const targetLookAt = step === 1 ? new THREE.Vector3(5, 0, 0) : new THREE.Vector3(1.5, 0, 0);
+    
+    state.camera.position.lerp(targetPos, 0.05);
+    controlsRef.current.target.lerp(targetLookAt, 0.05);
+    controlsRef.current.update();
+  });
+
+  return <OrbitControls ref={controlsRef} enableZoom={true} enablePan={false} />;
+};
 
 const TimeZonesGlobe = ({ step }) => {
   const colorMap = useTexture(worldMapUrl);
   const sunMap = useTexture(sunMapUrl);
   const flareMap = useTexture(flareMapUrl);
   const groupRef = useRef();
-  
+
   useFrame((state, delta) => {
     if (groupRef.current) {
       if (step === 1) {
         groupRef.current.rotation.y += delta * 0.2;
       } else if (step === 2) {
-         groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, 45 * (Math.PI / 180), 0.05);
+        groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, 45 * (Math.PI / 180), 0.05);
       }
     }
   });
@@ -62,21 +77,21 @@ const TimeZonesGlobe = ({ step }) => {
     <>
       <color attach="background" args={['#000000']} />
       <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-      <ambientLight intensity={0.35} />
+      <ambientLight intensity={0.85} />
       <directionalLight position={[15, 0, 0]} intensity={2.5} color="#FDB813" />
-      
+
       <group position={[12, 0, 0]}>
         <mesh rotation={[0, -Math.PI / 2, 0]}>
-          <sphereGeometry args={[2, 32, 32]} />
+          <sphereGeometry args={[2.8, 32, 32]} />
           <meshBasicMaterial map={sunMap} color="#fef08a" />
         </mesh>
         {/* Cinematic Optical Lens Flare (Stable in World Space) */}
         <group position={[0, 0, 0]}>
-          <mesh scale={[24, 24, 1]}>
+          <mesh scale={[30, 30, 1]}>
             <planeGeometry args={[1, 1]} />
             <meshBasicMaterial map={flareMap} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} depthTest={false} side={THREE.DoubleSide} />
           </mesh>
-          <mesh scale={[24, 24, 1]} rotation={[Math.PI/2, 0, 0]}>
+          <mesh scale={[30, 30, 1]} rotation={[Math.PI / 2, 0, 0]}>
             <planeGeometry args={[1, 1]} />
             <meshBasicMaterial map={flareMap} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} depthTest={false} side={THREE.DoubleSide} />
           </mesh>
@@ -87,8 +102,8 @@ const TimeZonesGlobe = ({ step }) => {
         <Sphere args={[2.2, 64, 64]}>
           <meshStandardMaterial map={colorMap} roughness={0.8} />
         </Sphere>
-        
-        {step >= 3 && Array.from({length: 24}).map((_, i) => {
+
+        {step >= 3 && Array.from({ length: 24 }).map((_, i) => {
           let lon = i * 15;
           const points = [];
           for (let lat = 90; lat >= -90; lat -= 5) {
@@ -100,28 +115,28 @@ const TimeZonesGlobe = ({ step }) => {
 
       {(step === 1 || step === 2) && (
         <group>
-          <Line 
-             points={Array.from({length: 61}).map((_,i) => {
-                const angle = (i/60) * Math.PI * 2;
-                return [0, 2.23 * Math.cos(angle), 2.23 * Math.sin(angle)];
-             })}
-             color="#cbd5e1"
-             lineWidth={1}
-             transparent opacity={0.3}
+          <Line
+            points={Array.from({ length: 61 }).map((_, i) => {
+              const angle = (i / 60) * Math.PI * 2;
+              return [0, 2.23 * Math.cos(angle), 2.23 * Math.sin(angle)];
+            })}
+            color="#cbd5e1"
+            lineWidth={1}
+            transparent opacity={0.3}
           />
           {step === 2 && (
             <>
-              <Html position={[0, 2.4, 0]} center zIndexRange={[100,0]}>
-                 <div style={{ color: '#cbd5e1', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌓 day - night line</div>
+              <Html position={[0, 2.4, 0]} center zIndexRange={[100, 0]}>
+                <div style={{ color: '#cbd5e1', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌓 day - night line</div>
               </Html>
-              <Html position={[2.4, 1.2, 0]} center zIndexRange={[100,0]}>
-                 <div style={{ color: '#fef08a', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ 12:00 NOON</div>
+              <Html position={[2.4, 1.2, 0]} center zIndexRange={[100, 0]}>
+                <div style={{ color: '#fef08a', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ 12:00 NOON</div>
               </Html>
-              <Html position={[-2.4, 0.8, 0]} center zIndexRange={[100,0]}>
-                 <div style={{ color: '#93c5fd', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌙 MIDNIGHT</div>
+              <Html position={[-2.4, 0.8, 0]} center zIndexRange={[100, 0]}>
+                <div style={{ color: '#93c5fd', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌙 MIDNIGHT</div>
               </Html>
-              <Html position={[4, 1.5, 0]} center zIndexRange={[100,0]}>
-                 <div style={{ color: '#fbbf24', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ sun rays</div>
+              <Html position={[4, 1.5, 0]} center zIndexRange={[100, 0]}>
+                <div style={{ color: '#fbbf24', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ sun rays</div>
               </Html>
             </>
           )}
@@ -137,7 +152,7 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
   const sunMap = useTexture(sunMapUrl);
   const flareMap = useTexture(flareMapUrl);
   const groupRef = useRef();
-  
+
   useFrame(() => {
     if (groupRef.current) {
       groupRef.current.rotation.y = -172.5 * (Math.PI / 180);
@@ -160,47 +175,47 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
     <>
       <color attach="background" args={['#000000']} />
       <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-      <ambientLight intensity={0.15} />
-      <directionalLight 
-        position={[-10 * Math.sin(sunAngle), 0, 10 * Math.cos(sunAngle)]} 
-        intensity={2.5} 
+      <ambientLight intensity={0.45} />
+      <directionalLight
+        position={[-10 * Math.sin(sunAngle), 0, 10 * Math.cos(sunAngle)]}
+        intensity={2.5}
       />
 
       <group ref={groupRef}>
         <Sphere args={[2.2, 64, 64]}>
           <meshStandardMaterial map={colorMap} roughness={0.8} />
         </Sphere>
-        
-        {showGrid && Array.from({length: 24}).map((_, i) => (
-          <Line key={i} points={Array.from({length: 37}).map((_,j) => getLatLonPoint(90-j*5, i*15, 2.205))} color="rgba(255,255,255,0.1)" lineWidth={1} transparent />
+
+        {showGrid && Array.from({ length: 24 }).map((_, i) => (
+          <Line key={i} points={Array.from({ length: 37 }).map((_, j) => getLatLonPoint(90 - j * 5, i * 15, 2.205))} color="rgba(255,255,255,0.1)" lineWidth={1} transparent />
         ))}
-        {showGrid && Array.from({length: 17}).map((_, i) => {
-          const lat = 80 - i*10;
+        {showGrid && Array.from({ length: 17 }).map((_, i) => {
+          const lat = 80 - i * 10;
           const pts = [];
-          for (let lon=0; lon<=360; lon+=5) pts.push(getLatLonPoint(lat, lon, 2.205));
+          for (let lon = 0; lon <= 360; lon += 5) pts.push(getLatLonPoint(lat, lon, 2.205));
           return <Line key={`lat${i}`} points={pts} color="rgba(255,255,255,0.1)" lineWidth={1} transparent />
         })}
 
-        <Line points={Array.from({length:37}).map((_,i)=>getLatLonPoint(90-i*5, 82.5, 2.21))} color="#10b981" lineWidth={3} />
-        <Line points={Array.from({length:37}).map((_,i)=>getLatLonPoint(90-i*5, 69.6, 2.21))} color="#d97706" lineWidth={2} transparent opacity={0.5} />
-        <Line points={Array.from({length:37}).map((_,i)=>getLatLonPoint(90-i*5, 95.3, 2.21))} color="#d97706" lineWidth={2} transparent opacity={0.5} />
+        <Line points={Array.from({ length: 37 }).map((_, i) => getLatLonPoint(90 - i * 5, 82.5, 2.21))} color="#10b981" lineWidth={3} />
+        <Line points={Array.from({ length: 37 }).map((_, i) => getLatLonPoint(90 - i * 5, 69.6, 2.21))} color="#d97706" lineWidth={2} transparent opacity={0.5} />
+        <Line points={Array.from({ length: 37 }).map((_, i) => getLatLonPoint(90 - i * 5, 95.3, 2.21))} color="#d97706" lineWidth={2} transparent opacity={0.5} />
 
-        <Html position={getLatLonPoint(21.6, 69.6, 2.25)} center zIndexRange={[100,0]}>
+        <Html position={getLatLonPoint(21.6, 69.6, 2.25)} center zIndexRange={[100, 0]}>
           <div style={{ background: '#1e293b', color: '#fff', padding: '8px 12px', borderRadius: '12px', fontSize: '11px', border: '1px solid #475569', display: 'flex', flexDirection: 'column', alignItems: 'center', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
-             <div style={{ fontWeight: 'bold' }}>Porbandar</div>
-             <div style={{ color: '#94a3b8', fontSize: '9px' }}>Gujarat • west</div>
-             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: porbDay ? '#fef08a' : '#93c5fd' }}>{porbDay ? '☀️' : '🌙'} {format12(porbMins)}</div>
-             <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
+            <div style={{ fontWeight: 'bold' }}>Porbandar</div>
+            <div style={{ color: '#94a3b8', fontSize: '9px' }}>Gujarat • west</div>
+            <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: porbDay ? '#fef08a' : '#93c5fd' }}>{porbDay ? '☀️' : '🌙'} {format12(porbMins)}</div>
+            <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
           </div>
 
         </Html>
 
-        <Html position={getLatLonPoint(27.5, 95.3, 2.25)} center zIndexRange={[100,0]}>
+        <Html position={getLatLonPoint(27.5, 95.3, 2.25)} center zIndexRange={[100, 0]}>
           <div style={{ background: '#1e293b', color: '#fff', padding: '8px 12px', borderRadius: '12px', fontSize: '11px', border: '1px solid #475569', display: 'flex', flexDirection: 'column', alignItems: 'center', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
-             <div style={{ fontWeight: 'bold' }}>Tinsukia</div>
-             <div style={{ color: '#94a3b8', fontSize: '9px' }}>Assam • east</div>
-             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: tinDay ? '#fef08a' : '#93c5fd' }}>{tinDay ? '☀️' : '🌙'} {format12(tinMins)}</div>
-             <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
+            <div style={{ fontWeight: 'bold' }}>Tinsukia</div>
+            <div style={{ color: '#94a3b8', fontSize: '9px' }}>Assam • east</div>
+            <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: tinDay ? '#fef08a' : '#93c5fd' }}>{tinDay ? '☀️' : '🌙'} {format12(tinMins)}</div>
+            <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
           </div>
 
         </Html>
@@ -215,32 +230,32 @@ const LocalTimeExplorer = ({ onNextActivity, onBack }) => {
   const [showDayNight, setShowDayNight] = useState(true);
   const [showGrid, setShowGrid] = useState(false);
   const [playing, setPlaying] = useState(false);
-  
+
   const istMins = timeMins;
   const porbMins = timeMins - 52;
   const tinMins = timeMins + 51;
 
   const format24 = (m) => {
     let mt = Math.round(m);
-    while(mt < 0) mt += 24*60;
-    while(mt >= 24*60) mt -= 24*60;
+    while (mt < 0) mt += 24 * 60;
+    while (mt >= 24 * 60) mt -= 24 * 60;
     const hr = Math.floor(mt / 60);
     const mn = mt % 60;
-    return `${hr.toString().padStart(2,'0')}:${mn.toString().padStart(2,'0')}`;
+    return `${hr.toString().padStart(2, '0')}:${mn.toString().padStart(2, '0')}`;
   };
 
   const format12 = (m) => {
     let mt = Math.round(m);
-    while(mt < 0) mt += 24*60;
-    while(mt >= 24*60) mt -= 24*60;
+    while (mt < 0) mt += 24 * 60;
+    while (mt >= 24 * 60) mt -= 24 * 60;
     const hr = Math.floor(mt / 60);
     const mn = mt % 60;
     const ap = hr < 12 ? 'a.m.' : 'p.m.';
     let h = hr % 12;
     if (h === 0) h = 12;
-    return `${h}:${mn.toString().padStart(2,'0')} ${ap}`;
+    return `${h}:${mn.toString().padStart(2, '0')} ${ap}`;
   };
-  
+
   useEffect(() => {
     let interval;
     if (playing) {
@@ -255,69 +270,69 @@ const LocalTimeExplorer = ({ onNextActivity, onBack }) => {
         <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Local Time vs Standard Time</h2>
         <div style={{ fontSize: '12px', color: '#94a3b8' }}>The same two friends — Porbandar (Gujarat) & Tinsukia (Assam)</div>
       </div>
-      
+
 
 
       <div style={{ position: 'absolute', bottom: 30, right: 30, zIndex: 10 }}>
-         <button className="dark-nav-btn next" onClick={onNextActivity} style={{ padding: '12px 24px' }}>
-            Next <Play size={16} fill="currentColor" style={{ marginLeft: '4px' }} />
-         </button>
+        <button className="dark-nav-btn next" onClick={onNextActivity} style={{ padding: '12px 24px' }}>
+          Next <Play size={16} fill="currentColor" style={{ marginLeft: '4px' }} />
+        </button>
       </div>
 
       <div style={{ position: 'absolute', inset: 0 }}>
         <Canvas camera={{ position: [0, 0, 7], fov: 45 }}>
-           <GlobeContent istMins={istMins} porbMins={porbMins} tinMins={tinMins} showDayNight={showDayNight} showGrid={showGrid} format12={format12} format24={format24} />
-           <OrbitControls enableZoom={true} enablePan={false} />
+          <GlobeContent istMins={istMins} porbMins={porbMins} tinMins={tinMins} showDayNight={showDayNight} showGrid={showGrid} format12={format12} format24={format24} />
+          <OrbitControls enableZoom={true} enablePan={false} />
         </Canvas>
       </div>
 
       <div style={{ position: 'absolute', top: 20, right: 30, width: '260px', background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(8px)', padding: '20px', borderRadius: '16px', border: '1px solid #334155', zIndex: 10 }}>
-         <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '1px', marginBottom: '12px' }}>CONTROLS</div>
-         
-         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>
-               <button onClick={() => setPlaying(!playing)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                 {playing ? <Pause size={16} /> : <Play size={16} />}
-               </button>
-               Move the Sun
-            </div>
-            <input type="range" min="0" max="1440" value={timeMins} onChange={e => { setTimeMins(Number(e.target.value)); setPlaying(false); }} style={{ width: '80px', accentColor: '#3b82f6', cursor: 'pointer' }} />
-         </div>
+        <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '1px', marginBottom: '12px' }}>CONTROLS</div>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>
+            <button onClick={() => setPlaying(!playing)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              {playing ? <Pause size={16} /> : <Play size={16} />}
+            </button>
+            Move the Sun
+          </div>
+          <input type="range" min="0" max="1440" value={timeMins} onChange={e => { setTimeMins(Number(e.target.value)); setPlaying(false); }} style={{ width: '80px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+        </div>
       </div>
 
       <div style={{ position: 'absolute', bottom: 30, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '16px', zIndex: 10 }}>
-         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
-            <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Porbandar • Sun time</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fef08a', margin: '4px 0' }}>{format24(porbMins)}</div>
-            <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 52 min behind IST</div>
-         </div>
-         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
-         <div style={{ background: '#78350f', border: '1px solid #d97706', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
-            <div style={{ fontSize: '11px', color: '#fde68a', fontWeight: 'bold' }}>🕒 IST (82½°E)</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', margin: '4px 0' }}>{format24(istMins)}</div>
-            <div style={{ fontSize: '10px', color: '#fde68a' }}>the one shared clock</div>
-         </div>
-         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
-         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
-            <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Tinsukia • Sun time</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#93c5fd', margin: '4px 0' }}>{format24(tinMins)}</div>
-            <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 51 min ahead of IST</div>
-         </div>
+        <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+          <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Porbandar • Sun time</div>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fef08a', margin: '4px 0' }}>{format24(porbMins)}</div>
+          <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 52 min behind IST</div>
+        </div>
+        <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
+        <div style={{ background: '#78350f', border: '1px solid #d97706', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+          <div style={{ fontSize: '11px', color: '#fde68a', fontWeight: 'bold' }}>🕒 IST (82½°E)</div>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', margin: '4px 0' }}>{format24(istMins)}</div>
+          <div style={{ fontSize: '10px', color: '#fde68a' }}>the one shared clock</div>
+        </div>
+        <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
+        <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+          <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Tinsukia • Sun time</div>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#93c5fd', margin: '4px 0' }}>{format24(tinMins)}</div>
+          <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 51 min ahead of IST</div>
+        </div>
       </div>
-      
-      <button 
-         className="dark-nav-btn" 
-         onClick={onBack}
-         style={{ position: 'absolute', bottom: 30, left: 30, background: 'rgba(255,255,255,0.1)', zIndex: 10 }}
+
+      <button
+        className="dark-nav-btn"
+        onClick={onBack}
+        style={{ position: 'absolute', bottom: 30, left: 30, background: 'rgba(255,255,255,0.1)', zIndex: 10 }}
       >
-         <ArrowLeft size={16} /> Back
+        <ArrowLeft size={16} /> Back
       </button>
     </div>
   );
 };
 
 export default function TimeZonesPage({ onNextActivity, onBack }) {
-  const [currentStepIdx, setCurrentStepIdx] = useState(0); 
+  const [currentStepIdx, setCurrentStepIdx] = useState(0);
 
   const handleNext = () => setCurrentStepIdx(c => c + 1);
   const handlePrev = () => {
@@ -332,12 +347,12 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
           <div className="coords-main-content">
             <div className="coords-left">
               <div className="coords-eyebrow">CHAPTER 1 &bull; CLASS 6 SOCIAL SCIENCE</div>
-              <h1 className="coords-chtitle">Understanding<br/>Time Zones</h1>
+              <h1 className="coords-chtitle">Understanding<br />Time Zones</h1>
               <div className="coords-illus" style={{ position: 'relative', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #334155', boxShadow: 'inset 0 0 30px rgba(0,0,0,0.8)', overflow: 'hidden', padding: 0 }}>
                 <img src="/time_zones_illustration.jpg" alt="Time Zones Overview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </div>
-            
+
             <div className="coords-right">
               <div className="coords-rhead" style={{ fontSize: '32px' }}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -391,11 +406,11 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
       <div className="dark-coords-main-content">
         <div className="dark-coords-left">
           <div className="dark-top-title">Time Around the World — Why Clocks Differ</div>
-          
+
           <div className="dark-globe-container">
-            <Canvas camera={{ position: [1.5, 0, 7], fov: 45 }}>
+            <Canvas camera={{ position: [5, 0, 16], fov: 45 }}>
               <TimeZonesGlobe step={step.stepNum} />
-              <OrbitControls enableZoom={true} enablePan={false} target={[1.5, 0, 0]} />
+              <CameraController step={step.stepNum} />
             </Canvas>
           </div>
 
@@ -417,7 +432,7 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
         <div className="dark-coords-right">
           <div className="dark-step-eyebrow">STEP {activeStepIdx + 1} OF 2</div>
           <h2 className="dark-step-title">{step.title}</h2>
-          
+
           {step.paragraphs.map((p, idx) => (
             <div key={idx} className="dark-step-text">{p}</div>
           ))}
