@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRightLeft, Users, Hexagon, Triangle, Plus, UserPlus, Trophy } from 'lucide-react';
+import { ArrowRightLeft, Users, Hexagon, Triangle, Plus, UserPlus, Trophy, Circle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import './theme.css';
 
@@ -33,7 +33,7 @@ export default function ShapesToNumbers({
               Bridge 1: Regular Polygons ⟷ Counting Numbers
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              In every closed two-dimensional polygon, the total count of bounding line edges rigorously equals the total count of meeting corners (vertices). Adjust the slider to observe this geometric invariant:
+              In any simple polygon, the number of sides is always exactly the same as the number of corners! Move the slider to see how the sides and corners match up:
             </p>
           </div>
 
@@ -68,7 +68,7 @@ export default function ShapesToNumbers({
           </div>
 
           <div style={{ background: 'var(--theme-bg, #f0fdfa)', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', color: 'var(--theme-heading, #134e4a)', fontWeight: '800', fontSize: '0.92rem', textAlign: 'justify', textJustify: 'inter-word' }}>
-            ✅ Theorem: Since every vertex connects precisely two perimeter edges in a simple closed polygon, the counting sequence of vertices maps 1-to-1 with sides ($V = E$).
+            ✅ Rule: Because every corner joins exactly two sides, the number of corners is always equal to the number of sides (Corners = Sides).
           </div>
         </div>
       )}
@@ -81,7 +81,7 @@ export default function ShapesToNumbers({
               Bridge 2: The Handshake Network & Triangular Numbers
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              If $N$ delegates attend a summit and every person shakes hands with all other delegates once, the total handshakes correspond exactly to the $(N - 1)$-th triangular number ($T_{N-1} = N(N - 1)/2$).
+              If $N$ friends meet up and everyone shakes hands with everyone else exactly once, the total number of handshakes is a Triangular Number! You can find it using the formula $N \times (N - 1) \div 2$.
             </p>
           </div>
 
@@ -129,16 +129,16 @@ export default function ShapesToNumbers({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', height: '100%', justifyContent: 'space-between' }}>
           <div>
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-              Bridge 3: Stacked Triangle Rows ⟷ Square Numbers
+              Bridge 3: Stacking Wooden Blocks ⟷ Square Numbers
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              In an equilateral triangular grid partitioned into horizontal tiers, each consecutive tier contains successive odd numbers of unit triangles (1, 3, 5, 7, …). Summing these tiers produces perfect square numbers:
+              If you build a square using wooden blocks on a desk, each new L-shaped layer needs the next odd number of blocks (1, 3, 5, 7...). Adding them up always makes a perfect square!
             </p>
           </div>
 
           <div style={{ background: '#ffffff', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Triangle size={24} color="var(--theme-primary, #0d9488)" />
-            <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Tier Rows = {s2nTriRows}:</span>
+            <Hexagon size={24} color="var(--theme-primary, #0d9488)" />
+            <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Square Size = {s2nTriRows}x{s2nTriRows}:</span>
             <input
               type="range"
               min="1"
@@ -148,7 +148,7 @@ export default function ShapesToNumbers({
               style={{ flex: 1, accentColor: 'var(--theme-primary, #0d9488)' }}
             />
             <span style={{ fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)', fontSize: '0.95rem' }}>
-              {s2nTriRows * s2nTriRows} Triangles
+              {s2nTriRows * s2nTriRows} Blocks
             </span>
           </div>
 
@@ -184,7 +184,7 @@ export default function ShapesToNumbers({
                   </div>
                 )
               })}
-              <span style={{ padding: '0.2rem', color: '#cbd5e1', fontWeight: '900', fontSize: '1rem', marginLeft: '0.3rem' }}>...</span>
+              <span style={{ padding: '0.2rem', color: '#64748b', fontWeight: '900', fontSize: '1rem', marginLeft: '0.3rem' }}>...</span>
             </div>
             
             <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '800', marginTop: '0.3rem', textAlign: 'center', background: '#f1f5f9', padding: '0.6rem 1rem', borderRadius: '10px', width: '100%' }}>
@@ -205,7 +205,7 @@ export default function ShapesToNumbers({
               Bridge 4: Koch Snowflake ↔ 3 × Powers of 4
             </h3>
             <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              At each iterative depth k of the Koch fractal, each linear segment splits into 4 sub-segments of length 1/3. The total perimeter segment count follows the exponential geometric progression 3 × 4ᵏ:
+              In each step of drawing the Koch Snowflake, every straight line splits into 4 smaller lines. This means the total number of lines multiplies by 4 every single time!
             </p>
           </div>
 
@@ -255,7 +255,7 @@ export default function ShapesToNumbers({
                   </div>
                 )
               })}
-              <span style={{ padding: '0.2rem', color: '#cbd5e1', fontWeight: '900', fontSize: '1rem', marginLeft: '0.3rem' }}>...</span>
+              <span style={{ padding: '0.2rem', color: '#64748b', fontWeight: '900', fontSize: '1rem', marginLeft: '0.3rem' }}>...</span>
             </div>
             
             <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '800', marginTop: '0.3rem', textAlign: 'center', background: '#f1f5f9', padding: '0.6rem 1rem', borderRadius: '10px', width: '100%' }}>

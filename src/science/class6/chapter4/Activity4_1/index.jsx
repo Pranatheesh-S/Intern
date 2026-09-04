@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Compass } from 'lucide-react';
+import { ArrowLeft, Compass, Lock } from 'lucide-react';
 import MagneticTable from './MagneticTable';
 import DidYouKnow from './DidYouKnow';
 import Quiz from './Quiz';
@@ -7,8 +7,10 @@ import './Activity4_1.css';
 
 export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
   const [stage, setStage] = useState('table');
+  const [isTableCompleted, setIsTableCompleted] = useState(false);
 
   const handleTableComplete = () => {
+    setIsTableCompleted(true);
     setStage('quiz');
   };
 
@@ -91,7 +93,8 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
             1. Classification Table
           </button>
           <button
-            onClick={() => setStage('quiz')}
+            onClick={() => isTableCompleted && setStage('quiz')}
+            disabled={!isTableCompleted}
             className={stage === 'quiz' ? 'gold-glow-btn' : ''}
             style={{
               display: 'flex',
@@ -101,13 +104,16 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
               fontSize: '0.88rem',
               fontWeight: 800,
               borderRadius: '25px',
-              background: stage === 'quiz' ? undefined : '#F8FAFC',
-              color: stage === 'quiz' ? '#FFFFFF' : '#334155',
-              border: stage === 'quiz' ? 'none' : '1.5px solid #CBD5E1',
-              cursor: 'pointer',
+              background: stage === 'quiz' ? undefined : isTableCompleted ? '#F8FAFC' : '#F1F5F9',
+              color: stage === 'quiz' ? '#FFFFFF' : isTableCompleted ? '#334155' : '#94A3B8',
+              border: stage === 'quiz' ? 'none' : isTableCompleted ? '1.5px solid #CBD5E1' : '1.5px dashed #CBD5E1',
+              cursor: isTableCompleted ? 'pointer' : 'not-allowed',
+              opacity: isTableCompleted ? 1 : 0.65,
               transition: 'all 0.2s ease'
             }}
+            title={isTableCompleted ? '2. Knowledge Quiz' : 'Complete the classification table first to unlock the quiz'}
           >
+            {!isTableCompleted && <Lock size={14} color="#94A3B8" />}
             2. Knowledge Quiz
           </button>
         </div>
@@ -116,7 +122,10 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
       {/* Main Content Area */}
       <main style={{ width: '100%', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative', zIndex: 10 }}>
         {stage === 'table' ? (
-          <MagneticTable onComplete={handleTableComplete} />
+          <MagneticTable 
+            onComplete={handleTableComplete}
+            onTableCompleted={(completed) => setIsTableCompleted(completed)}
+          />
         ) : (
           <Quiz 
             onComplete={handleQuizComplete} 

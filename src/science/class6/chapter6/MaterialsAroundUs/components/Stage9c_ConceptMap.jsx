@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Compass, Book, Box, Sparkles, Hammer, Eye, Droplets, Trophy, Brain, CheckCircle2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useState, cloneElement } from 'react';
+import PropTypes from 'prop-types';
+import { Compass, Book, Box, Sparkles, Hammer, Eye, Droplets, Trophy, Brain } from 'lucide-react';
 
 export default function Stage9c_ConceptMap({ onComplete, addXp }) {
   const [activeConcept, setActiveConcept] = useState('matter');
@@ -10,9 +10,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     matter: {
       id: 'matter',
       title: 'What is Matter?',
-      color: '#22c55e',
-      bg: '#f0fdf4',
-      icon: <Box size={24} color="#22c55e" />,
+      color: '#A64B27',
+      bg: 'var(--lesson-success-bg)',
+      icon: <Box size={24} color="#A64B27" />,
       desc: 'Anything that occupies space (volume) and has mass is called matter.',
       prefix: 'Matter',
       summary: 'is everything around us that has mass and occupies space.',
@@ -22,9 +22,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     lustre: {
       id: 'lustre',
       title: 'Lustre (Shine)',
-      color: 'var(--accent)',
-      bg: 'var(--accent-bg)',
-      icon: <Sparkles size={24} color="var(--accent)" />,
+      color: 'var(--lesson-text)',
+      bg: 'var(--lesson-accent-bg)',
+      icon: <Sparkles size={24} color="var(--lesson-primary)" />,
       desc: "The way a material's surface reflects light. Examples: Gold, Silver, Plastic",
       prefix: 'Lustre',
       summary: 'helps us identify how a material looks by its shine.',
@@ -34,9 +34,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     hardness: {
       id: 'hardness',
       title: 'Hardness & Softness',
-      color: 'var(--accent)',
-      bg: 'var(--surface)',
-      icon: <Hammer size={24} color="var(--accent)" />,
+      color: 'var(--lesson-text)',
+      bg: 'var(--lesson-surface)',
+      icon: <Hammer size={24} color="var(--lesson-primary)" />,
       desc: 'The ability of a material to resist scratching or pressure. Examples: Iron (hard), Chalk (soft)',
       prefix: 'Hardness & softness',
       summary: 'tell us how strong or weak a material is when pressed or scratched.',
@@ -46,9 +46,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     transparency: {
       id: 'transparency',
       title: 'Transparency Levels',
-      color: '#eab308',
-      bg: '#fefce8',
-      icon: <Eye size={24} color="#eab308" />,
+      color: 'var(--lesson-warning)',
+      bg: 'var(--lesson-warning-bg)',
+      icon: <Eye size={24} color="var(--lesson-warning)" />,
       desc: 'How much light can pass through a material. Examples: Glass (transparent), Wood (opaque)',
       prefix: 'Transparency',
       summary: 'helps us know whether we can see through a material or not.',
@@ -58,9 +58,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     solubility: {
       id: 'solubility',
       title: 'Solubility in Water',
-      color: '#06b6d4',
-      bg: '#ecfeff',
-      icon: <Droplets size={24} color="#06b6d4" />,
+      color: 'var(--lesson-text)',
+      bg: 'var(--lesson-accent-bg)',
+      icon: <Droplets size={24} color="var(--lesson-primary)" />,
       desc: 'The ability of a material to dissolve in water. Examples: Salt (soluble), Sand (insoluble)',
       prefix: 'Solubility',
       summary: 'helps us know whether a material dissolves in water or not.',
@@ -85,18 +85,18 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', overflowY: 'auto', paddingRight: '0.5rem' }}>
       
       {/* Top Header */}
-      <div style={{ background: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0, background: 'var(--surface)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Book size={40} color="var(--accent)" />
-          <div style={{ position: 'absolute', bottom: -5, right: -5, background: '#10b981', borderRadius: '50%', padding: '4px', border: '3px solid white' }}>
+      <div style={{ background: '#FFFFFF', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', gap: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0, background: '#FFFFFF', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Book size={40} color="var(--lesson-primary)" />
+          <div style={{ position: 'absolute', bottom: -5, right: -5, background: '#A64B27', borderRadius: '50%', padding: '4px', border: '3px solid white' }}>
             <Compass size={20} color="white" />
           </div>
         </div>
         <div style={{ flex: 1 }}>
-          <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)', fontSize: '1.6rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--lesson-primary)', fontSize: '1.6rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
             Case File Complete: Property Concept Map
           </h2>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, color: 'var(--lesson-secondary)', fontSize: '1.05rem', lineHeight: '1.5' }}>
             Review all the properties we investigated during this mission.<br/>
             Click through the categories to refresh your memory!
           </p>
@@ -108,7 +108,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       <div style={{ display: 'flex', gap: '1rem', flex: 1, minHeight: 0 }}>
         
         {/* Left Map Panel */}
-        <div style={{ flex: 2, background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 2, background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           
           {/* Navigation Buttons */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center', marginBottom: '1.2rem', zIndex: 10 }}>
@@ -128,7 +128,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                   filter: explored.includes(c.id) ? 'none' : 'grayscale(100%) opacity(0.6)'
                 }}
               >
-                {React.cloneElement(c.icon, { color: activeConcept === c.id ? 'white' : c.color, size: 16 })}
+                {cloneElement(c.icon, { color: activeConcept === c.id ? 'white' : c.color, size: 16 })}
                 {c.title}
               </button>
             ))}
@@ -158,12 +158,12 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
               <foreignObject x="400" y="250" width="200" height="200">
                 <div style={{ 
                   width: '100%', height: '100%', 
-                  background: 'radial-gradient(circle, var(--text-heading), var(--text-primary))',
+                  background: 'radial-gradient(circle, var(--lesson-primary), var(--lesson-text))',
                   borderRadius: '50%',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                   color: 'white', textAlign: 'center',
                   boxShadow: '0 8px 24px rgba(30, 58, 138, 0.4)',
-                  border: '6px solid var(--surface)',
+                  border: '6px solid var(--lesson-surface)',
                   padding: '20px'
                 }}>
                   <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.2' }}>Properties<br/>of Matter</div>
@@ -192,11 +192,11 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <div style={{ background: 'white', padding: '10px', borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                        {React.cloneElement(c.icon, { size: 28 })}
+                        {cloneElement(c.icon, { size: 28 })}
                       </div>
                       <div style={{ color: c.color, fontWeight: 'bold', fontSize: '20px' }}>{c.title}</div>
                     </div>
-                    <div style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: '1.5' }}>
+                    <div style={{ color: 'var(--lesson-secondary)', fontSize: '15px', lineHeight: '1.5' }}>
                       {c.desc}
                     </div>
                   </div>
@@ -209,11 +209,11 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
         </div>
 
         {/* Right Summary Panel */}
-        <div style={{ flex: 1, background: 'var(--accent-bg)', borderRadius: '16px', border: '1px solid var(--accent)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ flex: 1, background: 'var(--lesson-warning-bg)', borderRadius: '16px', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           
-          <div style={{ padding: '1.5rem 1.5rem 0.5rem 1.5rem', borderBottom: '1px solid var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-            <Brain size={24} color="var(--accent)" />
-            <h3 style={{ margin: 0, color: 'var(--accent)', fontSize: '1.3rem' }}>Quick Summary</h3>
+          <div style={{ padding: '1.5rem 1.5rem 0.5rem 1.5rem', borderBottom: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+            <Brain size={24} color="var(--lesson-primary)" />
+            <h3 style={{ margin: 0, color: 'var(--heading-main)', fontSize: '1.3rem' }}>Quick Summary</h3>
           </div>
           
           <div style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1, overflowY: 'auto' }}>
@@ -231,21 +231,21 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                 }}
               >
                 <div style={{ background: c.color, color: 'white', padding: '8px', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {React.cloneElement(c.icon, { color: 'white', size: 18 })}
+                  {cloneElement(c.icon, { color: 'white', size: 18 })}
                 </div>
-                <div style={{ color: 'var(--text-primary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                <div style={{ color: 'var(--lesson-text)', fontSize: '0.95rem', lineHeight: '1.5' }}>
                   <strong style={{ color: c.color }}>{c.prefix}</strong> {c.summary}
                 </div>
               </div>
             ))}
           </div>
 
-          <div style={{ padding: '1.5rem', background: '#f0fdf4', borderTop: '1px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ padding: '1.5rem', background: 'var(--lesson-success-bg)', borderTop: '1px solid var(--lesson-success-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '1.1rem' }}>Great job, Detective!</div>
-              <div style={{ color: '#15803d', fontSize: '0.9rem' }}>You've learned so much today!</div>
+              <div style={{ color: '#A64B27', fontWeight: 'bold', fontSize: '1.1rem' }}>Great job, Detective!</div>
+              <div style={{ color: '#A64B27', fontSize: '0.9rem' }}>You&apos;ve learned so much today!</div>
             </div>
-            <Trophy size={40} color="#eab308" />
+            <Trophy size={40} color="var(--lesson-warning)" />
           </div>
 
         </div>
@@ -255,3 +255,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     </div>
   );
 }
+
+Stage9c_ConceptMap.propTypes = {
+  onComplete: PropTypes.func,
+  addXp: PropTypes.func
+};

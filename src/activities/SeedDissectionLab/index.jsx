@@ -342,7 +342,10 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
                     {/* Wrinkling paths (fades out as hydration reaches 100%) */}
                     <path d="M 10 12 Q 13 16 11 20 M 20 12 Q 17 16 19 20" fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="0.6" opacity={Math.max(0, 1 - (soakProgress / 80))} />
                   </g>
-                  <text x="52" y="240" fill="var(--text-primary)" fontSize="8.5" fontWeight="bold">Chickpea (Dicot)</text>
+                  <text x="74" y="238" textAnchor="middle" fill="var(--text-primary)" fontSize="9.5" fontWeight="bold">
+                    <tspan x="74" dy="0">Chickpea</tspan>
+                    <tspan x="74" dy="11" fontSize="8.5" fill="#0284c7">(Dicot)</tspan>
+                  </text>
 
                   {/* Maize Kernel */}
                   <g transform={`translate(${125 + (soakProgress*0.08)}, ${185 - (soakProgress*0.05)}) scale(${1 + (soakProgress * 0.0018)})`}>
@@ -351,7 +354,10 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
                     {/* Whitish embryo base shield */}
                     <path d="M 15 25 L 8 15 Q 15 11 22 15 Z" fill="#ffffff" opacity="0.6" />
                   </g>
-                  <text x="122" y="240" fill="var(--text-primary)" fontSize="8.5" fontWeight="bold">Maize (Monocot)</text>
+                  <text x="142" y="238" textAnchor="middle" fill="var(--text-primary)" fontSize="9.5" fontWeight="bold">
+                    <tspan x="142" dy="0">Maize</tspan>
+                    <tspan x="142" dy="11" fontSize="8.5" fill="#0284c7">(Monocot)</tspan>
+                  </text>
 
                   {/* Beaker Glass Structure (Overlayed to show reflections) */}
                   {/* Lip and spout of beaker */}

@@ -151,7 +151,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                 <div style={{ background: '#FFFFFF', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 6px rgba(60,40,20,0.03)' }}>
                   <h2 style={{ fontSize: '1.15rem', color: '#92400E', margin: '0 0 4px 0', fontFamily: '"Fraunces", serif', fontWeight: 900 }}>What are Symbols?</h2>
                   <p style={{ color: '#3D2E24', fontSize: '13px', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
-                    Real places are too huge to draw exactly on a map. Instead of full buildings, roads, and rivers, we use standardized symbols to make map reading quick and universal.
+                    Real places are too big to draw on a map. Instead of drawing real buildings, roads, and rivers, we use simple symbols to make maps easy to read.
                   </p>
                 </div>
 
@@ -162,28 +162,52 @@ export default function MapSymbols({ onComplete, onBack }) {
                     <div style={{ width: '32px', textAlign: 'center' }}>→</div>
                     <div style={{ flex: 1 }}>Standard Map Symbol</div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
                     <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Curved river line</div>
                     <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'river')?.Icon} width={46} height={26} />
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'river')?.Icon} width={64} height={36} />
                       <span style={{ fontSize: '14px', color: '#1E40AF', fontWeight: 900 }}>River</span>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
                     <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Hospital building</div>
                     <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'hospital')?.Icon} width={46} height={26} />
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'hospital')?.Icon} width={64} height={36} />
                       <span style={{ fontSize: '14px', color: '#991B1B', fontWeight: 900 }}>Hospital</span>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 14px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
                     <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Thick forest trees</div>
                     <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'forest')?.Icon} width={46} height={26} />
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'forest')?.Icon} width={64} height={36} />
                       <span style={{ fontSize: '14px', color: '#166534', fontWeight: 900 }}>Forest</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Metal tracks with sleepers</div>
+                    <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'railway')?.Icon} width={64} height={36} />
+                      <span style={{ fontSize: '14px', color: '#3D2E24', fontWeight: 900 }}>Railway Line</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', padding: '6px 14px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Paved path for vehicles</div>
+                    <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'road')?.Icon} width={64} height={36} />
+                      <span style={{ fontSize: '14px', color: '#52525B', fontWeight: 900 }}>Road</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', padding: '6px 14px', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13.5px', fontWeight: 700 }}>Body of still water</div>
+                    <div style={{ width: '32px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '14px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'lake')?.Icon} width={64} height={36} />
+                      <span style={{ fontSize: '14px', color: '#2563EB', fontWeight: 900 }}>Lake</span>
                     </div>
                   </div>
                 </div>
@@ -209,7 +233,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                 <div style={{ background: '#FEF3C7', padding: '10px 14px', borderRadius: '12px', border: '1.5px solid #FDE68A', display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Lightbulb size={22} color="#D97706" style={{ flexShrink: 0 }} />
                   <p style={{ color: '#78350F', margin: 0, fontSize: '13px', lineHeight: 1.45, fontWeight: 700, textAlign: 'justify', textJustify: 'inter-word' }}>
-                    <strong style={{ fontSize: '13.5px', fontWeight: 900 }}>Remember:</strong> Standardized conventional symbols and colors make reading any atlas or topographic map easy across countries worldwide.
+                    <strong style={{ fontSize: '13.5px', fontWeight: 900 }}>Remember:</strong> Standard symbols and colors help everyone around the world read maps easily.
                   </p>
                 </div>
               </div>
@@ -379,7 +403,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                             }}
                             whileHover={{ scale: 1.05 }}
                           >
-                            <SymbolDisplay Icon={symbol.Icon} width={62} height={30} />
+                            <SymbolDisplay Icon={symbol.Icon} width={90} height={45} />
                           </motion.div>
                         );
                       })}
@@ -427,7 +451,7 @@ export default function MapSymbols({ onComplete, onBack }) {
         onBack={onBack}
         nextLabel="Next Activity"
         onNext={onComplete}
-        nextDisabled={!isComplete}
+        nextDisabled={false}
         nextVariant="green"
       />
     </div>

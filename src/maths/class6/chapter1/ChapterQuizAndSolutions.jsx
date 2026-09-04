@@ -84,7 +84,7 @@ export default function ChapterQuizAndSolutions({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%', justifyContent: 'space-between' }}>
           <div style={{ borderBottom: '1.5px solid var(--theme-border, #a7f3d0)', paddingBottom: '0.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ margin: 0, fontSize: '1.28rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <ShieldAlert size={22} color="var(--theme-primary, #0d9488)" /> MISSION BRIEFING: OPERATION PATTERN DECRYPT
+              <ShieldAlert size={22} color="var(--theme-primary, #0d9488)" /> CHAPTER SUMMARY & MISSION BRIEFING
             </h3>
             <span style={{ background: 'var(--theme-badge-bg, #ccfbf1)', padding: '0.2rem 0.65rem', borderRadius: '6px', fontSize: '0.76rem', fontWeight: '800', color: 'var(--theme-badge-text, #0f766e)' }}>
               NCERT GANITA PRAKASH · CH. 1
@@ -97,13 +97,13 @@ export default function ChapterQuizAndSolutions({
             </div>
             <ul style={{ margin: '0.3rem 0', paddingLeft: '1.15rem', color: '#334155', fontSize: '0.86rem', lineHeight: 1.55 }}>
               <li style={{ marginBottom: '0.35rem', textAlign: 'justify', fontSize: '1.0rem' }}>
-                <strong style={{ color: 'var(--theme-heading, #134e4a)' }}>[Universal Laws]:</strong> Mathematics is the search for patterns and explanations—powering orbital gravitation, satellite GPS, and life-saving genomics.
+                <strong style={{ color: 'var(--theme-heading, #134e4a)' }}>[Universal Laws]:</strong> Math is all about finding patterns! These patterns help us understand everything from how planets move to how plants grow.
               </li>
               <li style={{ marginBottom: '0.35rem', textAlign: 'justify', fontSize: '1.0rem' }}>
-                <strong style={{ color: 'var(--theme-heading, #134e4a)' }}>[Number Theory]:</strong> Triangular (Tₙ), Square (n²), and Virahānka (1, 2, 3, 5, 8…) series represent geometric proofs and recursive growth equations.
+                <strong style={{ color: 'var(--theme-heading, #134e4a)' }}>[Number Magic]:</strong> Triangular numbers, Square numbers, and Fibonacci sequences (1, 2, 3, 5, 8…) are beautiful number patterns you can draw!
               </li>
               <li style={{ textAlign: 'justify', fontSize: '1.0rem' }}>
-                <strong style={{ color: 'var(--theme-heading, #134e4a)' }}>[Geometry Bridge]:</strong> Polygon sides equal vertices (V=E). Complete graph chords equal triangular numbers (Tₙ₋₁). Odd sums form squares (n²).
+                <strong style={{ color: 'var(--theme-heading, #134e4a)' }}>[Geometry Fun]:</strong> A shape's corners always equal its sides. Adding odd numbers gives perfect squares. Math is totally connected!
               </li>
             </ul>
 
@@ -123,7 +123,7 @@ export default function ChapterQuizAndSolutions({
             </div>
 
             <div style={{ color: 'var(--theme-heading, #134e4a)', fontSize: '0.82rem', fontWeight: '800', textAlign: 'center', padding: '0.35rem', background: '#ffffff', borderRadius: '8px', border: '1px dashed var(--theme-border-strong, #5eead4)' }}>
-              🎯 Navigate to Slides 2 & 3 to resolve all 12 forensic clues and unlock the master vault.
+              🎯 Go to Slides 2 & 3 to answer all 12 questions and unlock the master vault!
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function ChapterQuizAndSolutions({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', height: '100%', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid var(--theme-border, #a7f3d0)', paddingBottom: '0.35rem' }}>
             <h3 style={{ margin: 0, fontSize: '1.18rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Crosshair size={20} color="var(--theme-primary, #0d9488)" /> LEVEL 1 CLEARANCE: FILES Q1 – Q6
+              <Crosshair size={20} color="var(--theme-primary, #0d9488)" /> LEVEL 1 CLEARANCE: QUESTIONS 1 TO 6
             </h3>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               <button

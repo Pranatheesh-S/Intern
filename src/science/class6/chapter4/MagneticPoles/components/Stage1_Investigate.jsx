@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Play, Pause } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
@@ -32,21 +32,21 @@ function PaperBoxEnclosure({ isVibrating, isPaused }) {
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
 
-      {/* 2. Back Paper Wall */}
-      <mesh receiveShadow position={[0, 2.4, -8.0]}>
-        <boxGeometry args={[26, 4.8, 0.04]} />
+      {/* 2. Back Paper Wall - Increased Height */}
+      <mesh receiveShadow position={[0, 3.9, -8.0]}>
+        <boxGeometry args={[26, 7.8, 0.04]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
 
-      {/* 3. Left Paper Wall */}
-      <mesh receiveShadow position={[-13.0, 2.4, 0]}>
-        <boxGeometry args={[0.04, 4.8, 16]} />
+      {/* 3. Left Paper Wall - Increased Height */}
+      <mesh receiveShadow position={[-13.0, 3.9, 0]}>
+        <boxGeometry args={[0.04, 7.8, 16]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
 
-      {/* 4. Right Paper Wall */}
-      <mesh receiveShadow position={[13.0, 2.4, 0]}>
-        <boxGeometry args={[0.04, 4.8, 16]} />
+      {/* 4. Right Paper Wall - Increased Height */}
+      <mesh receiveShadow position={[13.0, 3.9, 0]}>
+        <boxGeometry args={[0.04, 7.8, 16]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
     </group>
@@ -123,56 +123,109 @@ function RotatableMagnetGroup({ children }) {
 // ---------------------------------------------------------
 // 1. True Rectangular 3D Bar Magnet (Proportionate: 12.0 x 1.3 x 1.9)
 // ---------------------------------------------------------
+// Realistic 3D Bar Magnet with Panoramic Texture Mapping
+// ---------------------------------------------------------
 
 function Magnet3D() {
+  const textures = useMemo(() => {
+    const loader = new THREE.TextureLoader();
+    const frontTop = loader.load('/MagneticPoles/magnet_front_top.png');
+    frontTop.colorSpace = THREE.SRGBColorSpace;
+    frontTop.anisotropy = 8;
+
+    const back = loader.load('/MagneticPoles/magnet_back.png');
+    back.colorSpace = THREE.SRGBColorSpace;
+    back.anisotropy = 8;
+
+    const northCap = loader.load('/MagneticPoles/magnet_end_north.png');
+    northCap.colorSpace = THREE.SRGBColorSpace;
+    northCap.anisotropy = 8;
+
+    const southCap = loader.load('/MagneticPoles/magnet_end_south.png');
+    southCap.colorSpace = THREE.SRGBColorSpace;
+    southCap.anisotropy = 8;
+
+    return { frontTop, back, northCap, southCap };
+  }, []);
+
   return (
-    <group position={[0, 2.5, 0]}>
-      {/* North Pole Half - Pure Rich Red */}
+    <group position={[0, 4.2, 0]} scale={[1.35, 2.2, 1.35]}>
+      {/* 1. North Pole Core Half (Left) - Metallic Blue */}
       <mesh position={[-3.0, 0, 0]} castShadow receiveShadow>
         <boxGeometry args={[6.0, 1.3, 1.9]} />
         <meshStandardMaterial 
-          color="#C51E28" 
-          roughness={0.55} 
-          metalness={0.12} 
+          color="#124982" 
+          roughness={0.4} 
+          metalness={0.25} 
         />
       </mesh>
-      
-      {/* North Letter - White */}
-      <Text 
-        position={[-4.2, 0.66, 0]} 
-        rotation={[-Math.PI / 2, 0, 0]} 
-        fontSize={0.95} 
-        color="#FFFFFF" 
-        fontWeight="bold"
-      >
-        N
-      </Text>
 
-      {/* South Pole Half - Bold Ultramarine Blue */}
+      {/* 2. South Pole Core Half (Right) - Metallic Red */}
       <mesh position={[3.0, 0, 0]} castShadow receiveShadow>
         <boxGeometry args={[6.0, 1.3, 1.9]} />
         <meshStandardMaterial 
-          color="#1848B8" 
-          roughness={0.55} 
-          metalness={0.12} 
+          color="#A31820" 
+          roughness={0.4} 
+          metalness={0.25} 
         />
       </mesh>
 
-      {/* South Letter - White */}
-      <Text 
-        position={[4.2, 0.66, 0]} 
-        rotation={[-Math.PI / 2, 0, 0]} 
-        fontSize={0.95} 
-        color="#FFFFFF" 
-        fontWeight="bold"
-      >
-        S
-      </Text>
-
-      {/* Center Dividing Seam */}
+      {/* 3. Center Dividing Seam */}
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[0.06, 1.31, 1.91]} />
-        <meshStandardMaterial color="#111827" roughness={0.7} />
+        <meshStandardMaterial color="#0F172A" roughness={0.6} metalness={0.5} />
+      </mesh>
+
+      {/* 4. Front Face: First Image (North Left, South Right) */}
+      <mesh position={[0, 0, 0.955]} castShadow receiveShadow>
+        <planeGeometry args={[12.0, 1.3]} />
+        <meshStandardMaterial
+          map={textures.frontTop}
+          roughness={0.3}
+          metalness={0.15}
+        />
+      </mesh>
+
+      {/* 5. Top Face: First Image (North Left, South Right) */}
+      <mesh position={[0, 0.655, 0]} rotation={[-Math.PI / 2, 0, 0]} castShadow receiveShadow>
+        <planeGeometry args={[12.0, 1.9]} />
+        <meshStandardMaterial
+          map={textures.frontTop}
+          roughness={0.3}
+          metalness={0.15}
+        />
+      </mesh>
+
+      {/* 6. Back Face: Second Image (South Left, North Right when viewed from back) */}
+      <mesh position={[0, 0, -0.955]} rotation={[0, Math.PI, 0]} castShadow receiveShadow>
+        <planeGeometry args={[12.0, 1.3]} />
+        <meshStandardMaterial
+          map={textures.back}
+          roughness={0.3}
+          metalness={0.15}
+        />
+      </mesh>
+
+      {/* 7. North End-Cap (Left Face, X = -6.0): Matching Blue Section */}
+      <mesh position={[-6.005, 0, 0]} rotation={[0, -Math.PI / 2, 0]} castShadow receiveShadow>
+        <planeGeometry args={[1.9, 1.3]} />
+        <meshStandardMaterial
+          map={textures.northCap}
+          color="#124982"
+          roughness={0.38}
+          metalness={0.25}
+        />
+      </mesh>
+
+      {/* 8. South End-Cap (Right Face, X = +6.0): Matching Red Section */}
+      <mesh position={[6.005, 0, 0]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+        <planeGeometry args={[1.9, 1.3]} />
+        <meshStandardMaterial
+          map={textures.southCap}
+          color="#A31820"
+          roughness={0.38}
+          metalness={0.25}
+        />
       </mesh>
     </group>
   );
@@ -181,14 +234,15 @@ function Magnet3D() {
 // ---------------------------------------------------------
 // Smooth Intro Animation Group (Bottom-Left to Center Growth)
 // ---------------------------------------------------------
-function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
+function AnimatedLabGroup({ children, zoomScale = 1.0, onArrival }) {
   const groupRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
+  const arrivedRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasStarted(true);
-    }, 800);
+    }, 250);
     return () => clearTimeout(timer);
   }, []);
 
@@ -210,6 +264,23 @@ function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
     const currentScale = groupRef.current.scale.x;
     const nextScale = THREE.MathUtils.lerp(currentScale, targetScale, dt * speed);
     groupRef.current.scale.set(nextScale, nextScale, nextScale);
+
+    // Notify once tray and magnet have smoothly arrived at the center
+    if (hasStarted && !arrivedRef.current) {
+      const dist = Math.hypot(
+        groupRef.current.position.x - 0,
+        groupRef.current.position.y - (-0.4),
+        groupRef.current.position.z - 0
+      );
+      const scaleDiff = Math.abs(currentScale - targetScale);
+
+      if (dist < 0.08 && scaleDiff < 0.015) {
+        arrivedRef.current = true;
+        groupRef.current.position.set(0, -0.4, 0);
+        groupRef.current.scale.set(targetScale, targetScale, targetScale);
+        if (onArrival) onArrival();
+      }
+    }
   });
 
   return (
@@ -224,14 +295,14 @@ function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
 // ---------------------------------------------------------
 
 function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) {
-  const count = 14000;
+  const count = 15000;
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const lastCycleRef = useRef(-1);
 
-  // Magnet pole centers matching the floating 12x1.3x1.9 bar magnet
-  const poles = useMemo(() => ({ nX: -4.8, nZ: 0.0, sX: 4.8, sZ: 0.0, span: 4.0 }), []);
-  const poleY = 2.5;
+  // Magnet pole centers matching the scaled floating bar magnet (16.2 x 2.86 x 2.57)
+  const poles = useMemo(() => ({ nX: -6.48, nZ: 0.0, sX: 6.48, sZ: 0.0, span: 5.4 }), []);
+  const poleY = 4.2;
 
   const particles = useMemo(() => {
     const data = [];
@@ -244,29 +315,39 @@ function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) 
       const randomEuler = new THREE.Euler(Math.PI / 2, (Math.random() - 0.5) * Math.PI, 0);
       const initialQ = new THREE.Quaternion().setFromEuler(randomEuler);
 
-      let targetX, targetZ;
+      let targetX, targetZ, targetMountainY;
       const clusterRoll = Math.random();
 
-      if (clusterRoll < 0.42) {
-        // High density clustering directly at poles
+      if (clusterRoll < 0.44) {
+        // Balanced 3D mountain formation under North and South poles (aerated & lighter density)
         const isNorth = Math.random() < 0.5;
         const pX = isNorth ? poles.nX : poles.sX;
         const pZ = isNorth ? poles.nZ : poles.sZ;
         const angle = Math.random() * Math.PI * 2;
-        const r = Math.pow(Math.random(), 2.0) * poles.span + 0.2;
+        // Natural conical spread (radius ~3.6)
+        const r = Math.pow(Math.random(), 0.75) * 3.6;
 
         targetX = pX + Math.cos(angle) * r;
-        targetZ = pZ + Math.sin(angle) * r;
+        targetZ = pZ + Math.sin(angle) * (r * 0.85);
+
+        // Volumetric mountain height: peak reaches ~2.2 under pole, tapering smoothly
+        const surfacePeakY = 2.2;
+        const profile = Math.exp(-Math.pow(r / 1.9, 2.0));
+        const moundMaxY = 0.04 + surfacePeakY * profile;
+        // Volumetric spread allowing light to pass between filings
+        const volRatio = Math.pow(Math.random(), 0.6);
+        targetMountainY = 0.04 + volRatio * (moundMaxY - 0.04) + (Math.random() - 0.5) * 0.06;
       } else {
-        // Natural magnetic stream loops
+        // Natural magnetic stream loops around larger magnet
         const lineIdx = Math.floor(Math.random() * numLines);
         const t = Math.random();
-        const loopR = 1.6 + (lineIdx / numLines) * 8.0;
+        const loopR = 2.1 + (lineIdx / numLines) * 8.5;
         const theta = (t - 0.5) * Math.PI * 0.95;
 
         const side = Math.random() > 0.5 ? 1 : -1;
-        targetX = Math.sin(theta) * (loopR + Math.sin(t * Math.PI) * 1.6);
-        targetZ = side * Math.cos(theta) * loopR * 0.75 + (Math.random() - 0.5) * 0.25;
+        targetX = Math.sin(theta) * (loopR + Math.sin(t * Math.PI) * 2.1);
+        targetZ = side * Math.cos(theta) * loopR * 0.78 + (Math.random() - 0.5) * 0.25;
+        targetMountainY = 0.04;
       }
 
       // Constrain tightly to stay neatly on top of the paper
@@ -278,7 +359,8 @@ function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) 
         originZ: randZ,
         targetX,
         targetZ,
-        scale: 0.65 + Math.random() * 0.45,
+        targetMountainY,
+        scale: 0.55 + Math.random() * 0.35,
         x: randX,
         y: 8 + Math.random() * 4.5,
         z: randZ,
@@ -326,7 +408,7 @@ function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) 
 
     particles.forEach((p, i) => {
       // Step 1: Sprinkling down - suspended floating in 3D air onto the paper
-      if (isSprinkling || step === 'initial') {
+      if (isSprinkling) {
         p.delay -= dt;
         if (p.delay <= 0) {
           p.visible = true;
@@ -350,11 +432,12 @@ function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) 
         p.q.copy(p.initialQ);
       }
 
-      // Step 3: Tapped - align to magnetic field lines and cluster at poles
+      // Step 3: Tapped / Observing / Complete - form 3D mountains under magnet poles
       if (step === 'tapped' || step === 'complete') {
         p.visible = true;
         p.x = THREE.MathUtils.lerp(p.x, p.targetX, dt * 5.2);
         p.z = THREE.MathUtils.lerp(p.z, p.targetZ, dt * 5.2);
+        p.y = THREE.MathUtils.lerp(p.y, p.targetMountainY, dt * 5.2);
 
         const dxN = p.x - poles.nX;
         const dyN = p.y - poleY;
@@ -376,15 +459,6 @@ function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) 
           const dir = new THREE.Vector3(Bx / Bmag, By / Bmag, Bz / Bmag);
           p.targetQ.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
           p.q.slerp(p.targetQ, dt * 7.5);
-
-          // 3D vertical magnetic field lifting towards the floating poles
-          const minDist = Math.min(distN, distS);
-          if (minDist < 3.0) {
-            const spikeHeight = (3.0 - minDist) * 0.75;
-            p.y = THREE.MathUtils.lerp(p.y, 0.04 + spikeHeight * Math.abs(By / Bmag), dt * 6);
-          } else {
-            p.y = THREE.MathUtils.lerp(p.y, 0.04, dt * 6);
-          }
         }
       }
 
@@ -419,13 +493,14 @@ function FilingsSystem({ step, isSprinkling, isVibrating, cycleKey, isPaused }) 
 // 3. Main Container
 // ---------------------------------------------------------
 export default function Stage1_Investigate({ onComplete }) {
-  const [step, setStep] = useState('initial');
+  const [step, setStep] = useState('waiting');
   const [cycleKey, setCycleKey] = useState(0);
   const [tapCount, setTapCount] = useState(0);
   const [quizAnswer, setQuizAnswer] = useState(null);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
+  const hasArrivedRef = useRef(false);
 
   const [isPaused, setIsPaused] = useState(false);
   const isPausedRef = useRef(false);
@@ -487,11 +562,25 @@ export default function Stage1_Investigate({ onComplete }) {
     }, duration);
   };
 
-  // Start continuous loop on initial mount
-  useEffect(() => {
+  // Only start pouring iron filings once the tray and magnet arrive at the center
+  const handleArrival = useCallback(() => {
+    if (hasArrivedRef.current) return;
+    hasArrivedRef.current = true;
     executePhase('sprinkle', 1800);
-    return () => clearLoopTimers();
   }, []);
+
+  // Safety fallback in case of background tab throttling
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      if (!hasArrivedRef.current) {
+        handleArrival();
+      }
+    }, 2200);
+    return () => {
+      clearTimeout(fallbackTimer);
+      clearLoopTimers();
+    };
+  }, [handleArrival]);
 
   const handleTogglePause = () => {
     if (!isPaused) {
@@ -654,7 +743,7 @@ export default function Stage1_Investigate({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <AnimatedLabGroup zoomScale={1.0}>
+              <AnimatedLabGroup zoomScale={1.0} onArrival={handleArrival}>
                 <RotatableMagnetGroup>
                   <Magnet3D />
                   <FilingsSystem step={step} isSprinkling={isSprinkling} isVibrating={isVibrating} cycleKey={cycleKey} isPaused={isPaused} />
@@ -683,7 +772,7 @@ export default function Stage1_Investigate({ onComplete }) {
       {/* Control Panel (Unified Warm Orange Theme) */}
       <div style={{ 
         flex: '1.15', 
-        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+        background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', 
         border: '1.5px solid #FDE68A', 
         borderRadius: '24px', 
         padding: '1.25rem 1.35rem', 
@@ -698,19 +787,19 @@ export default function Stage1_Investigate({ onComplete }) {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <BookOpen size={26} color="#059669" />
-            <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#064E3B', fontWeight: 900 }}>
+            <BookOpen size={26} color="#D97706" />
+            <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#78350F', fontWeight: 900 }}>
               Stage 1: Investigation
             </h3>
           </div>
           <span style={{
-            background: '#DCFCE7',
-            color: '#15803D',
+            background: step === 'complete' ? '#DCFCE7' : '#FEF3C7',
+            color: step === 'complete' ? '#15803D' : '#92400E',
             fontWeight: 900,
             fontSize: '0.88rem',
             padding: '0.35rem 0.8rem',
             borderRadius: '12px',
-            border: '1.5px solid #86EFAC'
+            border: step === 'complete' ? '1.5px solid #86EFAC' : '1.5px solid #F59E0B'
           }}>
             Step {step === 'tapped' || step === 'complete' ? 3 : (step === 'scattered' || isVibrating) ? 2 : 1} of 3
           </span>
@@ -718,7 +807,7 @@ export default function Stage1_Investigate({ onComplete }) {
 
         {/* CONTAINER 1: Steps of Instructions */}
         <div style={{
-          background: '#FFFFFF',
+          background: 'rgba(255, 255, 255, 0.96)',
           border: '1.5px solid #FDE68A',
           borderRadius: '20px',
           padding: '1.1rem 1.2rem',
@@ -728,7 +817,7 @@ export default function Stage1_Investigate({ onComplete }) {
           gap: '0.85rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #FEF3C7', paddingBottom: '0.5rem' }}>
-            <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#064E3B', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#78350F', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
               <span>📋</span> Steps of Instructions
             </h4>
           </div>
@@ -760,7 +849,15 @@ export default function Stage1_Investigate({ onComplete }) {
                 <div
                   key={s.stepNum}
                   style={{
-                    padding: '0.2rem 0',
+                    padding: '0.65rem 0.85rem',
+                    borderRadius: '14px',
+                    background: isPast ? '#DCFCE7' : isCurrent ? '#FEF3C7' : 'rgba(255, 255, 255, 0.7)',
+                    border: isPast ? '1.5px solid #86EFAC' : isCurrent ? '1.5px solid #F59E0B' : '1.5px solid transparent',
+                    boxShadow: isPast 
+                      ? '0 3px 10px rgba(16, 185, 129, 0.1)' 
+                      : isCurrent 
+                      ? '0 3px 10px rgba(245, 158, 11, 0.12)' 
+                      : 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.2rem',
@@ -773,28 +870,29 @@ export default function Stage1_Investigate({ onComplete }) {
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
-                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#059669' : '#64748B',
-                        color: '#FFFFFF',
+                        background: isPast ? '#059669' : '#FEF3C7',
+                        border: isPast ? '2px solid #059669' : '2px solid #F59E0B',
+                        color: isPast ? '#FFFFFF' : '#92400E',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '0.9rem',
-                        fontWeight: 800,
+                        fontSize: '0.92rem',
+                        fontWeight: 900,
                         flexShrink: 0
                       }}>
                         {s.stepNum}
                       </span>
                       <span style={{ 
-                        fontWeight: 800, 
+                        fontWeight: 900, 
                         fontSize: '1.1rem', 
-                        color: isCurrent ? '#064E3B' : isPast ? '#047857' : '#334155' 
+                        color: isPast ? '#15803D' : isCurrent ? '#92400E' : '#78350F' 
                       }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={20} color="#059669" />}
+                    {isPast && <CheckCircle size={20} color="#16A34A" />}
                   </div>
-                  <p style={{ margin: '0.15rem 0 0 2.3rem', fontSize: '0.96rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.15rem 0 0 2.3rem', fontSize: '0.96rem', color: isPast ? '#166534' : '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -861,19 +959,19 @@ export default function Stage1_Investigate({ onComplete }) {
 
         {/* CONTAINER 2: Observation Question */}
         <div style={{ 
-          background: '#FFFFFF',
-          border: '1.5px solid #A7F3D0',
+          background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : 'rgba(255, 255, 255, 0.96)',
+          border: (quizAnswer === 'ends' || step === 'complete') ? '1.5px solid #86EFAC' : '1.5px solid #FDE68A',
           borderRadius: '20px',
           padding: '1.1rem 1.2rem',
-          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.06)',
+          boxShadow: (quizAnswer === 'ends' || step === 'complete') ? '0 4px 14px rgba(16, 185, 129, 0.12)' : '0 4px 14px rgba(217, 119, 6, 0.05)',
           display: 'flex', 
           flexDirection: 'column', 
           gap: '0.85rem'
         }}>
-          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.2rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-            <AlertCircle size={22} color="#059669" /> Observation Question
+          <h4 style={{ color: (quizAnswer === 'ends' || step === 'complete') ? '#15803D' : '#78350F', margin: 0, fontSize: '1.2rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <AlertCircle size={22} color={(quizAnswer === 'ends' || step === 'complete') ? '#16A34A' : '#D97706'} /> Observation Question
           </h4>
-          <p style={{ margin: 0, color: '#065F46', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 600 }}>
+          <p style={{ margin: 0, color: (quizAnswer === 'ends' || step === 'complete') ? '#166534' : '#065F46', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 600 }}>
             Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
           </p>
 

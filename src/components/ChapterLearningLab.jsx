@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ArrowLeft, Play, X, ChevronLeft, ChevronRight, Volume2, VolumeX, RefreshCw, Check } from "lucide-react";
 import CoverPage from "./CoverPage";
 import SloganPage from "./SloganPage";
@@ -25,8 +25,8 @@ import dicot3Img from "../assets/dicot_3.png";
 import monocot1Img from "../assets/monocot_1.png";
 import monocot2Img from "../assets/monocot_2.png";
 import monocot3Img from "../assets/monocot_3.png";
-import herbTulsiImg from "../assets/tulsi_cropped_raw.png";
-import shrubHibiscusImg from "../assets/hibiscus_cropped_raw.png";
+import herbTulsiImg from "../assets/tulsi_2.4.png";
+import shrubHibiscusImg from "../assets/hib_1.png";
 import tree1Img from "../assets/tree_1.png";
 import treeCanopyImg from "../assets/wildlife/tree_canopy.jpg";
 import spiderMonkeyImg from "../assets/wildlife/spider_monkey.jpg";
@@ -55,14 +55,17 @@ import FoodTestingActivity from "../science/class6/chapter3/FoodTesting";
 import FatTestingActivity from "../science/class6/chapter3/FatTesting";
 import ProteinTestingActivity from "../science/class6/chapter3/ProteinTesting";
 
-import fishImg from "../assets/specimens/fish.png";
-import pigeonImg from "../assets/specimens/pigeon.png";
-import snailImg from "../assets/specimens/snail.png";
-import cowImg from "../assets/specimens/cow.png";
+import fishImg from "../assets/golden_masheer.png";
+import pigeonImg from "../assets/pigeon.png";
+import snailImg from "../assets/snail.png";
+import cowImg from "../assets/brown_cow.png";
 import tulsiImg from "../assets/specimens/tulsi.png";
 import roseImg from "../assets/specimens/rose.png";
 import mangoImg from "../assets/specimens/mango.png";
 import banyanImg from "../assets/specimens/banyan.png";
+import tomatoImg from "../assets/specimens/tomato.png";
+import grassImg from "../assets/specimens/grass.png";
+import hibiscusImg from "../assets/specimens/hibiscus.png";
 
 const LEVEL_QUIZZES = {
   'biodiversity_concept': [
@@ -221,20 +224,38 @@ const contentLessonsData = {
     title: '2.2.1-A Plant Classification',
     slides: [
       {
-        title: 'Activity 2.4: Let us group',
-        content: 'Plants display an incredible range of sizes and forms. We categorize them based on their height, stem thickness, and branch levels:',
+        title: 'Activity 2.4: Let us group — Herbs',
+        content: 'Plants display an incredible range of sizes and forms. Herbs are small plants characterized by soft, green, and tender stems that bend easily without breaking:',
         bullets: [
-          '🌿 Herbs: Short plants with soft, green, and tender stems that bend easily (e.g. Grass, Tomato, Coriander, Tulsi).',
-          '🌺 Shrubs: Medium height, thin woody stems branching out close to the base/ground (e.g. Rose, Lemon, Hibiscus).',
+          '🌿 Herbs: Short plants with soft, green, and tender stems that bend easily (e.g. Grass, Tomato, Coriander, Tulsi).'
+        ]
+      },
+      {
+        title: 'Activity 2.4: Let us group — Shrubs',
+        content: 'Shrubs are medium-sized bushy plants with hard, thin woody stems that branch out close to the ground or base:',
+        bullets: [
+          '🌸 Shrubs: Medium height, thin woody stems branching out close to the base/ground (e.g. Rose, Lemon, Hibiscus).'
+        ]
+      },
+      {
+        title: 'Activity 2.4: Let us group — Trees',
+        content: 'Trees are tall, grand plants with thick, hard brown woody trunks that branch high up above the ground:',
+        bullets: [
           '🌳 Trees: Tall plants with thick, hard brown woody trunks branching high up (e.g. Mango, Banyan, Neem, Deodar).'
         ]
       },
       {
-        title: 'Climbers & Creepers',
-        content: 'Some plants have weak stems that cannot stand upright on their own:',
+        title: 'Activity 2.4: Let us group — Creepers',
+        content: 'Creepers have weak, tender stems that cannot stand upright and instead spread horizontally along the soil surface:',
         bullets: [
-          '🍉 Creepers: Plants that creep and spread horizontally along the ground (e.g., Pumpkin, Watermelon, Sweet Potato).',
-          '🍇 Climbers: Plants that climb up using neighboring structures or trees for support (e.g., Money Plant, Pea Plant, Grapevine).'
+          '🍉 Creepers: Plants that creep and spread horizontally along the ground (e.g., Pumpkin, Watermelon, Sweet Potato).'
+        ]
+      },
+      {
+        title: 'Activity 2.4: Let us group — Climbers',
+        content: 'Climbers have weak stems and climb upward by taking support of neighboring structures, fences, or trees:',
+        bullets: [
+          '🌱 Climbers: Plants that climb up using neighboring structures or trees for support (e.g., Money Plant, Pea Plant, Grapevine).'
         ]
       }
     ]
@@ -527,11 +548,9 @@ const CHAPTER_2_FLOW = [
   { type: 'lab', levelId: 'lvl-1', actIdx: 2, focused: true, subStep: 'quiz', slide: 0, name: 'Ecosystem Quiz' },
   /* 9. Activity 2.3 — Classification Lab */
   { type: 'lab', levelId: 'lvl-1', actIdx: 3, focused: true, subStep: null, slide: 0, name: 'Activity 2.3 — Classification Lab' },
-  /* 10. 2.2.1 — How to Group Plants? */
-  { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: false, subStep: null, slide: 0, name: '2.2.1 — How to Group Plants?' },
-  /* 11. Activity 2.4 — Let Us Group */
-  { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: false, subStep: null, slide: 1, name: 'Activity 2.4 — Let Us Group' },
-  /* 12. Activity 2.4 — Herbs, Shrubs & Trees */
+  /* 10. 2.2.1 — How to Group Plants? Activity 2.4 */
+  { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: false, subStep: null, slide: 0, name: 'Activity 2.4 — Let Us Group' },
+  /* 11. Activity 2.4 — Herbs, Shrubs & Trees */
   { type: 'lab', levelId: 'lvl-3', actIdx: 0, focused: true, subStep: null, slide: 0, name: 'Activity 2.4 — Herbs, Shrubs & Trees' },
   /* 13. Lesson Pane — Activity 2.5: Let Us Compare */
   { type: 'lab', levelId: 'lvl-4', actIdx: 0, focused: false, subStep: null, slide: 0, name: 'Lesson Pane — Activity 2.5: Let Us Compare' },
@@ -711,7 +730,7 @@ function speakWithProfile(text, characterName, muteFlag, onEndCallback, onErrorC
   return utt;
 }
 
-function speakIndianMaleNarrator(text, muteFlag, onEndCallback, onErrorCallback) {
+function speakIndianMaleNarrator(text, muteFlag, onEndCallback, onErrorCallback, onBoundaryCallback) {
   if (muteFlag || !('speechSynthesis' in window)) return null;
   window.speechSynthesis.cancel();
 
@@ -723,11 +742,18 @@ function speakIndianMaleNarrator(text, muteFlag, onEndCallback, onErrorCallback)
 
   const utt = new SpeechSynthesisUtterance(spokenText);
   utt.pitch = 0.98; // Natural, resonant adult male educator pitch
-  utt.rate = 0.88;  // Clear, moderate pacing for Class 6 comprehension
+  utt.rate = 0.85;  // Slower, clear natural pacing for Class 6 comprehension (0.85x)
   utt.volume = 1.0;
 
   if (onEndCallback) utt.onend = onEndCallback;
   if (onErrorCallback) utt.onerror = onErrorCallback;
+  if (onBoundaryCallback) {
+    utt.onboundary = (e) => {
+      if (e.name === 'word') {
+        onBoundaryCallback(e);
+      }
+    };
+  }
 
   const voices = window.speechSynthesis.getVoices();
   if (voices.length > 0) {
@@ -773,6 +799,7 @@ function IntroStoryteller({ onComplete, onBack }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [dialogueStep, setDialogueStep] = useState(0);
   const [isNarrationMuted, setIsNarrationMuted] = useState(false);
+  const [activeWordIndex, setActiveWordIndex] = useState(null);
   const dialogueTimerRef = useRef(null);
   const { theme = 'dark' } = useTheme() || {};
 
@@ -838,6 +865,81 @@ function IntroStoryteller({ onComplete, onBack }) {
 
   const totalScenes = scenes.length;
   const scene = scenes[currentScene];
+  const [subtitleIndex, setSubtitleIndex] = useState(0);
+
+  const getSingleLineCues = (text) => {
+    const rawSentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    const rawCues = [];
+    rawSentences.forEach(s => {
+      const trimmed = s.trim();
+      if (trimmed.length > 55 && trimmed.includes(' — ')) {
+        const parts = trimmed.split(' — ');
+        parts.forEach(p => rawCues.push(p.trim()));
+      } else if (trimmed.length > 65 && trimmed.includes(', and ')) {
+        const parts = trimmed.split(', and ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('and ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(' into a ')) {
+        const parts = trimmed.split(' into a ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('into a ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(' without ')) {
+        const parts = trimmed.split(' without ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('without ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(', others are ')) {
+        const parts = trimmed.split(', others are ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('others are ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(', each ')) {
+        const parts = trimmed.split(', each ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('each ' + parts[1].trim());
+      } else if (trimmed.length > 65 && trimmed.includes(', marveling ')) {
+        const parts = trimmed.split(', marveling ');
+        rawCues.push(parts[0].trim());
+        rawCues.push('marveling ' + parts[1].trim());
+      } else {
+        rawCues.push(trimmed);
+      }
+    });
+
+    const spokenText = text.replace(/—/g, ', ').replace(/\s+/g, ' ').trim();
+    let searchPos = 0;
+    let globalWordCounter = 0;
+
+    const structuredCues = rawCues.map((cueText, cueIdx) => {
+      const wordTokens = cueText.split(/\s+/).filter(Boolean);
+      const words = wordTokens.map((w, wIdxInCue) => {
+        const cleanWord = w.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        let foundIndex = spokenText.toLowerCase().indexOf(cleanWord, searchPos);
+        if (foundIndex === -1) {
+          foundIndex = searchPos;
+        }
+        searchPos = foundIndex + (cleanWord.length || 1);
+
+        return {
+          text: w,
+          clean: cleanWord,
+          cueIndex: cueIdx,
+          wordIndexInCue: wIdxInCue,
+          globalIndex: globalWordCounter++,
+          charStart: foundIndex,
+          charEnd: foundIndex + cleanWord.length
+        };
+      });
+
+      return {
+        text: cueText,
+        words
+      };
+    });
+
+    return structuredCues;
+  };
+
+  const cues = useMemo(() => getSingleLineCues(scene.text), [scene.text]);
+  const allWords = useMemo(() => cues.flatMap(c => c.words), [cues]);
 
   useEffect(() => {
     if ('speechSynthesis' in window) {
@@ -846,13 +948,47 @@ function IntroStoryteller({ onComplete, onBack }) {
     clearTimeout(dialogueTimerRef.current);
     setDialogueStep(0);
     setImgLoaded(false);
+    setActiveWordIndex(null);
+    setSubtitleIndex(0);
 
-    // Speak center information box narration with Indian male teacher voice immediately as scene opens
+    const handleBoundary = (event) => {
+      const charIdx = event.charIndex;
+      let matched = null;
+      for (let i = 0; i < allWords.length; i++) {
+        const w = allWords[i];
+        if (charIdx >= w.charStart && charIdx <= w.charEnd + 2) {
+          matched = w;
+          break;
+        }
+      }
+      if (!matched) {
+        matched = allWords.find((w, i) => {
+          const next = allWords[i + 1];
+          return charIdx >= w.charStart && (!next || charIdx < (next?.charStart || Infinity));
+        });
+      }
+      if (matched) {
+        setSubtitleIndex(matched.cueIndex);
+        setActiveWordIndex(matched.wordIndexInCue);
+      }
+    };
+
+    const handleSpeechEnd = () => {
+      setActiveWordIndex(null);
+    };
+
+    // Speak center narration with Indian male teacher voice and real-time word boundary sync
     let speakTimer = null;
     if (!isNarrationMuted && 'speechSynthesis' in window) {
       speakTimer = setTimeout(() => {
         const doSpeak = () => {
-          speakIndianMaleNarrator(scene.text, isNarrationMuted);
+          speakIndianMaleNarrator(
+            scene.text,
+            isNarrationMuted,
+            handleSpeechEnd,
+            handleSpeechEnd,
+            handleBoundary
+          );
         };
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
@@ -868,7 +1004,7 @@ function IntroStoryteller({ onComplete, onBack }) {
       clearTimeout(dialogueTimerRef.current);
       if (speakTimer) clearTimeout(speakTimer);
     };
-  }, [currentScene, isNarrationMuted]);
+  }, [currentScene, isNarrationMuted, allWords, scene.text]);
 
   useEffect(() => {
     let active = true;
@@ -920,6 +1056,18 @@ function IntroStoryteller({ onComplete, onBack }) {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
+      <style>{`
+        @keyframes movieSubtitleFade {
+          0% {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
       
       <div style={{
         position: 'relative',
@@ -949,7 +1097,7 @@ function IntroStoryteller({ onComplete, onBack }) {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 25%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.65) 78%, rgba(0,0,0,0.82) 100%)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 25%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.45) 78%, rgba(0,0,0,0.68) 100%)',
           pointerEvents: 'none',
           zIndex: 1
         }} />
@@ -1019,6 +1167,7 @@ function IntroStoryteller({ onComplete, onBack }) {
         })}
       </div>
 
+      {/* Scene Index Indicator */}
       <div style={{
         position: 'absolute', top: '0.9rem', left: '0.9rem', zIndex: 12,
         background: 'rgba(0,0,0,0.52)', backdropFilter: 'blur(10px)',
@@ -1029,6 +1178,7 @@ function IntroStoryteller({ onComplete, onBack }) {
         Class 6 · Scene {currentScene + 1} of {totalScenes}
       </div>
 
+      {/* Back to Slogan Button (Green highlighted on Scene 1) */}
       {onBack && (
         <div style={{
           position: 'absolute', bottom: '1.2rem', left: '1.2rem', zIndex: 15
@@ -1036,79 +1186,162 @@ function IntroStoryteller({ onComplete, onBack }) {
           <button 
             onClick={(e) => { e.stopPropagation(); onBack(); }}
             style={{
-              padding: '0.7rem 1.4rem', fontSize: '0.9rem', fontWeight: '700',
-              borderRadius: '8px', border: 'none',
-              background: '#10b981', color: '#fff',
+              padding: '0.6rem 1.25rem', fontSize: '0.88rem', fontWeight: '700',
+              borderRadius: '8px',
+              border: currentScene === 0 ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(255,255,255,0.18)',
+              background: currentScene === 0
+                ? 'linear-gradient(135deg, #10b981, #059669)'
+                : 'rgba(0,0,0,0.65)',
+              color: '#fff',
               backdropFilter: 'blur(12px)', cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)', transition: 'all 0.2s',
+              boxShadow: currentScene === 0
+                ? '0 4px 16px rgba(16, 185, 129, 0.45)'
+                : '0 4px 16px rgba(0,0,0,0.4)',
+              transition: 'all 0.2s',
               display: 'flex', alignItems: 'center', gap: '0.5rem'
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#059669'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = '#10b981'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#059669';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = currentScene === 0
+                ? 'linear-gradient(135deg, #10b981, #059669)'
+                : 'rgba(0,0,0,0.65)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
           >
             ← Back to Slogan
           </button>
         </div>
       )}
 
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        display: 'flex', justifyContent: 'center',
-        padding: '0 1rem 1.1rem',
-        zIndex: 14,
-        transform: 'translateY(0)',
-        transition: 'transform 0.3s ease'
-      }}>
-        <div style={{
-          width: '100%', maxWidth: '780px',
-          background: '#E6BF83', 
-          color: '#000000',
-          backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(160, 82, 45, 0.5)', 
-          borderRadius: '16px',
-          padding: '1.4rem 1.8rem 1.2rem',
-          boxShadow: '0 -2px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(230, 191, 131, 0.18)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '1.28rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
-              {scene.title}
-            </span>
-          </div>
-
+      {/* Real Movie-Style Subtitles (Exact Viewport Center, One Single Line, Audio-Synced Word Highlight) */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '4.6rem',
+          left: 0,
+          right: 0,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 14,
+          pointerEvents: 'none'
+        }}
+      >
+        <div
+          key={`sub-${currentScene}-${subtitleIndex}`}
+          style={{
+            maxWidth: '78vw',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            animation: 'movieSubtitleFade 0.35s ease-out'
+          }}
+        >
           <p style={{
-            margin: '0 0 0.85rem 0', fontSize: '1.18rem',
-            color: '#523418', lineHeight: '1.68', fontWeight: '500',
-            minHeight: '3.2em', fontFamily: "'Georgia', 'Times New Roman', serif"
+            margin: 0,
+            fontSize: 'clamp(1.25rem, 2.2vw, 1.55rem)',
+            fontWeight: '700',
+            lineHeight: '1.45',
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+            letterSpacing: '0.015em'
           }}>
-            {scene.text}
+            {(cues[subtitleIndex]?.words || []).map((w, wIdx) => {
+              const isSpoken = activeWordIndex === wIdx;
+              return (
+                <span
+                  key={wIdx}
+                  style={{
+                    display: 'inline-block',
+                    margin: '0 0.18em',
+                    color: isSpoken ? '#34d399' : '#ffffff',
+                    transition: 'color 0.12s ease, text-shadow 0.12s ease',
+                    textShadow: isSpoken
+                      ? '0 0 16px rgba(52, 211, 153, 0.9), 0 2px 4px rgba(0, 0, 0, 0.95), -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000'
+                      : '0 2px 4px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.9), -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000'
+                  }}
+                >
+                  {w.text}
+                </span>
+              );
+            })}
           </p>
-
-          <div style={{ display: 'flex', gap: '0.55rem', alignItems: 'center', justifyContent: 'center' }}>
-            <button onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-              disabled={currentScene === 0}
-              style={{
-                padding: '0.45rem 1.1rem', fontSize: '0.82rem', fontWeight: '700',
-                borderRadius: '9px', border: 'none',
-                background: currentScene === 0 ? 'rgba(255,255,255,0.1)' : '#10b981',
-                color: '#fff',
-                cursor: currentScene === 0 ? 'not-allowed' : 'pointer',
-                opacity: currentScene === 0 ? 0.4 : 1, transition: 'all 0.2s',
-                boxShadow: currentScene === 0 ? 'none' : '0 3px 12px rgba(16, 185, 129, 0.4)'
-              }}>← Prev</button>
-            <button onClick={(e) => { e.stopPropagation(); handleNext(); }}
-              style={{
-                padding: '0.42rem 1.3rem', fontSize: '0.78rem', fontWeight: '700',
-                borderRadius: '9px', border: 'none',
-                background: currentScene === totalScenes - 1
-                  ? 'linear-gradient(135deg,#059669,#34d399)'
-                  : 'linear-gradient(135deg,#b45309,#d97706)',
-                color: '#fff', cursor: 'pointer',
-                boxShadow: '0 3px 12px rgba(0,0,0,0.35)', transition: 'all 0.2s'
-              }}>
-              {currentScene === totalScenes - 1 ? 'Finish Story ✓' : 'Next Scene →'}
-            </button>
-          </div>
         </div>
+      </div>
+
+      {/* Floating Movie Scene Controls */}
+      <div style={{
+        position: 'absolute',
+        bottom: '1.2rem',
+        right: '1.2rem',
+        zIndex: 15,
+        display: 'flex',
+        gap: '0.65rem',
+        alignItems: 'center'
+      }}>
+        {/* Prev Button (Green highlighted on Scenes 2 through 7) */}
+        <button
+          onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+          disabled={currentScene === 0}
+          style={{
+            padding: '0.55rem 1.15rem',
+            fontSize: '0.86rem',
+            fontWeight: '700',
+            borderRadius: '8px',
+            border: currentScene > 0 ? '1px solid rgba(255,255,255,0.25)' : '1px solid rgba(255,255,255,0.12)',
+            background: currentScene > 0
+              ? 'linear-gradient(135deg, #10b981, #059669)'
+              : 'rgba(0,0,0,0.35)',
+            color: currentScene === 0 ? 'rgba(255,255,255,0.35)' : '#ffffff',
+            backdropFilter: 'blur(10px)',
+            cursor: currentScene === 0 ? 'not-allowed' : 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: currentScene > 0
+              ? '0 4px 14px rgba(16, 185, 129, 0.45)'
+              : 'none'
+          }}
+          onMouseEnter={(e) => {
+            if (currentScene > 0) {
+              e.currentTarget.style.background = '#059669';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (currentScene > 0) {
+              e.currentTarget.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }
+          }}
+        >
+          ← Prev
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); handleNext(); }}
+          style={{
+            padding: '0.55rem 1.3rem',
+            fontSize: '0.86rem',
+            fontWeight: '800',
+            borderRadius: '8px',
+            border: '1px solid rgba(255,255,255,0.25)',
+            background: currentScene === totalScenes - 1
+              ? 'linear-gradient(135deg, #059669, #34d399)'
+              : 'linear-gradient(135deg, #10b981, #059669)',
+            color: '#ffffff',
+            cursor: 'pointer',
+            boxShadow: '0 4px 16px rgba(16, 185, 129, 0.45)',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {currentScene === totalScenes - 1 ? 'Finish Story ✓' : 'Next Scene →'}
+        </button>
       </div>
     </div>
   );
@@ -1280,58 +1513,60 @@ function VocabularyGlossary({ onMatchComplete }) {
   return (
     <div className="split-frame" style={{ width: '100%', minHeight: '520px', gap: '1.25rem' }}>
       {/* LEFT COLUMN: Controls & Info */}
-      <div className="frame-page-left" style={{
-        background: 'linear-gradient(145deg, rgba(12, 28, 62, 0.94) 0%, rgba(8, 18, 42, 0.96) 100%)',
-        border: '1.5px solid rgba(56, 189, 248, 0.3)',
-        borderRadius: '14px',
+      <div className="frame-page-left act24-mint-left" style={{
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+        border: '1.5px solid rgba(167, 243, 208, 0.95)',
+        borderRadius: '16px',
         padding: '1.35rem 1.5rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         minHeight: '100%',
         boxSizing: 'border-box',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
-        backdropFilter: 'blur(12px)'
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.15)',
+        backdropFilter: 'blur(16px)'
       }}>
         <div>
           <div style={{ 
             fontSize: '0.88rem', 
-            fontWeight: '800', 
-            color: '#38bdf8', 
+            fontWeight: '900', 
+            color: '#0284c7', 
             textTransform: 'uppercase', 
             letterSpacing: '0.06em',
             marginBottom: '0.45rem',
-            textShadow: '0 2px 8px rgba(56, 189, 248, 0.3)'
+            background: 'rgba(14, 165, 233, 0.18)',
+            padding: '0.35rem 0.8rem',
+            borderRadius: '8px',
+            border: '1.5px solid rgba(56, 189, 248, 0.4)',
+            display: 'inline-block'
           }}>
             Class 6 Science · Chapter 2
           </div>
 
           <h1 style={{ 
             fontFamily: 'var(--serif-font)', 
-            margin: '0 0 0.85rem 0', 
+            margin: '0.45rem 0 0.85rem 0', 
             fontSize: '1.75rem',
             fontWeight: '900',
-            color: '#38bdf8',
-            textShadow: '0 2px 12px rgba(56, 189, 248, 0.4)',
+            color: '#0f172a',
             letterSpacing: '0.01em'
           }}>
             Key Vocabulary
           </h1>
           
           <p style={{ 
-            fontSize: '0.98rem', 
-            color: '#fde047', 
-            fontWeight: '600',
+            fontSize: '1.02rem', 
+            color: '#334155', 
+            fontWeight: '700',
             lineHeight: '1.6', 
-            margin: '0 0 1.25rem 0',
-            textShadow: '0 1px 6px rgba(0, 0, 0, 0.5)'
+            margin: '0 0 1.25rem 0'
           }}>
             Mastering scientific terms is key to understanding the diversity of plants and animals. Use this interactive pane to study glossary words or test yourself.
           </p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: 'auto' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: '800', color: '#bae6fd', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: '800', color: '#0284c7', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Choose Mode:
           </span>
           <div style={{ display: 'flex', gap: '0.65rem' }}>
@@ -1341,17 +1576,17 @@ function VocabularyGlossary({ onMatchComplete }) {
                 flex: 1,
                 padding: '0.65rem 0.85rem',
                 fontSize: '0.92rem',
-                fontWeight: '800',
-                borderRadius: '9px',
+                fontWeight: '900',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 background: activeTab === 'glossary' 
-                  ? 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)' 
-                  : 'rgba(255, 255, 255, 0.06)',
+                  ? '#f59e0b' 
+                  : '#ffffff',
                 border: activeTab === 'glossary' 
-                  ? '1.5px solid #38bdf8' 
-                  : '1.5px solid rgba(56, 189, 248, 0.25)',
-                color: '#ffffff',
-                boxShadow: activeTab === 'glossary' ? '0 4px 14px rgba(14, 165, 233, 0.4)' : 'none',
+                  ? 'none' 
+                  : '1.5px solid rgba(167, 243, 208, 0.95)',
+                color: activeTab === 'glossary' ? '#1a0f05' : '#0f172a',
+                boxShadow: activeTab === 'glossary' ? '0 4px 14px rgba(245, 158, 11, 0.4)' : '0 2px 6px rgba(0,0,0,0.04)',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -1363,17 +1598,17 @@ function VocabularyGlossary({ onMatchComplete }) {
                 flex: 1,
                 padding: '0.65rem 0.85rem',
                 fontSize: '0.92rem',
-                fontWeight: '800',
-                borderRadius: '9px',
+                fontWeight: '900',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 background: activeTab === 'game' 
-                  ? 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)' 
-                  : 'rgba(255, 255, 255, 0.06)',
+                  ? '#f59e0b' 
+                  : '#ffffff',
                 border: activeTab === 'game' 
-                  ? '1.5px solid #38bdf8' 
-                  : '1.5px solid rgba(56, 189, 248, 0.25)',
-                color: '#ffffff',
-                boxShadow: activeTab === 'game' ? '0 4px 14px rgba(14, 165, 233, 0.4)' : 'none',
+                  ? 'none' 
+                  : '1.5px solid rgba(167, 243, 208, 0.95)',
+                color: activeTab === 'game' ? '#1a0f05' : '#0f172a',
+                boxShadow: activeTab === 'game' ? '0 4px 14px rgba(245, 158, 11, 0.4)' : '0 2px 6px rgba(0,0,0,0.04)',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -1384,52 +1619,52 @@ function VocabularyGlossary({ onMatchComplete }) {
 
         {activeTab === 'game' && (
           <div style={{
-            background: 'rgba(14, 165, 233, 0.12)',
-            border: '1.5px solid rgba(56, 189, 248, 0.35)',
-            borderRadius: '10px',
+            background: 'rgba(240, 253, 244, 0.95)',
+            border: '1.5px solid rgba(167, 243, 208, 0.95)',
+            borderRadius: '12px',
             padding: '0.85rem 1rem',
             marginTop: '1.25rem',
             fontSize: '0.9rem',
-            color: '#f8fafc'
+            color: '#0f172a',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
           }}>
-            <span style={{ fontWeight: '800', color: '#38bdf8', display: 'block', marginBottom: '6px' }}>Match Game Progress:</span>
-            <span>Matched: <b style={{ color: '#34d399', transition: 'all 0.3s ease' }}>{matchedPairs.length} / 6</b> pairs</span>
-            <span style={{ marginLeft: '14px' }}>Attempts: <b style={{ color: '#fde047', transition: 'all 0.3s ease' }}>{attempts}</b></span>
+            <span style={{ fontWeight: '900', color: '#0284c7', display: 'block', marginBottom: '6px' }}>Match Game Progress:</span>
+            <span>Matched: <b style={{ color: '#16a34a', transition: 'all 0.3s ease' }}>{matchedPairs.length} / 6</b> pairs</span>
+            <span style={{ marginLeft: '14px' }}>Attempts: <b style={{ color: '#b45309', transition: 'all 0.3s ease' }}>{attempts}</b></span>
           </div>
         )}
       </div>
 
       {/* RIGHT COLUMN: Grid Space */}
       <div className="frame-page-right" style={{ 
-        background: 'linear-gradient(145deg, rgba(8, 22, 52, 0.94) 0%, rgba(4, 12, 32, 0.96) 100%)',
-        border: '1.5px solid rgba(56, 189, 248, 0.3)',
-        borderRadius: '14px',
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+        border: '2px solid rgba(167, 243, 208, 0.95)',
+        borderRadius: '16px',
         padding: '1.15rem 1.35rem',
         display: 'flex', 
         flexDirection: 'column', 
         minHeight: 0, 
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
-        backdropFilter: 'blur(12px)'
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+        backdropFilter: 'blur(16px)'
       }}>
         {/* Main Matcher / Glossary Header */}
         <div style={{ 
-          borderBottom: '2px solid rgba(56, 189, 248, 0.3)', 
+          borderBottom: '2px solid rgba(167, 243, 208, 0.95)', 
           paddingBottom: '0.65rem', 
           marginBottom: '0.85rem' 
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ 
-              fontSize: '1.15rem', 
+              fontSize: '1.2rem', 
               fontWeight: '900', 
-              color: '#38bdf8',
-              textShadow: '0 2px 8px rgba(56, 189, 248, 0.35)',
+              color: '#0284c7',
               letterSpacing: '0.01em'
             }}>
               {activeTab === 'glossary' ? '📕 Interactive Textbook Glossary' : '🎯 Definition Matcher'}
             </span>
           </div>
           {activeTab === 'game' && (
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.86rem', color: '#94a3b8', fontWeight: '500' }}>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.88rem', color: '#334155', fontWeight: '700' }}>
               Match each definition with the correct scientific term.
             </p>
           )}
@@ -1446,10 +1681,10 @@ function VocabularyGlossary({ onMatchComplete }) {
                     onClick={() => setFlippedCardId(isFlipped ? null : t.id)}
                     style={{
                       background: isFlipped 
-                        ? 'linear-gradient(135deg, rgba(16, 42, 88, 0.95) 0%, rgba(10, 26, 62, 0.98) 100%)' 
-                        : 'linear-gradient(135deg, rgba(14, 34, 76, 0.9) 0%, rgba(8, 22, 52, 0.95) 100%)',
-                      border: isFlipped ? '1.5px solid #38bdf8' : '1.5px solid rgba(56, 189, 248, 0.28)',
-                      borderRadius: '12px',
+                        ? 'rgba(240, 253, 244, 0.98)' 
+                        : '#ffffff',
+                      border: isFlipped ? '2px solid #0284c7' : '2px solid rgba(167, 243, 208, 0.95)',
+                      borderRadius: '14px',
                       padding: '0.85rem',
                       cursor: 'pointer',
                       transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -1457,15 +1692,15 @@ function VocabularyGlossary({ onMatchComplete }) {
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      boxShadow: isFlipped ? '0 0 16px rgba(56, 189, 248, 0.3)' : '0 4px 14px rgba(0,0,0,0.35)'
+                      boxShadow: isFlipped ? '0 0 16px rgba(14, 165, 233, 0.2)' : '0 4px 14px rgba(0,0,0,0.06)'
                     }}
                   >
                     {isFlipped ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', height: '100%' }}>
-                        <span style={{ fontSize: '0.92rem', color: '#f8fafc', lineHeight: '1.5', fontWeight: 500 }}>
-                          <strong style={{ color: '#38bdf8' }}>Def:</strong> {t.desc}
+                        <span style={{ fontSize: '0.92rem', color: '#0f172a', lineHeight: '1.5', fontWeight: 700 }}>
+                          <strong style={{ color: '#0284c7' }}>Def:</strong> {t.desc}
                         </span>
-                        <span style={{ fontSize: '0.82rem', color: '#34d399', fontStyle: 'italic', fontWeight: 600, marginTop: 'auto' }}>
+                        <span style={{ fontSize: '0.84rem', color: '#15803d', fontStyle: 'italic', fontWeight: 700, marginTop: 'auto' }}>
                           Ex: {t.eg}
                         </span>
                       </div>
@@ -1473,17 +1708,18 @@ function VocabularyGlossary({ onMatchComplete }) {
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
                         <div style={{
                           width: '100%',
-                          height: '110px',
-                          borderRadius: '8px',
+                          height: '112px',
+                          borderRadius: '10px',
                           overflow: 'hidden',
-                          border: '1px solid rgba(56, 189, 248, 0.25)',
-                          background: 'rgba(6, 16, 38, 0.85)',
+                          border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                          background: '#ffffff',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          padding: '6px',
+                          padding: '6px 8px',
                           boxSizing: 'border-box',
-                          marginBottom: '0.65rem'
+                          marginBottom: '0.65rem',
+                          boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(0, 0, 0, 0.04)'
                         }}>
                           <img 
                             src={t.image} 
@@ -1494,14 +1730,15 @@ function VocabularyGlossary({ onMatchComplete }) {
                               width: 'auto', 
                               height: 'auto', 
                               objectFit: 'contain', 
-                              display: 'block' 
+                              display: 'block',
+                              filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08)) contrast(1.05)'
                             }} 
                           />
                         </div>
-                        <span style={{ fontSize: '0.98rem', fontWeight: '800', color: '#ffffff', textAlign: 'center', lineHeight: '1.2' }}>
+                        <span style={{ fontSize: '0.98rem', fontWeight: '900', color: '#0f172a', textAlign: 'center', lineHeight: '1.2' }}>
                           {t.word}
                         </span>
-                        <span style={{ fontSize: '0.72rem', color: '#7dd3fc', fontWeight: '600', marginTop: '0.25rem' }}>
+                        <span style={{ fontSize: '0.74rem', color: '#0284c7', fontWeight: '700', marginTop: '0.25rem' }}>
                           Click for definition ↻
                         </span>
                       </div>
@@ -1522,12 +1759,12 @@ function VocabularyGlossary({ onMatchComplete }) {
                       key={line.id}
                       d={pathData}
                       fill="none"
-                      stroke={line.status === 'matched' ? '#10b981' : '#ef4444'}
+                      stroke={line.status === 'matched' ? '#16a34a' : '#dc2626'}
                       strokeWidth={line.status === 'matched' ? '3.5' : '2.5'}
                       strokeDasharray={line.status === 'error' ? '6 4' : 'none'}
                       style={{
                         transition: 'all 0.25s ease',
-                        filter: line.status === 'matched' ? 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.7))' : 'drop-shadow(0 0 6px rgba(239, 68, 68, 0.7))'
+                        filter: line.status === 'matched' ? 'drop-shadow(0 0 6px rgba(22, 163, 74, 0.4))' : 'drop-shadow(0 0 6px rgba(220, 38, 38, 0.4))'
                       }}
                     />
                   );
@@ -1545,7 +1782,7 @@ function VocabularyGlossary({ onMatchComplete }) {
                     padding: '0.15rem 0.35rem', 
                     fontSize: '0.85rem', 
                     fontWeight: '900', 
-                    color: '#fbbf24', 
+                    color: '#b45309', 
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em'
                   }}>
@@ -1553,14 +1790,14 @@ function VocabularyGlossary({ onMatchComplete }) {
                       width: '20px', 
                       height: '20px', 
                       borderRadius: '50%', 
-                      background: 'rgba(251, 191, 36, 0.2)', 
-                      border: '1.5px solid #fbbf24',
+                      background: 'rgba(245, 158, 11, 0.2)', 
+                      border: '1.5px solid #f59e0b',
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       fontSize: '0.75rem',
                       fontWeight: '900',
-                      color: '#fbbf24'
+                      color: '#b45309'
                     }}>D</span>
                     DEFINITIONS
                   </div>
@@ -1580,27 +1817,27 @@ function VocabularyGlossary({ onMatchComplete }) {
                           flex: 1,
                           minHeight: '54px',
                           padding: '0.55rem 0.85rem',
-                          borderRadius: '10px',
+                          borderRadius: '12px',
                           cursor: isMatched ? 'default' : 'pointer',
                           border: isMatched 
-                            ? '1.5px solid #10b981' 
+                            ? '2px solid #22c55e' 
                             : isError 
-                              ? '2px solid #ef4444' 
+                              ? '2px solid #dc2626' 
                               : isSelected 
-                                ? '2px solid #fde047' 
-                                : '1.5px solid rgba(56, 189, 248, 0.25)',
+                                ? '2px solid #f59e0b' 
+                                : '2px solid rgba(167, 243, 208, 0.95)',
                           background: isMatched 
-                            ? 'rgba(16, 185, 129, 0.12)' 
+                            ? 'rgba(220, 252, 231, 0.7)' 
                             : isError 
-                              ? 'rgba(239, 68, 68, 0.25)' 
+                              ? 'rgba(254, 226, 226, 0.8)' 
                               : isSelected 
-                                ? 'linear-gradient(135deg, rgba(20, 50, 110, 0.95), rgba(12, 34, 80, 0.95))' 
-                                : 'linear-gradient(135deg, rgba(14, 34, 76, 0.88), rgba(8, 22, 52, 0.92))',
+                                ? 'rgba(254, 243, 199, 0.9)' 
+                                : '#ffffff',
                           boxShadow: isSelected 
-                            ? '0 0 14px rgba(253, 224, 71, 0.4)' 
+                            ? '0 0 14px rgba(245, 158, 11, 0.25)' 
                             : isMatched 
-                              ? '0 0 10px rgba(16, 185, 129, 0.2)' 
-                              : '0 2px 8px rgba(0,0,0,0.3)',
+                              ? '0 0 10px rgba(34, 197, 94, 0.15)' 
+                              : '0 2px 8px rgba(0,0,0,0.04)',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '0.65rem',
@@ -1614,20 +1851,20 @@ function VocabularyGlossary({ onMatchComplete }) {
                           width: '24px',
                           height: '24px',
                           borderRadius: '50%',
-                          background: isMatched ? '#10b981' : '#f59e0b',
-                          color: isMatched ? '#ffffff' : '#000000',
+                          background: isMatched ? '#16a34a' : '#f59e0b',
+                          color: isMatched ? '#ffffff' : '#1a0f05',
                           fontWeight: '900',
                           fontSize: '0.8rem',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           flexShrink: 0,
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
                         }}>
                           {isMatched ? '✓' : def.num}
                         </div>
 
-                        <div style={{ flex: 1, fontSize: '0.82rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.3' }}>
+                        <div style={{ flex: 1, fontSize: '0.84rem', color: '#0f172a', fontWeight: '700', lineHeight: '1.3' }}>
                           {def.text}
                         </div>
 
@@ -1636,9 +1873,9 @@ function VocabularyGlossary({ onMatchComplete }) {
                           width: '12px',
                           height: '12px',
                           borderRadius: '50%',
-                          background: isMatched ? '#10b981' : isSelected ? '#fde047' : '#38bdf8',
-                          border: '2px solid #07152f',
-                          boxShadow: isSelected ? '0 0 10px #fde047' : isMatched ? '0 0 8px #10b981' : 'none',
+                          background: isMatched ? '#16a34a' : isSelected ? '#f59e0b' : '#0284c7',
+                          border: '2px solid #ffffff',
+                          boxShadow: isSelected ? '0 0 10px #f59e0b' : isMatched ? '0 0 8px #16a34a' : 'none',
                           position: 'absolute',
                           right: '-6px',
                           top: 'calc(50% - 6px)',
@@ -1652,8 +1889,8 @@ function VocabularyGlossary({ onMatchComplete }) {
 
                 {/* CENTER INSTRUCTION COLUMN */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', opacity: 0.65 }}>
-                  <span style={{ fontSize: '1.2rem', color: '#38bdf8' }}>↔</span>
-                  <span style={{ fontSize: '0.65rem', color: '#7dd3fc', fontWeight: '700', textTransform: 'uppercase', writingMode: 'vertical-rl', letterSpacing: '0.12em' }}>
+                  <span style={{ fontSize: '1.2rem', color: '#0284c7' }}>↔</span>
+                  <span style={{ fontSize: '0.65rem', color: '#0284c7', fontWeight: '800', textTransform: 'uppercase', writingMode: 'vertical-rl', letterSpacing: '0.12em' }}>
                     Connect
                   </span>
                 </div>
@@ -1667,7 +1904,7 @@ function VocabularyGlossary({ onMatchComplete }) {
                     padding: '0.15rem 0.35rem', 
                     fontSize: '0.85rem', 
                     fontWeight: '900', 
-                    color: '#38bdf8', 
+                    color: '#0284c7', 
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em'
                   }}>
@@ -1675,14 +1912,14 @@ function VocabularyGlossary({ onMatchComplete }) {
                       width: '20px', 
                       height: '20px', 
                       borderRadius: '4px', 
-                      background: 'rgba(56, 189, 248, 0.2)', 
-                      border: '1.5px solid #38bdf8',
+                      background: 'rgba(14, 165, 233, 0.18)', 
+                      border: '1.5px solid rgba(56, 189, 248, 0.4)', 
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       fontSize: '0.75rem',
                       fontWeight: '900',
-                      color: '#38bdf8'
+                      color: '#0284c7'
                     }}>W</span>
                     WORDS (TERMS)
                   </div>
@@ -1702,27 +1939,27 @@ function VocabularyGlossary({ onMatchComplete }) {
                           flex: 1,
                           minHeight: '54px',
                           padding: '0.55rem 0.85rem',
-                          borderRadius: '10px',
+                          borderRadius: '12px',
                           cursor: isMatched ? 'default' : 'pointer',
                           border: isMatched 
-                            ? '1.5px solid #10b981' 
+                            ? '2px solid #22c55e' 
                             : isError 
-                              ? '2px solid #ef4444' 
+                              ? '2px solid #dc2626' 
                               : isSelected 
-                                ? '2px solid #38bdf8' 
-                                : '1.5px solid rgba(56, 189, 248, 0.25)',
+                                ? '2px solid #0284c7' 
+                                : '2px solid rgba(167, 243, 208, 0.95)',
                           background: isMatched 
-                            ? 'rgba(16, 185, 129, 0.12)' 
+                            ? 'rgba(220, 252, 231, 0.7)' 
                             : isError 
-                              ? 'rgba(239, 68, 68, 0.25)' 
+                              ? 'rgba(254, 226, 226, 0.8)' 
                               : isSelected 
-                                ? 'linear-gradient(135deg, rgba(14, 55, 120, 0.95), rgba(8, 38, 90, 0.95))' 
-                                : 'linear-gradient(135deg, rgba(14, 34, 76, 0.88), rgba(8, 22, 52, 0.92))',
+                                ? 'rgba(224, 242, 254, 0.9)' 
+                                : '#ffffff',
                           boxShadow: isSelected 
-                            ? '0 0 14px rgba(56, 189, 248, 0.4)' 
+                            ? '0 0 14px rgba(14, 165, 233, 0.25)' 
                             : isMatched 
-                              ? '0 0 10px rgba(16, 185, 129, 0.2)' 
-                              : '0 2px 8px rgba(0,0,0,0.3)',
+                              ? '0 0 10px rgba(34, 197, 94, 0.15)' 
+                              : '0 2px 8px rgba(0,0,0,0.04)',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '0.65rem',
@@ -1736,9 +1973,9 @@ function VocabularyGlossary({ onMatchComplete }) {
                           width: '12px',
                           height: '12px',
                           borderRadius: '50%',
-                          background: isMatched ? '#10b981' : isSelected ? '#38bdf8' : '#38bdf8',
-                          border: '2px solid #07152f',
-                          boxShadow: isSelected ? '0 0 10px #38bdf8' : isMatched ? '0 0 8px #10b981' : 'none',
+                          background: isMatched ? '#16a34a' : isSelected ? '#0284c7' : '#0284c7',
+                          border: '2px solid #ffffff',
+                          boxShadow: isSelected ? '0 0 10px #0284c7' : isMatched ? '0 0 8px #16a34a' : 'none',
                           position: 'absolute',
                           left: '-6px',
                           top: 'calc(50% - 6px)',
@@ -1750,8 +1987,8 @@ function VocabularyGlossary({ onMatchComplete }) {
                         <div style={{
                           width: '24px',
                           height: '24px',
-                          borderRadius: '5px',
-                          background: isMatched ? '#10b981' : '#0284c7',
+                          borderRadius: '6px',
+                          background: isMatched ? '#16a34a' : '#0284c7',
                           color: '#ffffff',
                           fontWeight: '900',
                           fontSize: '0.8rem',
@@ -1759,17 +1996,17 @@ function VocabularyGlossary({ onMatchComplete }) {
                           alignItems: 'center',
                           justifyContent: 'center',
                           flexShrink: 0,
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
                         }}>
                           {isMatched ? '✓' : word.letter}
                         </div>
 
-                        <div style={{ flex: 1, fontSize: '0.92rem', color: '#ffffff', fontWeight: '800' }}>
+                        <div style={{ flex: 1, fontSize: '0.92rem', color: '#0f172a', fontWeight: '800' }}>
                           {word.text}
                         </div>
 
                         {isMatched && (
-                          <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: '800' }}>🔒</span>
+                          <span style={{ fontSize: '0.85rem', color: '#16a34a', fontWeight: '800' }}>🔒</span>
                         )}
                       </div>
                     );
@@ -1779,8 +2016,8 @@ function VocabularyGlossary({ onMatchComplete }) {
 
               {/* MATCH FEEDBACK & SUCCESS BANNER */}
               {matchedPairs.length === 6 && (
-                <div style={{ marginTop: '0.5rem', textAlign: 'center', padding: '0.65rem 1rem', background: 'rgba(16, 185, 129, 0.15)', borderRadius: '10px', border: '1.5px solid #10b981' }}>
-                  <h4 style={{ margin: 0, color: '#34d399', fontSize: '1.05rem', fontWeight: 900 }}>🎉 Excellent Job! All Terms Matched!</h4>
+                <div style={{ marginTop: '0.5rem', textAlign: 'center', padding: '0.65rem 1rem', background: 'rgba(220, 252, 231, 0.9)', borderRadius: '12px', border: '2px solid #22c55e' }}>
+                  <h4 style={{ margin: 0, color: '#15803d', fontSize: '1.05rem', fontWeight: 900 }}>🎉 Excellent Job! All Terms Matched!</h4>
                 </div>
               )}
 
@@ -1789,17 +2026,17 @@ function VocabularyGlossary({ onMatchComplete }) {
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 alignItems: 'center', 
-                borderTop: '1px solid rgba(56, 189, 248, 0.2)', 
+                borderTop: '2px solid rgba(167, 243, 208, 0.95)', 
                 paddingTop: '0.65rem', 
                 marginTop: 'auto', 
-                fontSize: '0.8rem' 
+                fontSize: '0.85rem' 
               }}>
-                <div style={{ display: 'flex', gap: '1.15rem', alignItems: 'center', color: '#bae6fd', fontWeight: '600' }}>
+                <div style={{ display: 'flex', gap: '1.15rem', alignItems: 'center', color: '#334155', fontWeight: '700' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ color: '#10b981', fontWeight: '900' }}>✓</span> Correct Match
+                    <span style={{ color: '#16a34a', fontWeight: '900' }}>✓</span> Correct Match
                   </span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ color: '#ef4444', fontWeight: '900' }}>✕</span> Wrong Match
+                    <span style={{ color: '#dc2626', fontWeight: '900' }}>✕</span> Wrong Match
                   </span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <span>🔒</span> Matched
@@ -1809,13 +2046,14 @@ function VocabularyGlossary({ onMatchComplete }) {
                   onClick={initGame}
                   style={{
                     padding: '0.4rem 0.85rem',
-                    borderRadius: '7px',
-                    fontSize: '0.82rem',
-                    fontWeight: '700',
-                    background: 'rgba(56, 189, 248, 0.12)',
-                    border: '1px solid rgba(56, 189, 248, 0.35)',
-                    color: '#38bdf8',
+                    borderRadius: '8px',
+                    fontSize: '0.85rem',
+                    fontWeight: '800',
+                    background: '#ffffff',
+                    border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                    color: '#0f172a',
                     cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                     transition: 'all 0.2s ease'
                   }}
                 >
@@ -1864,57 +2102,63 @@ function SummaryPane({ lessonId }) {
   const summaryPoints = summaries[lessonId] || [];
 
   return (
-    <div id="pane-summary-window" className="glass-panel" style={{ 
+    <div id="pane-summary-window" style={{ 
       display: 'flex', 
       flexDirection: 'column', 
-      gap: '1.25rem', 
-      background: 'linear-gradient(145deg, rgba(12, 28, 62, 0.94) 0%, rgba(6, 16, 38, 0.96) 100%)',
-      border: '1.5px solid rgba(56, 189, 248, 0.3)',
-      borderRadius: '14px',
-      padding: '1.5rem 1.75rem',
-      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
-      backdropFilter: 'blur(12px)',
-      marginTop: '1rem'
+      gap: '0.85rem', 
+      background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+      border: '2px solid rgba(167, 243, 208, 0.95)',
+      borderRadius: '16px',
+      padding: '1.25rem 1.65rem',
+      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.15)',
+      backdropFilter: 'blur(16px)',
+      marginTop: '1rem',
+      width: '100%',
+      boxSizing: 'border-box'
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid rgba(56, 189, 248, 0.3)', paddingBottom: '0.85rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid rgba(167, 243, 208, 0.95)', paddingBottom: '0.65rem' }}>
         <span style={{ 
           fontSize: '1.25rem', 
           fontWeight: '900', 
-          color: '#38bdf8', 
+          color: '#0284c7', 
           textTransform: 'uppercase', 
-          letterSpacing: '0.06em',
-          textShadow: '0 2px 10px rgba(56, 189, 248, 0.35)'
+          letterSpacing: '0.06em'
         }}>
           KEY TAKEAWAYS
         </span>
         <span style={{ 
-          fontSize: '0.92rem', 
-          fontWeight: '700',
-          color: '#bae6fd',
-          background: 'rgba(14, 165, 233, 0.15)',
-          border: '1px solid rgba(56, 189, 248, 0.3)',
+          fontSize: '0.88rem', 
+          fontWeight: '800',
+          color: '#0284c7',
+          background: 'rgba(14, 165, 233, 0.18)',
+          border: '1.5px solid rgba(56, 189, 248, 0.4)',
           padding: '0.3rem 0.85rem',
-          borderRadius: '6px'
+          borderRadius: '8px'
         }}>
           Chapter Summary
         </span>
       </div>
-      <ul style={{ margin: 0, paddingLeft: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.9rem', listStyle: 'none' }}>
+      <div style={{ margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
         {summaryPoints.map((point, i) => (
-          <li key={i} style={{ 
-            fontSize: '1rem', 
-            color: '#f8fafc', 
-            fontWeight: '500',
-            lineHeight: '1.7',
+          <div key={i} style={{ 
+            fontSize: '0.98rem', 
+            color: '#0f172a', 
+            fontWeight: '700',
+            lineHeight: '1.55',
             display: 'flex',
             alignItems: 'flex-start',
-            gap: '0.75rem'
+            gap: '0.65rem',
+            background: '#ffffff',
+            border: '1.5px solid rgba(167, 243, 208, 0.95)',
+            borderRadius: '10px',
+            padding: '0.6rem 0.95rem',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
           }}>
-            <span style={{ color: '#38bdf8', fontSize: '1.2rem', lineHeight: '1.3', flexShrink: 0 }}>•</span>
-            <span>{point}</span>
-          </li>
+            <span style={{ color: '#0284c7', fontSize: '1.15rem', lineHeight: '1.2', flexShrink: 0, fontWeight: '900' }}>•</span>
+            <span style={{ flex: 1 }}>{point}</span>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
@@ -2453,24 +2697,23 @@ function ChapterChallengeOverview({ onBack, onComplete, onViewSummary, onComplet
   return (
     <div className="split-frame" style={{ width: '100%', minHeight: '480px', gap: '1.25rem' }}>
       {/* LEFT PANE: Question, Metadata */}
-      <div className="frame-page-left" style={{ 
-        background: 'linear-gradient(145deg, rgba(12, 28, 62, 0.94) 0%, rgba(8, 18, 42, 0.96) 100%)', 
-        border: '1.5px solid rgba(56, 189, 248, 0.3)',
-        borderRadius: '14px',
+      <div className="frame-page-left act24-mint-left" style={{ 
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)', 
+        border: '1.5px solid rgba(167, 243, 208, 0.95)',
+        borderRadius: '16px',
         padding: '1.5rem 1.75rem', 
         display: 'flex', 
         flexDirection: 'column',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
-        backdropFilter: 'blur(12px)'
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.15)',
+        backdropFilter: 'blur(16px)'
       }}>
         <div style={{ 
           fontSize: '1.15rem', 
           fontWeight: '900', 
-          color: '#fbbf24', 
+          color: '#b45309', 
           textTransform: 'uppercase', 
           letterSpacing: '0.05em',
-          textShadow: '0 0 12px rgba(251, 191, 36, 0.5), 0 2px 8px rgba(0, 0, 0, 0.5)',
-          borderBottom: '2px solid rgba(251, 191, 36, 0.35)', 
+          borderBottom: '2px solid rgba(167, 243, 208, 0.95)', 
           paddingBottom: '0.65rem', 
           marginBottom: '1rem' 
         }}>
@@ -2480,33 +2723,32 @@ function ChapterChallengeOverview({ onBack, onComplete, onViewSummary, onComplet
           fontFamily: 'var(--serif-font)', 
           margin: '0 0 1.25rem 0', 
           fontSize: '1.18rem', 
-          color: '#ffffff', 
+          color: '#0f172a', 
           whiteSpace: 'pre-line', 
-          fontWeight: '600', 
-          lineHeight: '1.75',
-          textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)'
+          fontWeight: '700', 
+          lineHeight: '1.75'
         }}>
           {currentQuestion.question}
         </h2>
         
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', fontSize: '0.82rem', marginTop: 'auto', paddingTop: '1rem' }}>
-            <span style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#bae6fd', padding: '0.3rem 0.75rem', borderRadius: '8px', fontWeight: '600' }}><b style={{ color: '#38bdf8' }}>Difficulty:</b> {currentQuestion.difficulty}</span>
-            <span style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#bae6fd', padding: '0.3rem 0.75rem', borderRadius: '8px', fontWeight: '600' }}><b style={{ color: '#38bdf8' }}>Concept:</b> {currentQuestion.concept}</span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', fontSize: '0.85rem', marginTop: 'auto', paddingTop: '1rem' }}>
+            <span style={{ background: '#ffffff', border: '1.5px solid rgba(167, 243, 208, 0.95)', color: '#0f172a', padding: '0.35rem 0.85rem', borderRadius: '8px', fontWeight: '700', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}><b style={{ color: '#0284c7' }}>Difficulty:</b> {currentQuestion.difficulty}</span>
+            <span style={{ background: '#ffffff', border: '1.5px solid rgba(167, 243, 208, 0.95)', color: '#0f172a', padding: '0.35rem 0.85rem', borderRadius: '8px', fontWeight: '700', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}><b style={{ color: '#0284c7' }}>Concept:</b> {currentQuestion.concept}</span>
         </div>
       </div>
 
       {/* RIGHT PANE: Options + Explanation */}
       <div className="frame-page-right" style={{ 
-        background: 'linear-gradient(145deg, rgba(8, 22, 52, 0.94) 0%, rgba(4, 12, 32, 0.96) 100%)',
-        border: '1.5px solid rgba(56, 189, 248, 0.3)',
-        borderRadius: '14px',
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+        border: '2px solid rgba(167, 243, 208, 0.95)',
+        borderRadius: '16px',
         padding: '1.5rem 1.75rem', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'center', 
         gap: '1rem', 
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
-        backdropFilter: 'blur(12px)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+        backdropFilter: 'blur(16px)',
         transition: 'all 0.3s ease-in-out' 
       }}>
         {/* Options container that moves up altogether when answered */}
@@ -2524,30 +2766,30 @@ function ChapterChallengeOverview({ onBack, onComplete, onViewSummary, onComplet
               display: 'block',
               width: '100%',
               padding: '1.1rem 1.35rem',
-              border: '1.5px solid rgba(56, 189, 248, 0.35)',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
               borderRadius: '12px',
               textAlign: 'left',
-              background: 'linear-gradient(135deg, rgba(14, 34, 76, 0.95) 0%, rgba(8, 22, 52, 0.98) 100%)',
-              color: '#fbbf24',
-              fontWeight: '700',
-              fontSize: '1.08rem',
+              background: '#ffffff',
+              color: '#0f172a',
+              fontWeight: '800',
+              fontSize: '1.05rem',
               cursor: isAnswered ? 'default' : 'pointer',
               transition: 'all 0.2s ease',
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.35)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
               lineHeight: '1.4'
             };
 
             if (isAnswered) {
               if (isCorrect) {
-                buttonStyle.background = 'linear-gradient(135deg, rgba(6, 78, 59, 0.95) 0%, rgba(4, 47, 46, 0.98) 100%)';
-                buttonStyle.borderColor = '#10b981';
-                buttonStyle.color = '#34d399';
-                buttonStyle.boxShadow = '0 0 16px rgba(16, 185, 129, 0.4)';
+                buttonStyle.background = 'rgba(220, 252, 231, 0.95)';
+                buttonStyle.borderColor = '#22c55e';
+                buttonStyle.color = '#15803d';
+                buttonStyle.boxShadow = '0 0 16px rgba(34, 197, 94, 0.3)';
               } else if (isSelected) {
-                buttonStyle.background = 'linear-gradient(135deg, rgba(127, 29, 29, 0.95) 0%, rgba(69, 10, 10, 0.98) 100%)';
-                buttonStyle.borderColor = '#ef4444';
-                buttonStyle.color = '#f87171';
-                buttonStyle.boxShadow = '0 0 16px rgba(239, 68, 68, 0.4)';
+                buttonStyle.background = 'rgba(254, 226, 226, 0.95)';
+                buttonStyle.borderColor = '#dc2626';
+                buttonStyle.color = '#991b1b';
+                buttonStyle.boxShadow = '0 0 16px rgba(220, 38, 38, 0.3)';
               } else {
                  buttonStyle.opacity = 0.5;
               }
@@ -2564,19 +2806,19 @@ function ChapterChallengeOverview({ onBack, onComplete, onViewSummary, onComplet
         {/* Explanation appears below, sliding/opening down */}
         {isAnswered && (
           <div style={{ 
-            background: 'rgba(6, 16, 38, 0.85)', 
-            borderRadius: '12px', 
+            background: '#ffffff', 
+            borderRadius: '14px', 
             padding: '1.15rem 1.25rem', 
             maxHeight: '260px', 
             overflowY: 'auto',
-            border: '1.5px solid rgba(56, 189, 248, 0.3)',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+            border: '2px solid rgba(167, 243, 208, 0.95)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.65rem',
             animation: 'fadeIn 0.3s ease-out'
           }}>
-            <h4 style={{ margin: 0, color: '#38bdf8', fontSize: '1rem', fontWeight: '800' }}>Explanation</h4>
+            <h4 style={{ margin: 0, color: '#0284c7', fontSize: '1.05rem', fontWeight: '900' }}>Explanation</h4>
             <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {currentQuestion.explanation.map((point, i) => (
                 <li 
@@ -2584,9 +2826,9 @@ function ChapterChallengeOverview({ onBack, onComplete, onViewSummary, onComplet
                   className="explanation-point-animated"
                   style={{ 
                     fontSize: '0.92rem', 
-                    color: '#f8fafc', 
+                    color: '#0f172a', 
                     lineHeight: '1.6',
-                    fontWeight: '500',
+                    fontWeight: '600',
                     animationDelay: `${i * 0.25}s` 
                   }}
                 >
@@ -2600,16 +2842,17 @@ function ChapterChallengeOverview({ onBack, onComplete, onViewSummary, onComplet
               className="primary" 
               style={{ 
                 marginTop: '0.75rem', 
-                padding: '0.65rem 1.35rem', 
-                borderRadius: '20px', 
-                fontSize: '0.88rem',
-                fontWeight: '800',
-                background: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)',
-                border: '1.5px solid #38bdf8',
-                color: '#ffffff',
+                padding: '0.65rem 1.5rem', 
+                borderRadius: '10px', 
+                fontSize: '0.95rem',
+                fontWeight: '900',
+                background: '#f59e0b',
+                border: 'none',
+                color: '#1a0f05',
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(14, 165, 233, 0.4)',
-                alignSelf: 'flex-end'
+                boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)',
+                alignSelf: 'flex-end',
+                transition: 'all 0.2s ease'
               }}
             >
               {currentQuestionIndex < chapterChallengeQuestions.length - 1 ? 'Next Question →' : 'Finish Quiz ✓'}
@@ -2704,6 +2947,10 @@ export default function ChapterLearningLab({
   const [ch2FlowIndex, setCh2FlowIndex] = useState(0);
   const [appreciatingSubStep, setAppreciatingSubStep] = useState('appreciate');
   const [challengeQuestionIdx, setChallengeQuestionIdx] = useState(0);
+
+  // Activity 2.4 Interactive Learning States
+  const [act24SelectedGroup, setAct24SelectedGroup] = useState('herbs');
+  const [act24ExploredGroups, setAct24ExploredGroups] = useState({ herbs: true });
 
   const goToChapter2Step = (targetIndex) => {
     if ('speechSynthesis' in window) {
@@ -3537,348 +3784,190 @@ export default function ChapterLearningLab({
                 );
               })}
             </div>
-            </div>
           </div>
-        )}
-      </div>
-    );
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+  const PLANT_DATA = {
+    herbs: {
+      id: 'herbs',
+      name: 'Herbs',
+      icon: '🌿',
+      title: '🌿 Herbs',
+      badgeColor: '#065f46',
+      badgeBg: '#dcfce7',
+      badgeBorder: '#86efac',
+      color: '#10b981',
+      bg: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(52,211,153,0.03) 100%)',
+      definition: 'Short plants with soft green stems.',
+      examples: 'Grass • Tomato • Coriander • Tulsi',
+      imgSrc: tulsiImg,
+      imgAlt: 'Tulsi Herb',
+      keyFeatures: [
+        { id: 'height', label: 'Height: Short', hotspotId: 'height' },
+        { id: 'stem', label: 'Stem: Soft & tender', hotspotId: 'stem' },
+        { id: 'growth', label: 'Growth: Small plant', hotspotId: 'growth' }
+      ]
+    },
+    shrubs: {
+      id: 'shrubs',
+      name: 'Shrubs',
+      icon: '🌸',
+      title: '🌸 Shrubs',
+      badgeColor: '#9a3412',
+      badgeBg: '#ffedd5',
+      badgeBorder: '#fed7aa',
+      color: '#d97706',
+      bg: 'linear-gradient(135deg, rgba(217,119,6,0.08) 0%, rgba(251,191,36,0.03) 100%)',
+      definition: 'Medium bushy plants branching near base.',
+      examples: 'Rose • Lemon • Hibiscus • Henna',
+      imgSrc: roseImg,
+      imgAlt: 'Rose Shrub',
+      keyFeatures: [
+        { id: 'height', label: 'Height: Medium', hotspotId: 'height' },
+        { id: 'stem', label: 'Stem: Woody', hotspotId: 'stem' },
+        { id: 'branches', label: 'Branches: Near ground', hotspotId: 'branches' }
+      ]
+    },
+    trees: {
+      id: 'trees',
+      name: 'Trees',
+      icon: '🌳',
+      title: '🌳 Trees',
+      badgeColor: '#15803d',
+      badgeBg: '#dcfce7',
+      badgeBorder: '#86efac',
+      color: '#059669',
+      bg: 'linear-gradient(135deg, rgba(5,150,105,0.08) 0%, rgba(16,185,129,0.03) 100%)',
+      definition: 'Tall plants with thick woody trunks.',
+      examples: 'Mango • Banyan • Neem • Deodar',
+      imgSrc: banyanImg,
+      imgAlt: 'Banyan Tree',
+      keyFeatures: [
+        { id: 'height', label: 'Height: Tall', hotspotId: 'height' },
+        { id: 'stem', label: 'Stem: Thick, hard, woody', hotspotId: 'stem' },
+        { id: 'branches', label: 'Branches: Higher up', hotspotId: 'branches' }
+      ]
+    },
+    creepers: {
+      id: 'creepers',
+      name: 'Creepers',
+      icon: '🍉',
+      title: '🍉 Creepers',
+      badgeColor: '#0369a1',
+      badgeBg: '#e0f2fe',
+      badgeBorder: '#7dd3fc',
+      color: '#0284c7',
+      bg: 'linear-gradient(135deg, rgba(2,132,199,0.08) 0%, rgba(56,189,248,0.03) 100%)',
+      definition: 'Creeps along the ground.',
+      examples: 'Pumpkin • Watermelon • Sweet Potato',
+      imgSrc: creeperImg,
+      imgAlt: 'Watermelon Creeper',
+      keyFeatures: [
+        { id: 'stem', label: 'Stem: Weak', hotspotId: 'stem' },
+        { id: 'growth', label: 'Growth: Along ground', hotspotId: 'growth' },
+        { id: 'fruit', label: 'Fruit: Supported on soil', hotspotId: 'fruit' }
+      ]
+    },
+    climbers: {
+      id: 'climbers',
+      name: 'Climbers',
+      icon: '🌱',
+      title: '🌱 Climbers',
+      badgeColor: '#7c2d12',
+      badgeBg: '#fef3c7',
+      badgeBorder: '#fde68a',
+      color: '#ea580c',
+      bg: 'linear-gradient(135deg, rgba(234,88,12,0.08) 0%, rgba(251,146,60,0.03) 100%)',
+      definition: 'Climbs upward using support.',
+      examples: 'Money Plant • Pea • Grapevine',
+      imgSrc: climberImg,
+      imgAlt: 'Climber on support',
+      keyFeatures: [
+        { id: 'stem', label: 'Stem: Weak', hotspotId: 'stem' },
+        { id: 'support', label: 'Needs Support: Upward', hotspotId: 'support' },
+        { id: 'growth', label: 'Growth: Upward with Support', hotspotId: 'growth' }
+      ]
+    }
   };
 
-
-  function PlantVarietyMorpher() {
-    const [stage, setStage] = useState(0);
-    const [activeHotspot, setActiveHotspot] = useState(null);
-    const [creeperFlipped, setCreeperFlipped] = useState(false);
-    const [climberFlipped, setClimberFlipped] = useState(false);
-
-    const stages = [
-      {
-        title: '🌿 Herb',
-        height: 'Short (usually less than 1 meter)',
-        stem: 'Soft, green, and tender stem. Very easy to bend without breaking.',
-        examples: 'Tomato, Basil, Wheat, Grass',
-        color: '#10b981',
-        bg: 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(52,211,153,0.02) 100%)',
-        desc: 'Herbs are small plants with soft, non-woody stems. They contain a high water concentration in their cells.',
-        imgSrc: tulsiImg,
-        anatomy: (
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <defs>
-              <clipPath id="herb-clip">
-                <circle cx="50" cy="50" r="38" />
-              </clipPath>
-            </defs>
-            <circle cx="50" cy="50" r="39" fill="#10b981" />
-            <image 
-              href="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=200&q=80" 
-              x="12" y="12" width="76" height="76" 
-              clipPath="url(#herb-clip)" 
-            />
-            {/* Overlay a subtle green radial mask to blend with Pith */}
-            <circle cx="50" cy="50" r="38" fill="rgba(16, 185, 129, 0.15)" clipPath="url(#herb-clip)" pointerEvents="none" />
-            
-            {/* Capillaries / Vascular Bundles (Interactive Hotspots) */}
-            {[
-              { cx: 50, cy: 22, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 50, cy: 78, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 22, cy: 50, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 78, cy: 50, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 30, cy: 30, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 70, cy: 30, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 30, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' },
-              { cx: 70, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' }
-            ].map((pt, i) => (
-              <g key={i} className="anatomy-hotspot" onClick={() => setActiveHotspot({
-                title: pt.name,
-                text: '• In herbs, water and mineral transport is handled by ring-arranged vascular capillaries (xylem/phloem).\n• Since there is no thick wood or bark, the surrounding tissues are soft, green parenchyma cells, making the stem highly flexible.'
-              })}>
-                <circle cx={pt.cx} cy={pt.cy} r="6.5" fill="rgba(59, 130, 246, 0.3)" stroke="#3b82f6" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 2px rgba(59,130,246,0.5))' }} />
-                <circle cx={pt.cx} cy={pt.cy} r="2.5" fill="#2563eb" />
-              </g>
-            ))}
-            {/* Center Pith */}
-            <circle cx="50" cy="50" r="14" fill="rgba(200, 230, 201, 0.85)" stroke="#81c784" strokeWidth="1" />
-            <text x="50" y="52" textAnchor="middle" fill="#1b5e20" fontSize="6.5" fontWeight="bold">PITH</text>
-          </svg>
-        )
-      },
-      {
-        title: '🌺 Shrub',
-        height: 'Medium height (typically 1 to 3 meters)',
-        stem: 'Hard, thin, woody stem. Branches emerge close to the soil level.',
-        examples: 'Rose, Hibiscus, Lemon, Henna',
-        color: '#d97706',
-        bg: 'linear-gradient(135deg, rgba(217,119,6,0.06) 0%, rgba(251,191,36,0.02) 100%)',
-        desc: 'Shrubs are medium-sized plants with hard stems branching near the ground. They lack a single clear trunk.',
-        imgSrc: roseImg,
-        anatomy: (
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <defs>
-              <clipPath id="shrub-clip">
-                <circle cx="50" cy="50" r="35" />
-              </clipPath>
-            </defs>
-            <circle cx="50" cy="50" r="36" fill="#d97706" />
-            <image 
-              href="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=200&q=80" 
-              x="14" y="14" width="72" height="72" 
-              clipPath="url(#shrub-clip)" 
-            />
-            {/* Thin Wood Core (Hotspot) */}
-            <circle 
-              cx="50" cy="50" r="26" 
-              className="anatomy-hotspot pulse-ring-element"
-              fill="rgba(254, 215, 170, 0.45)" stroke="#ea580c" strokeWidth="2.5"
-              style={{ filter: 'drop-shadow(0 0 3px rgba(234,88,12,0.3))' }}
-              onClick={() => setActiveHotspot({
-                title: '🪵 Thin Wood Core',
-                text: '• Shrubs develop a thin core of lignified woody xylem tissue.\n• This wood provides rigid structural support allowing them to stand upright, but it remains thin compared to trees, keeping stems slender and slightly bendable.'
-              })}
-            />
-            {/* Thorns */}
-            {[
-              { x1: 50, y1: 15, x2: 50, y2: 4, path: "M48,15 L50,4 L52,15 Z" },
-              { x1: 50, y1: 85, x2: 50, y2: 96, path: "M48,85 L50,96 L52,85 Z" },
-              { x1: 15, y1: 50, x2: 4, y2: 50, path: "M15,48 L4,50 L15,52 Z" },
-              { x1: 85, y1: 50, x2: 96, y2: 50, path: "M85,48 L96,50 L85,52 Z" }
-            ].map((th, i) => (
-              <path 
-                key={i} 
-                d={th.path}
-                className="anatomy-hotspot"
-                fill="#9a3412" stroke="#451a03" strokeWidth="1"
-                onClick={() => setActiveHotspot({
-                  title: '🌵 Protective Thorns / Prickles',
-                  text: '• Many shrubs, like Wild Rose, develop thorns directly from their epidermal stem layer.\n• These sharp extensions act as a mechanical defense mechanism to deter herbivores from eating their leaves and stems.'
-                })}
-              />
-            ))}
-            <circle cx="50" cy="50" r="9" fill="#9a3412" opacity="0.9" />
-            <circle cx="50" cy="50" r="5" fill="#fdba74" />
-          </svg>
-        )
-      },
-      {
-        title: '🌳 Tree',
-        height: 'Tall (usually exceeding 3 meters)',
-        stem: 'Thick, hard, brown woody trunk. Branches start high up.',
-        examples: 'Neem, Mango, Banyan, Coconut',
-        color: '#1e3a8a',
-        bg: 'linear-gradient(135deg, rgba(30,58,138,0.06) 0%, rgba(59,130,246,0.02) 100%)',
-        desc: 'Trees are tall woody plants with a single main supporting trunk. They grow continuously for many years.',
-        imgSrc: banyanImg,
-        anatomy: (
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <defs>
-              <clipPath id="tree-clip">
-                <circle cx="50" cy="50" r="38" />
-              </clipPath>
-            </defs>
-            <circle cx="50" cy="50" r="40" fill="#451a03" />
-            <image 
-              href="https://images.unsplash.com/photo-1546482502-04b017f1190f?auto=format&fit=crop&w=200&q=80" 
-              x="10" y="10" width="80" height="80" 
-              clipPath="url(#tree-clip)" 
-            />
-            {/* Semi-transparent bark cork hotspot */}
-            <circle 
-              cx="50" cy="50" r="38" 
-              className="anatomy-hotspot"
-              fill="rgba(69, 26, 3, 0.2)" stroke="#ffd700" strokeWidth="1.5" strokeDasharray="3,3"
-              onClick={() => setActiveHotspot({
-                title: '🟫 Outer Cork Bark',
-                text: '• The outer bark is a thick layer of dead cork cells.\n• It serves as a rugged shield protecting the tree trunk against physical damage, fires, insects, water loss, and freezing mountain cold.'
-              })}
-            />
-            {/* Annual growth rings overlay */}
-            {[28, 20, 12].map((r, i) => (
-              <circle 
-                key={i} cx="50" cy="50" r={r} 
-                className="anatomy-hotspot pulse-ring-element"
-                fill="none" stroke="rgba(255, 215, 0, 0.45)" strokeWidth="2"
-                style={{ filter: 'drop-shadow(0 0 3px rgba(255,215,0,0.3))' }}
-                onClick={() => setActiveHotspot({
-                  title: '⭕ Annual Growth Rings',
-                  text: '• Concentric rings formed by secondary growth xylem divisions each season.\n• Fast spring growth creates wide light rings; slow summer growth creates thin dark rings. Counting them estimates trunk age!'
-                })}
-              />
-            ))}
-            <circle cx="50" cy="50" r="6" fill="#451a03" />
-          </svg>
-        )
-      }
-    ];
+  function PlantVarietyMorpher({
+    selectedGroup = 'herbs'
+  }) {
+    const curGroup = PLANT_DATA[selectedGroup] || PLANT_DATA.herbs;
 
     return (
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '1.25rem', 
-        width: '100%', 
-        padding: '1.5rem', 
-        background: 'linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%)', 
-        backdropFilter: 'blur(16px)', 
-        borderRadius: '20px', 
-        border: '1.5px solid rgba(167, 243, 208, 0.85)', 
-        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.35)' 
+      <div id="act24-interactive-explorer" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.05rem',
+        width: '100%',
+        minHeight: '100%',
+        padding: '1.3rem 1.5rem',
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.99) 0%, rgba(240, 253, 244, 0.97) 100%)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: '20px',
+        border: '1.5px solid rgba(167, 243, 208, 0.95)',
+        boxShadow: '0 14px 36px rgba(0, 0, 0, 0.15)',
+        position: 'relative',
+        justifyContent: 'center'
       }}>
-        <div style={{ borderBottom: '1.5px solid rgba(167, 243, 208, 0.85)', paddingBottom: '0.65rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.9rem', fontWeight: '800', color: '#047857', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            🔬 Plant Growth Form Morpher
-          </span>
-          <span style={{ fontSize: '12px', color: '#065f46', fontWeight: '700' }}>Tap rings/spots to magnifying cellular details!</span>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 100px', gap: '1rem', alignItems: 'center' }}>
-          <div style={{ padding: '0.85rem 1rem', borderRadius: '14px', background: stages[stage].bg, border: `1.5px solid ${stages[stage].color}44`, minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '0 2px 8px rgba(6, 78, 59, 0.05)' }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: stages[stage].color, fontSize: '1.15rem', fontWeight: '800' }}>
-              {stages[stage].title}
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '14.5px', color: '#064e3b', lineHeight: '1.5', fontWeight: '700' }}>
-              <span><b>Average Height:</b> {stages[stage].height}</span>
-              <span><b>Stem Character:</b> {stages[stage].stem}</span>
-              <span><b>NCERT Examples:</b> <i style={{ color: '#047857' }}>{stages[stage].examples}</i></span>
+        {/* EXPLORE & LEARN AREA (LARGE HD PLANT VISUAL FOCUS) */}
+        <div style={{
+          background: curGroup.bg,
+          border: `1.5px solid ${curGroup.color}44`,
+          borderRadius: '16px',
+          padding: '1.15rem 1.25rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.95rem',
+          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.04)'
+        }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem', borderBottom: '1.5px solid rgba(0,0,0,0.06)', paddingBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1.25rem' }}>🔍</span>
+              <strong style={{ fontSize: '1.18rem', color: curGroup.color, fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                EXPLORE &amp; LEARN: {curGroup.name}
+              </strong>
             </div>
+            <span style={{ fontSize: '0.9rem', color: '#065f46', fontWeight: '800' }}>
+              Observe the key features of {curGroup.name.toLowerCase()}.
+            </span>
           </div>
-          {/* Realistic View */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 4px 12px rgba(6, 78, 59, 0.08)', overflow: 'hidden' }}>
-              <img src={stages[stage].imgSrc} alt={stages[stage].title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
-            </div>
-            <span style={{ fontSize: '10px', color: '#047857', fontWeight: '800' }}>Realistic View</span>
-          </div>
-        </div>
 
-        {/* Morph Slider */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: '#ffffff', padding: '0.85rem 1.25rem', borderRadius: '14px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)' }}>
-          <input 
-            type="range" 
-            min="0" 
-            max="2" 
-            value={stage} 
-            onChange={(e) => { setStage(parseInt(e.target.value)); setActiveHotspot(null); }} 
-            style={{ width: '100%', accentColor: stages[stage].color, cursor: 'pointer', height: '6px', borderRadius: '3px' }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '800', color: '#064e3b' }}>
-            <span style={{ color: stage === 0 ? '#047857' : 'inherit', transition: 'color 0.2s' }}>Herb</span>
-            <span style={{ color: stage === 1 ? '#d97706' : 'inherit', transition: 'color 0.2s' }}>Shrub</span>
-            <span style={{ color: stage === 2 ? '#1e3a8a' : 'inherit', transition: 'color 0.2s' }}>Tree</span>
-          </div>
-        </div>
-
-        {/* Hotspot details panel */}
-        {activeHotspot ? (
+          {/* Plant Image (Fills Entire Box Area Edge-to-Edge, Full Original Image Visible, No Empty Side Space) */}
           <div style={{
-            background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)',
-            borderLeft: '4px solid #eab308',
-            border: '1.5px solid #fde047',
-            borderLeftWidth: '4px',
-            borderRadius: '10px',
-            padding: '0.85rem 1.1rem',
-            fontSize: '13.5px',
-            lineHeight: '1.55',
-            boxShadow: '0 2px 8px rgba(234, 179, 8, 0.15)',
-            animation: 'fadeIn 0.25s ease-out'
-          }}>
-            <strong style={{ color: '#854d0e', display: 'block', marginBottom: '0.25rem', fontWeight: '800' }}>{activeHotspot.title}</strong>
-            <p style={{ margin: 0, color: '#713f12', whiteSpace: 'pre-line', fontWeight: '700' }}>{activeHotspot.text}</p>
-          </div>
-        ) : (
-          <div style={{
-            background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)',
-            borderLeft: '4px solid #eab308',
-            border: '1.5px solid #fde047',
-            borderLeftWidth: '4px',
-            borderRadius: '10px',
-            padding: '0.85rem 1.1rem',
-            fontSize: '13.5px',
-            color: '#713f12',
-            fontWeight: '700',
-            textAlign: 'center',
+            position: 'relative',
+            borderRadius: '14px',
+            overflow: 'hidden',
+            border: `2px solid ${curGroup.color}44`,
+            boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
+            width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            boxShadow: '0 2px 8px rgba(234, 179, 8, 0.15)'
+            lineHeight: 0,
+            background: '#ffffff'
           }}>
-            <span>🔍</span>
-            <span><b>Directions:</b> Tap the glowing rings or points in the <b>Cellular Anatomy</b> view above to inspect growth details!</span>
+            <img
+              src={curGroup.imgSrc}
+              alt={curGroup.imgAlt}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxHeight: '480px',
+                objectFit: 'contain',
+                display: 'block',
+                userSelect: 'none',
+                borderRadius: '12px'
+              }}
+            />
           </div>
-        )}
-
-        {/* Climbers vs Creepers comparative panel (Upgraded for high visual visibility & interactive 3D flips) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', borderTop: '1.5px solid rgba(167, 243, 208, 0.85)', paddingTop: '1.25rem' }}>
-          
-          {/* Creeper Card Flip Container */}
-          <div className="flip-card-container" onClick={() => setCreeperFlipped(f => !f)}>
-            <div className={`flip-card-inner ${creeperFlipped ? 'flipped' : ''}`}>
-              
-              {/* Front Side: Visual */}
-              <div className="flip-card-front" style={{ border: '1.5px solid rgba(245, 158, 11, 0.5)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderRadius: '14px' }}>
-                <img src={creeperImg} alt="Creeper" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍉</span>
-                    <strong style={{ fontSize: '15px' }}>Creepers (Spread on Ground)</strong>
-                  </div>
-                  <span style={{ fontSize: '11px', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700' }}>👉 Tap to read details</span>
-                </div>
-              </div>
-
-              {/* Back Side: Details */}
-              <div className="flip-card-back" style={{ background: '#ffffff', border: '1.5px solid rgba(245, 158, 11, 0.45)', borderRadius: '14px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem', boxShadow: '0 4px 14px rgba(0,0,0,0.08)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(245, 158, 11, 0.2)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍉</span>
-                    <strong style={{ fontSize: '15px', color: '#b45309', fontWeight: '800' }}>Creepers (Spread on Ground)</strong>
-                  </div>
-                  <span style={{ fontSize: '10px', color: '#854d0e', textTransform: 'uppercase', fontWeight: '700' }}>Tap to view image</span>
-                </div>
-                <div style={{ margin: 0, fontSize: '13.5px', lineHeight: '1.55', color: '#064e3b', fontWeight: '700', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <span>🌱 <b>Growth Habit:</b> They creep horizontally along the ground and spread out on the surface of the soil.</span>
-                  <span>⚠️ <b>Stem Weakness:</b> Their stems are so thin and fragile that they <b>cannot grow vertically</b> at all, even with external supports.</span>
-                  <span>🍉 <b>Fruits:</b> Frequently produce large, heavy fruits (like Watermelon or Pumpkin) that must rest on the ground.</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Climber Card Flip Container */}
-          <div className="flip-card-container" onClick={() => setClimberFlipped(f => !f)}>
-            <div className={`flip-card-inner ${climberFlipped ? 'flipped' : ''}`}>
-              
-              {/* Front Side: Visual */}
-              <div className="flip-card-front" style={{ border: '1.5px solid rgba(2, 132, 199, 0.5)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderRadius: '14px' }}>
-                <img src={climberImg} alt="Climber" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍇</span>
-                    <strong style={{ fontSize: '15px' }}>Climbers (Climb Up Support)</strong>
-                  </div>
-                  <span style={{ fontSize: '11px', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700' }}>👉 Tap to read details</span>
-                </div>
-              </div>
-
-              {/* Back Side: Details */}
-              <div className="flip-card-back" style={{ background: '#ffffff', border: '1.5px solid rgba(2, 132, 199, 0.45)', borderRadius: '14px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem', boxShadow: '0 4px 14px rgba(0,0,0,0.08)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(2, 132, 199, 0.2)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '1.3rem' }}>🍇</span>
-                    <strong style={{ fontSize: '15px', color: '#0369a1', fontWeight: '800' }}>Climbers (Climb Up Support)</strong>
-                  </div>
-                  <span style={{ fontSize: '10px', color: '#0284c7', textTransform: 'uppercase', fontWeight: '700' }}>Tap to view image</span>
-                </div>
-                <div style={{ margin: 0, fontSize: '13.5px', lineHeight: '1.55', color: '#064e3b', fontWeight: '700', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <span>🎋 <b>Growth Habit:</b> They grow vertically by clasping onto nearby supports (sticks, trees, or walls).</span>
-                  <span>🔗 <b>Adaptation:</b> They develop special climbing organs called coiled <b>Tendrils</b> or sticky roots to latch and pull themselves up.</span>
-                  <span>☀️ <b>Goal:</b> Climbing allows their leaves to reach higher areas with direct sunlight (e.g., Pea, Grapevine, Money Plant).</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
         </div>
       </div>
     );
@@ -3919,12 +4008,12 @@ export default function ChapterLearningLab({
     };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%)', borderRadius: '20px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 16px 40px rgba(0,0,0,0.35)' }}>
+        <div style={{ borderBottom: '1.5px solid rgba(167, 243, 208, 0.85)', paddingBottom: '0.55rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+          <span style={{ fontSize: '0.92rem', fontWeight: '900', color: '#064e3b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             🔗 Venation-Root Correlation Linker
           </span>
-          <span style={{ fontSize: '1.05rem', color: '#ffffff', fontWeight: '800', background: 'linear-gradient(135deg, #f59e0b, #d97706)', padding: '0.45rem 1.15rem', borderRadius: '14px', border: '2px solid #92400e', boxShadow: '0 4px 16px rgba(245,158,11,0.5)', textShadow: '0 1px 2px rgba(0,0,0,0.4)' }}>
+          <span style={{ fontSize: '0.92rem', color: '#ffffff', fontWeight: '800', background: 'linear-gradient(135deg, #f59e0b, #d97706)', padding: '0.35rem 0.95rem', borderRadius: '12px', border: '1.5px solid #92400e', boxShadow: '0 2px 8px rgba(245,158,11,0.35)', textShadow: '0 1px 2px rgba(0,0,0,0.4)' }}>
             👉 Tap matching cards on left & right to link
           </span>
         </div>
@@ -3951,36 +4040,36 @@ export default function ChapterLearningLab({
             )}
 
             {/* Reticulate port (left, top) */}
-            <circle cx="46.3%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : 'var(--page-bg)'} stroke={connections.reticulate ? '#059669' : selectedLeaf === 'reticulate' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="46.3%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : '#ffffff'} stroke={connections.reticulate ? '#059669' : selectedLeaf === 'reticulate' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedLeaf === 'reticulate' && !connections.reticulate && (
-              <circle cx="46.3%" cy="24%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="46.3%" cy="24%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
             )}
 
             {/* Parallel port (left, bottom) */}
-            <circle cx="46.3%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : 'var(--page-bg)'} stroke={connections.parallel ? '#059669' : selectedLeaf === 'parallel' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="46.3%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : '#ffffff'} stroke={connections.parallel ? '#059669' : selectedLeaf === 'parallel' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedLeaf === 'parallel' && !connections.parallel && (
-              <circle cx="46.3%" cy="74%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="46.3%" cy="74%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
             )}
 
             {/* Taproot port (right, top) */}
-            <circle cx="53.7%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : 'var(--page-bg)'} stroke={connections.reticulate ? '#059669' : selectedRoot === 'taproot' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="53.7%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : '#ffffff'} stroke={connections.reticulate ? '#059669' : selectedRoot === 'taproot' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedRoot === 'taproot' && !connections.reticulate && (
-              <circle cx="53.7%" cy="24%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="53.7%" cy="24%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
             )}
 
             {/* Fibrous port (right, bottom) */}
-            <circle cx="53.7%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : 'var(--page-bg)'} stroke={connections.parallel ? '#059669' : selectedRoot === 'fibrous' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="53.7%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : '#ffffff'} stroke={connections.parallel ? '#059669' : selectedRoot === 'fibrous' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedRoot === 'fibrous' && !connections.parallel && (
-              <circle cx="53.7%" cy="74%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="53.7%" cy="74%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
@@ -3988,32 +4077,32 @@ export default function ChapterLearningLab({
           </svg>
           {/* Leaves */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.92rem', fontWeight: '900', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Venation</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: '900', color: '#064e3b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Venation</span>
             
             <button
               onClick={() => selectLeaf('reticulate')}
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.reticulate ? '2.5px solid var(--success)' : selectedLeaf === 'reticulate' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.reticulate ? '2.5px solid #059669' : selectedLeaf === 'reticulate' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.reticulate ? '#f0fdf4' : selectedLeaf === 'reticulate' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedLeaf === 'reticulate' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.reticulate ? '0 4px 14px rgba(5,150,105,0.2)' : selectedLeaf === 'reticulate' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={dicotLeafImg} alt="Dicot / Reticulate Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f0fdf4' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={dicotLeafImg} alt="Dicot / Reticulate Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Reticulate</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Net-like network of veins</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Reticulate</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>Net-like network of veins</span>
               </div>
             </button>
             
@@ -4022,57 +4111,57 @@ export default function ChapterLearningLab({
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.parallel ? '2.5px solid var(--success)' : selectedLeaf === 'parallel' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.parallel ? '2.5px solid #059669' : selectedLeaf === 'parallel' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.parallel ? '#f0fdf4' : selectedLeaf === 'parallel' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedLeaf === 'parallel' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.parallel ? '0 4px 14px rgba(5,150,105,0.2)' : selectedLeaf === 'parallel' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={monocotLeafImg} alt="Monocot / Parallel Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f0fdf4' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={monocotLeafImg} alt="Monocot / Parallel Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Parallel</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Veins running side-by-side</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Parallel</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>Veins running side-by-side</span>
               </div>
             </button>
           </div>
 
           {/* Roots */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.92rem', fontWeight: '900', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Root System</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: '900', color: '#064e3b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Root System</span>
             
             <button
               onClick={() => selectRoot('taproot')}
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.reticulate ? '2.5px solid var(--success)' : selectedRoot === 'taproot' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.reticulate ? '2.5px solid #059669' : selectedRoot === 'taproot' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.reticulate ? '#f0fdf4' : selectedRoot === 'taproot' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedRoot === 'taproot' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.reticulate ? '0 4px 14px rgba(5,150,105,0.2)' : selectedRoot === 'taproot' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={taprootImg} alt="Taproot" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#fdf8f6' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={taprootImg} alt="Taproot" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Taproot</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>One deep central thick root</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Taproot</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>One deep central thick root</span>
               </div>
             </button>
             
@@ -4081,32 +4170,32 @@ export default function ChapterLearningLab({
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.parallel ? '2.5px solid var(--success)' : selectedRoot === 'fibrous' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.parallel ? '2.5px solid #059669' : selectedRoot === 'fibrous' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.parallel ? '#f0fdf4' : selectedRoot === 'fibrous' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedRoot === 'fibrous' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.parallel ? '0 4px 14px rgba(5,150,105,0.2)' : selectedRoot === 'fibrous' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={fibrousImg} alt="Fibrous Root" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#fdf8f6' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={fibrousImg} alt="Fibrous Root" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Fibrous</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Cluster of thin threadlike roots</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Fibrous</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>Cluster of thin threadlike roots</span>
               </div>
             </button>
           </div>
         </div>
 
         {status && (
-          <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+          <div style={{ padding: '0.6rem 0.9rem', borderRadius: '10px', background: '#ffffff', border: '1.5px solid rgba(167, 243, 208, 0.9)', fontSize: '0.88rem', fontWeight: '700', color: status.startsWith('❌') ? '#b91c1c' : '#064e3b', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
             {status}
           </div>
         )}
@@ -4152,23 +4241,52 @@ export default function ChapterLearningLab({
     };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.85rem',
+        width: '100%',
+        padding: '1.25rem',
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: '16px',
+        border: '2px solid rgba(167, 243, 208, 0.95)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.15)'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid rgba(167, 243, 208, 0.95)', paddingBottom: '0.5rem' }}>
+          <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#0284c7', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             🥜 Interactive Seed Dissector
           </span>
-          <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.1rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', gap: '0.35rem', background: '#ffffff', padding: '0.2rem', borderRadius: '8px', border: '1.5px solid rgba(167, 243, 208, 0.95)' }}>
             <button
               onClick={() => handleSelect('pea')}
-              className="glass-btn"
-              style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: activeSeed === 'pea' ? 'var(--accent)' : 'transparent', color: activeSeed === 'pea' ? '#fff' : 'var(--text-primary)' }}
+              style={{
+                padding: '0.3rem 0.65rem',
+                fontSize: '0.78rem',
+                fontWeight: '900',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                background: activeSeed === 'pea' ? '#f59e0b' : 'transparent',
+                color: activeSeed === 'pea' ? '#1a0f05' : '#0f172a',
+                transition: 'all 0.2s ease'
+              }}
             >
               Dicot (Gram)
             </button>
             <button
               onClick={() => handleSelect('maize')}
-              className="glass-btn"
-              style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: activeSeed === 'maize' ? 'var(--accent)' : 'transparent', color: activeSeed === 'maize' ? '#fff' : 'var(--text-primary)' }}
+              style={{
+                padding: '0.3rem 0.65rem',
+                fontSize: '0.78rem',
+                fontWeight: '900',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                background: activeSeed === 'maize' ? '#f59e0b' : 'transparent',
+                color: activeSeed === 'maize' ? '#1a0f05' : '#0f172a',
+                transition: 'all 0.2s ease'
+              }}
             >
               Monocot (Maize)
             </button>
@@ -4176,7 +4294,7 @@ export default function ChapterLearningLab({
         </div>
 
         {/* Large Image box on Top */}
-        <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '1rem', border: '1px solid var(--border)', height: '240px', alignItems: 'center', overflow: 'hidden', width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', background: '#ffffff', borderRadius: '12px', padding: '1rem', border: '1.5px solid rgba(167, 243, 208, 0.95)', height: '240px', alignItems: 'center', overflow: 'hidden', width: '100%', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
           <img 
             src={getSeedImage()} 
             alt={getSeedAlt()}
@@ -4189,8 +4307,23 @@ export default function ChapterLearningLab({
           <button
             disabled={coatRemoved}
             onClick={() => { setCoatRemoved(true); setStatus('Seed coat peeled! Now click "Split Seed" to look inside.'); }}
-            className="glass-btn"
-            style={{ padding: '0.75rem', fontSize: '0.85rem', fontWeight: 'bold', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: coatRemoved ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: coatRemoved ? 'default' : 'pointer' }}
+            style={{
+              padding: '0.75rem',
+              fontSize: '0.9rem',
+              fontWeight: '900',
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.35rem',
+              borderRadius: '10px',
+              background: coatRemoved ? '#e2e8f0' : '#f59e0b',
+              color: coatRemoved ? '#64748b' : '#1a0f05',
+              border: coatRemoved ? '1.5px solid #cbd5e1' : 'none',
+              cursor: coatRemoved ? 'default' : 'pointer',
+              boxShadow: coatRemoved ? 'none' : '0 4px 14px rgba(245, 158, 11, 0.35)',
+              transition: 'all 0.2s ease'
+            }}
           >
             🔓 Peel Seed Coat
           </button>
@@ -4206,14 +4339,29 @@ export default function ChapterLearningLab({
                 ? '🌱 Dicot splits cleanly into TWO food-storing cotyledons.' 
                 : '🚫 Monocot does not split. It has a single solid cotyledon.');
             }}
-            className="glass-btn"
-            style={{ padding: '0.75rem', fontSize: '0.85rem', fontWeight: 'bold', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: seedSplit ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: seedSplit ? 'default' : 'pointer' }}
+            style={{
+              padding: '0.75rem',
+              fontSize: '0.9rem',
+              fontWeight: '900',
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.35rem',
+              borderRadius: '10px',
+              background: seedSplit ? '#e2e8f0' : '#f59e0b',
+              color: seedSplit ? '#64748b' : '#1a0f05',
+              border: seedSplit ? '1.5px solid #cbd5e1' : 'none',
+              cursor: seedSplit ? 'default' : 'pointer',
+              boxShadow: seedSplit ? 'none' : '0 4px 14px rgba(245, 158, 11, 0.35)',
+              transition: 'all 0.2s ease'
+            }}
           >
             ✂️ Split Seed
           </button>
         </div>
 
-        <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+        <div style={{ padding: '0.65rem 0.9rem', borderRadius: '10px', background: 'rgba(240, 253, 244, 0.95)', border: '1.5px solid rgba(167, 243, 208, 0.95)', fontSize: '0.85rem', color: '#0f172a', fontWeight: '700' }}>
           {status}
         </div>
       </div>
@@ -4237,10 +4385,10 @@ export default function ChapterLearningLab({
     const specimenKeys = ['fish', 'pigeon', 'snail', 'cow'];
 
     const dropzones = [
-      { id: 'swim', label: 'Swim 🏊', theme: { active: '#38bdf8', bg: 'rgba(56, 189, 248, 0.22)', border: '#38bdf8' } },
-      { id: 'fly', label: 'Fly 🦅', theme: { active: '#a78bfa', bg: 'rgba(167, 139, 250, 0.22)', border: '#a78bfa' } },
-      { id: 'walk', label: 'Walk 🚶', theme: { active: '#fbbf24', bg: 'rgba(251, 191, 36, 0.22)', border: '#fbbf24' } },
-      { id: 'crawl', label: 'Crawl 🐌', theme: { active: '#4ade80', bg: 'rgba(74, 222, 128, 0.22)', border: '#4ade80' } }
+      { id: 'swim', label: 'Swim 🏊', theme: { active: '#0284c7', bg: 'rgba(224, 242, 254, 0.9)', border: '#38bdf8' } },
+      { id: 'fly', label: 'Fly 🦅', theme: { active: '#7c3aed', bg: 'rgba(243, 232, 255, 0.9)', border: '#c084fc' } },
+      { id: 'walk', label: 'Walk 🚶', theme: { active: '#b45309', bg: 'rgba(254, 243, 199, 0.9)', border: '#f59e0b' } },
+      { id: 'crawl', label: 'Crawl 🐌', theme: { active: '#15803d', bg: 'rgba(220, 252, 231, 0.9)', border: '#4ade80' } }
     ];
 
     const handleDragStart = (e, animalId) => {
@@ -4275,7 +4423,18 @@ export default function ChapterLearningLab({
     };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem 1.4rem', background: '#071A33', borderRadius: '22px', border: '1.5px solid #1e3a8a', boxShadow: '0 12px 36px rgba(0,0,0,0.45)' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.85rem',
+        width: '100%',
+        padding: '1.25rem 1.4rem',
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: '16px',
+        border: '2px solid rgba(167, 243, 208, 0.95)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.15)'
+      }}>
         
         <style>{`
           @keyframes scaleUp {
@@ -4285,29 +4444,43 @@ export default function ChapterLearningLab({
         `}</style>
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #1e3a8a', paddingBottom: '0.5rem' }}>
-          <span style={{ fontSize: '1.1rem', fontWeight: '900', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid rgba(167, 243, 208, 0.95)', paddingBottom: '0.5rem' }}>
+          <span style={{ fontSize: '1.1rem', fontWeight: '900', color: '#0284c7', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🏃 Locomotion Organ Mapper
           </span>
           <button 
             onClick={handleResetGrid} 
-            style={{ background: '#0f2744', border: '1.5px solid #1e3a8a', color: '#94a3b8', borderRadius: '8px', padding: '0.3rem 0.65rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.88rem', fontWeight: '800' }}
+            style={{
+              background: '#ffffff',
+              border: '1.5px solid rgba(167, 243, 208, 0.95)',
+              color: '#0f172a',
+              borderRadius: '8px',
+              padding: '0.35rem 0.75rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.85rem',
+              fontWeight: '800',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
+              transition: 'all 0.2s ease'
+            }}
           >
-            <RefreshCw size={14} color="#38bdf8" /> Reset
+            <RefreshCw size={14} color="#0284c7" /> Reset
           </button>
         </div>
 
         {/* SPECIMEN TRAY */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%' }}>
-          <span style={{ fontSize: '1.02rem', fontWeight: '800', color: '#ffffff' }}>Animal Specimen Tray</span>
+          <span style={{ fontSize: '0.98rem', fontWeight: '800', color: '#0f172a' }}>Animal Specimen Tray</span>
           <div style={{ 
             display: 'flex', 
             gap: '16px', 
             minHeight: '260px', 
             padding: '1rem 1.25rem', 
-            background: '#0b2347', 
-            borderRadius: '18px', 
-            border: '1.5px dashed #1e3a8a', 
+            background: 'rgba(240, 253, 244, 0.6)', 
+            borderRadius: '14px', 
+            border: '2px dashed rgba(167, 243, 208, 0.95)', 
             alignItems: 'center', 
             justifyContent: 'center', 
             flexWrap: 'nowrap',
@@ -4315,7 +4488,7 @@ export default function ChapterLearningLab({
             boxSizing: 'border-box'
           }}>
             {specimenKeys.filter(k => !placed[k]).length === 0 ? (
-              <div style={{ fontSize: '1.05rem', color: '#4ade80', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '1rem' }}>
+              <div style={{ fontSize: '1.05rem', color: '#16a34a', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '1rem' }}>
                 ✅ All animal specimens successfully placed!
               </div>
             ) : (
@@ -4344,10 +4517,10 @@ export default function ChapterLearningLab({
                       maxWidth: '190px',
                       minWidth: '135px',
                       height: '230px',
-                      borderRadius: '16px',
-                      background: '#071A33',
-                      border: isSelected ? '2.5px solid #38bdf8' : draggingId === k ? '1.5px dashed #38bdf8' : '1.5px solid #1e3a8a',
-                      boxShadow: isSelected ? '0 0 22px rgba(56, 189, 248, 0.45)' : '0 6px 18px rgba(0,0,0,0.35)',
+                      borderRadius: '14px',
+                      background: '#ffffff',
+                      border: isSelected ? '2.5px solid #0284c7' : draggingId === k ? '2px dashed #0284c7' : '2px solid rgba(167, 243, 208, 0.95)',
+                      boxShadow: isSelected ? '0 0 22px rgba(14, 165, 233, 0.35)' : '0 4px 14px rgba(0,0,0,0.06)',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -4370,8 +4543,8 @@ export default function ChapterLearningLab({
                       justifyContent: 'center',
                       position: 'relative',
                       overflow: 'hidden',
-                      background: 'rgba(15, 39, 68, 0.45)',
-                      borderRadius: '12px'
+                      background: '#f0fdf4',
+                      borderRadius: '10px'
                     }}>
                       <img 
                         src={data[k].image} 
@@ -4380,21 +4553,20 @@ export default function ChapterLearningLab({
                           maxWidth: '92%', 
                           maxHeight: '92%', 
                           width: 'auto', 
-                          height: 'auto',
+                          height: 'auto', 
                           objectFit: 'contain', 
                           borderRadius: '8px', 
                           pointerEvents: 'none',
-                          filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.65))',
                           transform: k === 'cow' ? 'scale(1.22)' : k === 'snail' ? 'scale(1.18)' : k === 'pigeon' ? 'scale(1.14)' : 'scale(1.14)',
                           transformOrigin: 'center center'
                         }} 
                       />
                     </div>
-                    <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#ffffff', textAlign: 'center', marginTop: '6px' }}>
+                    <span style={{ fontSize: '1rem', fontWeight: '900', color: '#0f172a', textAlign: 'center', marginTop: '6px' }}>
                       {data[k].name}
                     </span>
                     {isSelected && (
-                      <div style={{ position: 'absolute', top: -6, right: -6, background: '#38bdf8', color: '#041226', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', boxShadow: '0 2px 6px rgba(0,0,0,0.4)' }}>
+                      <div style={{ position: 'absolute', top: -6, right: -6, background: '#0284c7', color: '#ffffff', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' }}>
                         ✓
                       </div>
                     )}
@@ -4414,13 +4586,13 @@ export default function ChapterLearningLab({
             const borderStyle = isHovered 
               ? `2px solid ${zone.theme.active}` 
               : hasPlaced 
-              ? '1.5px solid #22c55e' 
-              : `1.5px dashed ${zone.theme.border}`;
+              ? '2px solid #22c55e' 
+              : `2px dashed rgba(167, 243, 208, 0.95)`;
             const bgStyle = isHovered 
               ? zone.theme.bg 
               : hasPlaced 
-              ? 'rgba(22, 163, 74, 0.22)' 
-              : '#0b2347';
+              ? 'rgba(220, 252, 231, 0.8)' 
+              : '#ffffff';
 
             return (
               <div
@@ -4448,19 +4620,19 @@ export default function ChapterLearningLab({
                   borderRadius: '12px',
                   border: borderStyle,
                   background: bgStyle,
-                  padding: '0.35rem 0.65rem',
+                  padding: '0.45rem 0.75rem',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.2rem',
                   transition: 'all 0.2s',
                   cursor: selectedAnimal ? 'pointer' : 'default',
-                  boxShadow: isHovered ? `0 4px 18px ${zone.theme.bg}` : 'none',
+                  boxShadow: isHovered ? `0 4px 18px ${zone.theme.bg}` : '0 2px 6px rgba(0,0,0,0.04)',
                   justifyContent: 'center',
                   alignItems: 'center',
                   textAlign: 'center'
                 }}
               >
-                <div style={{ fontSize: '0.95rem', fontWeight: '900', color: '#ffffff', display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: '900', color: '#0f172a', display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
                   {zone.label}
                 </div>
 
@@ -4471,13 +4643,13 @@ export default function ChapterLearningLab({
                         <img 
                           src={data[placedAnimal].image} 
                           alt={data[placedAnimal].name} 
-                          style={{ width: '32px', height: '32px', objectFit: 'contain', background: '#ffffff', border: '1.5px solid #1e3a8a', borderRadius: '6px', padding: '2px' }} 
+                          style={{ width: '32px', height: '32px', objectFit: 'contain', background: '#ffffff', border: '1.5px solid rgba(167, 243, 208, 0.95)', borderRadius: '6px', padding: '2px' }} 
                         />
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.05rem' }}>
-                          <span style={{ fontSize: '0.85rem', fontWeight: '900', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            {data[placedAnimal].name} <Check size={14} color="#4ade80" strokeWidth={3.5} />
+                          <span style={{ fontSize: '0.85rem', fontWeight: '900', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            {data[placedAnimal].name} <Check size={14} color="#16a34a" strokeWidth={3.5} />
                           </span>
-                          <span style={{ fontSize: '0.74rem', color: '#4ade80', fontWeight: '700' }}>
+                          <span style={{ fontSize: '0.74rem', color: '#15803d', fontWeight: '700' }}>
                             ⚙️ {data[placedAnimal].organ}
                           </span>
                         </div>
@@ -4485,7 +4657,7 @@ export default function ChapterLearningLab({
                     ))}
                   </div>
                 ) : (
-                  <span style={{ fontSize: '0.78rem', color: '#cbd5e1', lineHeight: 1.15, fontWeight: '600' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.15, fontWeight: '700' }}>
                     {selectedAnimal 
                       ? `Tap to place ${data[selectedAnimal].name} here` 
                       : `Drag specimen here`}
@@ -4498,12 +4670,12 @@ export default function ChapterLearningLab({
 
         {/* FEEDBACK BANNER */}
         <div style={{ 
-          padding: '0.55rem 0.95rem', 
-          borderRadius: '10px', 
-          background: result.startsWith('❌') ? 'rgba(239, 68, 68, 0.25)' : result.startsWith('🎉') || result.startsWith('✅') ? 'rgba(22, 163, 74, 0.25)' : '#0b2347', 
-          border: `1.5px solid ${result.startsWith('❌') ? '#ef4444' : result.startsWith('🎉') || result.startsWith('✅') ? '#22c55e' : '#1e3a8a'}`, 
+          padding: '0.65rem 0.95rem', 
+          borderRadius: '12px', 
+          background: result.startsWith('❌') ? 'rgba(254, 226, 226, 0.9)' : result.startsWith('🎉') || result.startsWith('✅') ? 'rgba(220, 252, 231, 0.9)' : 'rgba(240, 253, 244, 0.95)', 
+          border: `2px solid ${result.startsWith('❌') ? '#dc2626' : result.startsWith('🎉') || result.startsWith('✅') ? '#22c55e' : 'rgba(167, 243, 208, 0.95)'}`, 
           fontSize: '0.88rem', 
-          color: '#ffffff', 
+          color: '#0f172a', 
           fontWeight: '700',
           lineHeight: 1.4,
           transition: 'all 0.3s'
@@ -4522,11 +4694,15 @@ export default function ChapterLearningLab({
       <div style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.85rem',
+        gap: '1.1rem',
         width: '100%',
-        height: '100%',
-        padding: '0.25rem 0',
-        background: 'transparent',
+        minHeight: '100%',
+        padding: '1.6rem 1.75rem',
+        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: '16px',
+        border: '2px solid rgba(167, 243, 208, 0.95)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
         boxSizing: 'border-box'
       }}>
         {/* Dashboard Header Bar */}
@@ -4534,27 +4710,26 @@ export default function ChapterLearningLab({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderBottom: '1.5px solid rgba(56, 189, 248, 0.35)',
-          paddingBottom: '0.5rem',
+          borderBottom: '2px solid rgba(167, 243, 208, 0.95)',
+          paddingBottom: '0.65rem',
           marginBottom: '0.25rem'
         }}>
           <span style={{
-            fontSize: '1.15rem',
+            fontSize: '1.22rem',
             fontWeight: '900',
-            color: '#38bdf8',
+            color: '#0284c7',
             textTransform: 'uppercase',
             letterSpacing: '0.06em',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            textShadow: '0 2px 8px rgba(0,0,0,0.6)'
+            gap: '0.55rem'
           }}>
             🗺️ Survival Adaptations Dashboard
           </span>
         </div>
 
         {/* Tab Switcher Pills */}
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
           {[
             { id: 'hot', label: 'Hot Desert', icon: '🐪' },
             { id: 'cold', label: 'Cold Desert', icon: '🐫' },
@@ -4565,21 +4740,21 @@ export default function ChapterLearningLab({
               key={t.id}
               onClick={() => setTab(t.id)}
               style={{
-                padding: '0.55rem 1rem',
+                padding: '0.65rem 1.15rem',
                 borderRadius: '10px',
-                fontSize: '0.95rem',
-                fontWeight: '800',
+                fontSize: '0.96rem',
+                fontWeight: '900',
                 cursor: 'pointer',
-                border: tab === t.id ? '2px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.18)',
+                border: tab === t.id ? 'none' : '1.5px solid rgba(167, 243, 208, 0.95)',
                 background: tab === t.id
-                  ? 'linear-gradient(135deg, rgba(2, 132, 199, 0.95) 0%, rgba(14, 165, 233, 0.95) 100%)'
-                  : 'rgba(15, 23, 42, 0.75)',
-                color: '#ffffff',
-                boxShadow: tab === t.id ? '0 4px 14px rgba(14, 165, 233, 0.45)' : '0 2px 6px rgba(0, 0, 0, 0.2)',
+                  ? '#f59e0b'
+                  : '#ffffff',
+                color: tab === t.id ? '#1a0f05' : '#0f172a',
+                boxShadow: tab === t.id ? '0 4px 14px rgba(245, 158, 11, 0.4)' : '0 2px 6px rgba(0, 0, 0, 0.04)',
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.45rem'
+                gap: '0.5rem'
               }}
             >
               <span>{t.icon}</span>
@@ -4588,35 +4763,35 @@ export default function ChapterLearningLab({
           ))}
         </div>
 
-        {/* Tab Content Cards (Expanded across full right side with high contrast and tight spacing) */}
+        {/* Tab Content Cards */}
         {tab === 'hot' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem', width: '100%', flex: 1 }}>
             <div style={{
-              padding: '1.05rem 1.25rem',
+              padding: '1.25rem 1.5rem',
               borderRadius: '14px',
-              background: 'rgba(245, 158, 11, 0.14)',
-              border: '1.5px solid rgba(245, 158, 11, 0.45)',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
-              fontSize: '1.05rem',
-              lineHeight: '1.6',
-              color: '#ffffff'
+              background: '#ffffff',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
+              fontSize: '1.08rem',
+              lineHeight: '1.65',
+              color: '#0f172a'
             }}>
-              <b style={{ color: '#fbbf24', fontSize: '1.18rem', display: 'block', marginBottom: '0.35rem' }}>
+              <b style={{ color: '#b45309', fontSize: '1.2rem', display: 'block', marginBottom: '0.4rem' }}>
                 🐪 Rajasthan Camel:
               </b>
               Long legs (keeps body above hot sand), wide padded hooves, stores fat in its hump.
             </div>
             <div style={{
-              padding: '1.05rem 1.25rem',
+              padding: '1.25rem 1.5rem',
               borderRadius: '14px',
-              background: 'rgba(16, 185, 129, 0.14)',
-              border: '1.5px solid rgba(16, 185, 129, 0.45)',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
-              fontSize: '1.05rem',
-              lineHeight: '1.6',
-              color: '#ffffff'
+              background: '#ffffff',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
+              fontSize: '1.08rem',
+              lineHeight: '1.65',
+              color: '#0f172a'
             }}>
-              <b style={{ color: '#4ade80', fontSize: '1.18rem', display: 'block', marginBottom: '0.35rem' }}>
+              <b style={{ color: '#15803d', fontSize: '1.2rem', display: 'block', marginBottom: '0.4rem' }}>
                 🌵 Cactus:
               </b>
               Stem becomes fleshy/green to perform photosynthesis and store water. Leaves turn to spines.
@@ -4625,18 +4800,18 @@ export default function ChapterLearningLab({
         )}
 
         {tab === 'cold' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem', width: '100%', flex: 1 }}>
             <div style={{
-              padding: '1.15rem 1.35rem',
+              padding: '1.35rem 1.6rem',
               borderRadius: '14px',
-              background: 'rgba(59, 130, 246, 0.14)',
-              border: '1.5px solid rgba(59, 130, 246, 0.45)',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
-              fontSize: '1.05rem',
-              lineHeight: '1.6',
-              color: '#ffffff'
+              background: '#ffffff',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
+              fontSize: '1.08rem',
+              lineHeight: '1.65',
+              color: '#0f172a'
             }}>
-              <b style={{ color: '#60a5fa', fontSize: '1.18rem', display: 'block', marginBottom: '0.35rem' }}>
+              <b style={{ color: '#0284c7', fontSize: '1.2rem', display: 'block', marginBottom: '0.4rem' }}>
                 🐫 Ladakh Camel:
               </b>
               Two humps, short study limbs to scale mountain paths, shaggy thick woolly hair coat for sub-zero climate.
@@ -4645,18 +4820,18 @@ export default function ChapterLearningLab({
         )}
 
         {tab === 'mountain' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem', width: '100%', flex: 1 }}>
             <div style={{
-              padding: '1.15rem 1.35rem',
+              padding: '1.35rem 1.6rem',
               borderRadius: '14px',
-              background: 'rgba(99, 102, 241, 0.14)',
-              border: '1.5px solid rgba(99, 102, 241, 0.45)',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
-              fontSize: '1.05rem',
-              lineHeight: '1.6',
-              color: '#ffffff'
+              background: '#ffffff',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
+              fontSize: '1.08rem',
+              lineHeight: '1.65',
+              color: '#0f172a'
             }}>
-              <b style={{ color: '#a5b4fc', fontSize: '1.18rem', display: 'block', marginBottom: '0.35rem' }}>
+              <b style={{ color: '#6d28d9', fontSize: '1.2rem', display: 'block', marginBottom: '0.4rem' }}>
                 🌲 Mountain Pine/Deodar:
               </b>
               Sloping branches let snow slide off. Conical shape and needle-thin leaves protect against frost.
@@ -4665,42 +4840,42 @@ export default function ChapterLearningLab({
         )}
 
         {tab === 'pioneers' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', flex: 1 }}>
             <div style={{
-              padding: '0.9rem 1.15rem',
+              padding: '1.05rem 1.35rem',
               borderRadius: '12px',
-              background: 'rgba(15, 23, 42, 0.8)',
-              border: '1.5px solid rgba(56, 189, 248, 0.4)',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
-              fontSize: '1.02rem',
-              lineHeight: '1.55',
-              color: '#f8fafc'
+              background: '#ffffff',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
+              fontSize: '1.05rem',
+              lineHeight: '1.6',
+              color: '#0f172a'
             }}>
-              • <b style={{ color: '#38bdf8' }}>Dr. Salim Ali:</b> India\'s Birdman, mapped ornithological habitats.
+              • <b style={{ color: '#0284c7' }}>Dr. Salim Ali:</b> India's Birdman, mapped ornithological habitats.
             </div>
             <div style={{
-              padding: '0.9rem 1.15rem',
+              padding: '1.05rem 1.35rem',
               borderRadius: '12px',
-              background: 'rgba(15, 23, 42, 0.8)',
-              border: '1.5px solid rgba(251, 146, 60, 0.4)',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
-              fontSize: '1.02rem',
-              lineHeight: '1.55',
-              color: '#f8fafc'
+              background: '#ffffff',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
+              fontSize: '1.05rem',
+              lineHeight: '1.6',
+              color: '#0f172a'
             }}>
-              • <b style={{ color: '#fb923c' }}>Project Tiger (1973):</b> Landmark preservation scheme for national tiger populations.
+              • <b style={{ color: '#b45309' }}>Project Tiger (1973):</b> Landmark preservation scheme for national tiger populations.
             </div>
             <div style={{
-              padding: '0.9rem 1.15rem',
+              padding: '1.05rem 1.35rem',
               borderRadius: '12px',
-              background: 'rgba(15, 23, 42, 0.8)',
-              border: '1.5px solid rgba(74, 222, 128, 0.4)',
-              boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
-              fontSize: '1.02rem',
-              lineHeight: '1.55',
-              color: '#f8fafc'
+              background: '#ffffff',
+              border: '2px solid rgba(167, 243, 208, 0.95)',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
+              fontSize: '1.05rem',
+              lineHeight: '1.6',
+              color: '#0f172a'
             }}>
-              • <b style={{ color: '#4ade80' }}>Sacred Groves:</b> Local community forest reserves where woodcutting is banned.
+              • <b style={{ color: '#15803d' }}>Sacred Groves:</b> Local community forest reserves where woodcutting is banned.
             </div>
           </div>
         )}
@@ -4721,36 +4896,62 @@ export default function ChapterLearningLab({
     const isLastSlide = currentSlideIndex === totalSlides - 1;
 
     const isPlantVarietyConcept = lessonId === 'plant_variety_concept';
+    const isVenationRootsConcept = lessonId === 'venation_roots_concept';
+    const isCotyledonsConcept = lessonId === 'cotyledons_concept';
+    const isPlantConcept = isPlantVarietyConcept || isVenationRootsConcept;
     const isAdaptationsConcept = lessonId === 'adaptations_concept';
     const isGroupingAnimalsConcept = lessonId === 'grouping_animals_concept';
-    const isEnlargedTextConcept = isPlantVarietyConcept || isAdaptationsConcept;
+    const isCh2Concept = chapterNum === 2;
+    const isEnlargedTextConcept = isPlantConcept || isAdaptationsConcept;
 
     const isScientistSlide = (isGroupingAnimalsConcept && currentSlideIndex === 2) || (isAdaptationsConcept && currentSlideIndex === 2);
+    const isAdaptationsSlide1Or2 = isAdaptationsConcept && (currentSlideIndex === 0 || currentSlideIndex === 1);
+    const isAdaptationsSlide5 = isAdaptationsConcept && currentSlideIndex === 4;
 
     return (
-      <div className="split-frame" style={{ width: '100%', minHeight: '560px' }}>
+      <div 
+        className="split-frame" 
+        style={{ 
+          width: '100%', 
+          minHeight: isAdaptationsSlide1Or2 ? '620px' : '560px',
+          ...(isAdaptationsSlide1Or2 ? {
+            gridTemplateColumns: '0.62fr 1.38fr',
+            gap: '1.25rem'
+          } : {})
+        }}
+      >
         {/* LEFT COLUMN: Concept text & slideshow buttons */}
         <div 
-          className={`frame-page-left ${isPlantVarietyConcept ? 'act24-mint-left' : ''}`} 
-          style={isGroupingAnimalsConcept ? { padding: '1.25rem 1.4rem' } : undefined}
+          className={`frame-page-left ${isCh2Concept || isPlantConcept ? 'act24-mint-left' : ''}`} 
+          style={{
+            ...(isGroupingAnimalsConcept ? { padding: '1.25rem 1.4rem' } : {}),
+            ...(isPlantVarietyConcept ? { padding: '1.35rem 1.5rem', display: 'flex', flexDirection: 'column' } : {}),
+            ...(isAdaptationsSlide1Or2 ? { padding: '1.5rem 1.6rem', display: 'flex', flexDirection: 'column', minHeight: '100%' } : {}),
+            ...(isCh2Concept ? {
+              background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 253, 244, 0.96) 100%)',
+              border: '1.5px solid rgba(167, 243, 208, 0.95)',
+              borderRadius: '16px',
+              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.15)',
+              backdropFilter: 'blur(16px)'
+            } : {}),
+            ...(isAdaptationsSlide5 ? {
+              alignSelf: 'start'
+            } : {})
+          }}
         >
-          {lessonId === 'cotyledons_concept' ? (
-            <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.65rem', color: '#38bdf8', fontWeight: '800' }}>
-              Activity 2.8: Let us compare - Seeds & Cotyledons
-            </h1>
-          ) : isPlantVarietyConcept ? (
+          {isCh2Concept ? (
             <div>
               <div className="textbook-eyebrow" style={{ 
-                fontSize: '15px', 
-                color: '#065f46', 
+                fontSize: '14px', 
+                color: '#ffffff', 
                 fontWeight: '800', 
                 letterSpacing: '0.06em',
                 display: 'inline-block',
-                background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-                border: '1.5px solid #10b981',
+                background: 'linear-gradient(135deg, #065f46 0%, #047857 100%)',
+                border: '1.5px solid #064e3b',
                 padding: '0.35rem 0.85rem',
                 borderRadius: '8px',
-                boxShadow: '0 2px 6px rgba(16, 185, 129, 0.15)',
+                boxShadow: '0 2px 6px rgba(6, 95, 70, 0.25)',
                 marginBottom: '0.5rem'
               }}>
                 {activeLevel.title}
@@ -4758,9 +4959,10 @@ export default function ChapterLearningLab({
               <h1 className="textbook-title" style={{
                 fontFamily: 'var(--serif-font)',
                 margin: '0 0 0.85rem 0',
-                fontSize: '2.2rem',
-                color: '#064e3b',
-                fontWeight: '800'
+                fontSize: isScientistSlide ? '1.75rem' : '2.1rem',
+                color: '#0f172a',
+                fontWeight: '900',
+                lineHeight: '1.2'
               }}>
                 {slide.title}
               </h1>
@@ -4783,39 +4985,358 @@ export default function ChapterLearningLab({
           )}
           
           <p style={{
-            fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '1.02rem' : '1.12rem') : (isScientistSlide ? '1.05rem' : (isEnlargedTextConcept ? '1.22rem' : '1.02rem')),
-            color: isPlantVarietyConcept ? '#064e3b' : '#fde047',
-            lineHeight: isGroupingAnimalsConcept ? '1.5' : (isScientistSlide ? '1.45' : '1.65'),
-            margin: isGroupingAnimalsConcept ? '0 0 0.75rem 0' : '0 0 0.85rem 0',
-            fontWeight: (isGroupingAnimalsConcept || isPlantVarietyConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
-            textShadow: (isAdaptationsConcept || isGroupingAnimalsConcept) ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'
+            fontSize: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '1.18rem' : (isPlantVarietyConcept ? '1.08rem' : (isCh2Concept ? '1.05rem' : (isGroupingAnimalsConcept ? (isScientistSlide ? '1.02rem' : '1.12rem') : (isScientistSlide ? '1.05rem' : (isEnlargedTextConcept ? '1.22rem' : '1.02rem'))))),
+            color: isCh2Concept ? '#1e293b' : '#fde047',
+            lineHeight: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '1.6' : (isPlantVarietyConcept ? '1.58' : (isGroupingAnimalsConcept ? '1.5' : (isScientistSlide ? '1.45' : '1.65'))),
+            margin: isPlantVarietyConcept ? '0 0 1rem 0' : (isGroupingAnimalsConcept ? '0 0 0.75rem 0' : '0 0 0.85rem 0'),
+            fontWeight: isCh2Concept ? '700' : '500'
           }}>
             {slide.content}
           </p>
 
           {slide.bullets && (
-            <ul style={{
-              margin: isGroupingAnimalsConcept ? '0 0 0.85rem 0' : '0 0 1.25rem 0',
-              paddingLeft: isGroupingAnimalsConcept ? '1.25rem' : '1.25rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: isGroupingAnimalsConcept ? (isScientistSlide ? '0.38rem' : '0.55rem') : (isScientistSlide ? '0.4rem' : (isEnlargedTextConcept ? '0.55rem' : '0.4rem'))
-            }}>
-              {slide.bullets.map((b, i) => (
-                <li key={i} style={{
-                  fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '0.94rem' : '1.04rem') : (isScientistSlide ? '0.98rem' : (isEnlargedTextConcept ? '1.14rem' : '0.95rem')),
-                  color: isPlantVarietyConcept ? '#064e3b' : '#fde047',
-                  lineHeight: isGroupingAnimalsConcept ? '1.48' : (isScientistSlide ? '1.4' : '1.6'),
-                  fontWeight: (isGroupingAnimalsConcept || isPlantVarietyConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
-                  textShadow: (isAdaptationsConcept || isGroupingAnimalsConcept) ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'
-                }}>
-                  {b}
-                </li>
-              ))}
-            </ul>
+            isPlantVarietyConcept ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.85rem',
+                margin: '0 0 1rem 0',
+                flex: 1
+              }}>
+                {slide.bullets.map((b, i) => {
+                  let badgeColor = '#065f46';
+                  let badgeBg = '#dcfce7';
+                  let badgeBorder = '#86efac';
+                  let gKey = 'herbs';
+                  let gImg = tulsiImg;
+                  
+                  if (b.includes('Shrubs')) {
+                    badgeColor = '#9a3412';
+                    badgeBg = '#ffedd5';
+                    badgeBorder = '#fed7aa';
+                    gKey = 'shrubs';
+                    gImg = roseImg;
+                  } else if (b.includes('Trees')) {
+                    badgeColor = '#15803d';
+                    badgeBg = '#dcfce7';
+                    badgeBorder = '#86efac';
+                    gKey = 'trees';
+                    gImg = banyanImg;
+                  } else if (b.includes('Creepers')) {
+                    badgeColor = '#0369a1';
+                    badgeBg = '#e0f2fe';
+                    badgeBorder = '#7dd3fc';
+                    gKey = 'creepers';
+                    gImg = creeperImg;
+                  } else if (b.includes('Climbers')) {
+                    badgeColor = '#7c2d12';
+                    badgeBg = '#fef3c7';
+                    badgeBorder = '#fde68a';
+                    gKey = 'climbers';
+                    gImg = climberImg;
+                  }
+
+                  const isSelected = true;
+                  const parts = b.split(': ');
+                  const groupData = PLANT_DATA[gKey] || PLANT_DATA.herbs;
+
+                  return (
+                    <React.Fragment key={i}>
+                      <div
+                        style={{
+                          background: 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)',
+                          border: `2.5px solid ${badgeBorder}`,
+                          borderRadius: '14px',
+                          padding: '0.95rem 1.15rem',
+                          boxShadow: '0 8px 24px rgba(6, 95, 70, 0.16)',
+                          display: 'flex',
+                          gap: '0.85rem',
+                          alignItems: 'center',
+                          transform: 'translateY(-2px) scale(1.01)',
+                          transition: 'all 0.2s ease',
+                          position: 'relative'
+                        }}
+                      >
+                        {/* Thumbnail Image */}
+                        <div style={{
+                          width: '54px',
+                          height: '54px',
+                          borderRadius: '10px',
+                          overflow: 'hidden',
+                          border: `1.5px solid ${badgeBorder}`,
+                          flexShrink: 0,
+                          background: '#ffffff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
+                        }}>
+                          <img
+                            src={gImg}
+                            alt={parts[0] || 'Plant'}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        </div>
+
+                        {/* Content Area */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', flex: 1 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.3rem' }}>
+                            <span style={{
+                              background: badgeBg,
+                              color: badgeColor,
+                              border: `1.5px solid ${badgeBorder}`,
+                              padding: '0.18rem 0.65rem',
+                              borderRadius: '8px',
+                              fontWeight: '900',
+                              fontSize: '1rem',
+                              letterSpacing: '0.01em'
+                            }}>
+                              {parts[0]}
+                            </span>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {isSelected && (
+                                <span style={{
+                                  fontSize: '0.72rem',
+                                  color: '#047857',
+                                  fontWeight: '800',
+                                  textTransform: 'uppercase'
+                                }}>
+                                  Active 🔍
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {parts.length > 1 ? (
+                            <div style={{ color: '#1e293b', fontSize: '0.98rem', lineHeight: '1.5', fontWeight: '600', paddingLeft: '0.1rem' }}>
+                              {parts[1]}
+                            </div>
+                          ) : (
+                            <div style={{ color: '#0f172a', fontSize: '1rem', lineHeight: '1.5', fontWeight: '700' }}>
+                              {b}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Definition & Examples Row */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: '0.85rem' }}>
+                        <div style={{
+                          background: '#ffffff',
+                          border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                          borderRadius: '12px',
+                          padding: '0.75rem 1rem',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+                        }}>
+                          <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: '900', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.04em' }}>
+                            Textbook Definition
+                          </div>
+                          <div style={{ color: '#0f172a', fontWeight: '800', fontSize: '1.08rem', lineHeight: '1.45' }}>
+                            “{groupData.definition}”
+                          </div>
+                        </div>
+
+                        <div style={{
+                          background: '#ffffff',
+                          border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                          borderRadius: '12px',
+                          padding: '0.75rem 1rem',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
+                        }}>
+                          <div style={{ fontSize: '0.82rem', color: '#047857', fontWeight: '900', textTransform: 'uppercase', marginBottom: '2px', letterSpacing: '0.04em' }}>
+                            Examples
+                          </div>
+                          <div style={{ color: '#0f172a', fontWeight: '700', fontSize: '1.02rem', lineHeight: '1.4' }}>
+                            {groupData.examples}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 3 Key Feature Badges */}
+                      <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.88rem', fontWeight: '900', color: '#065f46', textTransform: 'uppercase', marginRight: '4px' }}>
+                          Key Features:
+                        </span>
+                        {groupData.keyFeatures.map((chip, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              padding: '0.35rem 0.8rem',
+                              borderRadius: '10px',
+                              fontSize: '0.92rem',
+                              fontWeight: '800',
+                              background: '#ffffff',
+                              color: '#065f46',
+                              border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                              boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '5px'
+                            }}
+                          >
+                            <span>🌿</span>
+                            <span>{chip.label}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            ) : isVenationRootsConcept ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.65rem',
+                margin: '0 0 0.85rem 0'
+              }}>
+                {slide.bullets.map((b, i) => {
+                  let badgeColor = '#064e3b';
+                  let badgeBg = '#dcfce7';
+                  let badgeBorder = '#86efac';
+                  
+                  if (b.includes('Parallel')) {
+                    badgeColor = '#0369a1';
+                    badgeBg = '#e0f2fe';
+                    badgeBorder = '#7dd3fc';
+                  } else if (b.includes('Taproot')) {
+                    badgeColor = '#92400e';
+                    badgeBg = '#fef3c7';
+                    badgeBorder = '#fde68a';
+                  } else if (b.includes('Fibrous')) {
+                    badgeColor = '#9a3412';
+                    badgeBg = '#ffedd5';
+                    badgeBorder = '#fed7aa';
+                  }
+
+                  const parts = b.split(': ');
+                  return (
+                    <div key={i} style={{
+                      background: '#ffffff',
+                      border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                      borderRadius: '12px',
+                      padding: '0.7rem 0.95rem',
+                      boxShadow: '0 2px 8px rgba(0, 30, 15, 0.04)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.3rem'
+                    }}>
+                      {parts.length > 1 ? (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{
+                              background: badgeBg,
+                              color: badgeColor,
+                              border: `1px solid ${badgeBorder}`,
+                              padding: '0.18rem 0.65rem',
+                              borderRadius: '6px',
+                              fontWeight: '800',
+                              fontSize: '0.96rem',
+                              letterSpacing: '0.02em'
+                            }}>
+                              {parts[0]}
+                            </span>
+                          </div>
+                          <div style={{ color: '#334155', fontSize: '1.02rem', lineHeight: '1.48', fontWeight: '600', paddingLeft: '0.15rem' }}>
+                            {parts[1]}
+                          </div>
+                        </>
+                      ) : (
+                        <div style={{ color: '#0f172a', fontSize: '1.05rem', lineHeight: '1.48', fontWeight: '700' }}>
+                          {b}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : isCh2Concept ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '0.75rem' : '0.55rem',
+                margin: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '0 0 1rem 0' : '0 0 0.85rem 0'
+              }}>
+                {slide.bullets.map((b, i) => (
+                  <div key={i} style={{
+                    background: '#ffffff',
+                    border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                    borderRadius: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '12px' : '10px',
+                    padding: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '0.85rem 1.15rem' : '0.6rem 0.85rem',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)',
+                    color: '#0f172a',
+                    fontSize: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '1.14rem' : '0.96rem',
+                    lineHeight: (isAdaptationsSlide1Or2 || isAdaptationsSlide5) ? '1.55' : '1.5',
+                    fontWeight: '700'
+                  }}>
+                    • {b}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <ul style={{
+                margin: isGroupingAnimalsConcept ? '0 0 0.85rem 0' : '0 0 1.25rem 0',
+                paddingLeft: isGroupingAnimalsConcept ? '1.25rem' : '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: isGroupingAnimalsConcept ? (isScientistSlide ? '0.38rem' : '0.55rem') : (isScientistSlide ? '0.4rem' : (isEnlargedTextConcept ? '0.55rem' : '0.4rem'))
+              }}>
+                {slide.bullets.map((b, i) => (
+                  <li key={i} style={{
+                    fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '0.94rem' : '1.04rem') : (isScientistSlide ? '0.98rem' : (isEnlargedTextConcept ? '1.14rem' : '0.95rem')),
+                    color: '#fde047',
+                    lineHeight: isGroupingAnimalsConcept ? '1.48' : (isScientistSlide ? '1.4' : '1.6'),
+                    fontWeight: '500'
+                  }}>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            )
           )}
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto', paddingTop: isGroupingAnimalsConcept ? '0.75rem' : '1rem', borderTop: isPlantVarietyConcept ? '1.5px solid rgba(167, 243, 208, 0.7)' : '1px solid rgba(0,0,0,0.06)' }}>
+          {isVenationRootsConcept && (
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(240, 253, 244, 0.95), rgba(255, 255, 255, 0.98))',
+              border: '1.5px dashed #059669',
+              borderRadius: '12px',
+              padding: '0.75rem 1rem',
+              marginTop: 'auto',
+              marginBottom: '0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              boxShadow: '0 2px 8px rgba(5, 150, 105, 0.06)'
+            }}>
+              <div style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #059669, #047857)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.15rem',
+                flexShrink: 0,
+                boxShadow: '0 2px 6px rgba(4, 120, 87, 0.25)'
+              }}>
+                🔬
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Lab Diagnostic Tip
+                </span>
+                <span style={{ fontSize: '0.92rem', fontWeight: '700', color: '#0f172a', lineHeight: '1.35' }}>
+                  {currentSlideIndex === 0 && 'Inspect leaf veins carefully: net-mesh indicates reticulate, straight lines indicate parallel.'}
+                  {currentSlideIndex === 1 && 'Observe root structure: one main thick taproot vs multiple equal fibrous threadlike roots.'}
+                  {currentSlideIndex === 2 && 'Plants show exact correlation: Reticulate leaf ⇄ Taproot, Parallel leaf ⇄ Fibrous roots.'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: isAdaptationsSlide5 ? '1.1rem' : 'auto', paddingTop: isGroupingAnimalsConcept ? '0.75rem' : '1rem', borderTop: isCh2Concept || isPlantConcept ? '1.5px solid rgba(167, 243, 208, 0.7)' : '1px solid rgba(0,0,0,0.06)' }}>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               {chapterNum !== 2 && (
                 <button
@@ -4849,7 +5370,7 @@ export default function ChapterLearningLab({
             </div>
 
             <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.75rem', color: isPlantVarietyConcept ? '#047857' : 'var(--text-muted)', fontWeight: isPlantVarietyConcept ? '700' : 'normal', marginRight: '0.2rem' }}>
+              <span style={{ fontSize: '0.75rem', color: isCh2Concept || isPlantConcept ? '#047857' : 'var(--text-muted)', fontWeight: isCh2Concept || isPlantConcept ? '700' : 'normal', marginRight: '0.2rem' }}>
                 Slide {currentSlideIndex + 1} of {totalSlides}
               </span>
               {currentSlideIndex > 0 && (
@@ -4860,7 +5381,7 @@ export default function ChapterLearningLab({
                     padding: '0.35rem 0.8rem', 
                     fontSize: '0.75rem', 
                     borderRadius: '20px',
-                    ...(isPlantVarietyConcept ? {
+                    ...(isCh2Concept || isPlantConcept ? {
                       border: '1.5px solid #10b981',
                       color: '#065f46',
                       fontWeight: '800',
@@ -4887,7 +5408,7 @@ export default function ChapterLearningLab({
                     padding: '0.35rem 0.8rem', 
                     fontSize: '0.75rem', 
                     borderRadius: '20px',
-                    ...(isPlantVarietyConcept ? {
+                    ...(isCh2Concept || isPlantConcept ? {
                       background: 'linear-gradient(135deg, #059669, #047857)',
                       borderColor: '#059669',
                       fontWeight: '800'
@@ -4905,7 +5426,7 @@ export default function ChapterLearningLab({
                     padding: '0.35rem 0.8rem', 
                     fontSize: '0.75rem', 
                     borderRadius: '20px',
-                    ...(isPlantVarietyConcept ? {
+                    ...(isCh2Concept || isPlantConcept ? {
                       background: 'linear-gradient(135deg, #059669, #047857)',
                       borderColor: '#059669',
                       fontWeight: '800'
@@ -4925,8 +5446,9 @@ export default function ChapterLearningLab({
             (isAdaptationsConcept || lessonId === 'grouping_animals_concept') ? (
               <div style={{
                 width: '100%',
-                height: '100%',
-                minHeight: '100%',
+                height: slide.image === 'sacred_groves' ? 'auto' : '100%',
+                minHeight: slide.image === 'sacred_groves' ? 'auto' : '100%',
+                maxHeight: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -4934,9 +5456,9 @@ export default function ChapterLearningLab({
                 margin: 0,
                 borderRadius: '16px',
                 overflow: 'hidden',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
-                border: '1.5px solid rgba(56, 189, 248, 0.35)',
-                background: 'rgba(15, 23, 42, 0.6)'
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                border: '2px solid rgba(167, 243, 208, 0.95)',
+                background: '#ffffff'
               }}>
                 <img 
                   src={slide.image === 'Scientist2' ? scientist2Img :
@@ -4947,9 +5469,9 @@ export default function ChapterLearningLab({
                   alt={slide.title} 
                   style={{
                     width: '100%',
-                    height: '100%',
+                    height: slide.image === 'sacred_groves' ? 'auto' : '100%',
                     maxHeight: '100%',
-                    objectFit: 'cover',
+                    objectFit: slide.image === 'sacred_groves' ? 'contain' : 'cover',
                     objectPosition: 'center',
                     display: 'block'
                   }} 
@@ -4987,7 +5509,9 @@ export default function ChapterLearningLab({
               </div>
             )
           ) : lessonId === 'plant_variety_concept' ? (
-            <PlantVarietyMorpher />
+            <PlantVarietyMorpher
+              selectedGroup={['herbs', 'shrubs', 'trees', 'creepers', 'climbers'][currentSlideIndex] || 'herbs'}
+            />
           ) : lessonId === 'venation_roots_concept' ? (
             <VenationRootsCorrelationExplorer />
           ) : lessonId === 'cotyledons_concept' ? (

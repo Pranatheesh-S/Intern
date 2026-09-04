@@ -38,7 +38,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             width: 100%;
             height: 100%;
             background: #ffffff;
-            border: 8px solid #1b2a4a;
+            border: 8px solid #3B2A1F;
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.18);
             position: relative;
@@ -57,35 +57,30 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             background: #f6f1e4;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            align-items: stretch;
+            justify-content: center;
+            align-items: center;
             height: 100%;
             overflow: hidden;
             position: relative;
             padding: 24px 28px 76px;
           }
+          .left-content-block {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: clamp(260px, 42vh, 400px);
+          }
           .left-hero-wrapper {
             width: 100%;
-            flex: 1 1 auto;
-            max-height: 56%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-            overflow: hidden;
-            border-radius: 12px;
+            margin-bottom: 12px;
           }
-          .barrier2-hero-img {
+          .barrier2-hero-img, .default-hero-img {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 12px;
-            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.12));
-          }
-          .default-hero-img {
-            height: 100%;
-            max-height: 500px;
-            object-fit: contain;
+            height: clamp(480px, 60vh, 650px);
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
           }
 
           /* ---------- RIGHT PAGE ---------- */
@@ -104,10 +99,12 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           /* ---------- LEFT PAGE SPEECH BUBBLE ---------- */
           .speech-bubble {
             position: relative;
-            margin-top: 4px;
             width: 100%;
             background: white;
-            padding: 1.2rem 1.5rem;
+            padding: 2.5rem 1.8rem;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             z-index: 20;
@@ -158,7 +155,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 1.8px;
-            color: #3b4ea0;
+            color: #3B2A1F;
             margin-bottom: 14px;
             display: flex;
             align-items: center;
@@ -167,7 +164,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .mission-title {
             font-size: clamp(41px, 5vh, 53px);
             line-height: 1.12;
-            color: #1b2a4a;
+            color: #3B2A1F;
             font-weight: 700;
             margin: 0 0 22px 0;
             font-family: Georgia, "Times New Roman", serif;
@@ -196,7 +193,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 19px;
             font-weight: 700;
-            color: #3b4ea0;
+            color: #3B2A1F;
             margin: 0 0 12px 0;
             display: flex;
             align-items: center;
@@ -312,25 +309,27 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
         <div className="spread">
           {/* LEFT PAGE */}
           <div className="page-spread left-page">
-            <div className="left-hero-wrapper">
-              <img 
-                src={detectiveImg} 
-                alt="Chief Detective" 
-                className={isBarrier2 ? "barrier2-hero-img" : "default-hero-img"}
-                onError={(e) => { e.target.src = 'https://via.placeholder.com/400x600.png?text=Blake'; }}
-              />
+            <div className="left-content-block">
+              <div className="left-hero-wrapper">
+                <img 
+                  src={detectiveImg} 
+                  alt="Chief Detective" 
+                  className={isBarrier2 ? "barrier2-hero-img" : "default-hero-img"}
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/400x600.png?text=Blake'; }}
+                />
+              </div>
+              <motion.div 
+                className="speech-bubble"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <div className="speech-speaker">CHIEF BLAKE</div>
+                <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: '#1e293b', lineHeight: '1.45', fontWeight: '500' }}>
+                  {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
+                </p>
+              </motion.div>
             </div>
-            <motion.div 
-              className="speech-bubble"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: '#1e293b', lineHeight: '1.45', fontWeight: '500' }}>
-                {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
-              </p>
-            </motion.div>
 
             <button className="spread-back-btn" onClick={onBack}>
               <ArrowLeft size={20} /> Back

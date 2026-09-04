@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Lightbulb, X, Globe2, Image as ImageIcon, Maximize2, Minimize2, Mountain } from 'lucide-react';
 import physicalImg from './assets/printed_physical_map.jpeg';
 import politicalImg from './assets/political.png';
@@ -29,8 +30,13 @@ const PageLayout = ({
   onFullyViewed,
   globeMode = 'physical',
   globeTheme,
+  thematicMapOptions,
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
+  const [activeMapIndex, setActiveMapIndex] = useState(0);
+
+  const currentImageSrc = thematicMapOptions ? thematicMapOptions[activeMapIndex].src : (imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg'));
+  const currentMapTitle = thematicMapOptions ? thematicMapOptions[activeMapIndex].label : title;
   const [isGlobeOpen, setIsGlobeOpen] = useState(false);
   const [isMountainsMapOpen, setIsMountainsMapOpen] = useState(false);
   const [mountainsCategory, setMountainsCategory] = useState('all');
@@ -503,7 +509,7 @@ const PageLayout = ({
             gap: '4px',
             boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
           }}>
-            <ImageIcon size={11} /> Printed {title}
+            <ImageIcon size={11} /> Printed {currentMapTitle}
           </div>
 
           <div style={{
@@ -525,8 +531,8 @@ const PageLayout = ({
           </div>
 
           <img
-            src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
-            alt={title}
+            src={currentImageSrc}
+            alt={currentMapTitle}
             style={{
               maxWidth: '100%',
               maxHeight: '100%',
@@ -546,33 +552,7 @@ const PageLayout = ({
 
         {/* INTERACTIVE CONTROLS */}
         <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem', flexShrink: 0, width: '100%' }}>
-          {globeMode === 'physical' && (
-            <button
-              onClick={() => setIsMountainsMapOpen(true)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.4rem',
-                background: 'linear-gradient(135deg, #78350F 0%, #92400E 100%)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '999px',
-                padding: '0.4rem 1rem',
-                fontSize: '11.5px',
-                fontWeight: 800,
-                cursor: 'pointer',
-                boxShadow: '0 2px 8px rgba(146, 64, 14, 0.35)',
-                transition: 'all 0.2s ease',
-                fontFamily: '"Space Grotesk", sans-serif',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-            >
-              <Mountain size={15} color="#FEF08A" /> Explore Natural Features 3D Map
-            </button>
-          )}
+
 
           {/* Parallel Side-by-Side Action Buttons */}
           <div style={{
@@ -642,15 +622,16 @@ const PageLayout = ({
     </div>
 
     {/* Natural Features 3D Map Explorer Modal */}
-    {isMountainsMapOpen && (
+    {isMountainsMapOpen && typeof document !== 'undefined' && createPortal(
       <IndiaMountainsMapExplorer 
         initialCategory={mountainsCategory}
         onClose={() => setIsMountainsMapOpen(false)} 
-      />
+      />,
+      document.body
     )}
 
     {/* High-Resolution Printed Map Modal */}
-    {isImageOpen && (
+    {isImageOpen && typeof document !== 'undefined' && createPortal(
       <div
         onClick={() => setIsImageOpen(false)}
         style={{
@@ -665,7 +646,7 @@ const PageLayout = ({
           style={{
             position: 'relative',
             width: 'min(1100px, 94vw)',
-            maxHeight: '92vh',
+            height: '92vh',
             background: '#FFFFFF',
             borderRadius: '16px',
             boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
@@ -689,7 +670,7 @@ const PageLayout = ({
             flexShrink: 0
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 900, fontSize: '14px' }}>
-              <ImageIcon size={18} color="#F59E0B" /> Printed {title} • NCERT Class 6 Atlas Reference
+              <ImageIcon size={18} color="#F59E0B" /> Printed {currentMapTitle} • NCERT Class 6 Atlas Reference
             </div>
             <button
               onClick={() => setIsImageOpen(false)}
@@ -717,19 +698,62 @@ const PageLayout = ({
           <div style={{
             flex: 1,
             minHeight: 0,
-            padding: '16px',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            flexDirection: 'column',
             background: '#FAF5EB',
-            overflow: 'auto'
+            overflow: 'hidden'
           }}>
-            <img
-              src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
-              alt={title}
+            {thematicMapOptions && (
+              <div style={{
+                display: 'flex',
+                gap: '8px',
+                padding: '12px 16px',
+                background: '#FFFFFF',
+                borderBottom: '2px solid #F2DFBC',
+                overflowX: 'auto',
+                flexShrink: 0
+              }}>
+                {thematicMapOptions.map((opt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={(e) => { e.stopPropagation(); setActiveMapIndex(idx); }}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: idx === activeMapIndex ? '2px solid #D97706' : '2px solid transparent',
+                      background: idx === activeMapIndex ? '#FEF3C7' : '#F3F4F6',
+                      color: idx === activeMapIndex ? '#92400E' : '#4B5563',
+                      fontWeight: 800,
+                      fontSize: '13px',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    {opt.icon} {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            
+            <div style={{
+              flex: 1,
+              minHeight: 0,
+              padding: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden'
+            }}>
+              <img
+                src={currentImageSrc}
+                alt={currentMapTitle}
               style={{
                 maxWidth: '100%',
-                maxHeight: '75vh',
+                maxHeight: '100%',
                 objectFit: 'contain',
                 borderRadius: '10px',
                 boxShadow: '0 6px 24px rgba(0,0,0,0.15)',
@@ -744,12 +768,14 @@ const PageLayout = ({
               }}
             />
           </div>
+          </div>
         </div>
-      </div>
+      </div>,
+      document.body
     )}
 
     {/* 3D Globe Modal */}
-    {isGlobeOpen && (
+    {isGlobeOpen && typeof document !== 'undefined' && createPortal(
       <div
         onClick={() => setIsGlobeOpen(false)}
         style={{
@@ -816,7 +842,8 @@ const PageLayout = ({
             allowFullScreen
           />
         </div>
-      </div>
+      </div>,
+      document.body
     )}
     </>
   );
@@ -826,7 +853,7 @@ export const PhysicalMapPage = ({ onFullyViewed }) => (
   <PageLayout 
     onFullyViewed={onFullyViewed}
     title="Physical Maps"
-    subtitle="Maps that show Earth's natural features and varied landforms"
+    subtitle="Maps that show Earth's natural features like mountains and rivers"
     imageSrc={physicalImg}
     globeMode="physical"
     callouts={[
@@ -838,37 +865,37 @@ export const PhysicalMapPage = ({ onFullyViewed }) => (
       { icon: '⛰', label: 'Plateau', top: '50%', left: '25%' }
     ]}
     whatIs={[
-      "A Physical Map illustrates the natural features and physical landforms of the Earth.",
-      "It helps us understand topography and landscape elevation without showing human-made roads, cities, or administrative boundaries."
+      "A Physical Map shows the natural features of the Earth.",
+      "It helps us see the shape of the land without showing roads or cities built by people."
     ]}
     whatIsTitle="What is a Physical Map?"
     featuresTitle="Natural Features on a Physical Map"
     features={[
-      { icon: '🏔', title: 'Mountains', desc: 'Prominent elevated landforms rising high above the surrounding landscape.' },
-      { icon: '🏞', title: 'Plains', desc: 'Expansive flat lowlands highly suitable for agriculture and settlements.' },
-      { icon: '🌊', title: 'Rivers', desc: 'Natural flowing water channels traveling across terrains toward oceans.' },
-      { icon: '🏜', title: 'Deserts', desc: 'Arid land areas that experience very low annual precipitation.' },
-      { icon: '🌳', title: 'Forests', desc: 'Lush green landscapes covered with dense trees and rich vegetation.' },
-      { icon: '⛰', title: 'Plateaus', desc: 'Extensive elevated flat tablelands bounded by steeper slopes.' }
+      { icon: '🏔', title: 'Mountains', desc: 'Very tall and large rocky hills rising high above the land.' },
+      { icon: '🏞', title: 'Plains', desc: 'Large flat areas of land that are great for farming and building houses.' },
+      { icon: '🌊', title: 'Rivers', desc: 'Natural streams of flowing water moving across the land into the sea.' },
+      { icon: '🏜', title: 'Deserts', desc: 'Very dry and sandy lands that get almost no rain all year.' },
+      { icon: '🌳', title: 'Forests', desc: 'Large areas completely covered with lots of trees and plants.' },
+      { icon: '⛰', title: 'Plateaus', desc: 'Large flat lands that are raised high up like a table.' }
     ]}
     colorsTitle="Colours Used on Physical Maps"
     colors={[
-      { color: '🟢', desc: 'Green represents plains, river basins, and fertile lowlands.' },
-      { color: '🟤', desc: 'Brown shades indicate mountain ranges and elevated highland regions.' },
-      { color: '🔵', desc: 'Blue illustrates water bodies including rivers, lakes, seas, and oceans.' },
-      { color: '🟡', desc: 'Yellow indicates plateaus, tablelands, and elevated plains.' }
+      { color: '🟢', desc: 'Green represents plains, river valleys, and low flat lands.' },
+      { color: '🟤', desc: 'Brown is used for high mountains and tall hills.' },
+      { color: '🔵', desc: 'Blue shows water like rivers, lakes, seas, and oceans.' },
+      { color: '🟡', desc: 'Yellow is used to show high flat lands called plateaus.' }
     ]}
     whyUseTitle="Why are Physical Maps Useful?"
     whyUse={[
-      { icon: '🏕', desc: 'Planning travel expeditions and exploring outdoor routes' },
-      { icon: '🌾', desc: 'Studying physical geography and diverse natural landforms' },
-      { icon: '🏞', desc: 'Understanding water drainage systems and mountain ranges' }
+      { icon: '🏕', desc: 'Planning outdoor trips and finding paths through nature' },
+      { icon: '🌾', desc: 'Learning about different land shapes on Earth' },
+      { icon: '🏞', desc: 'Seeing where water flows and where mountains are located' }
     ]}
     remember={[
-      "Physical Maps show Nature.",
-      "They help us identify mountains, rivers, plains, forests and deserts."
+      "Physical Maps show nature.",
+      "They help us find mountains, rivers, plains, forests and deserts."
     ]}
-    funFact="The Himalayas appear as prominent dark brown regions on physical maps because they are among the highest mountain systems on Earth."
+    funFact="The Himalayas are colored dark brown on physical maps because they are some of the tallest mountains in the world!"
   />
 );
 
@@ -876,7 +903,7 @@ export const PoliticalMapPage = ({ onFullyViewed }) => (
   <PageLayout 
     onFullyViewed={onFullyViewed}
     title="Political Maps"
-    subtitle="Maps that show countries, states, cities and administrative boundaries"
+    subtitle="Maps that show countries, states, cities and their borders"
     imageSrc={politicalImg}
     globeMode="political"
     callouts={[
@@ -887,36 +914,36 @@ export const PoliticalMapPage = ({ onFullyViewed }) => (
       { icon: '🌎', label: 'Country', top: '25%', left: '25%' }
     ]}
     whatIs={[
-      "A Political Map displays the demarcated boundaries of countries, states, and cities.",
-      "It helps us understand human-made governance divisions, provincial territories, and administrative capitals across regions."
+      "A Political Map shows the borders of countries, states, and cities.",
+      "It helps us see the different regions and governments created by people."
     ]}
     whatIsTitle="What is a Political Map?"
     featuresTitle="What Can We See?"
     features={[
-      { icon: '🌎', title: 'Countries', desc: 'Sovereign nations and recognized territories across the world.' },
-      { icon: '🗺', title: 'States', desc: 'Administrative divisions and regional provinces within a nation.' },
-      { icon: '📍', title: 'Capitals', desc: 'Principal administrative headquarters and governmental seats.' },
-      { icon: '🏙', title: 'Cities', desc: 'Major urban settlements, commercial hubs, and population centers.' },
-      { icon: '➖', title: 'Boundaries', desc: 'Official demarcation lines that separate states and sovereign nations.' }
+      { icon: '🌎', title: 'Countries', desc: 'Different nations around the world with their own governments.' },
+      { icon: '🗺', title: 'States', desc: 'Smaller regions or states inside a country.' },
+      { icon: '📍', title: 'Capitals', desc: 'Important cities where the government of a state or country works.' },
+      { icon: '🏙', title: 'Cities', desc: 'Big towns where many people live and work.' },
+      { icon: '➖', title: 'Boundaries', desc: 'The lines on the map that separate states and countries.' }
     ]}
     colorsTitle="Common Symbols"
     colors={[
-      { color: '⭐️', desc: 'Special star symbols designate national and state capital cities.' },
-      { color: '⚫️', desc: 'Solid dots designate major commercial cities and municipal centers.' },
-      { color: '➖', desc: 'Thick dash-dot lines demarcate recognized international borders.' },
-      { color: '〰️', desc: 'Dashed line styles represent provincial and state administrative boundaries.' }
+      { color: '⭐️', desc: 'Stars are used to show capital cities.' },
+      { color: '⚫️', desc: 'Black dots are used to show important cities.' },
+      { color: '➖', desc: 'Thick lines show the borders between different countries.' },
+      { color: '〰️', desc: 'Dotted or dashed lines show the borders between states.' }
     ]}
     whyUseTitle="Why Do We Use Political Maps?"
     whyUse={[
-      { icon: '🏫', desc: 'Learning political geography and administrative divisions of countries' },
-      { icon: '✈️', desc: 'Locating which state or province a destination city is located within' },
-      { icon: '🗺', desc: 'Understanding international relations and geopolitical borders' }
+      { icon: '🏫', desc: 'Learning about the different countries and states in the world' },
+      { icon: '✈️', desc: 'Finding out which state a city belongs to when traveling' },
+      { icon: '🗺', desc: 'Seeing the borders that separate different nations' }
     ]}
     remember={[
       "Political Maps show places made by people.",
       "They help us locate countries, states, cities and their borders."
     ]}
-    funFact="India currently comprises 28 states and 8 Union Territories, each demarcated with distinct administrative boundaries."
+    funFact="India currently has 28 states and 8 Union Territories, each with its own borders on the map."
   />
 );
 
@@ -924,10 +951,16 @@ export const ThematicMapPage = ({ onFullyViewed }) => (
   <PageLayout 
     onFullyViewed={onFullyViewed}
     title="Thematic Maps"
-    subtitle="Maps that show one special topic or data theme (e.g., Soils, Rainfall, Crops)"
-    imageSrc={thematicMapImg}
+    subtitle="Maps that focus on one special topic like soil, rainfall, or crops"
     globeMode="thematic"
     globeTheme="rain"
+    thematicMapOptions={[
+      { icon: '🌱', label: 'Major Soil Types', src: thematicMapImg },
+      { icon: '🌧', label: 'Annual Rainfall', src: '/maps/flat_thematic_rainfall_map.jpg' },
+      { icon: '🌡', label: 'Temperature Distribution', src: '/maps/flat_thematic_temperature_map.jpg' },
+      { icon: '👥', label: 'Population Density', src: '/maps/flat_thematic_population_density_map.jpg' },
+      { icon: '🌳', label: 'Forest Cover', src: '/maps/flat_thematic_forest_cover_map.jpg' }
+    ]}
     callouts={[
       { icon: '🌱', label: 'Alluvial Soil', top: '33%', left: '42%' },
       { icon: '🧱', label: 'Black Soil', top: '50%', left: '30%' },
@@ -935,38 +968,38 @@ export const ThematicMapPage = ({ onFullyViewed }) => (
       { icon: '📊', label: 'Soil Legend', top: '75%', left: '72%' }
     ]}
     whatIs={[
-      "A Thematic Map focuses on a single specific subject, theme, or statistical distribution.",
-      "Instead of general landforms or borders, it presents specialized geographic data such as soil varieties, rainfall amounts, mineral wealth, or agricultural zones."
+      "A Thematic Map focuses on one special topic or theme.",
+      "Instead of showing borders, it shows specific information like rainfall, types of crops, or soil."
     ]}
     whatIsTitle="What is a Thematic Map?"
     featuresTitle="What Can We Learn from Thematic Maps?"
     features={[
-      { icon: '🌱', title: 'Soil Types', desc: 'Distribution of fertile Alluvial, Black, Red, and Laterite soils.' },
-      { icon: '🌧', title: 'Rainfall', desc: 'Annual precipitation patterns and monsoon distribution across regions.' },
-      { icon: '🌡', title: 'Temperature', desc: 'Climatic zones, heat variations, and regional temperature ranges.' },
-      { icon: '🌾', title: 'Crops & Agriculture', desc: 'Major agricultural regions cultivating rice, wheat, and cotton crops.' },
-      { icon: '🌳', title: 'Forests & Wildlife', desc: 'Vegetation distribution including tropical evergreen and deciduous forests.' }
+      { icon: '🌱', title: 'Soil Types', desc: 'Shows where different kinds of soil are found for farming.' },
+      { icon: '🌧', title: 'Rainfall', desc: 'Shows how much rain falls in different areas across the year.' },
+      { icon: '🌡', title: 'Temperature', desc: 'Shows how hot or cold different regions get.' },
+      { icon: '🌾', title: 'Crops & Agriculture', desc: 'Shows where crops like rice, wheat, and cotton grow best.' },
+      { icon: '🌳', title: 'Forests & Wildlife', desc: 'Shows where different types of forests and animals are located.' }
     ]}
     colorsTitle="Colours and Legends"
     colors={[
-      { color: '📊', desc: 'Map legends explain what each distinct colour and pattern represents.' },
-      { color: '🟩', desc: 'Light green shades highlight fertile Alluvial soils across river plains.' },
-      { color: '⬛️', desc: 'Dark grey represents fertile Black Cotton soil across the Deccan plateau.' },
-      { color: '🟥', desc: 'Red and yellow tones indicate soils formed over crystalline rocks.' },
-      { color: '🌲', desc: 'Deep green indicates Mountain and Forest soils across northern ranges.' },
-      { color: '🟨', desc: 'Yellow indicates Laterite soils developed under intense tropical rainfall.' },
-      { color: '🏜️', desc: 'Beige shades represent Arid and Desert soils across the Thar region.' }
+      { color: '📊', desc: 'The legend box explains what each color or pattern means on the map.' },
+      { color: '🟩', desc: 'Light green shows good soil for farming near rivers.' },
+      { color: '⬛️', desc: 'Dark grey shows black soil that is great for growing cotton.' },
+      { color: '🟥', desc: 'Red and yellow colors show older, rocky soils.' },
+      { color: '🌲', desc: 'Deep green shows forest soils found on mountains.' },
+      { color: '🟨', desc: 'Yellow shows soils found in areas with very heavy rain.' },
+      { color: '🏜️', desc: 'Beige colors show dry and sandy soils in deserts.' }
     ]}
     whyUseTitle="Why Do We Use Thematic Maps?"
     whyUse={[
-      { icon: '🚜', desc: 'Selecting suitable agricultural crops based on regional soil and climate' },
-      { icon: '☔️', desc: 'Planning water management and predicting seasonal monsoon patterns' },
-      { icon: '📈', desc: 'Analyzing natural resources, mineral reserves, and population density' }
+      { icon: '🚜', desc: 'Finding the best places to grow different crops' },
+      { icon: '☔️', desc: 'Knowing where it will rain the most during the year' },
+      { icon: '📈', desc: 'Seeing where people live and where natural resources are found' }
     ]}
     remember={[
       "One map, one main idea.",
-      "Thematic maps use distinct colors and a legend box to explain specific distribution data."
+      "Thematic maps use distinct colors and a legend box to explain specific information."
     ]}
-    funFact="A soil map and a rainfall map of India cover the exact same geographic boundary, yet each reveals a completely distinct layer of scientific information!"
+    funFact="A soil map and a rainfall map of India cover the exact same land, but they tell us two completely different stories!"
   />
 );

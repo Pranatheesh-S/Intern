@@ -1,55 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 /* src/science/class6/chapter6/MaterialsAroundUs/theme.css */
 
-
 .materials-around-us-theme {
     /* ── Typography ── */
   --font-heading: 'Merriweather', serif;
   --font-body: 'Inter', sans-serif;
 
   /* ── Page ── */
-  --page-bg: #FDFBF7; /* very light warm ivory/cream */
-  --page-bg-gradient: #FDFBF7;
+  --lesson-background: #FDFBF7; /* very light warm ivory/cream */
+  --lesson-background-gradient: #FDFBF7;
 
   /* ── Card / Panel ── */
-  --card-bg: #FBF7F0; /* soft cream */
-  --card-border: #E8DECE; /* muted warm tan */
+  --lesson-card: #FBF7F0; /* soft cream */
+  --lesson-border: #E8DECE; /* muted warm tan */
   --card-shadow: 0 4px 20px rgba(110, 80, 50, 0.06), 0 8px 32px rgba(110, 80, 50, 0.04);
   --card-hover-border: #D8C3A5;
-  --card-hover-shadow: 0 8px 32px rgba(205, 111, 56, 0.12);
+  --card-hover-shadow: 0 8px 32px rgba(44, 110, 99, 0.12);
 
   /* ── Text ── */
-  --text-heading: #3E2723; /* deep espresso */
-  --text-primary: #4E342E; /* warm dark brown */
-  --text-secondary: #5D4037;
-  --text-muted: #8D6E63;
+  --lesson-primary: #3E2723; /* deep espresso */
+  --lesson-text: #4E342E; /* warm dark brown */
+  --lesson-secondary: #5D4037;
+  --lesson-muted: #8D6E63;
   --text-faint: #A1887F;
-  --map-popup-desc: var(--text-muted);
+  --map-popup-desc: var(--lesson-muted);
 
-  /* ── Border ── */
-  --border: #E8DECE;
-  --border-light: #F4ECE1;
-
-  /* ── Accent (terracotta) ── */
-  --accent: #CD6F38; /* muted terracotta / burnt orange */
-  --accent-bg: #FBEAE1;
-  --accent-border: #F4CBB3;
-  --accent-text: #A85123;
+  /* ── Accent (Muted Teal/Blue-Green) ── */
+  --lesson-accent: #2C6E63; /* muted teal/blue-green */
+  --lesson-accent-bg: #E6F0EE; /* very light teal/cream mix */
+  --lesson-accent-border: #B2D1CB; /* soft teal border */
+  --lesson-accent-text: #1B4D45; /* deep teal for text */
+  --lesson-highlight: #fef08a; /* for text highlighting */
 
   /* ── Success (warm harmonized green) ── */
-  --success: #689F38;
-  --success-bg: #F1F8E9;
-  --success-border: #C5E1A5;
+  --lesson-success: #689F38;
+  --lesson-success-bg: #F1F8E9;
+  --lesson-success-border: #C5E1A5;
 
   /* ── Danger (warm harmonized red/terracotta) ── */
-  --danger: #D84315;
-  --danger-bg: #FBE9E7;
-  --danger-border: #FFCCBC;
+  --lesson-danger: #D84315;
+  --lesson-danger-bg: #FBE9E7;
+  --lesson-danger-border: #FFCCBC;
 
   /* ── Warning (muted golden yellow) ── */
-  --warning: #FBC02D;
-  --warning-bg: #FFFDE7;
-  --warning-border: #FFF59D;
+  --lesson-warning: #FBC02D;
+  --lesson-warning-bg: #FFFDE7;
+  --lesson-warning-border: #FFF59D;
 
   /* ── Neutral ── */
   --neutral-bg: #F4ECE1;
@@ -57,7 +53,7 @@
   --neutral-border: #E8DECE;
 
   /* ── Surface (light beige) ── */
-  --surface: #F5EFE6;
+  --lesson-surface: #F5EFE6;
   --surface-hover: #EBE3D5;
 
   /* ── Canvas ── */
@@ -74,19 +70,24 @@
   --tab-text: #8D6E63;
   --tab-hover-bg: #EBE3D5;
   --tab-hover-text: #4E342E;
-  --tab-active-bg: #CD6F38;
+  --tab-active-bg: var(--lesson-accent);
   --tab-active-text: #ffffff;
-  --tab-active-shadow: 0 2px 6px rgba(205, 111, 56, 0.2);
+  --tab-active-shadow: 0 2px 6px rgba(44, 110, 99, 0.2);
+
+  /* ── Chapter Heading Colors ── */
+  --heading-main: #1A5431; /* Rich Dark Green (Main Activity Headings) */
+  --heading-sub: #D35F2D; /* Warm Orange (Instruction / Subheadings) */
+  --heading-section: #4F386E; /* Purple (Section Headings) */
 }
 
 /* Ensure background color overrides tailwind bg classes */
 .materials-around-us-theme.bg-\[\#eaf6fb\] {
-  background-color: var(--page-bg) !important;
+  background-color: var(--lesson-background) !important;
 }
 
 /* Apply body font */
 .materials-around-us-theme {
-  color: var(--text-primary);
+  color: var(--lesson-text);
   font-family: var(--font-body);
   font-weight: 500;
 }
@@ -106,7 +107,7 @@
 .materials-around-us-theme h6,
 .materials-around-us-theme .heading-font {
   font-family: var(--font-heading);
-  color: var(--text-heading);
+  color: var(--lesson-primary);
   font-weight: 700;
 }
 

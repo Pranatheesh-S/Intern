@@ -1,272 +1,195 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as THREE from 'three';
-import { useTexture } from '@react-three/drei';
 
 /**
- * 3D Crystal Highball Glass Tumbler Barrier Component
- * - Crystal clear highball glass with refined transmission and reflections
- * - Translucent cool water with subtle meniscus
- * - Effervescent bubble carbonation wrap
- * - Visible crystalline ice cubes with physical refraction and specular highlights
- * - Procedural condensation droplets on the glass exterior
- * - Dynamic thickness scaling along X/Z axes
+ * 2D Transparent Billboard Image Mesh Glass Barrier with 4 Stages:
+ * - Stage 1: Small Glass (Faceted Crystal Tumbler) -> /assets/glass_small.png
+ * - Stage 2: Big Glass (Tall Cut-Glass Highball Tumbler) -> /assets/glass_tall.png
+ * - Stage 3: Glass Bowl (Clear Pyrex Crystal Bowl) -> /assets/glass_bowl.png
+ * - Stage 4: Glass Jar (Storage Canister with Wire Clip Lock) -> /assets/glass_jar.png
  */
-export default function GlassBarrier({ thickness = 1 }) {
-  // Load local bubble and ice textures from public/textures
-  const [bubbleMap, iceMap] = useTexture([
-    '/textures/glass-bubbles.png',
-    '/textures/ice-cube.png'
-  ]);
 
-  useMemo(() => {
-    if (bubbleMap) {
-      bubbleMap.wrapS = bubbleMap.wrapT = THREE.RepeatWrapping;
-      bubbleMap.repeat.set(2, 3);
+// ─── Offscreen Canvas Texture Cache & Processor for pristine studio-grade alpha transparency ───
+const glassTextureCache = new Map();
+
+function useGlassTexture(url) {
+  const [texture, setTexture] = useState(() => glassTextureCache.get(url) || null);
+
+  useEffect(() => {
+    if (glassTextureCache.has(url)) {
+      setTexture(glassTextureCache.get(url));
+      return;
     }
-  }, [bubbleMap]);
 
-  const scaleX = 0.88 + thickness * 0.16;
-  const scaleZ = 0.88 + thickness * 0.16;
+    let isMounted = true;
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
 
-  // Generate condensation droplets procedurally
-  const condensationPositions = useMemo(() => {
-    const positions = [];
-    const dropletCount = 35;
-    
-    for (let i = 0; i < dropletCount; i++) {
-      positions.push({
-        x: (Math.random() - 0.5) * 0.9,
-        y: Math.random() * 2.0 + 0.1,
-        z: Math.random() * 0.12 + 0.52,
-        size: Math.random() * 0.012 + 0.006,
-        opacity: Math.random() * 0.6 + 0.4
-      });
-    }
-    return positions;
-  }, []);
+    img.onload = () => {
+      if (!isMounted) return;
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+
+      // Extract isolated glass object and make plain background transparent
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        const minVal = Math.min(r, g, b);
+        const maxVal = Math.max(r, g, b);
+        const isNeutral = (maxVal - minVal) < 18;
+
+        if (minVal > 246 && isNeutral) {
+          data[i + 3] = 0; // Transparent background
+        } else if (minVal > 230 && isNeutral) {
+          // Antialiased edge alpha falloff
+          const factor = (246 - minVal) / 16;
+          data[i + 3] = Math.floor(data[i + 3] * Math.max(0, Math.min(1, factor)));
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      tex.generateMipmaps = true;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+
+      glassTextureCache.set(url, tex);
+      setTexture(tex);
+    };
+
+    return () => {
+      isMounted = false;
+    };
+  }, [url]);
+
+  return texture;
+}
+
+// ─── Stage 1: Small Glass (Compact Thick-Base Faceted Tumbler) ───
+function SmallGlassMesh({ thickness = 1 }) {
+  const texture = useGlassTexture('/assets/glass_small.png');
+  if (!texture) return null;
+
+  const scale = 1 + (thickness - 1) * 0.14;
+  const height = 3.0 * scale;
+  const width = 3.0 * scale;
 
   return (
-    <group position={[0, -1.1, 0]} scale={[scaleX, 1, scaleZ]}>
-      {/* ─── 1. Outer Highball Glass Cylinder (Crystal Clear) ─── */}
-      <mesh position={[0, 1.15, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.54, 0.52, 2.3, 64, 1, true]} />
-        <meshPhysicalMaterial
+    <group position={[0, -2.7, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
           color="#ffffff"
-          transmission={0.96}
-          opacity={1.0}
           transparent={true}
-          roughness={0.02}
-          ior={1.52}
-          thickness={0.6}
-          specularIntensity={1.2}
-          specularColor="#ffffff"
-          clearcoat={1.0}
-          clearcoatRoughness={0.02}
+          alphaTest={0.08}
           side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
         />
-      </mesh>
-
-      {/* Top Glass Rim Ring */}
-      <mesh position={[0, 2.30, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.49, 0.54, 64]} />
-        <meshPhysicalMaterial
-          color="#ffffff"
-          transmission={0.95}
-          opacity={1.0}
-          transparent={true}
-          roughness={0.02}
-          ior={1.52}
-          thickness={0.8}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Solid Glass Bottom Base */}
-      <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.52, 64]} />
-        <meshPhysicalMaterial
-          color="#ffffff"
-          transmission={0.92}
-          roughness={0.04}
-          ior={1.52}
-          thickness={1.0}
-          transparent={true}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* ─── 2. Water Cylinder & Meniscus ─── */}
-      <mesh position={[0, 1.0, 0]}>
-        <cylinderGeometry args={[0.485, 0.475, 1.85, 64, 1, true]} />
-        <meshPhysicalMaterial
-          color="#e0f2fe"
-          transmission={0.88}
-          transparent={true}
-          opacity={0.95}
-          roughness={0.02}
-          ior={1.333}
-          thickness={0.5}
-          specularIntensity={1.0}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Water Surface Meniscus */}
-      <mesh position={[0, 1.92, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.485, 64]} />
-        <meshPhysicalMaterial
-          color="#bae6fd"
-          transmission={0.85}
-          transparent={true}
-          opacity={0.95}
-          roughness={0.02}
-          ior={1.333}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* ─── 3. Effervescent Bubbles Wrap ─── */}
-      {bubbleMap && (
-        <mesh position={[0, 1.0, 0]}>
-          <cylinderGeometry args={[0.48, 0.47, 1.84, 48, 1, true]} />
-          <meshStandardMaterial
-            map={bubbleMap}
-            transparent={true}
-            opacity={0.75}
-            side={THREE.DoubleSide}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-          />
-        </mesh>
-      )}
-
-      {/* ─── 4. Procedural Condensation Droplets ─── */}
-      {condensationPositions.map((droplet, idx) => (
-        <mesh 
-          key={`droplet-${idx}`}
-          position={[droplet.x, droplet.y, droplet.z]}
-          scale={[droplet.size * 2, droplet.size * 2.5, droplet.size]}
-        >
-          <sphereGeometry args={[1, 12, 12]} />
-          <meshPhysicalMaterial
-            color="#ffffff"
-            transmission={0.9}
-            transparent={true}
-            opacity={droplet.opacity * 0.8}
-            roughness={0.02}
-            ior={1.333}
-            thickness={0.3}
-            specularIntensity={1.2}
-          />
-        </mesh>
-      ))}
-
-      {/* ─── 5. Realistic Crystalline Ice Cubes ─── */}
-      {/* Bottom Ice Cube */}
-      <group position={[-0.06, 0.52, 0.05]} rotation={[0.15, 0.38, 0.12]}>
-        <mesh castShadow>
-          <boxGeometry args={[0.31, 0.31, 0.31]} />
-          <meshPhysicalMaterial
-            map={iceMap || null}
-            color="#e0f2fe"
-            transmission={0.78}
-            transparent={true}
-            opacity={0.96}
-            roughness={0.05}
-            ior={1.31}
-            thickness={0.55}
-            specularIntensity={1.3}
-            specularColor="#ffffff"
-            clearcoat={0.9}
-            clearcoatRoughness={0.02}
-          />
-        </mesh>
-      </group>
-
-      {/* Mid-Lower Ice Cube */}
-      <group position={[0.09, 0.93, -0.03]} rotation={[-0.14, 0.58, -0.18]}>
-        <mesh castShadow>
-          <boxGeometry args={[0.295, 0.295, 0.295]} />
-          <meshPhysicalMaterial
-            map={iceMap || null}
-            color="#e0f2fe"
-            transmission={0.78}
-            transparent={true}
-            opacity={0.96}
-            roughness={0.05}
-            ior={1.31}
-            thickness={0.55}
-            specularIntensity={1.3}
-            specularColor="#ffffff"
-            clearcoat={0.88}
-            clearcoatRoughness={0.025}
-          />
-        </mesh>
-      </group>
-
-      {/* Mid-Upper Ice Cube */}
-      <group position={[-0.08, 1.32, -0.01]} rotation={[0.22, -0.32, 0.18]}>
-        <mesh castShadow>
-          <boxGeometry args={[0.29, 0.29, 0.29]} />
-          <meshPhysicalMaterial
-            map={iceMap || null}
-            color="#e0f2fe"
-            transmission={0.78}
-            transparent={true}
-            opacity={0.96}
-            roughness={0.05}
-            ior={1.31}
-            thickness={0.55}
-            specularIntensity={1.3}
-            specularColor="#ffffff"
-            clearcoat={0.85}
-            clearcoatRoughness={0.03}
-          />
-        </mesh>
-      </group>
-
-      {/* Top Floating Ice Cube */}
-      <group position={[0.06, 1.70, 0.04]} rotation={[-0.12, 0.22, 0.32]}>
-        <mesh castShadow>
-          <boxGeometry args={[0.27, 0.27, 0.27]} />
-          <meshPhysicalMaterial
-            map={iceMap || null}
-            color="#f0f9ff"
-            transmission={0.8}
-            transparent={true}
-            opacity={0.97}
-            roughness={0.04}
-            ior={1.31}
-            thickness={0.5}
-            specularIntensity={1.4}
-            specularColor="#ffffff"
-            clearcoat={0.92}
-            clearcoatRoughness={0.015}
-          />
-        </mesh>
-      </group>
-
-      {/* Additional Micro Ice Chunk */}
-      <mesh position={[0.12, 1.55, -0.08]} rotation={[0.3, -0.25, 0.45]} castShadow>
-        <boxGeometry args={[0.16, 0.18, 0.14]} />
-        <meshPhysicalMaterial
-          map={iceMap || null}
-          color="#e0f2fe"
-          transmission={0.8}
-          transparent={true}
-          opacity={0.94}
-          roughness={0.04}
-          ior={1.31}
-          thickness={0.45}
-          specularIntensity={1.25}
-        />
-      </mesh>
-
-      {/* Ground Contact Shadow */}
-      <mesh position={[0, -0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.55, 32]} />
-        <meshBasicMaterial color="#020617" transparent opacity={0.35} />
       </mesh>
     </group>
   );
+}
+
+// ─── Stage 2: Big Glass (Tall Crystal Cut-Glass Tumbler) ───
+function BigGlassMesh({ thickness = 1 }) {
+  const texture = useGlassTexture('/assets/glass_tall.png');
+  if (!texture) return null;
+
+  const scale = 1 + (thickness - 1) * 0.14;
+  const height = 4.2 * scale;
+  const width = 2.36 * scale;
+
+  return (
+    <group position={[0, -3.2, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
+          color="#ffffff"
+          transparent={true}
+          alphaTest={0.08}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Stage 3: Glass Bowl (Clear Pyrex Crystal Glass Bowl) ───
+function GlassBowlMesh({ thickness = 1 }) {
+  const texture = useGlassTexture('/assets/glass_bowl.png');
+  if (!texture) return null;
+
+  const scale = 1 + (thickness - 1) * 0.14;
+  const height = 2.8 * scale;
+  const width = 3.3 * scale;
+
+  return (
+    <group position={[0, -2.6, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
+          color="#ffffff"
+          transparent={true}
+          alphaTest={0.08}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Stage 4: Glass Jar (Storage Canister with Wire Clamp Lid) ───
+function GlassJarMesh({ thickness = 1 }) {
+  const texture = useGlassTexture('/assets/glass_jar.png');
+  if (!texture) return null;
+
+  const scale = 1 + (thickness - 1) * 0.14;
+  const height = 3.8 * scale;
+  const width = 3.8 * scale;
+
+  return (
+    <group position={[0, -3.1, 0]}>
+      <mesh position={[0, height / 2, 0]} visible={Boolean(texture)}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
+          color="#ffffff"
+          transparent={true}
+          alphaTest={0.08}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Master Glass Barrier Component (Switches among 4 Stages) ───
+export default function GlassBarrier({ stage = 1, thickness = 1 }) {
+  if (stage === 1) return <SmallGlassMesh thickness={thickness} />;
+  if (stage === 2) return <BigGlassMesh thickness={thickness} />;
+  if (stage === 3) return <GlassBowlMesh thickness={thickness} />;
+  return <GlassJarMesh thickness={thickness} />;
 }

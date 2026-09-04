@@ -93,7 +93,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         .ds-eyebrow {
           font-family: var(--geo);
-          font-size: 11px;
+          font-size: 13px;
           letter-spacing: .08em;
           text-transform: uppercase;
           color: var(--amber);
@@ -104,7 +104,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           font-family: var(--serif);
           font-weight: 900;
           color: var(--navy);
-          font-size: clamp(22px, 2.6vw, 32px);
+          font-size: clamp(24px, 2.8vw, 36px);
           line-height: 1.15;
           margin: 0 0 2px 0;
         }
@@ -112,14 +112,14 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           font-family: var(--serif);
           font-style: italic;
           color: #92400E;
-          font-size: clamp(13px, 1.4vw, 15px);
+          font-size: clamp(15px, 1.6vw, 17px);
           margin-bottom: 4px;
           line-height: 1.35;
           text-align: justify;
           text-justify: inter-word;
         }
         .ds-left p {
-          font-size: 13.5px;
+          font-size: 15px;
           line-height: 1.45;
           color: var(--ink);
           margin-bottom: 8px;
@@ -131,17 +131,17 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         .ds-left p b { color:var(--navy); font-weight:800; }
         
         .ds-comp { display:flex; gap:8px; margin:4px 0 14px; flex-wrap:wrap; }
-        .ds-comp span { cursor: pointer; font-family:var(--geo); font-size: 13px; font-weight:700; padding:6px 14px; border-radius:8px; border:1.5px solid #F2DFBC; background:#FFF9F0; color:#92400E; user-select: none; }
+        .ds-comp span { cursor: pointer; font-family:var(--geo); font-size: 14px; font-weight:700; padding:6px 14px; border-radius:8px; border:1.5px solid #F2DFBC; background:#FFF9F0; color:#92400E; user-select: none; }
         .ds-comp span.ds-on { background:#92400E; color:#fff; border-color:#92400E; }
         
         .ds-scaleex { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0 14px; }
         .ds-scaleex .ds-e { background:#FFFFFF; border:1.5px solid #F2DFBC; border-radius:10px; padding:11px 13px; }
-        .ds-scaleex .ds-e .ds-k { font-family:var(--geo); font-size: 11.5px; letter-spacing:.06em; color:#92400E; text-transform:uppercase; margin-bottom:0; font-weight:800; }
-        .ds-scaleex .ds-e .ds-v { font-weight:800; color:var(--navy); font-size:clamp(13px,1.5vw,16px); margin-top:3px; margin-bottom:0; }
+        .ds-scaleex .ds-e .ds-k { font-family:var(--geo); font-size: 13px; letter-spacing:.06em; color:#92400E; text-transform:uppercase; margin-bottom:0; font-weight:800; }
+        .ds-scaleex .ds-e .ds-v { font-weight:800; color:var(--navy); font-size:clamp(15px,1.7vw,18px); margin-top:3px; margin-bottom:0; }
         
         .ds-dyk { margin-top:auto; background:#FEF3C7; border:1.5px solid #FDE68A; border-left:5px solid var(--amber); border-radius:10px; padding:clamp(10px,1.4vw,14px); }
-        .ds-dyk h4 { display:flex; gap:7px; align-items:center; color:#92400E; font-weight:800; font-size: 13.5px; margin-bottom:4px; margin-top:0; }
-        .ds-dyk p { color:#78350F; font-size: 12.5px; lineHeight:1.45; margin:0; font-weight:600; text-align: justify; text-justify: inter-word; }
+        .ds-dyk h4 { display:flex; gap:7px; align-items:center; color:#92400E; font-weight:800; font-size: 15px; margin-bottom:4px; margin-top:0; }
+        .ds-dyk p { color:#78350F; font-size: 14px; lineHeight:1.45; margin:0; font-weight:600; text-align: justify; text-justify: inter-word; }
         
         .ds-right {
           background: linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%);
@@ -160,14 +160,14 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           color: var(--navy);
           font-family: var(--serif);
           font-weight: 900;
-          font-size: clamp(22px, 2.6vw, 32px);
+          font-size: clamp(24px, 2.8vw, 36px);
           line-height: 1.15;
           margin: 0 0 2px 0;
         }
         .ds-rsub {
           font-family: var(--serif);
           font-style: italic;
-          font-size: clamp(13px, 1.4vw, 15px);
+          font-size: clamp(15px, 1.6vw, 17px);
           color: #92400E;
           margin-bottom: 4px;
           line-height: 1.35;
@@ -194,7 +194,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         .ds-step-title {
           font-family: var(--geo);
           font-weight: 800;
-          font-size: 13.5px;
+          font-size: 16px;
           color: var(--navy);
           margin-bottom: 12px;
           display: flex;
@@ -203,7 +203,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         .ds-step-title-num {
           font-family: var(--geo);
-          font-size: 11px;
+          font-size: 13px;
           color: var(--amber);
           text-transform: uppercase;
           letter-spacing: 0.08em;
@@ -223,13 +223,13 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           color: #fff;
           font-family: var(--geo);
           font-weight: 900;
-          font-size: 22px;
+          font-size: 26px;
           padding: 10px 28px;
           border-radius: 999px;
           box-shadow: 0 6px 16px rgba(47,109,240,0.25);
         }
         .ds-step1-desc {
-          font-size: 13px;
+          font-size: 15px;
           color: var(--ink);
           line-height: 1.45;
           max-width: 320px;
@@ -262,7 +262,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           background: #FFF9F0;
           cursor: pointer;
           font-family: var(--geo);
-          font-size: 13px;
+          font-size: 15px;
           font-weight: 800;
           color: #78350F;
           transition: all 0.2s;
@@ -304,7 +304,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           align-items: center;
           gap: 12px;
           font-family: var(--geo);
-          font-size: 18px;
+          font-size: 20px;
           font-weight: 800;
           color: var(--navy);
         }
@@ -316,7 +316,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         .ds-calc-label {
           font-family: var(--geo);
-          font-size: 11px;
+          font-size: 13px;
           color: var(--mut);
           text-transform: uppercase;
           letter-spacing: 0.06em;
@@ -342,7 +342,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           color: #fff;
           font-family: var(--geo);
           font-weight: 800;
-          font-size: 13px;
+          font-size: 15px;
           padding: 12px 28px;
           border: none;
           border-radius: 999px;
@@ -381,7 +381,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         @keyframes ds-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .ds-res-title {
           color: #166534;
-          font-size: 20px;
+          font-size: 22px;
           font-weight: 900;
           margin: 6px 0;
           display: flex;
@@ -389,7 +389,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           gap: 8px;
         }
         .ds-res-text {
-          font-size: 13px;
+          font-size: 15px;
           color: var(--ink);
           margin-bottom: 8px;
           font-weight: 600;
@@ -397,7 +397,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           text-justify: inter-word;
         }
         .ds-res-big {
-          font-size: 28px;
+          font-size: 30px;
           font-weight: 900;
           color: #166534;
           background: #fff;
@@ -426,7 +426,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         .ds-rem-title {
           font-family: var(--geo);
           font-weight: 800;
-          font-size: 13px;
+          font-size: 15px;
           color: #92400E;
           margin-bottom: 8px;
           display: flex;
@@ -437,7 +437,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           margin: 0;
           padding-left: 20px;
           color: var(--ink);
-          font-size: 12.5px;
+          font-size: 14px;
           line-height: 1.45;
           font-weight: 600;
           text-align: justify;
@@ -451,7 +451,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           padding: 10px;
           font-family: var(--geo);
           font-weight: 800;
-          font-size: 13px;
+          font-size: 15px;
           color: var(--navy);
           cursor: pointer;
           flex: 1;
@@ -550,7 +550,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         .ds-section-heading {
           font-family: var(--geo);
           font-weight: 800;
-          font-size: clamp(13px, 1.2vw, 14.5px);
+          font-size: clamp(15px, 1.4vw, 17px);
           margin: 0 0 4px 0;
           display: flex;
           align-items: center;
@@ -582,7 +582,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         .ds-what-text {
           font-family: var(--geo);
-          font-size: 13px;
+          font-size: 15px;
           font-weight: 600;
           color: var(--ink);
           line-height: 1.35;
@@ -669,11 +669,11 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           color: var(--navy);
           font-family: var(--geo);
           font-weight: 800;
-          font-size: 12.5px;
+          font-size: 14.5px;
           padding: 2px 10px;
           border-radius: 999px;
           position: absolute;
-          top: -10px;
+          top: -12px;
           box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
         
@@ -681,7 +681,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           border-color: var(--green);
           color: var(--green);
           top: auto;
-          bottom: -14px;
+          bottom: -16px;
         }
 
         .ds-scale-hero {
@@ -698,7 +698,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           color: #fff;
           font-family: var(--geo);
           font-weight: 900;
-          font-size: clamp(16px, 2.2vw, 22px);
+          font-size: clamp(18px, 2.4vw, 24px);
           padding: 6px 28px;
           border-radius: 999px;
           box-shadow: 0 6px 20px rgba(217,119,6,0.3);
@@ -706,7 +706,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         
         .ds-hero-caption {
           font-family: var(--geo);
-          font-size: 12px;
+          font-size: 14px;
           color: var(--mut);
           text-transform: uppercase;
           letter-spacing: 0.08em;
@@ -730,8 +730,22 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           z-index: 4;
         }
         
+        .ds-callout-right {
+          position: relative;
+          bottom: auto;
+          right: auto;
+          max-width: 100%;
+          width: 100%;
+          margin-top: auto;
+          margin-bottom: 8px;
+          padding: 12px 16px;
+          box-sizing: border-box;
+          box-shadow: 0 4px 16px rgba(60,40,20,0.06);
+          background: rgba(255, 252, 246, 0.95);
+        }
+        
         .ds-callout-title {
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 800;
           color: var(--amber);
           display: flex;
@@ -739,15 +753,27 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           gap: 4px;
         }
         
+        .ds-callout-right .ds-callout-title {
+          font-size: 18px;
+          margin-bottom: 4px;
+        }
+        
         .ds-callout-text {
           font-family: var(--geo);
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 600;
           color: var(--ink);
           line-height: 1.35;
           margin: 0;
           text-align: justify;
           text-justify: inter-word;
+        }
+        
+        .ds-callout-right .ds-callout-text {
+          font-size: 17px;
+          text-align: left;
+          line-height: 1.45;
+          text-justify: auto;
         }
         
         /* Examples */
@@ -829,18 +855,14 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                     <h3 className="ds-section-heading ds-h-blue">
                       <Map size={18} strokeWidth={2.5} /> What is Scale?
                     </h3>
-                    <div className="ds-what-blocks">
+                    <div className="ds-what-blocks" style={{ flexDirection: 'column', gap: '6px' }}>
                       <div className="ds-what-block">
-                        <Map className="ds-what-icon" size={20} strokeWidth={2.5} />
-                        <p className="ds-what-text">Maps are smaller than the real world.</p>
+                        <Map className="ds-what-icon" size={18} strokeWidth={2.5} />
+                        <p className="ds-what-text">Maps are drawn smaller than the real world.</p>
                       </div>
                       <div className="ds-what-block">
-                        <Target className="ds-what-icon" size={20} strokeWidth={2.5} />
-                        <p className="ds-what-text">Scale tells us how much the real world has been reduced.</p>
-                      </div>
-                      <div className="ds-what-block">
-                        <Lightbulb className="ds-what-icon" size={20} strokeWidth={2.5} />
-                        <p className="ds-what-text">The same length on two maps can represent different real distances.</p>
+                        <Target className="ds-what-icon" size={18} strokeWidth={2.5} />
+                        <p className="ds-what-text">Scale is the ratio between map distance and real distance.</p>
                       </div>
                     </div>
                   </div>
@@ -887,13 +909,6 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                       </div>
                     </div>
 
-                    {/* Remember Callout */}
-                    <div className="ds-callout">
-                      <div className="ds-callout-title">
-                        <Lightbulb size={10} strokeWidth={3} /> Remember
-                      </div>
-                      <p className="ds-callout-text">Maps are smaller, but the scale tells us the real distance.</p>
-                    </div>
                   </div>
                 </>
               )}
@@ -932,7 +947,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                   {/* Did You Know */}
                   <div className="ds-dyk">
                     <h4><Lightbulb size={15} strokeWidth={2.5} /> Did You Know?</h4>
-                    <p>A map of your school uses a large scale (like 1 cm = 10 m), while a map of the whole country uses a small scale (like 1 cm = 100 km).</p>
+                    <p>Small areas like your school use a <b>large scale</b> map. Large areas like countries use a <b>small scale</b> map.</p>
                   </div>
                 </>
               )}
@@ -1112,6 +1127,14 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                   </div>
                 )}
 
+              </div>
+              
+              {/* Remember Callout moved to right side */}
+              <div className="ds-callout ds-callout-right">
+                <div className="ds-callout-title">
+                  <Lightbulb size={16} strokeWidth={3} /> Remember
+                </div>
+                <p className="ds-callout-text">Maps are smaller, but the scale tells us the real distance.</p>
               </div>
 
               {/* Sub-page navigation — Parallel Symmetrical Baseline */}
@@ -1304,7 +1327,7 @@ const TamilNaduSubpage = () => {
                   <div style={{ background: 'white', border: '1px solid #d5e3ef', borderRadius: '12px', padding: '14px', width: '90%', maxWidth: '400px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', zIndex: 10, marginTop: '16px' }}>
                     <div style={{ fontSize: '13px', fontWeight: 800, color: '#0284c7', textTransform: 'uppercase', marginBottom: '4px' }}>Real-Life Example</div>
                     <div style={{ fontSize: '13px', color: '#475569', lineHeight: 1.45, textAlign: 'justify', textJustify: 'inter-word' }}>
-                      The straight-line distance between Chennai and Kanyakumari is about 625 km. On a map, this large real-world distance is represented using only a few centimetres because maps are drawn to scale.
+                      Chennai to Kanyakumari is about 625 km. On a map, this big distance is drawn as just a few centimetres.
                     </div>
                   </div>
                 </motion.div>
@@ -1335,7 +1358,7 @@ const TamilNaduSubpage = () => {
                 <div style={{ fontSize: '24px' }}>🌍</div>
                 <div>
                   <div style={{ fontSize: '12.5px', color: '#5c6b7a', fontWeight: 700, textTransform: 'uppercase' }}>Real-world Distance</div>
-                  <div style={{ fontSize: '12.5px', color: '#475569', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>The approximate straight-line distance between Chennai and Kanyakumari is about 625 km.</div>
+                  <div style={{ fontSize: '12.5px', color: '#475569', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>The actual distance is 625 km.</div>
                 </div>
               </div>
               <div style={{ fontSize: '20px', fontWeight: 900, color: '#1e3a8a', whiteSpace: 'nowrap', flexShrink: 0 }}>≈ 625 km</div>
@@ -1352,7 +1375,7 @@ const TamilNaduSubpage = () => {
                 <div style={{ fontSize: '24px' }}>🗺️</div>
                 <div>
                   <div style={{ fontSize: '12.5px', color: '#0369a1', fontWeight: 700, textTransform: 'uppercase' }}>Distance on the Map</div>
-                  <div style={{ fontSize: '12.5px', color: '#0369a1', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>Using the given scale, the real-world distance is represented by a shorter distance on the map.</div>
+                  <div style={{ fontSize: '12.5px', color: '#0369a1', marginTop: '2px', lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>Using a scale, the big distance is shown small.</div>
                 </div>
               </div>
               <div style={{ fontSize: '20px', fontWeight: 900, color: '#0284c7', whiteSpace: 'nowrap', flexShrink: 0 }}>5 cm</div>
@@ -1364,7 +1387,7 @@ const TamilNaduSubpage = () => {
         <div style={{ background: '#ecfdf5', padding: '12px 16px', borderRadius: '14px', border: '1px solid #a7f3d0', flexShrink: 0 }}>
           <h4 style={{ margin: '0 0 4px 0', color: '#059669', fontSize: '13px', fontWeight: 800 }}>Remember</h4>
           <p style={{ margin: 0, fontSize: '12.5px', color: '#065f46', lineHeight: 1.45, textAlign: 'justify', textJustify: 'inter-word' }}>
-            Maps reduce real-world distances using a scale. Although the map is much smaller than the real world, the distances remain proportional and accurately represent actual locations.
+            Maps shrink real distances using a scale. Distances are shrunk evenly so the map is accurate.
           </p>
         </div>
 

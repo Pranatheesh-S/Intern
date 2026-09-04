@@ -142,8 +142,8 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
 
       <ChapterBackFooter
         onBack={onBack}
-        nextLabel={!isOpen ? "Open Atlas" : (isCompleted ? "Next Activity" : null)}
-        onNext={!isOpen ? () => setIsOpen(true) : (isCompleted ? onNextActivity : null)}
+        nextLabel={!isOpen ? "Open Atlas" : "Next Activity"}
+        onNext={!isOpen ? () => setIsOpen(true) : onNextActivity}
         nextDisabled={false}
         nextVariant="orange"
       />

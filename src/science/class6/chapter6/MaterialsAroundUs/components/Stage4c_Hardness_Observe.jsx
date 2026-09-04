@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
   const items = [
-    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, var(--surface), var(--border))', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: '#22c55e', bg: '#dcfce7', blockBg: '#bbf7d0', blockRadius: '20px' },
-    { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: '#22c55e', bg: '#dcfce7', blockBg: '#86efac', blockRadius: '8px' },
+    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, var(--surface), var(--border))', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: 'var(--lesson-success)', bg: '#dcfce7', blockBg: '#bbf7d0', blockRadius: '20px' },
+    { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: 'var(--lesson-success)', bg: '#dcfce7', blockBg: '#86efac', blockRadius: '8px' },
     { id: 'eraser', name: 'Eraser', type: 'soft', resultText: 'It changed shape slightly.', icon: (
       <svg width="50" height="50" viewBox="0 0 50 50">
         <g transform="rotate(-15 25 25)">
@@ -15,9 +15,9 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
           <rect x="16" y="16" width="18" height="12" fill="var(--border)" />
         </g>
       </svg>
-    ), color: '#22c55e', bg: '#dcfce7', blockBg: 'var(--border)', blockRadius: '4px' },
-    { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: '#ef4444', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '12px' },
-    { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, var(--border), var(--surface), var(--text-muted))', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: '#ef4444', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '0px' }
+    ), color: 'var(--lesson-success)', bg: '#dcfce7', blockBg: 'var(--border)', blockRadius: '4px' },
+    { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: 'var(--lesson-danger)', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '12px' },
+    { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, var(--border), var(--surface), var(--text-muted))', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: 'var(--lesson-danger)', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '0px' }
   ];
 
   const [testedItems, setTestedItems] = useState({});
@@ -209,7 +209,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
 
         <div style={{ display: 'flex', gap: '2rem', marginTop: '0.5rem' }}>
           {/* Soft Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed #22c55e', borderRadius: '12px', background: '#f0fdf4', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
+          <div style={{ flex: 1, border: '2px dashed var(--lesson-success)', borderRadius: '12px', background: '#f0fdf4', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
             <div style={{ color: '#15803d', fontWeight: 'bold', marginBottom: '1rem' }}>Soft (Easily Compressed)</div>
             {placedItems.soft.length === 0 ? (
               <div style={{ color: '#86efac', margin: 'auto' }}>Awaiting soft materials...</div>
@@ -224,7 +224,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
           </div>
 
           {/* Hard Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed #ef4444', borderRadius: '12px', background: '#fef2f2', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
+          <div style={{ flex: 1, border: '2px dashed var(--lesson-danger)', borderRadius: '12px', background: '#fef2f2', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
             <div style={{ color: '#b91c1c', fontWeight: 'bold', marginBottom: '1rem' }}>Hard (Difficult to Compress)</div>
             {placedItems.hard.length === 0 ? (
               <div style={{ color: '#fca5a5', margin: 'auto' }}>Awaiting hard materials...</div>

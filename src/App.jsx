@@ -68,6 +68,7 @@ const Activity4_6 = lazy(() => import('./science/class6/chapter4/Activity4_6'));
 const Activity4_7 = lazy(() => import('./science/class6/chapter4/Activity4_7'));
 const FunWithMagnets = lazy(() => import('./science/class6/chapter4/FunWithMagnets'));
 const Chapter4Flow = lazy(() => import('./science/class6/chapter4/Chapter4Flow'));
+const Chapter4Cover = lazy(() => import('./science/class6/chapter4/Chapter4Cover'));
 const Chapter5Flow = lazy(() => import('./science/class6/chapter5/Chapter5Flow'));
 const Chapter4Quiz = lazy(() => import('./science/class6/chapter4/Chapter4Flow/Chapter4Quiz'));
 const IntroMagnets = lazy(() => import('./science/class6/chapter4/IntroMagnets'));
@@ -1022,36 +1023,18 @@ export default function App() {
                                   : "Includes Activity 11.1: Nature's treasures & resource conservation."}
                   </p>
 
-                  {chapter.num === 6 ? (
-                    <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
-                      <button 
-                        onClick={() => navigateTo('class6', 'materials_around_us')}
-                        className="outline" 
-                        style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                      >
-                        Old <ArrowRight size={14} />
-                      </button>
-                      <button 
-                        onClick={() => navigateTo('class6', 'materials_around_us_new')}
-                        className="primary" 
-                        style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                      >
-                        New <ArrowRight size={14} />
-                      </button>
-                    </div>
-                  ) : (
-                    <button 
-                      onClick={() => {
-                        if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
-                        else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
-                        else navigateTo('class6', `chapter${chapter.num}`);
-                      }}
-                      className="primary" 
-                      style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                    >
-                      Open Chapter <ArrowRight size={14} />
-                    </button>
-                  )}
+                  <button 
+                    onClick={() => {
+                      if (chapter.num === 4) navigateTo('class6', 'chapter4_cover');
+                      else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
+                      else if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
+                      else navigateTo('class6', `chapter${chapter.num}`);
+                    }}
+                    className="primary" 
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                    Open Chapter <ArrowRight size={14} />
+                  </button>
                 </div>
               );
             }
@@ -2881,7 +2864,7 @@ export default function App() {
     </div>
   );
 
-  const isFullscreen = (activeActivity && !['chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader || ['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11'].includes(activeActivity);
+  const isFullscreen = (activeActivity && !['chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader || ['chapter2', 'chapter3', 'chapter4', 'chapter4_cover', 'chapter5', 'chapter6', 'chapter10', 'chapter11'].includes(activeActivity);
 
   return (
     <div className="app-container">
@@ -3104,11 +3087,14 @@ export default function App() {
             <MaterialsAroundUsActivity onBackToDashboard={() => navigateTo('class6', null)} />
           ) : activeActivity === 'materials_around_us_new' ? (
             <MaterialsAroundUsNewActivity onBackToDashboard={() => navigateTo('class6', null)} />
-          ) : activeActivity === 'chapter4' ? (
-            renderClass6Chapter4()
+          ) : activeActivity === 'chapter4_cover' || activeActivity === 'chapter4' ? (
+            <Chapter4Cover 
+              onStartJourney={() => navigateTo('class6', 'chapter4_flow')}
+              onBack={() => navigateTo('class6', null)}
+            />
           ) : activeActivity === 'chapter4_flow' ? (
             <Chapter4Flow 
-              onBackToDashboard={() => navigateTo('class6', null)} 
+              onBackToDashboard={() => navigateTo('class6', 'chapter4_cover')} 
               onLaunchActivity={(act) => navigateTo('class6', act)} 
               initialSection={activeSection}
             />

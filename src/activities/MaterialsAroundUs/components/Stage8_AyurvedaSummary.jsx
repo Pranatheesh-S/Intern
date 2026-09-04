@@ -81,7 +81,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
             display: 'flex', 
             flexDirection: 'column', 
             gap: '1rem', 
-            border: '2px solid #b45309', 
+            border: '2px solid #D9C9A3', 
             background: 'var(--warning-bg)',
             color: 'var(--text-primary)'
           }}

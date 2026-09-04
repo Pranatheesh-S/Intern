@@ -74,7 +74,7 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
         </div>
 
         {/* Right Column: Active Navigation Tabs */}
-        <nav className="tabs-container" style={{ display: 'flex', gap: '0.4rem', margin: 0, background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: '28px', padding: '0.25rem' }}>
+        <nav className="tabs-container" style={{ display: 'flex', gap: '0.4rem', margin: 0, background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', border: '1.5px solid #FDE68A', borderRadius: '28px', padding: '0.25rem', boxShadow: '0 2px 8px rgba(217, 119, 6, 0.08)' }}>
           {tabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -93,9 +93,9 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
                   fontSize: '0.85rem',
                   fontWeight: 800,
                   borderRadius: '24px',
-                  background: isActive ? undefined : '#FFFFFF',
-                  color: isActive ? '#FFFFFF' : '#334155',
-                  border: isActive ? 'none' : '1.5px solid #CBD5E1',
+                  background: isActive ? undefined : 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+                  color: isActive ? '#FFFFFF' : '#78350F',
+                  border: isActive ? 'none' : '1.5px solid #FDE68A',
                   transition: 'all 0.2s ease'
                 }}
               >

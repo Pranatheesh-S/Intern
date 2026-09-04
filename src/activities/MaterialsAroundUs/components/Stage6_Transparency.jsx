@@ -93,8 +93,8 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', maxWidth: '1000px', margin: '0 auto', paddingBottom: '2rem' }}>
       
       {/* Intro Header */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        <h3 style={{ margin: 0, fontSize: '1.6rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.6rem', color: '#3B2A1F', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Eye size={26} color="#6366f1" /> Explore materials through which one can see or cannot see
         </h3>
         <p style={{ margin: 0, fontSize: '1rem', color: '#334155', lineHeight: '1.5' }}>
@@ -105,9 +105,9 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
         {/* Interactive Yard */}
-        <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
+        <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #D9C9A3', padding: '1.5rem' }}>
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: '#3b82f6', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>1</div>
+            <div style={{ background: '#FFFFFF', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>1</div>
             Surveillance Simulator
           </h4>
 
@@ -140,7 +140,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
             </div>
 
             {/* Dialogue display */}
-            <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', border: '1px solid #cbd5e1', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ flex: 1, background: '#FFFFFF', borderRadius: '12px', border: '1px solid #D9C9A3', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               {selectedHidingSpot ? (
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
@@ -166,9 +166,9 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
         </div>
 
         {/* Classification Table */}
-        <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
+        <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #D9C9A3', padding: '1.5rem' }}>
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: '#22c55e', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>2</div>
+            <div style={{ background: '#FFFFFF', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 'bold' }}>2</div>
             Activity 6.6: Let us classify
           </h4>
           <p style={{ margin: '0 0 1rem 0', color: '#64748b' }}>
@@ -183,7 +183,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                 const isSelected = classifications[obj.id] !== undefined;
                 if (isSelected) return null; // Hide if placed
                 return (
-                  <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '8px', fontWeight: 'bold', color: '#1e293b' }}>
+                  <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#FFFFFF', border: '1px solid #D9C9A3', padding: '8px 12px', borderRadius: '8px', fontWeight: 'bold', color: '#1e293b' }}>
                     <span style={{ fontSize: '1.2rem' }}>{obj.icon}</span> {obj.name}
                   </div>
                 );
@@ -202,12 +202,12 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                 
                 {['Transparent', 'Translucent', 'Opaque'].map(category => (
                   <div key={category} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <div style={{ background: '#dcfce7', color: '#166534', fontWeight: 'bold', textAlign: 'center', padding: '10px', borderRadius: '8px 8px 0 0', border: '1px solid #bbf7d0' }}>
+                    <div style={{ background: '#FFFFFF', color: '#166534', fontWeight: 'bold', textAlign: 'center', padding: '10px', borderRadius: '8px 8px 0 0', border: '1px solid #D9C9A3' }}>
                       {category}
                     </div>
                     
                     {/* Items placed in this category */}
-                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0 0 8px 8px', padding: '10px', minHeight: '150px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ background: '#FFFFFF', border: '1px solid #D9C9A3', borderRadius: '0 0 8px 8px', padding: '10px', minHeight: '150px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {objectsToClassify.filter(o => classifications[o.id] === category).map(obj => (
                         <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: obj.correct === category ? '#f0fdf4' : '#fef2f2', border: `1px solid ${obj.correct === category ? '#86efac' : '#fca5a5'}`, padding: '6px 10px', borderRadius: '6px', fontSize: '0.9rem' }}>
                           <span style={{ fontSize: '1.1rem' }}>{obj.icon}</span> {obj.name}

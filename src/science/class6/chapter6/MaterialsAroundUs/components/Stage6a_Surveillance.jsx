@@ -12,7 +12,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Behind a Wall',
       type: 'Opaque',
       view: 'No View',
-      icon: <EyeOff size={24} color="#dc2626" />,
+      icon: <EyeOff size={24} color="var(--lesson-danger)" />,
       desc: 'The suspect is completely hidden behind the solid brick wall. No light passes through.',
       conclusion: 'Materials through which you cannot see at all are Opaque.',
       image: '/images/surveillance_wall.png'
@@ -32,7 +32,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Big Tree',
       type: 'Opaque',
       view: 'No View',
-      icon: <EyeOff size={24} color="#dc2626" />,
+      icon: <EyeOff size={24} color="var(--lesson-danger)" />,
       desc: 'The suspect is hiding behind a thick wooden tree trunk. Wood blocks all light from passing through.',
       conclusion: 'Wood is an Opaque material.',
       image: '/images/surveillance_tree.png'
@@ -42,7 +42,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Clear Glass Window',
       type: 'Transparent',
       view: 'Clear View',
-      icon: <Eye size={24} color="#16a34a" />,
+      icon: <Eye size={24} color="var(--lesson-success)" />,
       desc: 'You have a perfect view of the suspect through the window. Light passes through completely.',
       conclusion: 'Materials through which things can be seen clearly are Transparent.',
       image: '/images/surveillance_window.png'
@@ -67,25 +67,19 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
   }, [isComplete, onComplete]);
 
   return (
-    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: 'var(--text-primary)' }}>
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: 'var(--lesson-text)' }}>
       
       {/* Header */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Search size={24} color="var(--accent)" /> Phase 1: Surveillance Simulator
           </h3>
-          <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--heading-sub)' }}>
             Chief Blake is running a surveillance simulation! Click on each location to see if the suspect is visible through the material.
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '10px 15px', position: 'relative' }}>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '500' }}>Observe carefully, detective!</div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '500' }}>Not all materials reveal the truth.</div>
-            {/* Speech bubble arrow */}
-            <div style={{ position: 'absolute', right: '-8px', top: '20px', width: '16px', height: '16px', background: 'var(--surface)', borderRight: '1px solid var(--border)', borderBottom: '1px solid var(--border)', transform: 'rotate(-45deg)' }} />
-          </div>
           <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '70px', height: '70px', objectFit: 'contain' }} />
         </div>
       </div>
@@ -93,7 +87,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       <div style={{ display: 'flex', gap: '1.25rem', flex: 1, minHeight: 0 }}>
         
         {/* Main Surveillance Scene (2x2 Grid of CSS Cards) */}
-        <div style={{ flex: 1.8, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '12px' }}>
+        <div style={{ flex: '0 0 70%', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '12px' }}>
           
           {spots.map((spot, index) => {
             const isSelected = selectedSpot?.id === spot.id;
@@ -105,7 +99,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                 style={{
                   position: 'relative',
                   borderRadius: '16px',
-                  border: isSelected ? '4px solid var(--accent)' : '2px solid var(--border)',
+                  border: isSelected ? '4px solid var(--lesson-accent)' : '2px solid var(--lesson-border)',
                   cursor: 'pointer',
                   overflow: 'hidden',
                   background: 'white',
@@ -122,18 +116,18 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      style={{ width: '100%', height: '100%', backgroundColor: 'var(--text-primary)', backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      style={{ width: '100%', height: '100%', backgroundColor: 'var(--lesson-text)', backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
                       <svg width="80" height="80" viewBox="0 0 100 100">
                         <defs>
                           <radialGradient id="glassGrad" cx="30%" cy="30%" r="70%">
-                            <stop offset="0%" stopColor="var(--surface)" />
-                            <stop offset="100%" stopColor="var(--surface)" />
+                            <stop offset="0%" stopColor="var(--lesson-surface)" />
+                            <stop offset="100%" stopColor="var(--lesson-surface)" />
                           </radialGradient>
                         </defs>
-                        <circle cx="60" cy="40" r="30" fill="url(#glassGrad)" stroke="var(--border)" strokeWidth="6" filter="drop-shadow(0 0 10px rgba(56,189,248,0.3))" />
-                        <line x1="38" y1="62" x2="15" y2="85" stroke="var(--text-primary)" strokeWidth="12" strokeLinecap="round" />
-                        <line x1="38" y1="62" x2="25" y2="75" stroke="var(--text-muted)" strokeWidth="12" strokeLinecap="round" />
+                        <circle cx="60" cy="40" r="30" fill="url(#glassGrad)" stroke="var(--lesson-border)" strokeWidth="6" filter="drop-shadow(0 0 10px rgba(56,189,248,0.3))" />
+                        <line x1="38" y1="62" x2="15" y2="85" stroke="var(--lesson-text)" strokeWidth="12" strokeLinecap="round" />
+                        <line x1="38" y1="62" x2="25" y2="75" stroke="var(--lesson-muted)" strokeWidth="12" strokeLinecap="round" />
                       </svg>
                     </motion.div>
                   ) : (
@@ -150,15 +144,15 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                 </AnimatePresence>
                 
                 {/* Overlay Label */}
-                <div style={{ position: 'absolute', top: '15px', left: '15px', background: 'var(--text-heading)', color: 'white', padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
-                  <div style={{ background: 'var(--accent)', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 'var(--text-xs)' }}>{index + 1}</div>
+                <div style={{ position: 'absolute', top: '15px', left: '15px', background: 'var(--text-heading)', color: 'white', padding: '8px 16px', borderRadius: '24px', fontSize: '1.1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                  <div style={{ background: 'var(--accent)', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.9rem' }}>{index + 1}</div>
                   {!observations[spot.id] ? 'Unknown Target' : spot.name}
                 </div>
 
 
 
                 {observations[spot.id] && (
-                  <div style={{ position: 'absolute', bottom: '15px', right: '15px', background: '#16a34a', color: 'white', padding: '4px 10px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', zIndex: 20 }}>
+                  <div style={{ position: 'absolute', bottom: '15px', right: '15px', background: '#16a34a', color: 'white', padding: '6px 12px', borderRadius: '8px', fontSize: '1rem', fontWeight: 'bold', zIndex: 20 }}>
                     Observed
                   </div>
                 )}
@@ -171,9 +165,9 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
         {/* Observation Console */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           
-          <div style={{ background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <h4 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', fontSize: '1.1rem' }}>
-              <Camera size={20} color="var(--accent)" /> Observation Console
+          <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <h4 style={{ margin: '0 0 1rem 0', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.1rem' }}>
+              <Camera size={20} color="#A64B27" /> Observation Console
             </h4>
             
             <AnimatePresence mode="wait">
@@ -186,31 +180,31 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                   style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Target Location</div>
-                    <div style={{ fontSize: '1.2rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>{selectedSpot.name}</div>
+                    <div style={{ color: 'var(--lesson-muted)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Target Location</div>
+                    <div style={{ fontSize: '1.2rem', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>{selectedSpot.name}</div>
                   </div>
 
-                  <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '1rem', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Visibility</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                  <div style={{ background: '#FFFFFF', borderRadius: '12px', padding: '1rem', border: '1px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ color: 'var(--lesson-muted)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Visibility</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--lesson-text)' }}>
                       {selectedSpot.icon} {selectedSpot.view}
                     </div>
-                    <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                    <div style={{ color: 'var(--lesson-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
                       {selectedSpot.desc}
                     </div>
                   </div>
 
-                  <div style={{ background: '#f0fdfa', borderRadius: '12px', padding: '1rem', border: '1px solid #ccfbf1', marginTop: 'auto' }}>
-                    <div style={{ color: '#0d9488', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
+                  <div style={{ background: 'var(--lesson-success-bg)', borderRadius: '12px', padding: '1rem', border: '1px solid var(--lesson-success-border)', marginTop: 'auto' }}>
+                    <div style={{ color: 'var(--heading-section)', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
                     <div style={{ color: '#115e59', fontSize: '1rem', lineHeight: '1.5', fontWeight: 'bold' }}>
                       {selectedSpot.conclusion}
                     </div>
                   </div>
                 </motion.div>
               ) : (
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: 'var(--text-muted)', textAlign: 'center', border: '2px dashed var(--border)', borderRadius: '12px', padding: '2rem' }}>
-                  <div style={{ background: 'var(--surface)', padding: '15px', borderRadius: '50%' }}>
-                    <Camera size={40} color="var(--border)" />
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: 'var(--lesson-muted)', textAlign: 'center', border: '2px dashed var(--lesson-border)', borderRadius: '12px', padding: '2rem' }}>
+                  <div style={{ background: '#FFFFFF', padding: '15px', borderRadius: '50%' }}>
+                    <Camera size={40} color="var(--lesson-border)" />
                   </div>
                   <span style={{ fontSize: '0.95rem' }}>Select a location on the left to begin observation.</span>
                 </div>
@@ -225,17 +219,17 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       </div>
 
       {/* Footer Progress */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
-          <div style={{ background: '#fefce8', padding: '8px', borderRadius: '50%' }}>
+      <div style={{ background: '#FFFFFF', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#A64B27' }}>
+          <div style={{ background: 'var(--lesson-warning-bg)', padding: '8px', borderRadius: '50%' }}>
             <Target size={20} />
           </div>
-          <span style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Click on each location (1-4) to check if the suspect is visible through the material.</span>
+          <span style={{ color: 'var(--lesson-secondary)', fontSize: '1rem' }}>Click on each location (1-4) to check if the suspect is visible through the material.</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ fontWeight: 'bold', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--surface)', padding: '8px 16px', borderRadius: '20px', border: '1px solid var(--border)' }}>
+          <div style={{ fontWeight: 'bold', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px', background: '#FFFFFF', padding: '8px 16px', borderRadius: '20px', border: '1px solid var(--lesson-border)' }}>
             <img src="/images/chief_detective_blake.png" alt="Hat" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
-            Observations: <span style={{ color: isComplete ? '#16a34a' : 'var(--text-heading)', fontSize: '1.1rem' }}>{obsCount} / 4</span>
+            Observations: <span style={{ color: isComplete ? '#A64B27' : 'var(--lesson-primary)', fontSize: '1.1rem' }}>{obsCount} / 4</span>
           </div>
         </div>
       </div>

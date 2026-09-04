@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { SEQUENCES } from './NumberSequencesTable';
+import RealisticCube3D from './RealisticCube3D';
 
 const SequenceVisualizer = ({ id }) => {
   const [shape36, setShape36] = useState('square');
@@ -130,43 +131,8 @@ const SequenceVisualizer = ({ id }) => {
             </g>
           </svg>
         );
-      case 7: { // Cubes (Isometric 3D)
-        const drawIsoCube = (x, y, s) => (
-          <g transform={`translate(${x}, ${y})`}>
-            <polygon points={`0,0 ${s},${s/2} 0,${s} -${s},${s/2}`} fill="#fbbf24" />
-            <polygon points={`0,${s} ${s},${s/2} ${s},${s*1.5} 0,${s*2}`} fill="#d97706" />
-            <polygon points={`0,${s} -${s},${s/2} -${s},${s*1.5} 0,${s*2}`} fill="#f59e0b" />
-          </g>
-        );
-        return (
-          <svg viewBox="0 0 600 150" className="seq-svg">
-            <g transform="translate(80, 50)">
-              {[1, 2, 3, 4].map((num, i) => {
-                const s = 10;
-                const xOffset = i === 0 ? 0 :
-                                i === 1 ? 90 :
-                                i === 2 ? 200 : 330;
-                let blocks = [];
-                for(let z = 0; z < num; z++) {
-                  for(let y = 0; y < num; y++) {
-                    for(let x = 0; x < num; x++) {
-                      const isoX = (x - y) * s + xOffset;
-                      const isoY = ((x + y) * s / 2) - (z * s);
-                      blocks.push(
-                        <g key={`${x}-${y}-${z}`} className="anim-pop" style={{ animationDelay: `${i * 0.4 + (x+y+z) * 0.05}s` }}>
-                          {drawIsoCube(isoX, isoY, s)}
-                        </g>
-                      );
-                    }
-                  }
-                }
-                const totalValue = num * num * num;
-                blocks.push(<text key="t" x={xOffset} y={num * s + 30} fill="#94a3b8" fontSize="12" textAnchor="middle">{totalValue}</text>);
-                return <g key={i}>{blocks}</g>;
-              })}
-            </g>
-          </svg>
-        );
+      case 7: { // Cubes (Realistic 3D WebGL)
+        return <RealisticCube3D />;
       }
       case 8: // Virahānka / Fibonacci Spiral
         return (
